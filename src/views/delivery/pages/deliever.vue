@@ -85,7 +85,7 @@
 </template>
 
 <script>
-import rules from '../components/deliveryValidRules'
+import {rules} from '../components/deliveryValidRules'
 console.log(rules)
 export default {
   name: 'delivery',

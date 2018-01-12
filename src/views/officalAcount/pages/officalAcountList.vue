@@ -123,7 +123,7 @@ export default {
     },
     edit (row) {
       this.$router.push('/manager/officalAcount/create/' + row.id)
-      
+
     }
   }
 }

@@ -1,0 +1,47 @@
+{
+    "list": {
+        "success":true,
+        "data":{
+            "size":6,
+            "lists":[
+                {
+                    "id":7,
+                    "name":"name",
+                    "backupName":"back",
+                    "avatar":"ava"
+                },
+                {
+                    "id":6,
+                    "name":"name",
+                    "backupName":"back",
+                    "avatar":"ava"
+                },
+                {
+                    "id":5,
+                    "name":"name",
+                    "backupName":"back",
+                    "avatar":"ava"
+                },
+                {
+                    "id":4,
+                    "name":"name",
+                    "backupName":"back",
+                    "avatar":"ava"
+                },
+                {
+                    "id":3,
+                    "name":"name",
+                    "backupName":"back",
+                    "avatar":"ava"
+                },
+                {
+                    "id":2,
+                    "name":"name",
+                    "backupName":"back",
+                    "avatar":"ava"
+                }
+            ]
+        }
+    }
+
+}

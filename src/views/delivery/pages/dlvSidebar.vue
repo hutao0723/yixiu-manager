@@ -4,15 +4,19 @@
     <el-aside :width="hiddenWith" >
       <div class="side-wrap"  v-show="isShow">
         <p class="page-title" >投放管理</p>
-        <el-menu   class="menu-collapse" default-active="1">
+        <el-menu   class="menu-collapse">
+        <router-link :to="{ path: '/manager/dlv' }">          
           <el-menu-item index="1">
             <i class="iconfont icon-feiji"></i>
             <span slot="title">投放管理</span>
           </el-menu-item>
+        </router-link>
+          <router-link :to="{ path: '/manager/dlv/theme' }">          
           <el-menu-item index="2">
             <i class="iconfont icon-zhuti"></i>
             <span slot="title">公众号主题</span>
           </el-menu-item>
+          </router-link>
           <router-link :to="{ path: '/manager/dlv/loadpage' }">
               <el-menu-item index="3">
                 <i class="iconfont icon-gongzhonghao"></i>

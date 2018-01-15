@@ -6,8 +6,8 @@
         <p class="page-title" >公众号管理</p>
         <el-menu :collapse="isCollapse" class="menu-collapse" default-active="1">
           <el-menu-item index="1">
-            <i class="iconfont icon-feiji"></i>
-            <span slot="title">公众号</span>
+            <i class="iconfont icon-msnui-weixin"></i>
+            <span slot="title" >公众号</span>
           </el-menu-item>
         </el-menu>                
       </div>

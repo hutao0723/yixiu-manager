@@ -15,7 +15,7 @@
     <div class="conbtent">
       <div class="tabel-content">
         <template>
-          <el-table :data="tableData"  style="width: 100%" :header-cell-style='headerStyle'>
+          <el-table :data="tableData"  style="width: 100%">
             <el-table-column prop="id" label="序号" width="50"></el-table-column>
             <el-table-column prop="loadPageUrl" label="落地页"></el-table-column>
             <el-table-column prop="subscriptionName" label="公众号" width="200"></el-table-column>
@@ -25,7 +25,7 @@
             <el-table-column prop="status" label="状态" width="120"></el-table-column>
             <el-table-column  label="操作" width="150">
               <template slot-scope="scope">
-                <el-button type="text" size="small">移除</el-button>               
+                <el-button type="text" size="small" @click="cancelRelation(scope.row)">移除</el-button>               
               </template>
             </el-table-column>
           </el-table>
@@ -37,18 +37,19 @@
     </div>
     <div class="connect-loadPage-diolog">
       <el-dialog title="新增公众号" :visible.sync="dialogVisible">
-        <el-form  :label-position="'top'" :inline="true" :model="adPlanForm" :rules="rules">
-          <el-form-item label="待选公众号"  prop="adPlat">
-            <el-select v-model="adPlanForm.adPlat" placeholder="请选择投放平台">
-              <el-option label="推啊" value="0"></el-option>
-              <el-option label="广点通" value="1"></el-option>
-            </el-select>
-          </el-form-item>
+        <el-form  :inline="true" :model="adSubscriptionsForm" :rules="rules">
+        <el-form-item label="待选公众号">
+          <el-select  v-model="adSubscriptionsForm.subscriptionId"  filterable remote reserve-keyword placeholder="待选公众号" :remote-method="remoteMethod" :loading="loading">
+              <el-option v-for="item in subscriptionsList" :key="item.value" :label="item.label" :value="item.value"></el-option>
+          </el-select>
+          <el-button type="text"  size="mini" icon="el-icon-search" @click="getLoadPageBySubscription()">查询</el-button>
+        </el-form-item> 
         <el-form-item label="待选落地页">
-            <el-select multiple placeholder="请选择">
-                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-            </el-select>
-        </el-form-item>   
+          <el-transfer  :titles="['待选落地页', '已选落地页']" v-model="adSubscriptionsForm.loadPageIds" :data="loadpagesList"></el-transfer>
+        </el-form-item> 
+        <div class="btn-wrap">
+          <el-button size="small" :disabled="!adSubscriptionsForm.loadPageIds.length" type="primary" @click="boundRelation">保存</el-button>
+        </div>         
         </el-form>
       </el-dialog>
     </div>
@@ -59,43 +60,31 @@
 import {rules} from '../components/deliveryValidRules'
 import { mapState } from 'vuex'
 
-console.log(rules)
 export default {
   name: 'delivery',
   data () {
     return {
-      formInline: {
-        region: '',
-        user: ''
-      },
+      themeId: null,
       dialogVisible: false,
       rules: rules,
-      adPlanForm: {
-        adPlat: '',
-        adPlan: '',
-        adress: '',
-        subject: ''
+      adSubscriptionsForm: {
+        subscriptionId: null,
+        loadPageIds: []
       },
-      data: {
-        mac: '',
-        options: [
-          {
-            value: '0',
-            label: '广告计划名称'
-          },
-          {
-            value: '1',
-            label: '广告计划ID'
-          },
-          {
-            value: '2',
-            label: '投放地址'
-          }
-        ],
-        region: {
-          value: ''
+      loading: true,
+      subscriptionsList: [
+
+      ],
+      loadpagesList: [
+        {
+          key: 1,
+          label: '备选1'
+        },
+        {
+          key: 2,
+          label: '备选2'
         }
-      },
+      ],
       tableData: [
         {
           id: '1',
@@ -104,11 +93,12 @@ export default {
           loadPageUrl: '普陀区',
           thresholdNum: 1000,
           status: 0
-        }]
+        }],
     }
   },
   created () {
-    this.getList()
+    this.getList();
+    this.themeId = this.$route.params.id
   },
   computed: mapState({
     themeName: state => state.theme
@@ -123,6 +113,69 @@ export default {
         if (res.data.sucess) {
           this.tableData = res.data.data
         }
+      })
+    },
+    getLoadPageBySubscription () {
+      if (this.adSubscriptionsForm.subscriptionId) {
+        let _params = {
+          themeId: this.themeId,
+          subscriptionId: this.adSubscriptionsForm.subscriptionId
+        }
+        this.$http.get('http://192.168.2.87:9101/subscriptionTheme/getLoadPageBySubscription', {params:_params}).then(res => {
+          if (res.data.success) {
+            let pageUrlList = res.data.data
+            pageUrlList = pageUrlList.map(item => {
+              return {
+                key: item.id,
+                label: item.loadPageUrl
+              }
+            })
+            this.loadpagesList = pageUrlList
+          }
+        })
+      }
+    },
+    remoteMethod (query) {
+      console.log(query)
+      this.$http.get('http://192.168.2.87:9101/subscriptionInfo/list', {params:{backupName:query}}).then(res => {
+        if (res.data.success) {
+          let list = res.data.data.lists
+          list = list.map(item => {
+            return {
+              label: item.backupName,
+              value: item.id
+            }
+          })
+          this.subscriptionsList = list
+          if (this.subscriptionsList) {
+            this.loading = false
+          }
+        }
+      })
+    },
+    boundRelation () {
+      if (this.adSubscriptionsForm.subscriptionId && this.adSubscriptionsForm.loadPageIds.length) {
+        let _params = Object.assign({},this.adSubscriptionsForm)
+        _params.loadPageIds = JSON.stringify(params.loadPageIds)
+        this.$http.get('http://192.168.2.87:9101/subscriptionTheme/boundRelation', {params: _params}).then(res => {
+          if (res.data.success) {
+            this.$message.success('保存成功')
+          } else {
+            this.$message.error('保存失败')
+          }
+        })
+      }
+    },
+    cancelRelation (row) {
+      let id = row.id
+      this.$http.get('http://192.168.2.87:9101/subscriptionTheme/removeBoundRelation', {params:{id}}).then(res => {
+        if (res.data.success) {
+          this.$message.success('移除成功')
+        } else {
+          this.$message.error('移除失败')
+        }
+      }, () => {
+        this.$message.error('网络错误！')
       })
     }
   }
@@ -172,9 +225,12 @@ export default {
   .conbtent{
       padding: 30px 0
   }
-.el-dialog__body{
-    height: 300px;
-}
+  .el-dialog__body{
+    overflow: hidden;
+    .btn-wrap{
+      float: right;
+    }
+  }
 }
 
 </style>

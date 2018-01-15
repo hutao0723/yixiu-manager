@@ -45,7 +45,6 @@ export const rules = {
   ]
 }
 
-
 export const loadPagerules = {
   subscriptionId: [
     { required: true, message: '请选择公众号名称', trigger: 'change' }
@@ -57,4 +56,44 @@ export const loadPagerules = {
   thresholdNum: [
     {validator: checkthresholdNum, trigger: 'blur'}
   ]
+}
+export const themeRules = {
+  newTheme: [
+    {
+      required: true,
+      message: '请输入主题名称',
+      trigger: 'blur'
+    }, {
+      min: 1,
+      max: 20,
+      message: '长度在 1 到 20 个字符',
+      trigger: 'blur'
+    }
+  ],
+  theme: [
+    {
+      required: true,
+      message: '请输入主题名称',
+      trigger: 'blur'
+    }, {
+      min: 1,
+      max: 20,
+      message: '长度在 1 到 20 个字符',
+      trigger: 'blur'
+    }
+
+  ],
+  copyTheme: [
+    {
+      required: true,
+      message: '请输入主题名称',
+      trigger: 'blur'
+    }, {
+      min: 1,
+      max: 20,
+      message: '长度在 1 到 20 个字符',
+      trigger: 'blur'
+    }
+  ]
+
 }

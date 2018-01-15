@@ -33,11 +33,11 @@
       </div>
       <div class="tabel-content">
         <template>
-          <el-table :data="tableData"  style="width: 100%" :header-cell-style='headerStyle'>
+          <el-table :data="tableData"  style="width: 100%">
             <el-table-column prop="id" label="ID" width="50"></el-table-column>
             <el-table-column prop="name" label="主题"></el-table-column>
-            <el-table-column prop="province" label="公众号数量" ></el-table-column>
-            <el-table-column prop="city" label="主题状态" ></el-table-column>
+            <el-table-column prop="subscriptionNum" label="公众号数量" ></el-table-column>
+            <el-table-column prop="status" label="主题状态" ></el-table-column>
             <el-table-column  label="操作" width="250">
               <template slot-scope="scope">
                 <el-button type="text" size="small" @click="openDialogEdit(scope.row)">编辑</el-button>
@@ -66,7 +66,6 @@
           <el-button size="small" type="primary" @click="addTheme">保存</el-button>
         </div>         
         </el-form>
-
       </el-dialog>
     </div>
     <div class="change-status-diolog">
@@ -98,7 +97,7 @@
     <div class="copy-theme-diolog">
       <el-dialog title="复制主题" :visible.sync="dialogofCpTheme">
         <el-form :model="themeForm" :rules="rules">
-          <el-form-item label="主题" :label-width="formLabelWidth" prop="theme">
+          <el-form-item label="主题" :label-width="formLabelWidth" prop="copyTheme">
             <el-input v-model="themeForm.copyTheme" auto-complete="off"></el-input>
           </el-form-item> 
         <div class="btn-wrap">
@@ -111,8 +110,8 @@
 </template>
 
 <script>
-import {rules} from '../components/deliveryValidRules'
-console.log(rules)
+import { themeRules } from '../components/deliveryValidRules'
+console.log(themeRules)
 export default {
   name: 'delivery',
   data () {
@@ -125,18 +124,17 @@ export default {
         {
           label: 'aa',
           value: ''
-        }],
+        }
+      ],
       loading: '',
-      headerStyle: {
-        backgroundColor: '#f8f8f8'
-      },
-      formLabelWidth: '50px',
+      formLabelWidth: '80px',
       dialogofTheme: false,
       dialogofStatus: false,
       dialogofEdit: false,
       dialogofCpTheme: false,
-      rules: rules,
+      rules: themeRules,
       themeForm: {
+        id: null,
         newTheme: '',
         status: '',
         theme: '',
@@ -146,11 +144,10 @@ export default {
         {
           id: '5',
           name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '未启用',
-          zip: 200333
-        }]
+          subscriptionNum: '上海',
+          status: '普陀区'
+        }
+      ]
     }
   },
 
@@ -164,12 +161,14 @@ export default {
     openDialogTheme () {
       this.dialogofTheme = true
     },
-    openDilogStatus () {
+    openDilogStatus (row) {
       this.dialogofStatus = true
+      this.themeForm.id = row.id
     },
     openDialogEdit (row) {
       this.dialogofEdit = true
       this.themeForm.theme = row.name
+      this.themeForm.id = row.id
     },
     openDilogCpTheme (row) {
       this.dialogofCpTheme = true
@@ -212,17 +211,65 @@ export default {
     remoteMethod () {
       
     },
+    getAllThemeList () {
+      this.http.get('/subscriptionTheme/list').then(res => {
+        if (res.data.success){
+          this.tableData = res.data.data.lists
+        }
+      })
+    },
     changeStatus () {
-
+      let id = this.themeForm.id
+      let status = this.themeForm.status
+      this.$http.get('/subscriptionTheme/changeStatus', {params: {id,status}}).then(res => {
+        console.log(res)
+        if (res.data.success) {
+          this.$message.success('保存成功')
+        } else {
+          this.$message.error('保存失败')
+        }
+      },() => {
+        this.$message.error('网络错误')
+      })
     },
     addTheme () {
-
+      let newTheme = this.themeForm.newTheme
+      this.$http.post('//192.168.2.87:9101/subscriptionTheme/save', {name:newTheme}).then(res => {
+        if (res.data.success) {
+          this.$message.success('保存成功')
+        } else {
+          this.$message.error('保存失败')
+        }
+      },() => {
+        this.$message.error('网络错误！')
+      })
     },
     editTheme () {
-
+      let eiittheme = this.themeForm.theme
+      let id =  this.themeForm.id
+      this.$http.post('//192.168.2.87:9101/subscriptionTheme/save', {name: eiittheme, id: id}).then(res => {
+        if (res.data.success) {
+          this.$message.success('保存成功')
+        } else {
+          this.$message.error('保存失败')
+        }
+      },() => {
+        this.$message.error('网络错误！')
+      })
     },
     copyTheme () {
-
+      let copyTheme = this.themeForm.copyTheme
+      let id = this.themeForm.id
+      this.$http.get('//192.168.2.87:9101/subscriptionTheme/copy', {params: {themeName: copyTheme, id: id}}).then(res => {
+        if (res.data.success) {
+          this.$message.success('复制成功')
+          window.location.reload()
+        } else {
+          this.$message.error('复制失败')
+        }
+      }, () => {
+        this.$message.error('网路错误！')
+      })
     }
   }
 }

@@ -53,7 +53,8 @@
         </template>
       </div>
       <div class="page-control">
-        <el-pagination background layout="prev, pager, next" :total="1000"></el-pagination>
+        <el-pagination background  :current-page.sync="pageOption.pageNum"
+ @current-change="pageChange" layout="prev, pager, next" :total="totalSize"></el-pagination>
       </div>
     </div>
     <div class="add-theme-diolog">
@@ -126,6 +127,11 @@ export default {
           value: '主题1'
         }
       ],
+      pageOption: {
+        pageNum: 1,
+        size: 20
+      },
+      totalSize: 50,
       loading: '',
       formLabelWidth: '80px',
       dialogofTheme: false,
@@ -212,7 +218,12 @@ export default {
       this.$http.get('//192.168.2.87:9101/subscriptionTheme/list').then(res => {
         if (res.data.success) {
           this.tableData = res.data.data.lists
+          this.totalSize = res.data.data.totalSize * 20
+        } else {
+          this.$message.error('获取数据失败')          
         }
+      }, () => {
+          this.$message.error('网络错误')        
       })
     },
     onSearch () {
@@ -223,8 +234,25 @@ export default {
         console.log(res)
         if (res.data.success) {
           this.tableData = res.data.data.lists
+          this.totalSize = res.data.data.totalSize * 20
+        } else {
+          this.$message.error('获取数据失败')          
         }
+      }, () => {
+          this.$message.error('网络错误')        
       })
+    },
+    pageChange () {
+      this.$http.get('//192.168.2.87:9101/subscriptionTheme/list', {params: this.pageOption}).then(res => {
+        if (rea.data.success) {
+          this.tableData = res.data.data.lists
+          
+        } else {
+          this.$message.error('获取数据失败')
+        }
+      }, () => {
+          this.$message.error('网络错误')
+      })  
     },
     changeStatus () {
       let id = this.themeForm.id

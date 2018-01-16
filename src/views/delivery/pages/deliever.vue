@@ -152,14 +152,7 @@ export default {
         planPlatform: ''
       },
       themeList: [
-        {
-          label: '福利汇',
-          value: '01'
-        },
-        {
-          label: '福利汇1',
-          value: '02'
-        }
+
       ],
       formLabelWidth: '100px'
     }

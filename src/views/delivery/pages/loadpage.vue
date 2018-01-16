@@ -41,7 +41,7 @@
       </div>
       <div class="tabel-content">
         <template>
-          <el-table :data="tableData"  style="width: 100%" :header-cell-style='headerStyle'>
+          <el-table :data="tableData"  style="width: 100%">
             <el-table-column prop="id" label="ID" width="50"></el-table-column>
             <el-table-column prop="loadPageUrl" label="落地页"></el-table-column>
             <el-table-column prop="subscriptionName" label="公众号" width="200"></el-table-column>
@@ -60,12 +60,13 @@
         </template>
       </div>
       <div class="page-control">
-        <el-pagination background layout="prev, pager, next" :total="1000"></el-pagination>
+        <el-pagination background  :current-page.sync="pageOption.pageNum"
+ @current-change="pageChange" layout="prev, pager, next" :total="totalSize"></el-pagination>
       </div>
     </div>
     <div class="ad-loadPage-diolog">
       <el-dialog title="添加落地页" :visible.sync="dialogLoadPageVisible">
-        <el-form :model="addLoadPage" :rules="rules">
+        <el-form :model="addLoadPage" ref="addLoadPage" :rules="rules">
           <el-form-item label="公众号名称" :label-width="formLabelWidth" prop="subscriptionId">
             <el-select v-model="addLoadPage.subscriptionId" placeholder="请选择公众号名称">
                 <el-option
@@ -141,9 +142,7 @@ export default {
           }
         ]
       },
-      headerStyle: {
-        backgroundColor: '#f8f8f8'
-      },
+      totalSize: 50,
       formLabelWidth: '100px',
       dialogLoadPageVisible: false,
       dialogStatusVisible: false,
@@ -173,19 +172,25 @@ export default {
           id: 3
         }
       ],
+      pageOption: {
+        pageNum: 1,
+        size: 20
+      },
       tableData: [
         {
           id: '1',
           subscriptionName: '2',
           loadPageUrl: '上海',
           subscriptionbackUpName: '普陀区',
-          status: '未启用',
+          status: 0,
           zip: 200333,
           thresholdNum: 123
         }]
     }
   },
-
+  created() {
+    this.getAllList()
+  },
   methods: {
     // 搜索
     onSearch () {
@@ -198,25 +203,53 @@ export default {
       }
       params.status = searchForm.status
       this.$http.get('//192.168.2.87:9101/loadpage/list', {params}).then(res => {
-        let data = res.data
-        console.log(data)
-      })
-    },
-    // 新增落地页
-    addPage () {
-      let params = Object.assign(this.addLoadPage)
-      console.log(params)
-      this.$http.post('//192.168.2.87:9101/loadpage/save', params).then(res => {
-        console.log(res)
-        if (res.data.success) {
-          this.$message.success('创建成功')
+        if (rea.data.success) {
+          this.totalSize = res.data.data.totalSize * 20
+          this.tableData = res.data.data.lists
         } else {
-          this.$message.error(`${res.data.desc || 'erroe'}`)
+          this.$message.error('获取数据失败')
         }
       }, () => {
         this.$message.error('网络错误')
       })
     },
+    getAllList () {
+      this.$http.get('//192.168.2.87:9101/loadpage/list').then(res => {
+        if (res.data.success) {
+          this.totalSize = res.data.data.totalSize * 20
+          this.tableData = res.data.data.lists
+        } else {
+          this.$message.error('获取数据失败')
+        }
+      }, () => {
+        this.$message.error('网络错误')
+      })
+    },
+    // 新增落地页
+    addPage() {
+      this.$refs['addLoadPage'].validate((valid) => {
+        if (valid) {
+          let params = Object.assign(this.addLoadPage)
+          console.log(params)
+          this.$http.post('//192.168.2.87:9101/loadpage/save', params).then(res => {
+            console.log(res)
+            if (res.data.success) {
+              this.$message.success('创建成功')
+              this.dialogLoadPageVisible = false
+              window.location.reload()
+            } else {
+              this.$message.error(`${res.data.desc || 'erroe'}`)
+            }
+          }, () => {
+            this.$message.error('网络错误')
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+
     // 状态
     changeStatus () {
       let status = this.changeForm.status
@@ -247,7 +280,15 @@ export default {
     },
     // pageChange()
     pageChange () {
-      // TODO
+      this.$http.get('//192.168.2.87:9101/loadpage/list', {params: this.pageOption}).then(res => {
+        if (rea.data.success) {
+          this.tableData = res.data.data.lists
+        } else {
+          this.$message.error('获取数据失败')
+        }
+      }, () => {
+          this.$message.error('网络错误')
+      })      
     },
     // 删除
     deletePageModel (row) {
@@ -279,22 +320,18 @@ export default {
         })
       })
     },
-    // deletePage (id) {
-    //   this.$http.get('//192.168.2.87:9101/loadpage/delete', {params: {id}}).then(res => {
-    //     let msg = res.data.success
-    //     return msg
-    //   })
-    // },
     openDialogAd () {
       this.dialogLoadPageVisible = true
     },
     openStatusDilog (row) {
       this.dialogStatusVisible = true
       this.changeForm.id = row.id
+      this.changeForm.status = row.status
     },
     openThresholdDilog (row) {
       this.changeForm.id = row.id
-      this.dialogThresholdVisible = true
+      this.dialogThresholdVisible = true,
+      this.changeForm.thresholdNum = row.thresholdNum
     }
   }
 }

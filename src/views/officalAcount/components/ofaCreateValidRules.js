@@ -1,3 +1,22 @@
+const checkWechatID = (rule, value, callback) => {
+  if (!value) {
+    return callback(new Error('微信号不能为空'))
+  }
+  setTimeout(() => {
+    console.log(value)
+    var reg = /^\w+|_$/
+    if (!reg.test(value)) {
+      callback(new Error('请输入正确的字符'))
+    } else {
+      if (value.length > 20) {
+        callback(new Error('确保长度小于20'))
+      } else {
+        callback()
+      }
+    }
+  }, 1000)
+}
+
 const ofarules = {
   name: [
     { required: true, message: '请输入公众号', trigger: 'blur' },
@@ -10,8 +29,10 @@ const ofarules = {
 
   ],
   wechatId: [
-    { required: true, message: '请输入微信号', trigger: 'blur' },
-    { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
+    {
+      validator: checkWechatID,
+      trigger: 'blur'
+    }
   ],
   originId: [
     { required: true, message: '请输入原始ID', trigger: 'blur' }

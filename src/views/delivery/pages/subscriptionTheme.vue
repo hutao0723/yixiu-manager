@@ -14,12 +14,12 @@
         <template>
           <el-form :inline="true" :model="searchForm" class="form" size="mini">
             <el-form-item>
-                <el-select v-model="searchForm.theme" multiple filterable remote reserve-keyword placeholder="请输入关键词" :remote-method="remoteMethod" :loading="loading">
+                <el-select v-model="searchForm.theme"  filterable remote reserve-keyword placeholder="请输入关键词" :remote-method="remoteMethod">
                     <el-option v-for="item in themeList" :key="item.value" :label="item.label" :value="item.value"></el-option>
                 </el-select>
             </el-form-item>           
             <el-form-item>
-              <el-select v-model.number="searchForm.status" placeholder="主题状态">
+              <el-select v-model="searchForm.status" placeholder="主题状态">
                 <el-option label="启用" value="0"></el-option>
                 <el-option label="停用" value="1"></el-option>
                 <el-option label="系统停用" value="2"></el-option>
@@ -123,7 +123,7 @@ export default {
       themeList: [
         {
           label: 'aa',
-          value: ''
+          value: '主题1'
         }
       ],
       loading: '',
@@ -150,14 +150,11 @@ export default {
       ]
     }
   },
-
+  created () {
+    this.getAllThemeList()
+  },
   methods: {
-    onSearch () {
-      this.$http.get('http://localhost:3000/weChatlist').then(res => {
-        let data = res.data
-        console.log(data)
-      })
-    },
+
     openDialogTheme () {
       this.dialogofTheme = true
     },
@@ -212,8 +209,18 @@ export default {
       
     },
     getAllThemeList () {
-      this.http.get('/subscriptionTheme/list').then(res => {
-        if (res.data.success){
+      this.$http.get('//192.168.2.87:9101/subscriptionTheme/list').then(res => {
+        if (res.data.success) {
+          this.tableData = res.data.data.lists
+        }
+      })
+    },
+    onSearch () {
+      let theme = this.searchForm.theme
+      let status = this.searchForm.status
+      this.$http.get('//192.168.2.87:9101/subscriptionTheme/list', {params: {theme, status}}).then(res => {
+        console.log(res)
+        if (res.data.success) {
           this.tableData = res.data.data.lists
         }
       })

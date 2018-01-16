@@ -5,7 +5,6 @@
         <el-breadcrumb-item :to="{ path: '/manager/dlv/theme' }">公众号主题</el-breadcrumb-item>
         <el-breadcrumb-item :to="{ path: '/manager/dlv/theme' }">公众号</el-breadcrumb-item>
         <el-breadcrumb-item :to="{ path: '/manager/dlv/link' }">{{themeName}}</el-breadcrumb-item>
-
       </el-breadcrumb>
       <span class="link-theme">
         <i class="iconfont icon-jia"></i>
@@ -93,11 +92,11 @@ export default {
           loadPageUrl: '普陀区',
           thresholdNum: 1000,
           status: 0
-        }],
+        }]
     }
   },
   created () {
-    this.getList();
+    this.getList()
     this.themeId = this.$route.params.id
   },
   computed: mapState({
@@ -109,7 +108,7 @@ export default {
     },
     getList () {
       let id = this.$route.params.id
-      this.$http.get('/subscriptionTheme/getLoadPage', {params: {id}}).then(res => {
+      this.$http.get('http://192.168.2.87:9101/subscriptionTheme/getLoadPage', {params: {id}}).then(res => {
         if (res.data.sucess) {
           this.tableData = res.data.data
         }
@@ -155,8 +154,8 @@ export default {
     },
     boundRelation () {
       if (this.adSubscriptionsForm.subscriptionId && this.adSubscriptionsForm.loadPageIds.length) {
-        let _params = Object.assign({},this.adSubscriptionsForm)
-        _params.loadPageIds = JSON.stringify(params.loadPageIds)
+        let _params = Object.assign({}, this.adSubscriptionsForm)
+        _params.loadPageIds = JSON.stringify(_params.loadPageIds)
         this.$http.get('http://192.168.2.87:9101/subscriptionTheme/boundRelation', {params: _params}).then(res => {
           if (res.data.success) {
             this.$message.success('保存成功')

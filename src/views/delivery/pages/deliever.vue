@@ -12,11 +12,11 @@
     <div class="conbtent">
       <div class="search-bar">
         <template>
-          <el-form :inline="true" :model="formInline" class="demo-form-inline" size="mini">
+          <el-form :inline="true" :model="searchForm" class="demo-form-inline" size="mini">
             <el-form-item>
-              <el-select v-model="formInline.region" placeholder="广告计划名称">
+              <el-select v-model="searchForm.name" placeholder="广告计划名称">
                 <el-option
-                  v-for="item in data.options"
+                  v-for="item in selectOptions"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -24,12 +24,13 @@
               </el-select>
             </el-form-item>
             <el-form-item >
-              <el-input v-model="formInline.user" placeholder="名称/ID/地址"></el-input>
+              <el-input v-model="searchForm.value" placeholder="名称/ID/地址"></el-input>
             </el-form-item> 
             <el-form-item>
-              <el-select v-model="data.region" placeholder="请选择状态">
-                <el-option label="已使用" value="shanghai"></el-option>
-                <el-option label="待使用" value="beijing"></el-option>
+              <el-select v-model="searchForm.status" placeholder="请选择状态">
+                <el-option label="启用" value="0"></el-option>
+                <el-option label="系统停用" value="1"></el-option>
+                <el-option label="停用" value="2"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item>
@@ -40,16 +41,16 @@
       </div>
       <div class="tabel-content">
         <template>
-          <el-table :data="tableData"  style="width: 100%" :header-cell-style='headerStyle'>
-            <el-table-column prop="date" label="ID" width="50"></el-table-column>
-            <el-table-column prop="name" label="投放地址"></el-table-column>
-            <el-table-column prop="province" label="广告计划名称（ID）" width="200"></el-table-column>
-            <el-table-column prop="city" label="公众号名称（ID）" width="200"></el-table-column>
-            <el-table-column prop="address" label="主题状态" width="100"></el-table-column>
-            <el-table-column prop="zip" label="广告平台" width="120"></el-table-column>
+          <el-table :data="tableData"  style="width: 100%">
+            <el-table-column prop="id" label="ID" width="50"></el-table-column>
+            <el-table-column prop="pushUrl" label="投放地址"></el-table-column>
+            <el-table-column prop="planName" label="广告计划名称（ID）" width="200"></el-table-column>
+            <el-table-column prop="themeInfo" label="公众号主题（ID）" width="200"></el-table-column>
+            <el-table-column prop="themeStatus" label="主题状态" width="100"></el-table-column>
+            <el-table-column prop="planPlatform" label="广告平台" width="120"></el-table-column>
             <el-table-column  label="操作" width="150">
               <template slot-scope="scope">
-                <el-button type="text" size="small">取关</el-button>               
+                <el-button type="text" size="small" @click="delPlan(scope.row)">取关</el-button>               
               </template>
             </el-table-column>
           </el-table>
@@ -61,23 +62,42 @@
     </div>
     <div class="creat-ad-connect-diolog">
       <el-dialog title="关联广告计划" :visible.sync="dialogAdVisible">
-        <el-form :model="adPlanForm" :rules="rules">
+        <el-form :model="adPlanForm" ref="adPlanForm" :rules="rules">
           <el-form-item label="广告平台" :label-width="formLabelWidth" prop="adPlat">
-            <el-select v-model="adPlanForm.adPlat" placeholder="请选择投放平台">
+            <el-select v-model="adPlanForm.planPlatform" placeholder="请选择投放平台">
               <el-option label="推啊" value="0"></el-option>
               <el-option label="广点通" value="1"></el-option>
             </el-select>
           </el-form-item>
+          
+          <template v-if="adPlanForm.planPlatform == 0">
+            <el-form-item label="广告计划" :label-width="formLabelWidth"  prop="planName">
+              <el-input v-model="adPlanForm.planName" auto-complete="off"></el-input>
+            </el-form-item>              
+          </template>
 
-          <el-form-item label="广告计划" :label-width="formLabelWidth"  prop="adPlan">
-            <el-input v-model="adPlanForm.adPlan" auto-complete="off"></el-input>
+          <template v-else-if="adPlanForm.planPlatform == 1">
+            <el-form-item label="广告计划" :label-width="formLabelWidth"  prop="planName">
+              <el-input v-model="adPlanForm.planName" auto-complete="off" placeholder="广告计划名称"></el-input>
+            </el-form-item> 
+            <div class="w200">
+              <el-form-item label="广告计划" :label-width="formLabelWidth"  prop="planId">
+                <el-input v-model="adPlanForm.planId" auto-complete="off" placeholder="广告计划ID"></el-input>
+              </el-form-item>              
+            </div>            
+          </template>
+
+          <el-form-item label="投放地址" :label-width="formLabelWidth"  prop="pushUrl">
+            <el-input v-model="adPlanForm.pushUrl" auto-complete="off" placeholder="https://"></el-input>
           </el-form-item>
-          <el-form-item label="投放地址" :label-width="formLabelWidth"  prop="adress">
-            <el-input v-model="adPlanForm.adress" auto-complete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="公众号主题" :label-width="formLabelWidth" prop="subject">
-            <el-input v-model="adPlanForm.subject" auto-complete="off"></el-input>
-          </el-form-item>             
+          <el-form-item label="公众号主题" :label-width="formLabelWidth" prop="themeId">
+            <el-select  v-model="adPlanForm.themeId"  filterable remote reserve-keyword placeholder="请选择" :remote-method="remoteMethod">
+                <el-option v-for="item in themeList" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            </el-select>            
+          </el-form-item> 
+          <div class="btn-wrap">
+            <el-button size="small" type="primary" @click="savePlan">保存</el-button>
+          </div>            
         </el-form>
       </el-dialog>
     </div>
@@ -86,97 +106,180 @@
 
 <script>
 import {rules} from '../components/deliveryValidRules'
-console.log(rules)
+
 export default {
   name: 'delivery',
   data () {
     return {
-      formInline: {
-        region: '',
-        user: ''
+      searchForm: {
+        name: '',
+        value: '',
+        status: ''
       },
-      headerStyle: {
-        backgroundColor: '#f8f8f8'
-      },
-      formLabelWidth: '100px',
-      dialogAdVisible: false,
-      rules: rules,
-      adPlanForm: {
-        adPlat: '',
-        adPlan: '',
-        adress: '',
-        subject: ''
-      },
-      data: {
-        mac: '',
-        options: [
-          {
-            value: '0',
-            label: '广告计划名称'
-          },
-          {
-            value: '1',
-            label: '广告计划ID'
-          },
-          {
-            value: '2',
-            label: '投放地址'
-          }
-        ],
-        region: {
-          value: ''
+      selectOptions: [
+        {
+         value: 'planName',
+         label: '广告计划名称' 
+        },
+        {
+         value: 'planId',
+         label: '广告计划id' 
+        },
+        {
+         value: 'pushUrl',
+         label: '投放地址' 
         }
-      },
+
+      ],
+      dialogAdVisible: false,
       tableData: [
         {
-          date: '1',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '未启用',
-          zip: 200333
-        }, {
-          date: '2',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '未启用',
-          zip: 200333
-        }, {
-          date: '3',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '未启用',
-          zip: 200333
-        }, {
-          date: '4',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '未启用',
-          zip: 200333
-        }, {
-          date: '5',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '未启用',
-          zip: 200333
-        }]
+          id: 3,
+          pushUrl: "www.tmall.com",
+          planName: "lala",
+          planId: 2,
+          planPlatform: "2",
+          themeInfo: "主题1(4)",
+          themeStatus: 1
+        }
+      ],
+      rules: rules,
+      adPlanForm: {
+        pushUrl: '',
+        planName: '',
+        planId: null,
+        themeId: '',
+        planPlatform: ''
+      },
+      themeList: [
+        {
+          label: '福利汇',
+          value: '01'
+        },
+        {
+          label: '福利汇1',
+          value: '02'
+        }
+      ],
+      formLabelWidth: '100px'
     }
   },
-
+  created () {
+    this.getAllPlanList()
+  },
   methods: {
-    onSearch () {
-      this.$http.get('http://localhost:3000/weChatlist').then(res => {
+    onSearch() {
+      let valueArr = Object.values(this.searchForm)
+      let params = {
+        [valueArr[0]]: valueArr[1],
+        status: valueArr[2],
+        pageNum: 999
+      }
+      this.$http.get('//192.168.2.87:9101/advplan/list', {
+        params
+      }).then(res => {
         let data = res.data
-        console.log(data)
+        if (res.data.success) {
+          this.tableData = res.data.lists
+        } else {
+          let msg = res.data.desc
+          this.$message.error(msg || '获取失败')
+        }
+      }, () => {
+        this.$message.error('网络错误！')
+      })
+    },
+    getAllPlanList () {
+      this.$http.get('//192.168.2.87:9101/advplan/list').then(res => {
+        let data = res.data
+        if (res.data.success) {
+          this.tableData = res.data.lists
+        } else {
+          let msg = res.data.desc
+          this.$message.error(msg || '获取失败')
+        }
+      }, () => {
+        this.$message.error('网络错误！')
+      })
+    },
+    savePlan() {
+      this.$refs['adPlanForm'].validate((valid) => {
+        if (valid) {
+          let _params = Object.assign(this.adPlanForm)
+          this.$http.post('//192.168.2.87:9101/advplan/save', _params).then(res => {
+            if (res.data.success) {
+              this.$message.success('添加成功')
+              this.dialogAdVisible = false
+              window.location.reload()
+            } else {
+              this.$message.error('添加失败')
+            }
+          }, () => {
+            this.$message.error('网络错误')
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      });
+    },
+    delPlan (row) {
+      let id = row.id
+      this.$confirm('确定删除主题吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$http.get('//192.168.2.87:9101/advplan/delete', {params: {id}}).then(res => {
+          let msg = res.data.success
+          if (msg) {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+            window.location.reload()
+          } else {
+            this.$message({
+              type: 'error',
+              message: '删除失败!'
+            })
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
       })
     },
     openDialogAd () {
       this.dialogAdVisible = true
+    },
+    // 模糊查询 主题
+    remoteMethod(query) {
+      this.$http.get('//192.168.2.87:9101/subscriptionTheme/list', {
+        params: {
+          theme: query,
+          pageNum: 999
+        }
+      }).then(res => {
+        if (res.data.success) {
+          let data = res.data.data.lists
+          data = data.map(item => {
+            return {
+              label: item.name,
+              value: item.id
+            }
+          })
+          this.themeList = data
+        } else {
+          this.$message.success('获取失败')
+        }
+      }, () => {
+        this.$message.error('网络错误！')
+      })
     }
+
   }
 }
 </script>
@@ -221,6 +324,15 @@ export default {
       clear: both;
     }
   }
+  .w200{
+    width: 200px;
+    margin-top: 20px
+  }
 }
-
+.el-dialog__body{
+  overflow: hidden;
+  .btn-wrap{
+    float: right;
+  }
+}
 </style>

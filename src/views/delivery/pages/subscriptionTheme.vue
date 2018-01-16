@@ -218,7 +218,8 @@ export default {
     onSearch () {
       let theme = this.searchForm.theme
       let status = this.searchForm.status
-      this.$http.get('//192.168.2.87:9101/subscriptionTheme/list', {params: {theme, status}}).then(res => {
+      let pageNum = 999
+      this.$http.get('//192.168.2.87:9101/subscriptionTheme/list', {params: {theme, status,pageNum}}).then(res => {
         console.log(res)
         if (res.data.success) {
           this.tableData = res.data.data.lists
@@ -322,12 +323,7 @@ export default {
       clear: both;
     }
   }
-  .el-dialog__body{
-    overflow: hidden;
-  .btn-wrap{
-    float: right;
-  }
-  }
+
 }
 
 </style>

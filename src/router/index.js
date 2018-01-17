@@ -13,9 +13,10 @@ import subLinkPage from '../views/delivery/pages/subLinkPage'
 Vue.use(Router)
 
 export const constantRouterMap = [
-  // {   // 登录
-  //     //TODO
-  // },
+  {
+    path: '/',
+    redirect: '/manager/dlv'
+  },
   {
     path: '/manager',
     component: home,

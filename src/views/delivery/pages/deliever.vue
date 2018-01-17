@@ -57,7 +57,8 @@
         </template>
       </div>
       <div class="page-control">
-        <el-pagination background layout="prev, pager, next" :total="1000"></el-pagination>
+        <el-pagination background  :current-page.sync="pageOption.pageNum"
+ @current-change="pageChange" layout="prev, pager, next" :total="totalSize"></el-pagination>
       </div>
     </div>
     <div class="creat-ad-connect-diolog">
@@ -143,6 +144,11 @@ export default {
           themeStatus: 1
         }
       ],
+      pageOption: {
+        pageNum: 1,
+        size: 20
+      },
+      totalSize: 50,      
       rules: rules,
       adPlanForm: {
         pushUrl: '',
@@ -168,12 +174,12 @@ export default {
         status: valueArr[2],
         pageNum: 999
       }
-      this.$http.get('//192.168.2.87:9101/advplan/list', {
+      this.$http.get('/advplan/list', {
         params
       }).then(res => {
-        let data = res.data
         if (res.data.success) {
-          this.tableData = res.data.lists
+          this.tableData = res.data.data.lists
+          this.totalSize = res.data.data.totalSize
         } else {
           let msg = res.data.desc
           this.$message.error(msg || '获取失败')
@@ -183,10 +189,10 @@ export default {
       })
     },
     getAllPlanList () {
-      this.$http.get('//192.168.2.87:9101/advplan/list').then(res => {
-        let data = res.data
+      this.$http.get('/advplan/list').then(res => {
         if (res.data.success) {
-          this.tableData = res.data.lists
+          this.tableData = res.data.data.lists
+          this.totalSize = res.data.data.totalSize
         } else {
           let msg = res.data.desc
           this.$message.error(msg || '获取失败')
@@ -195,11 +201,29 @@ export default {
         this.$message.error('网络错误！')
       })
     },
+    pageChange () {
+      let valueArr = Object.values(this.searchForm)
+      let params = {
+        [valueArr[0]]: valueArr[1],
+        status: valueArr[2],
+        pageNum: this.pageOption.pageNum
+      }      
+      this.$http.get('/advplan/list', {params}).then(res => {
+        if (rea.data.success) {
+          this.tableData = res.data.data.lists
+          
+        } else {
+          this.$message.error('获取数据失败')
+        }
+      }, () => {
+          this.$message.error('网络错误')
+      })  
+    },
     savePlan() {
       this.$refs['adPlanForm'].validate((valid) => {
         if (valid) {
           let _params = Object.assign(this.adPlanForm)
-          this.$http.post('//192.168.2.87:9101/advplan/save', _params).then(res => {
+          this.$http.post('/advplan/save', _params).then(res => {
             if (res.data.success) {
               this.$message.success('添加成功')
               this.dialogAdVisible = false
@@ -223,7 +247,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$http.get('//192.168.2.87:9101/advplan/delete', {params: {id}}).then(res => {
+        this.$http.get('/advplan/delete', {params: {id}}).then(res => {
           let msg = res.data.success
           if (msg) {
             this.$message({
@@ -250,7 +274,7 @@ export default {
     },
     // 模糊查询 主题
     remoteMethod(query) {
-      this.$http.get('//192.168.2.87:9101/subscriptionTheme/list', {
+      this.$http.get('/subscriptionTheme/list', {
         params: {
           theme: query,
           pageNum: 999

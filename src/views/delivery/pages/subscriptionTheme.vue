@@ -160,13 +160,13 @@ export default {
     this.getAllThemeList()
   },
   methods: {
-
     openDialogTheme () {
       this.dialogofTheme = true
     },
     openDilogStatus (row) {
       this.dialogofStatus = true
       this.themeForm.id = row.id
+      this.themeForm.status = row.status
     },
     openDialogEdit (row) {
       this.dialogofEdit = true
@@ -176,6 +176,8 @@ export default {
     openDilogCpTheme (row) {
       this.dialogofCpTheme = true
       this.themeForm.copyTheme = row.name + '[复制]'
+      this.themeForm.id = row.id
+
     },
     redirectLinkPage (row) {
       let theme = row.name
@@ -190,9 +192,9 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$http.get('//192.168.2.87:9101/subscriptionTheme/delete', {params: {id}}).then(res => {
+        this.$http.get('/subscriptionTheme/delete', {params: {id}}).then(res => {
           let msg = res.data.success
-          if (!msg) {
+          if (msg) {
             this.$message({
               type: 'success',
               message: '删除成功!'
@@ -215,7 +217,7 @@ export default {
       
     },
     getAllThemeList () {
-      this.$http.get('//192.168.2.87:9101/subscriptionTheme/list').then(res => {
+      this.$http.get('/subscriptionTheme/list').then(res => {
         if (res.data.success) {
           this.tableData = res.data.data.lists
           this.totalSize = res.data.data.totalSize * 20
@@ -230,7 +232,7 @@ export default {
       let theme = this.searchForm.theme
       let status = this.searchForm.status
       let pageNum = 999
-      this.$http.get('//192.168.2.87:9101/subscriptionTheme/list', {params: {theme, status,pageNum}}).then(res => {
+      this.$http.get('/subscriptionTheme/list', {params: {theme, status,pageNum}}).then(res => {
         console.log(res)
         if (res.data.success) {
           this.tableData = res.data.data.lists
@@ -243,7 +245,7 @@ export default {
       })
     },
     pageChange () {
-      this.$http.get('//192.168.2.87:9101/subscriptionTheme/list', {params: this.pageOption}).then(res => {
+      this.$http.get('/subscriptionTheme/list', {params: this.pageOption}).then(res => {
         if (rea.data.success) {
           this.tableData = res.data.data.lists
           
@@ -260,7 +262,8 @@ export default {
       this.$http.get('/subscriptionTheme/changeStatus', {params: {id,status}}).then(res => {
         console.log(res)
         if (res.data.success) {
-          this.$message.success('保存成功')
+          this.$message.success('切换成功')
+          this.dialogofStatus = false
         } else {
           this.$message.error('保存失败')
         }
@@ -270,7 +273,7 @@ export default {
     },
     addTheme () {
       let newTheme = this.themeForm.newTheme
-      this.$http.post('//192.168.2.87:9101/subscriptionTheme/save', {name:newTheme}).then(res => {
+      this.$http.post('/subscriptionTheme/save', {name:newTheme}).then(res => {
         if (res.data.success) {
           this.$message.success('保存成功')
         } else {
@@ -283,7 +286,7 @@ export default {
     editTheme () {
       let eiittheme = this.themeForm.theme
       let id =  this.themeForm.id
-      this.$http.post('//192.168.2.87:9101/subscriptionTheme/save', {name: eiittheme, id: id}).then(res => {
+      this.$http.post('/subscriptionTheme/save', {name: eiittheme, id: id}).then(res => {
         if (res.data.success) {
           this.$message.success('保存成功')
         } else {
@@ -296,7 +299,8 @@ export default {
     copyTheme () {
       let copyTheme = this.themeForm.copyTheme
       let id = this.themeForm.id
-      this.$http.get('//192.168.2.87:9101/subscriptionTheme/copy', {params: {themeName: copyTheme, id: id}}).then(res => {
+      console.log(id)
+      this.$http.get('/subscriptionTheme/copy', {params: {themeName: copyTheme, id: id}}).then(res => {
         if (res.data.success) {
           this.$message.success('复制成功')
           window.location.reload()
@@ -353,5 +357,10 @@ export default {
   }
 
 }
-
+.el-dialog__body{
+  overflow: hidden;
+  .btn-wrap{
+    float: right;
+  }
+}
 </style>

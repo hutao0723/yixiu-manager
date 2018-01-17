@@ -47,7 +47,7 @@
             <el-table-column prop="subscriptionName" label="公众号" width="200"></el-table-column>
             <el-table-column prop="subscriptionbackUpName" label="公众号名称" width="200"></el-table-column>
             <el-table-column prop="thresholdNum" label="当日阈值" width="100"></el-table-column>
-            <el-table-column prop="zip" label="当日新增关注" width="120"></el-table-column>
+            <el-table-column prop="todayNewFollow" label="当日新增关注" width="120"></el-table-column>
             <el-table-column prop="status" label="状态" width="120"></el-table-column>           
             <el-table-column  label="操作" width="150">
               <template slot-scope="scope">
@@ -183,7 +183,7 @@ export default {
           loadPageUrl: '上海',
           subscriptionbackUpName: '普陀区',
           status: 0,
-          zip: 200333,
+          todayNewFollow: 200333,
           thresholdNum: 123
         }]
     }
@@ -202,7 +202,7 @@ export default {
         params.name = searchForm.value
       }
       params.status = searchForm.status
-      this.$http.get('//192.168.2.87:9101/loadpage/list', {params}).then(res => {
+      this.$http.get('/loadpage/list', {params}).then(res => {
         if (rea.data.success) {
           this.totalSize = res.data.data.totalSize * 20
           this.tableData = res.data.data.lists
@@ -214,7 +214,7 @@ export default {
       })
     },
     getAllList () {
-      this.$http.get('//192.168.2.87:9101/loadpage/list').then(res => {
+      this.$http.get('/loadpage/list').then(res => {
         if (res.data.success) {
           this.totalSize = res.data.data.totalSize * 20
           this.tableData = res.data.data.lists
@@ -231,7 +231,7 @@ export default {
         if (valid) {
           let params = Object.assign(this.addLoadPage)
           console.log(params)
-          this.$http.post('//192.168.2.87:9101/loadpage/save', params).then(res => {
+          this.$http.post('/loadpage/save', params).then(res => {
             console.log(res)
             if (res.data.success) {
               this.$message.success('创建成功')
@@ -255,7 +255,7 @@ export default {
       let status = this.changeForm.status
       let id = this.changeForm.id
       console.log(id)
-      this.$http.get('//192.168.2.87:9101/loadpage/changestatus', {params: {
+      this.$http.get('/loadpage/changestatus', {params: {
         status, id
       }}).then(res => {
         if (res.data.success) {
@@ -269,7 +269,7 @@ export default {
       let thresholdNum = this.changeForm.thresholdNum
       let id = this.changeForm.id
       console.log(id)
-      this.$http.get('//192.168.2.87:9101/loadpage/changethresholdNum', {params: {
+      this.$http.get('/loadpage/changethresholdNum', {params: {
         thresholdNum, id
       }}).then(res => {
         if (res.data.success) {
@@ -280,7 +280,7 @@ export default {
     },
     // pageChange()
     pageChange () {
-      this.$http.get('//192.168.2.87:9101/loadpage/list', {params: this.pageOption}).then(res => {
+      this.$http.get('/loadpage/list', {params: this.pageOption}).then(res => {
         if (rea.data.success) {
           this.tableData = res.data.data.lists
         } else {
@@ -299,7 +299,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$http.get('//192.168.2.87:9101/loadpage/delete', {params: {id}}).then(res => {
+        this.$http.get('/loadpage/delete', {params: {id}}).then(res => {
           let msg = res.data.success
           if (!msg) {
             this.$message({

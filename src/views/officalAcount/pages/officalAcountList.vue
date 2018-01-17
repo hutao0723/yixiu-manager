@@ -88,8 +88,8 @@ export default {
           id: "1",
           name: "今日财经",
           backupName: "今日财经0.1",
-          todayNewFollow: "100",
-          todayNewUnFollow: "200"
+          todayNewFollow: 10,
+          todayNewUnFollow: 200
         }
       ]
     }

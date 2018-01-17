@@ -188,7 +188,7 @@ export default {
         }]
     }
   },
-  created() {
+  created () {
     this.getAllList()
   },
   methods: {
@@ -203,7 +203,7 @@ export default {
       }
       params.status = searchForm.status
       this.$http.get('/loadpage/list', {params}).then(res => {
-        if (rea.data.success) {
+        if (res.data.success) {
           this.totalSize = res.data.data.totalSize * 20
           this.tableData = res.data.data.lists
         } else {
@@ -226,7 +226,7 @@ export default {
       })
     },
     // 新增落地页
-    addPage() {
+    addPage () {
       this.$refs['addLoadPage'].validate((valid) => {
         if (valid) {
           let params = Object.assign(this.addLoadPage)
@@ -281,14 +281,14 @@ export default {
     // pageChange()
     pageChange () {
       this.$http.get('/loadpage/list', {params: this.pageOption}).then(res => {
-        if (rea.data.success) {
+        if (res.data.success) {
           this.tableData = res.data.data.lists
         } else {
           this.$message.error('获取数据失败')
         }
       }, () => {
-          this.$message.error('网络错误')
-      })      
+        this.$message.error('网络错误')
+      })
     },
     // 删除
     deletePageModel (row) {
@@ -330,7 +330,7 @@ export default {
     },
     openThresholdDilog (row) {
       this.changeForm.id = row.id
-      this.dialogThresholdVisible = true,
+      this.dialogThresholdVisible = true
       this.changeForm.thresholdNum = row.thresholdNum
     }
   }

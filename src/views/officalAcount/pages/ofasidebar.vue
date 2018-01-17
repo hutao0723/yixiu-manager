@@ -36,13 +36,13 @@ export default {
   },
   data () {
     return {
-      isCollapse:false,
+      isCollapse: false,
       hiddenWith: '180px',
-      isShow: true,
+      isShow: true
     }
   },
-  methods:{
-    openCollapse(){
+  methods: {
+    openCollapse () {
       console.log(1)
       if (this.isShow) {
         console.log(2)

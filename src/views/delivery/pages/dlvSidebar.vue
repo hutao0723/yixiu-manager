@@ -55,7 +55,7 @@ export default {
     }
   },
   methods: {
-    openCollapse(){
+    openCollapse () {
       console.log(1)
       if (this.isShow) {
         console.log(2)

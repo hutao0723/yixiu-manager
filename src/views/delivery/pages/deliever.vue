@@ -119,16 +119,16 @@ export default {
       },
       selectOptions: [
         {
-         value: 'planName',
-         label: '广告计划名称' 
+          value: 'planName',
+          label: '广告计划名称'
         },
         {
-         value: 'planId',
-         label: '广告计划id' 
+          value: 'planId',
+          label: '广告计划id'
         },
         {
-         value: 'pushUrl',
-         label: '投放地址' 
+          value: 'pushUrl',
+          label: '投放地址'
         }
 
       ],
@@ -136,11 +136,11 @@ export default {
       tableData: [
         {
           id: 3,
-          pushUrl: "www.tmall.com",
-          planName: "lala",
+          pushUrl: 'www.tmall.com',
+          planName: '',
           planId: 2,
-          planPlatform: "2",
-          themeInfo: "主题1(4)",
+          planPlatform: '',
+          themeInfo: '',
           themeStatus: 1
         }
       ],
@@ -148,7 +148,7 @@ export default {
         pageNum: 1,
         size: 20
       },
-      totalSize: 50,      
+      totalSize: 50,
       rules: rules,
       adPlanForm: {
         pushUrl: '',
@@ -167,7 +167,7 @@ export default {
     this.getAllPlanList()
   },
   methods: {
-    onSearch() {
+    onSearch () {
       let valueArr = Object.values(this.searchForm)
       let params = {
         [valueArr[0]]: valueArr[1],
@@ -207,19 +207,18 @@ export default {
         [valueArr[0]]: valueArr[1],
         status: valueArr[2],
         pageNum: this.pageOption.pageNum
-      }      
+      }
       this.$http.get('/advplan/list', {params}).then(res => {
-        if (rea.data.success) {
+        if (res.data.success) {
           this.tableData = res.data.data.lists
-          
         } else {
           this.$message.error('获取数据失败')
         }
       }, () => {
-          this.$message.error('网络错误')
-      })  
+        this.$message.error('网络错误')
+      })
     },
-    savePlan() {
+    savePlan () {
       this.$refs['adPlanForm'].validate((valid) => {
         if (valid) {
           let _params = Object.assign(this.adPlanForm)
@@ -238,7 +237,7 @@ export default {
           console.log('error submit!!')
           return false
         }
-      });
+      })
     },
     delPlan (row) {
       let id = row.id
@@ -273,7 +272,7 @@ export default {
       this.dialogAdVisible = true
     },
     // 模糊查询 主题
-    remoteMethod(query) {
+    remoteMethod (query) {
       this.$http.get('/subscriptionTheme/list', {
         params: {
           theme: query,

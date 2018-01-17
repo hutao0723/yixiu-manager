@@ -110,22 +110,22 @@ export default {
   },
   methods: {
     onSave () {
-      this.$refs['params'].validate((valid) =>{
+      this.$refs['params'].validate((valid) => {
         if (valid) {
           let _params = Object.assign(this.params)
           if (this.id) {
             _params.id = this.id
           }
           this.$http.post('/subscriptionInfo/save', _params).then(res => {
-              let data = res.data
-              if (data.success) {
-                this.$message.success('保存成功')
-              } else {
-                let msg = data.desc || '保存失败'
-                this.$message.error(msg)
-                this.$router.push('/manager/officalAcount')
-              }
-            })          
+            let data = res.data
+            if (data.success) {
+              this.$message.success('保存成功')
+            } else {
+              let msg = data.desc || '保存失败'
+              this.$message.error(msg)
+              this.$router.push('/manager/officalAcount')
+            }
+          })
         } else {
           console.log('error submit!!')
           return false

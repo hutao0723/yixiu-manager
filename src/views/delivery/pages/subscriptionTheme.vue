@@ -177,7 +177,6 @@ export default {
       this.dialogofCpTheme = true
       this.themeForm.copyTheme = row.name + '[复制]'
       this.themeForm.id = row.id
-
     },
     redirectLinkPage (row) {
       let theme = row.name
@@ -214,7 +213,6 @@ export default {
       })
     },
     remoteMethod () {
-      
     },
     getAllThemeList () {
       this.$http.get('/subscriptionTheme/list').then(res => {
@@ -222,44 +220,43 @@ export default {
           this.tableData = res.data.data.lists
           this.totalSize = res.data.data.totalSize * 20
         } else {
-          this.$message.error('获取数据失败')          
+          this.$message.error('获取数据失败')
         }
       }, () => {
-          this.$message.error('网络错误')        
+        this.$message.error('网络错误')
       })
     },
     onSearch () {
       let theme = this.searchForm.theme
       let status = this.searchForm.status
       let pageNum = 999
-      this.$http.get('/subscriptionTheme/list', {params: {theme, status,pageNum}}).then(res => {
+      this.$http.get('/subscriptionTheme/list', {params: {theme, status, pageNum}}).then(res => {
         console.log(res)
         if (res.data.success) {
           this.tableData = res.data.data.lists
           this.totalSize = res.data.data.totalSize * 20
         } else {
-          this.$message.error('获取数据失败')          
+          this.$message.error('获取数据失败')
         }
       }, () => {
-          this.$message.error('网络错误')        
+        this.$message.error('网络错误')
       })
     },
     pageChange () {
       this.$http.get('/subscriptionTheme/list', {params: this.pageOption}).then(res => {
-        if (rea.data.success) {
+        if (res.data.success) {
           this.tableData = res.data.data.lists
-          
         } else {
           this.$message.error('获取数据失败')
         }
       }, () => {
-          this.$message.error('网络错误')
-      })  
+        this.$message.error('网络错误')
+      })
     },
     changeStatus () {
       let id = this.themeForm.id
       let status = this.themeForm.status
-      this.$http.get('/subscriptionTheme/changeStatus', {params: {id,status}}).then(res => {
+      this.$http.get('/subscriptionTheme/changeStatus', {params: {id, status}}).then(res => {
         console.log(res)
         if (res.data.success) {
           this.$message.success('切换成功')
@@ -267,32 +264,32 @@ export default {
         } else {
           this.$message.error('保存失败')
         }
-      },() => {
+      }, () => {
         this.$message.error('网络错误')
       })
     },
     addTheme () {
       let newTheme = this.themeForm.newTheme
-      this.$http.post('/subscriptionTheme/save', {name:newTheme}).then(res => {
+      this.$http.post('/subscriptionTheme/save', {name: newTheme}).then(res => {
         if (res.data.success) {
           this.$message.success('保存成功')
         } else {
           this.$message.error('保存失败')
         }
-      },() => {
+      }, () => {
         this.$message.error('网络错误！')
       })
     },
     editTheme () {
       let eiittheme = this.themeForm.theme
-      let id =  this.themeForm.id
+      let id = this.themeForm.id
       this.$http.post('/subscriptionTheme/save', {name: eiittheme, id: id}).then(res => {
         if (res.data.success) {
           this.$message.success('保存成功')
         } else {
           this.$message.error('保存失败')
         }
-      },() => {
+      }, () => {
         this.$message.error('网络错误！')
       })
     },

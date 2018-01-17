@@ -85,9 +85,9 @@ export default {
       totalSize: 50,
       officalAcountList: [
         {
-          id: "1",
-          name: "今日财经",
-          backupName: "今日财经0.1",
+          id: 1,
+          name: 'adsa',
+          backupName: 'xcv',
           todayNewFollow: 10,
           todayNewUnFollow: 200
         }
@@ -110,7 +110,7 @@ export default {
         if (res.data.success) {
           this.officalAcountList = res.data.data.lists
           // 算出有多少条数据
-          this.totalSize = res.data.data.totalSize * 20 
+          this.totalSize = res.data.data.totalSize * 20
         } else {
           let msg = res.data.desc || '请求失败'
           this.$message.error(msg)
@@ -122,7 +122,7 @@ export default {
         if (res.data.success) {
           this.officalAcountList = res.data.data.lists
           // 算出有多少条数据
-          this.totalSize = res.data.data.totalSize * 20 
+          this.totalSize = res.data.data.totalSize * 20
         } else {
           let msg = res.data.desc || '请求失败'
           this.$message.error(msg)
@@ -141,7 +141,6 @@ export default {
     },
     edit (row) {
       this.$router.push('/manager/officalAcount/create/' + row.id)
-
     },
     delAcount (row) {
       let id = row.id

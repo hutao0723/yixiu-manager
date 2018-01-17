@@ -70,7 +70,7 @@ export default {
       loading: true,
       subscriptionsList: [
 
-      ],           
+      ],
       loadpagesList: [
         {
           key: 1,
@@ -118,7 +118,7 @@ export default {
           themeId: this.themeId,
           subscriptionId: this.adSubscriptionsForm.subscriptionId
         }
-        this.$http.get('/subscriptionTheme/getLoadPageBySubscription', {params:_params}).then(res => {
+        this.$http.get('/subscriptionTheme/getLoadPageBySubscription', {params: _params}).then(res => {
           if (res.data.success) {
             let pageUrlList = res.data.data
             pageUrlList = pageUrlList.map(item => {
@@ -134,7 +134,7 @@ export default {
     },
     remoteMethod (query) {
       console.log(query)
-      this.$http.get('/subscriptionInfo/list', {params:{backupName:query}}).then(res => {
+      this.$http.get('/subscriptionInfo/list', {params: {backupName: query}}).then(res => {
         if (res.data.success) {
           let list = res.data.data.lists
           list = list.map(item => {
@@ -165,8 +165,7 @@ export default {
         })
       }
     },
-    cancelRelation(row) {
-      let id = row.id
+    cancelRelation (row) {
       this.$confirm('确定移除吗?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -193,8 +192,6 @@ export default {
         })
       })
     }
-
-
   }
 }
 </script>

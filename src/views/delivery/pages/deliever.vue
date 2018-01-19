@@ -172,7 +172,7 @@ export default {
       let params = {
         [valueArr[0]]: valueArr[1],
         status: valueArr[2],
-        pageNum: 999
+        size: 999
       }
       this.$http.get('/advplan/list', {
         params
@@ -276,7 +276,7 @@ export default {
       this.$http.get('/subscriptionTheme/list', {
         params: {
           theme: query,
-          pageNum: 999
+          size: 999
         }
       }).then(res => {
         if (res.data.success) {

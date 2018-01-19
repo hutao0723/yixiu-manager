@@ -229,8 +229,8 @@ export default {
     onSearch () {
       let theme = this.searchForm.theme
       let status = this.searchForm.status
-      let pageNum = 999
-      this.$http.get('/subscriptionTheme/list', {params: {theme, status, pageNum}}).then(res => {
+      let size = 999
+      this.$http.get('/subscriptionTheme/list', {params: {theme, status, size}}).then(res => {
         console.log(res)
         if (res.data.success) {
           this.tableData = res.data.data.lists

@@ -106,7 +106,7 @@ export default {
       let searchValue = this.ofaSearchForm.searchValue
       let name, backupName
       searchName === 'name' ? name = searchValue : backupName = searchValue
-      this.$http.get('/subscriptionInfo/list', {params: {name: name, backupName: backupName, pageNum: 999}}).then(res => {
+      this.$http.get('/subscriptionInfo/list', {params: {name: name, backupName: backupName, size: 999}}).then(res => {
         if (res.data.success) {
           this.officalAcountList = res.data.data.lists
           // 算出有多少条数据

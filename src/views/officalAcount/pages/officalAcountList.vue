@@ -6,9 +6,9 @@
       </el-breadcrumb>
       <span class="add-ofa">
         <!-- <i class="iconfont icon-guanlian"></i> -->
-         <router-link :to="{ path: '/manager/officalAcount/create' }">
-          <span class="offical-acount">公众号</span>
-         </router-link>
+         <!-- <router-link :to="{ path: '/manager/officalAcount/create' }"> -->
+          <span class="offical-acount" @click="getWeChatSetting">公众号</span>
+         <!-- </router-link> -->
       </span>
     </div>
     <div class="content">
@@ -53,7 +53,7 @@
       </div>
       <div class="page-control">
         <el-pagination background  :page-size="20" :current-page.sync="pageOption.pageNum"
- @current-change="pageChange" layout="prev, pager, next" :page-count="totalSize"></el-pagination>
+ @current-change="pageChange" layout="prev, pager, next" :total="totalSize"></el-pagination>
       </div>    
     </div>     
   </section>
@@ -168,6 +168,15 @@ export default {
           type: 'info',
           message: '已取消删除'
         })
+      })
+    },
+    getWeChatSetting () {
+      this.$http.get('/wechat/getAuthorization').then(res => {
+        console.log(res)
+        if (res.data.success) {
+          let redirectUrl = res.data.data
+          window.location.href = redirectUrl
+        }
       })
     }
   }

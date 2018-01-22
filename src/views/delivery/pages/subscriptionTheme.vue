@@ -54,7 +54,7 @@
       </div>
       <div class="page-control">
         <el-pagination background :page-size="20"  :current-page.sync="pageOption.pageNum"
- @current-change="pageChange" layout="prev, pager, next" :page-count="totalSize"></el-pagination>
+ @current-change="pageChange" layout="prev, pager, next" :total="totalSize"></el-pagination>
       </div>
     </div>
     <div class="add-theme-diolog">
@@ -295,6 +295,7 @@ export default {
       this.$http.post('/subscriptionTheme/save', {name: newTheme}).then(res => {
         if (res.data.success) {
           this.$message.success('保存成功')
+          this.dialogofTheme = false
         } else {
           this.$message.error('保存失败')
         }
@@ -308,6 +309,7 @@ export default {
       this.$http.post('/subscriptionTheme/save', {name: eiittheme, id: id}).then(res => {
         if (res.data.success) {
           this.$message.success('保存成功')
+          this.dialogofEdit = false
         } else {
           this.$message.error('保存失败')
         }

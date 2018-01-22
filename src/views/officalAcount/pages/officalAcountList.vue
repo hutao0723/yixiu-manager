@@ -52,8 +52,8 @@
         </template>        
       </div>
       <div class="page-control">
-        <el-pagination background  :current-page.sync="pageOption.pageNum"
- @current-change="pageChange" layout="prev, pager, next" :total="totalSize"></el-pagination>
+        <el-pagination background  :page-size="20" :current-page.sync="pageOption.pageNum"
+ @current-change="pageChange" layout="prev, pager, next" :page-count="totalSize"></el-pagination>
       </div>    
     </div>     
   </section>
@@ -82,7 +82,7 @@ export default {
         pageNum: 1,
         size: 20
       },
-      totalSize: 50,
+      totalSize: 1,
       officalAcountList: [
         {
           id: 1,
@@ -110,7 +110,7 @@ export default {
         if (res.data.success) {
           this.officalAcountList = res.data.data.lists
           // 算出有多少条数据
-          this.totalSize = res.data.data.totalSize * 20
+          this.totalSize = res.data.data.totalSize
         } else {
           let msg = res.data.desc || '请求失败'
           this.$message.error(msg)
@@ -122,7 +122,7 @@ export default {
         if (res.data.success) {
           this.officalAcountList = res.data.data.lists
           // 算出有多少条数据
-          this.totalSize = res.data.data.totalSize * 20
+          this.totalSize = res.data.data.totalSize
         } else {
           let msg = res.data.desc || '请求失败'
           this.$message.error(msg)

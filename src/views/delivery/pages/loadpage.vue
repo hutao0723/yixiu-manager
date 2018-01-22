@@ -60,7 +60,7 @@
         </template>
       </div>
       <div class="page-control">
-        <el-pagination background  :current-page.sync="pageOption.pageNum"
+        <el-pagination background   :page-size="20" :current-page.sync="pageOption.pageNum"
  @current-change="pageChange" layout="prev, pager, next" :total="totalSize"></el-pagination>
       </div>
     </div>
@@ -69,7 +69,7 @@
         <el-form :model="addLoadPage" ref="addLoadPage" :rules="rules">
           <el-form-item label="公众号名称" :label-width="formLabelWidth" prop="subscriptionId">
           <el-select  v-model="addLoadPage.subscriptionId"  filterable remote reserve-keyword placeholder="公众号名称" :remote-method="remoteMethod" :loading="loading">
-              <el-option v-for="item in subscriptionsList" :key="item.value" :label="item.label" :value="item.value"></el-option>
+              <el-option v-for="item in searchForm.officalAcountOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
           </el-form-item>
           <el-form-item label="落地页名称" :label-width="formLabelWidth"  prop="loadPageUrl">
@@ -130,14 +130,10 @@ export default {
           {
             label: '公众号名称',
             value: 'backupName'
-          },
-          {
-            label: '公众号',
-            value: 'name'
           }
         ]
       },
-      lodaing: false,
+      loading: false,
       totalSize: 50,
       formLabelWidth: '100px',
       dialogLoadPageVisible: false,
@@ -200,7 +196,7 @@ export default {
       params.status = searchForm.status
       this.$http.get('/loadpage/list', {params}).then(res => {
         if (res.data.success) {
-          this.totalSize = res.data.data.totalSize * 20
+          this.totalSize = res.data.data.totalSize
           this.tableData = res.data.data.lists
         } else {
           this.$message.error('获取数据失败')
@@ -212,7 +208,7 @@ export default {
     getAllList () {
       this.$http.get('/loadpage/list').then(res => {
         if (res.data.success) {
-          this.totalSize = res.data.data.totalSize * 20
+          this.totalSize = res.data.data.totalSize
           this.tableData = res.data.data.lists
         } else {
           this.$message.error('获取数据失败')
@@ -285,8 +281,8 @@ export default {
               value: item.id
             }
           })
-          this.officalAcountOptions = list
-          if (this.officalAcountOptions) {
+          this.searchForm.officalAcountOptions = list
+          if (this.searchForm.officalAcountOptions) {
             this.loading = false
           }
         }

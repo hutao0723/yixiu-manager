@@ -25,7 +25,7 @@
           <div>
             <el-upload
               action="/upyun/adminUploadImage"
-              list-type="picture"
+              list-type="picture-card"
               :on-success="handleAvatarSuccess">
               <i class="el-icon-plus"></i>
             </el-upload>
@@ -35,7 +35,7 @@
           <div>
             <el-upload
               action="/upyun/adminUploadImage"
-              list-type="picture"
+              list-type="picture-card"
               :on-success="handleQrcodeSuccess">
               <i class="el-icon-plus"></i>
             </el-upload>

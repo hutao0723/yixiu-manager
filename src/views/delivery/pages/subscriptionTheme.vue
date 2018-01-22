@@ -53,8 +53,8 @@
         </template>
       </div>
       <div class="page-control">
-        <el-pagination background  :current-page.sync="pageOption.pageNum"
- @current-change="pageChange" layout="prev, pager, next" :total="totalSize"></el-pagination>
+        <el-pagination background :page-size="20"  :current-page.sync="pageOption.pageNum"
+ @current-change="pageChange" layout="prev, pager, next" :page-count="totalSize"></el-pagination>
       </div>
     </div>
     <div class="add-theme-diolog">
@@ -112,7 +112,6 @@
 
 <script>
 import { themeRules } from '../components/deliveryValidRules'
-console.log(themeRules)
 export default {
   name: 'delivery',
   data () {
@@ -131,7 +130,7 @@ export default {
         pageNum: 1,
         size: 20
       },
-      totalSize: 50,
+      totalSize: 5,
       loading: '',
       formLabelWidth: '80px',
       dialogofTheme: false,
@@ -147,6 +146,30 @@ export default {
         copyTheme: ''
       },
       tableData: [
+        {
+          id: '5',
+          name: '王小虎',
+          subscriptionNum: '上海',
+          status: '普陀区'
+        },
+        {
+          id: '5',
+          name: '王小虎',
+          subscriptionNum: '上海',
+          status: '普陀区'
+        },
+        {
+          id: '5',
+          name: '王小虎',
+          subscriptionNum: '上海',
+          status: '普陀区'
+        },
+        {
+          id: '5',
+          name: '王小虎',
+          subscriptionNum: '上海',
+          status: '普陀区'
+        },
         {
           id: '5',
           name: '王小虎',
@@ -218,7 +241,7 @@ export default {
       this.$http.get('/subscriptionTheme/list').then(res => {
         if (res.data.success) {
           this.tableData = res.data.data.lists
-          this.totalSize = res.data.data.totalSize * 20
+          this.totalSize = res.data.data.totalSize
         } else {
           this.$message.error('获取数据失败')
         }
@@ -231,10 +254,9 @@ export default {
       let status = this.searchForm.status
       let size = 999
       this.$http.get('/subscriptionTheme/list', {params: {theme, status, size}}).then(res => {
-        console.log(res)
         if (res.data.success) {
           this.tableData = res.data.data.lists
-          this.totalSize = res.data.data.totalSize * 20
+          this.totalSize = res.data.data.totalSize
         } else {
           this.$message.error('获取数据失败')
         }

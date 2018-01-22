@@ -57,8 +57,8 @@
         </template>
       </div>
       <div class="page-control">
-        <el-pagination background  :current-page.sync="pageOption.pageNum"
- @current-change="pageChange" layout="prev, pager, next" :total="totalSize"></el-pagination>
+        <el-pagination background  :page-size="20" :current-page.sync="pageOption.pageNum"
+ @current-change="pageChange" layout="prev, pager, next" :page-count="totalSize"></el-pagination>
       </div>
     </div>
     <div class="creat-ad-connect-diolog">

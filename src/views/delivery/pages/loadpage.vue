@@ -68,14 +68,9 @@
       <el-dialog title="添加落地页" :visible.sync="dialogLoadPageVisible">
         <el-form :model="addLoadPage" ref="addLoadPage" :rules="rules">
           <el-form-item label="公众号名称" :label-width="formLabelWidth" prop="subscriptionId">
-            <el-select v-model="addLoadPage.subscriptionId" placeholder="请选择公众号名称">
-                <el-option
-                  v-for="item in subscriptionList"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id">
-                </el-option> 
-            </el-select>
+          <el-select  v-model="addLoadPage.subscriptionId"  filterable remote reserve-keyword placeholder="公众号名称" :remote-method="remoteMethod" :loading="loading">
+              <el-option v-for="item in subscriptionsList" :key="item.value" :label="item.label" :value="item.value"></el-option>
+          </el-select>
           </el-form-item>
           <el-form-item label="落地页名称" :label-width="formLabelWidth"  prop="loadPageUrl">
             <el-input placeholder="https://" v-model="addLoadPage.loadPageUrl" auto-complete="off"></el-input>
@@ -142,6 +137,7 @@ export default {
           }
         ]
       },
+      lodaing: false,
       totalSize: 50,
       formLabelWidth: '100px',
       dialogLoadPageVisible: false,
@@ -275,6 +271,24 @@ export default {
         if (res.data.success) {
           this.dialogThresholdVisible = false
           this.$message.success('修改成功')
+        }
+      })
+    },
+    remoteMethod (query) {
+      console.log(query)
+      this.$http.get('/subscriptionInfo/list', {params: {backupName: query}}).then(res => {
+        if (res.data.success) {
+          let list = res.data.data.lists
+          list = list.map(item => {
+            return {
+              label: item.backupName,
+              value: item.id
+            }
+          })
+          this.officalAcountOptions = list
+          if (this.officalAcountOptions) {
+            this.loading = false
+          }
         }
       })
     },

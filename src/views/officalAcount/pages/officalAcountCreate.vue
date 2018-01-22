@@ -23,17 +23,21 @@
         </el-form-item>
         <el-form-item label="头像">
           <div>
-            <el-upload class="upload-demo"  action="/upyun/adminUploadImage"    list-type="picture">
-              <el-button size="small" type="primary">点击上传</el-button>
-              <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+            <el-upload
+              action="/upyun/adminUploadImage"
+              list-type="picture"
+              :on-success="handleAvatarSuccess">
+              <i class="el-icon-plus"></i>
             </el-upload>
           </div>
         </el-form-item>
         <el-form-item label="二维码">
           <div>
-            <el-upload class="upload-demo"  action="/upyun/adminUploadImage"    list-type="picture">
-              <el-button size="small" type="primary">点击上传</el-button>
-              <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+            <el-upload
+              action="/upyun/adminUploadImage"
+              list-type="picture"
+              :on-success="handleQrcodeSuccess">
+              <i class="el-icon-plus"></i>
             </el-upload>
           </div>         
         </el-form-item>
@@ -136,10 +140,16 @@ export default {
       this.$http.get('/subscriptionInfo/find', {
         params: { id: id }
       }).then(res => {
-        if (res.success) {
+        if (res.data.success) {
           this.params = res.data.data
         }
       })
+    },
+    handleQrcodeSuccess (res) {
+      console.log(res)
+    },
+    handleAvatarSuccess (res) {
+      console.log(res)
     }
   }
 }
@@ -169,6 +179,29 @@ export default {
   .bottom-line {
     border-bottom: 1px dashed #ccc;
     padding: 10px 0;
+  }
+    .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
   }
 }
 </style>

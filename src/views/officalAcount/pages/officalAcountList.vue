@@ -39,12 +39,12 @@
           <el-table :data="officalAcountList"  style="width: 100%" >
             <el-table-column prop="id" label="ID" ></el-table-column>
             <el-table-column prop="name" label="公众号" ></el-table-column>
-            <el-table-column prop="backupName" label="公众号名称" ></el-table-column>
+            <!-- <el-table-column prop="backupName" label="公众号名称" ></el-table-column> -->
             <el-table-column prop="todayNewFollow" label="当日新增关注" ></el-table-column>
             <el-table-column prop="todayNewUnFollow" label="当日取消关注"></el-table-column>
             <el-table-column  label="操作" width="150">
               <template slot-scope="scope">
-                <el-button size="mini" @click="edit(scope.row)">编辑</el-button>
+                <el-button size="mini" @click="getWeChatSetting">编辑</el-button>
                 <el-button type="danger" size="mini" @click="delAcount(scope.row)">删除</el-button>               
               </template>
             </el-table-column>

@@ -171,8 +171,7 @@ export default {
       let valueArr = Object.values(this.searchForm)
       let params = {
         [valueArr[0]]: valueArr[1],
-        status: valueArr[2],
-        size: 999
+        status: valueArr[2]
       }
       this.$http.get('/advplan/list', {
         params

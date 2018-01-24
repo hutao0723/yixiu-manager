@@ -122,8 +122,8 @@ export default {
       },
       themeList: [
         {
-          label: 'aa',
-          value: '主题1'
+          label: '',
+          value: ''
         }
       ],
       pageOption: {
@@ -235,7 +235,28 @@ export default {
         })
       })
     },
-    remoteMethod () {
+    remoteMethod (query) {
+      this.$http.get('/subscriptionTheme/list', {
+        params: {
+          theme: query,
+          size: 999
+        }
+      }).then(res => {
+        if (res.data.success) {
+          let data = res.data.data.lists
+          data = data.map(item => {
+            return {
+              label: item.name,
+              value: item.id
+            }
+          })
+          this.themeList = data
+        } else {
+          this.$message.success('获取失败')
+        }
+      }, () => {
+        this.$message.error('网络错误！')
+      })
     },
     getAllThemeList () {
       this.$http.get('/subscriptionTheme/list').then(res => {

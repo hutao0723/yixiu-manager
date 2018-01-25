@@ -24,13 +24,16 @@
               </el-select>
             </el-form-item>
             <el-form-item >
-              <el-input v-model="searchForm.data.value" placeholder="名称"></el-input>
+              <!-- <el-input v-model="searchForm.data.value" placeholder="名称"></el-input> -->
+            <el-select  v-model="searchForm.data.value"  filterable remote reserve-keyword placeholder="请选择" :remote-method="remoteMethod2">
+                <el-option v-for="item in subList" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            </el-select>              
             </el-form-item> 
             <el-form-item>
               <el-select v-model="searchForm.data.status" placeholder="状态">
-                <el-option label="已使用" :value="0"></el-option>
+                <el-option label="已使用" :value="2"></el-option>
                 <el-option label="待使用" :value="1"></el-option>
-                <el-option label="不可使用" :value="2"></el-option>
+                <el-option label="不可使用" :value="0"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item>
@@ -67,7 +70,7 @@
     <div class="ad-loadPage-diolog">
       <el-dialog title="添加落地页" :visible.sync="dialogLoadPageVisible">
         <el-form :model="addLoadPage" ref="addLoadPage" :rules="rules">
-          <el-form-item label="公众号名称" :label-width="formLabelWidth" prop="subscriptionId">
+          <el-form-item label="公众号" :label-width="formLabelWidth" prop="subscriptionId">
           <el-select  v-model="addLoadPage.subscriptionId"  filterable remote reserve-keyword placeholder="公众号名称" :remote-method="remoteMethod" :loading="loading">
               <el-option v-for="item in searchForm.officalAcountOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
@@ -76,7 +79,7 @@
             <el-input placeholder="https://" v-model="addLoadPage.loadPageUrl" auto-complete="off"></el-input>
           </el-form-item>
           <el-form-item label="阈值" :label-width="formLabelWidth"  prop="thresholdNum">
-            <el-input v-model.number="addLoadPage.thresholdNum" auto-complete="off"></el-input>
+            <el-input v-model="addLoadPage.thresholdNum" auto-complete="off"></el-input>
           </el-form-item>           
         </el-form>
         <div class="btn-wrap">
@@ -88,9 +91,9 @@
       <el-dialog title="落地页状态" :visible.sync="dialogStatusVisible">
         <template>
           <el-radio-group v-model="changeForm.status">
-            <el-radio :label="0">待使用</el-radio>
-            <el-radio :label="1">已使用</el-radio>
-            <el-radio :label="2">不可使用</el-radio>
+            <el-radio :label="1">待使用</el-radio>
+            <el-radio :label="2">已使用</el-radio>
+            <el-radio :label="0">不可使用</el-radio>
           </el-radio-group>
         </template>
         <div class="btn-wrap">
@@ -102,7 +105,7 @@
       <el-dialog title="设置阈值" :visible.sync="dialogThresholdVisible">
         <el-form :model="changeForm" :rules="rules">
           <el-form-item label="阈值" :label-width="formLabelWidth"  prop="thresholdNum">
-            <el-input v-model.number="changeForm.thresholdNum" auto-complete="off"></el-input>
+            <el-input v-model="changeForm.thresholdNum" auto-complete="off"></el-input>
           </el-form-item>                     
         </el-form>
          <div class="btn-wrap">
@@ -115,6 +118,8 @@
 
 <script>
 import {loadPagerules} from '../components/deliveryValidRules'
+import qs from 'qs'
+
 console.log(loadPagerules)
 export default {
   name: 'delivery',
@@ -122,14 +127,14 @@ export default {
     return {
       searchForm: {
         data: {
-          searchName: '',
+          searchName: 'name',
           value: '',
           status: ''
         },
         officalAcountOptions: [
           {
-            label: '公众号名称',
-            value: 'backupName'
+            label: '公众号',
+            value: 'name'
           }
         ]
       },
@@ -143,7 +148,7 @@ export default {
       addLoadPage: {
         loadPageUrl: 'https://',
         subscriptionId: '',
-        thresholdNum: ''
+        thresholdNum: null
       },
       changeForm: {
         id: '',
@@ -168,6 +173,7 @@ export default {
         pageNum: 1,
         size: 20
       },
+      subList: [],
       tableData: [
         {
           id: '1',
@@ -192,6 +198,8 @@ export default {
         params.backupName = searchForm.value
       } else if (searchForm.searchName === 'name') {
         params.name = searchForm.value
+      } else {
+        params.loadPageUrl = searchForm.value
       }
       params.status = searchForm.status
       this.$http.get('/loadpage/list', {params}).then(res => {
@@ -222,8 +230,9 @@ export default {
       this.$refs['addLoadPage'].validate((valid) => {
         if (valid) {
           let params = Object.assign(this.addLoadPage)
+          params.thresholdNum = +params.thresholdNum
           console.log(params)
-          this.$http.post('/loadpage/save', params).then(res => {
+          this.$http.post('/loadpage/save', qs.stringify(params)).then(res => {
             console.log(res)
             if (res.data.success) {
               this.$message.success('创建成功')
@@ -241,7 +250,29 @@ export default {
         }
       })
     },
-
+    remoteMethod2 (query) {
+      let valueArr = Object.values(this.searchForm.data)
+      let params = {
+        [valueArr[0]]: query,
+        size: 999
+      }
+      this.$http.get('subscriptionInfo/list', { params }).then(res => {
+        if (res.data.success) {
+          let data = res.data.data.lists
+          data = data.map(item => {
+            return {
+              label: item.name,
+              value: item.id
+            }
+          })
+          this.subList = data
+        } else {
+          this.$message.success('获取失败')
+        }
+      }, () => {
+        this.$message.error('网络错误！')
+      })
+    },
     // 状态
     changeStatus () {
       let status = this.changeForm.status
@@ -251,14 +282,16 @@ export default {
         status, id
       }}).then(res => {
         if (res.data.success) {
-          this.dialogStatusVisible = false
-          this.$message.success('修改成功')
+          if (res.data.data) {
+            this.dialogStatusVisible = false
+            this.$message.success('切换成功')
+          }
         }
       })
     },
     // 阈值
     changeThresholdNum () {
-      let thresholdNum = this.changeForm.thresholdNum
+      let thresholdNum = +this.changeForm.thresholdNum
       let id = this.changeForm.id
       console.log(id)
       this.$http.get('/loadpage/changethresholdNum', {params: {
@@ -272,12 +305,12 @@ export default {
     },
     remoteMethod (query) {
       console.log(query)
-      this.$http.get('/subscriptionInfo/list', {params: {backupName: query}}).then(res => {
+      this.$http.get('/subscriptionInfo/list', {params: {name: query}}).then(res => {
         if (res.data.success) {
           let list = res.data.data.lists
           list = list.map(item => {
             return {
-              label: item.backupName,
+              label: item.name,
               value: item.id
             }
           })

@@ -4,7 +4,8 @@ const checkthresholdNum = (rule, value, callback) => {
   }
   setTimeout(() => {
     console.log(value)
-    if (!Number.isInteger(value)) {
+    var rexp = /^[1-9]\d*$/
+    if (!rexp.test(value)) {
       callback(new Error('请输入数字值'))
     } else {
       if (value > 1000000) {
@@ -13,7 +14,7 @@ const checkthresholdNum = (rule, value, callback) => {
         callback()
       }
     }
-  }, 1000)
+  }, 500)
 }
 const checkloadPageUrl = (rule, value, callback) => {
   if (!value) {

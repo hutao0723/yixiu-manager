@@ -112,6 +112,7 @@
 
 <script>
 import { themeRules } from '../components/deliveryValidRules'
+import qs from 'qs'
 export default {
   name: 'delivery',
   data () {
@@ -313,7 +314,7 @@ export default {
     },
     addTheme () {
       let newTheme = this.themeForm.newTheme
-      this.$http.post('/subscriptionTheme/save', {name: newTheme}).then(res => {
+      this.$http.post('/subscriptionTheme/save', qs.stringify({name: newTheme})).then(res => {
         if (res.data.success) {
           this.$message.success('保存成功')
           this.dialogofTheme = false
@@ -327,7 +328,7 @@ export default {
     editTheme () {
       let eiittheme = this.themeForm.theme
       let id = this.themeForm.id
-      this.$http.post('/subscriptionTheme/save', {name: eiittheme, id: id}).then(res => {
+      this.$http.post('/subscriptionTheme/save', qs.stringify({name: eiittheme, id: id})).then(res => {
         if (res.data.success) {
           this.$message.success('保存成功')
           this.dialogofEdit = false

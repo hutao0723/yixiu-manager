@@ -47,7 +47,19 @@
             <el-table-column prop="subscriptionName" label="公众号" width="200"></el-table-column>
             <el-table-column prop="thresholdNum" label="当日阈值" width="100"></el-table-column>
             <el-table-column prop="todayNewFollow" label="当日新增关注" width="120"></el-table-column>
-            <el-table-column prop="status" label="状态" width="120"></el-table-column>           
+            <el-table-column prop="status" label="状态" width="120">
+              <template slot-scope="scope">
+                <span v-if="scope.row.status === 0">
+                  不可使用
+                </span>
+                <span v-else-if="scope.row.status === 1">
+                  待使用
+                </span>
+                <span v-else-if="scope.row.status === 2">
+                  已使用
+                </span>
+              </template>
+              </el-table-column>           
             <el-table-column  label="操作" width="150">
               <template slot-scope="scope">
                 <el-button type="text" size="small" @click="openStatusDilog(scope.row)">状态</el-button>
@@ -128,6 +140,14 @@ export default {
           status: ''
         },
         officalAcountOptions: [
+          {
+            label: '公众号',
+            value: 'name'
+          },
+          {
+            label: '落地页',
+            value: 'loadPageUrl'
+          }
         ]
       },
       loading: false,
@@ -187,7 +207,7 @@ export default {
         params.loadPageUrl = searchForm.value
       }
       params.status = searchForm.status
-      this.$http.get('/loadpage/list', {params}).then(res => {
+      this.$http.get('http://192.168.2.87:9101/loadpage/list', {params}).then(res => {
         if (res.data.success) {
           this.totalSize = res.data.data.totalSize
           console.log(res.data.data.lists)
@@ -253,6 +273,9 @@ export default {
           if (res.data.data) {
             this.dialogStatusVisible = false
             this.$message.success('切换成功')
+          } else {
+            this.dialogStatusVisible = false
+            this.$message.success('切换失败')
           }
         }
       })

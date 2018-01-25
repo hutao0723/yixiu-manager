@@ -46,7 +46,19 @@
             <el-table-column prop="pushUrl" label="投放地址"></el-table-column>
             <el-table-column prop="planName" label="广告计划名称（ID）" width="200"></el-table-column>
             <el-table-column prop="themeInfo" label="公众号主题（ID）" width="200"></el-table-column>
-            <el-table-column prop="themeStatus" label="主题状态" width="100"></el-table-column>
+            <el-table-column prop="themeStatus" label="主题状态" width="100">
+              <template slot-scope="scope">
+                <span v-if="scope.row.themeStatus === 0">
+                  启用
+                </span>
+                <span v-else-if="scope.row.themeStatus === 1">
+                  停用
+                </span>
+                <span v-else-if="scope.row.themeStatus === 2">
+                  系统停用
+                </span>
+              </template>               
+            </el-table-column>
             <el-table-column prop="planPlatform" label="广告平台" width="120"></el-table-column>
             <el-table-column  label="操作" width="150">
               <template slot-scope="scope">

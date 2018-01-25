@@ -78,8 +78,11 @@ export default {
       text-align:center
     }
   }
+  .el-menu{
+    border-right: none
+  }
   .menu-collapse{
-    background-color: #eee;
+    background-color: #F7F9FA;
       .el-tooltip{
         padding:0;
 
@@ -109,7 +112,7 @@ export default {
   margin-right: 20px;
 }
 .side-wrap{
-  background-color: #eee;
+  background-color: #F7F9FA;
   top: 0;
   bottom: 0;
   position: fixed;

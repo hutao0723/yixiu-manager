@@ -37,7 +37,19 @@
             <el-table-column prop="id" label="ID" width="50"></el-table-column>
             <el-table-column prop="name" label="主题"></el-table-column>
             <el-table-column prop="subscriptionNum" label="公众号数量" ></el-table-column>
-            <el-table-column prop="status" label="主题状态" ></el-table-column>
+            <el-table-column prop="status" label="主题状态" >
+              <template slot-scope="scope">
+                <span v-if="scope.row.status === 0">
+                  启用
+                </span>
+                <span v-else-if="scope.row.status === 1">
+                  停用
+                </span>
+                <span v-else-if="scope.row.status === 2">
+                  系统停用
+                </span>
+              </template>              
+            </el-table-column>
             <el-table-column  label="操作" width="250">
               <template slot-scope="scope">
                 <el-button type="text" size="small" @click="openDialogEdit(scope.row)">编辑</el-button>
@@ -146,38 +158,7 @@ export default {
         theme: '',
         copyTheme: ''
       },
-      tableData: [
-        {
-          id: '5',
-          name: '王小虎',
-          subscriptionNum: '上海',
-          status: '普陀区'
-        },
-        {
-          id: '5',
-          name: '王小虎',
-          subscriptionNum: '上海',
-          status: '普陀区'
-        },
-        {
-          id: '5',
-          name: '王小虎',
-          subscriptionNum: '上海',
-          status: '普陀区'
-        },
-        {
-          id: '5',
-          name: '王小虎',
-          subscriptionNum: '上海',
-          status: '普陀区'
-        },
-        {
-          id: '5',
-          name: '王小虎',
-          subscriptionNum: '上海',
-          status: '普陀区'
-        }
-      ]
+      tableData: []
     }
   },
   created () {
@@ -337,6 +318,7 @@ export default {
         if (res.data.success) {
           this.$message.success('保存成功')
           this.dialogofEdit = false
+          window.location.reload()
         } else {
           this.$message.error('保存失败')
         }

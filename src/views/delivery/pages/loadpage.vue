@@ -25,9 +25,6 @@
             </el-form-item>
             <el-form-item >
               <el-input v-model="searchForm.data.value" placeholder="名称"></el-input>
-            <!-- <el-select  v-model="searchForm.data.value"  filterable remote reserve-keyword placeholder="请选择" :remote-method="remoteMethod2">
-                <el-option v-for="item in subList" :key="item.value" :label="item.label" :value="item.value"></el-option>
-            </el-select>               -->
             </el-form-item> 
             <el-form-item>
               <el-select v-model="searchForm.data.status" placeholder="状态">
@@ -190,7 +187,7 @@ export default {
         params.loadPageUrl = searchForm.value
       }
       params.status = searchForm.status
-      this.$http.get('//192.168.2.87:9101/loadpage/list', {params}).then(res => {
+      this.$http.get('/loadpage/list', {params}).then(res => {
         if (res.data.success) {
           this.totalSize = res.data.data.totalSize
           console.log(res.data.data.lists)
@@ -295,7 +292,7 @@ export default {
     // pageChange()
     pageChange () {
       console.log(this.pageOption.pageNum)
-      this.$http.get('//192.168.2.87:9101/loadpage/list', {params: this.pageOption}).then(res => {
+      this.$http.get('/loadpage/list', {params: this.pageOption}).then(res => {
         if (res.data.success) {
           this.tableData = res.data.data.lists
         } else {

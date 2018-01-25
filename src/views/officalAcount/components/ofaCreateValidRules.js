@@ -23,11 +23,6 @@ const ofarules = {
     { min: 1, max: 5, message: '长度在 1 到 20 个字符', trigger: 'blur' }
 
   ],
-  backupName: [
-    { required: true, message: '请输入公众号名称', trigger: 'blur' },
-    { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
-
-  ],
   wechatId: [
     {
       validator: checkWechatID,

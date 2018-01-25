@@ -178,8 +178,13 @@ export default {
         params
       }).then(res => {
         if (res.data.success) {
-          this.tableData = res.data.data.lists
-          this.totalSize = res.data.data.totalSize
+          if (res.data.data) {
+            this.tableData = res.data.data.lists
+            this.totalSize = res.data.data.totalSize
+          } else {
+            this.tableData = []
+            this.totalSize = 1
+          }
         } else {
           let msg = res.data.desc
           this.$message.error(msg || '获取失败')

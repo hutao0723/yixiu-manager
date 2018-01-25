@@ -39,7 +39,6 @@
           <el-table :data="officalAcountList"  style="width: 100%" >
             <el-table-column prop="id" label="ID" ></el-table-column>
             <el-table-column prop="name" label="公众号" ></el-table-column>
-            <!-- <el-table-column prop="backupName" label="公众号名称" ></el-table-column> -->
             <el-table-column prop="todayNewFollow" label="当日新增关注" ></el-table-column>
             <el-table-column prop="todayNewUnFollow" label="当日取消关注"></el-table-column>
             <el-table-column  label="操作" width="150">
@@ -65,10 +64,6 @@ export default {
     return {
       searchOptions: [
         {
-          value: 'backupName',
-          label: '公众号名称'
-        },
-        {
           value: 'name',
           label: '公众号'
         }
@@ -87,7 +82,6 @@ export default {
         {
           id: 1,
           name: 'adsa',
-          backupName: 'xcv',
           todayNewFollow: 10,
           todayNewUnFollow: 200
         }
@@ -104,9 +98,9 @@ export default {
     onSearch () {
       let searchName = this.ofaSearchForm.searchWay
       let searchValue = this.ofaSearchForm.searchValue
-      let name, backupName
-      searchName === 'name' ? name = searchValue : backupName = searchValue
-      this.$http.get('/subscriptionInfo/list', {params: {name: name, backupName: backupName, size: 999}}).then(res => {
+      let name
+      searchName === 'name' ? name = searchValue : name = searchValue
+      this.$http.get('/subscriptionInfo/list', {params: {name: name, size: 999}}).then(res => {
         if (res.data.success) {
           this.officalAcountList = res.data.data.lists
           // 算出有多少条数据

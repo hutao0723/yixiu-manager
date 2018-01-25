@@ -277,8 +277,13 @@ export default {
       let size = 999
       this.$http.get('/subscriptionTheme/list', {params: {theme, status, size}}).then(res => {
         if (res.data.success) {
-          this.tableData = res.data.data.lists
-          this.totalSize = res.data.data.totalSize
+          if (res.data.data) {
+            this.tableData = res.data.data.lists
+            this.totalSize = res.data.data.totalSize
+          } else {
+            this.tableData = []
+            this.totalSize = 1
+          }
         } else {
           this.$message.error('获取数据失败')
         }

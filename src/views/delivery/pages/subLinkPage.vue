@@ -18,7 +18,6 @@
             <el-table-column prop="id" label="序号" width="50"></el-table-column>
             <el-table-column prop="loadPageUrl" label="落地页"></el-table-column>
             <el-table-column prop="subscriptionName" label="公众号" width="200"></el-table-column>
-            <el-table-column prop="subscriptionbackUpName" label="公众号名称" width="200"></el-table-column>
             <el-table-column prop="thresholdNum" label="当日阈值" width="100"></el-table-column>
             <el-table-column prop="todayNewFollow" label="当日新增关注" width="120"></el-table-column>
             <el-table-column prop="status" label="状态" width="120"></el-table-column>
@@ -85,7 +84,6 @@ export default {
         {
           id: '1',
           subscriptionName: '王小虎',
-          subscriptionbackUpName: '上海',
           loadPageUrl: '普陀区',
           thresholdNum: 1000,
           todayNewFollow: 0,
@@ -134,12 +132,12 @@ export default {
     },
     remoteMethod (query) {
       console.log(query)
-      this.$http.get('/subscriptionInfo/list', {params: {backupName: query}}).then(res => {
+      this.$http.get('/subscriptionInfo/list', {params: {name: query}}).then(res => {
         if (res.data.success) {
           let list = res.data.data.lists
           list = list.map(item => {
             return {
-              label: item.backupName,
+              label: item.name,
               value: item.id
             }
           })

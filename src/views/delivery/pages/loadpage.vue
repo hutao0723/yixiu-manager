@@ -24,10 +24,10 @@
               </el-select>
             </el-form-item>
             <el-form-item >
-              <!-- <el-input v-model="searchForm.data.value" placeholder="名称"></el-input> -->
-            <el-select  v-model="searchForm.data.value"  filterable remote reserve-keyword placeholder="请选择" :remote-method="remoteMethod2">
+              <el-input v-model="searchForm.data.value" placeholder="名称"></el-input>
+            <!-- <el-select  v-model="searchForm.data.value"  filterable remote reserve-keyword placeholder="请选择" :remote-method="remoteMethod2">
                 <el-option v-for="item in subList" :key="item.value" :label="item.label" :value="item.value"></el-option>
-            </el-select>              
+            </el-select>               -->
             </el-form-item> 
             <el-form-item>
               <el-select v-model="searchForm.data.status" placeholder="状态">
@@ -48,7 +48,6 @@
             <el-table-column prop="id" label="ID" width="50"></el-table-column>
             <el-table-column prop="loadPageUrl" label="落地页"></el-table-column>
             <el-table-column prop="subscriptionName" label="公众号" width="200"></el-table-column>
-            <el-table-column prop="subscriptionbackUpName" label="公众号名称" width="200"></el-table-column>
             <el-table-column prop="thresholdNum" label="当日阈值" width="100"></el-table-column>
             <el-table-column prop="todayNewFollow" label="当日新增关注" width="120"></el-table-column>
             <el-table-column prop="status" label="状态" width="120"></el-table-column>           
@@ -63,7 +62,7 @@
         </template>
       </div>
       <div class="page-control">
-        <el-pagination background   :page-size="20" :current-page.sync="pageOption.pageNum"
+        <el-pagination background   :page-size="20" :current-page="pageOption.pageNum"
  @current-change="pageChange" layout="prev, pager, next" :total="totalSize"></el-pagination>
       </div>
     </div>
@@ -132,10 +131,6 @@ export default {
           status: ''
         },
         officalAcountOptions: [
-          {
-            label: '公众号',
-            value: 'name'
-          }
         ]
       },
       loading: false,
@@ -174,16 +169,9 @@ export default {
         size: 20
       },
       subList: [],
-      tableData: [
-        {
-          id: '1',
-          subscriptionName: '2',
-          loadPageUrl: '上海',
-          subscriptionbackUpName: '普陀区',
-          status: 0,
-          todayNewFollow: 200333,
-          thresholdNum: 123
-        }]
+      default: [
+      ],
+      tableData: []
     }
   },
   created () {
@@ -202,10 +190,16 @@ export default {
         params.loadPageUrl = searchForm.value
       }
       params.status = searchForm.status
-      this.$http.get('/loadpage/list', {params}).then(res => {
+      this.$http.get('//192.168.2.87:9101/loadpage/list', {params}).then(res => {
         if (res.data.success) {
           this.totalSize = res.data.data.totalSize
-          this.tableData = res.data.data.lists
+          console.log(res.data.data.lists)
+          if (res.data.data.lists) {
+            this.tableData = res.data.data.lists
+          } else {
+            this.totalSize = 1
+            this.tableData = this.default
+          }
         } else {
           this.$message.error('获取数据失败')
         }
@@ -248,29 +242,6 @@ export default {
           console.log('error submit!!')
           return false
         }
-      })
-    },
-    remoteMethod2 (query) {
-      let valueArr = Object.values(this.searchForm.data)
-      let params = {
-        [valueArr[0]]: query,
-        size: 999
-      }
-      this.$http.get('subscriptionInfo/list', { params }).then(res => {
-        if (res.data.success) {
-          let data = res.data.data.lists
-          data = data.map(item => {
-            return {
-              label: item.name,
-              value: item.id
-            }
-          })
-          this.subList = data
-        } else {
-          this.$message.success('获取失败')
-        }
-      }, () => {
-        this.$message.error('网络错误！')
       })
     },
     // 状态
@@ -323,7 +294,8 @@ export default {
     },
     // pageChange()
     pageChange () {
-      this.$http.get('/loadpage/list', {params: this.pageOption}).then(res => {
+      console.log(this.pageOption.pageNum)
+      this.$http.get('//192.168.2.87:9101/loadpage/list', {params: this.pageOption}).then(res => {
         if (res.data.success) {
           this.tableData = res.data.data.lists
         } else {

@@ -11,10 +11,7 @@
       <el-form ref="params" :rules="rules"  :model="params" label-width="120px">
         <el-form-item label="公众号"  prop="name">
           <el-input v-model="params.name" placeholder="福利汇1"></el-input>
-        </el-form-item>
-        <el-form-item label="公众号名称" prop="backupName">
-          <el-input v-model="params.backupName" placeholder="福利汇1-小李"></el-input>
-        </el-form-item>
+        </el-form-item> 
         <el-form-item label="微信号" prop="wechatId">
           <el-input v-model="params.wechatId" placeholder="fulihui1"></el-input>
         </el-form-item>
@@ -91,7 +88,6 @@ export default {
       rules: ofarules,
       params: {
         name: '',
-        backupName: '',
         wechatId: '',
         originId: '',
         avatar: '',

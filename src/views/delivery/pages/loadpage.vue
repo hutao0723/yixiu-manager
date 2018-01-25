@@ -207,7 +207,7 @@ export default {
         params.loadPageUrl = searchForm.value
       }
       params.status = searchForm.status
-      this.$http.get('http://192.168.2.87:9101/loadpage/list', {params}).then(res => {
+      this.$http.get('/loadpage/list', {params}).then(res => {
         if (res.data.success) {
           this.totalSize = res.data.data.totalSize
           console.log(res.data.data.lists)

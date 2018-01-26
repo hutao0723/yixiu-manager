@@ -46,7 +46,7 @@
       <el-dialog title="新增公众号" :visible.sync="dialogVisible">
         <el-form  :inline="true" :model="adSubscriptionsForm" :rules="rules">
         <el-form-item label="待选公众号">
-          <el-select  v-model="adSubscriptionsForm.subscriptionId"  filterable remote reserve-keyword placeholder="待选公众号" :remote-method="remoteMethod" :loading="loading">
+          <el-select  v-model="subscriptionId"  filterable remote reserve-keyword placeholder="待选公众号" :remote-method="remoteMethod" :loading="loading">
               <el-option v-for="item in subscriptionsList" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
           <el-button type="text"  size="mini" icon="el-icon-search" @click="getLoadPageBySubscription()">查询</el-button>
@@ -75,9 +75,10 @@ export default {
       dialogVisible: false,
       rules: rules,
       adSubscriptionsForm: {
-        subscriptionId: null,
+        // subscriptionId: null,
         loadPageIds: []
       },
+      subscriptionId: null,
       loading: true,
       subscriptionsList: [
 
@@ -111,10 +112,10 @@ export default {
       })
     },
     getLoadPageBySubscription () {
-      if (this.adSubscriptionsForm.subscriptionId) {
+      if (this.subscriptionId) {
         let _params = {
           themeId: this.themeId,
-          subscriptionId: this.adSubscriptionsForm.subscriptionId
+          subscriptionId: this.subscriptionId
         }
         this.$http.get('/subscriptionTheme/getLoadPageBySubscription', {params: _params}).then(res => {
           if (res.data.success) {
@@ -148,10 +149,10 @@ export default {
       })
     },
     boundRelation () {
-      if (this.adSubscriptionsForm.subscriptionId && this.adSubscriptionsForm.loadPageIds.length) {
+      if (this.adSubscriptionsForm.loadPageIds.length) {
         let _params = Object.assign({}, this.adSubscriptionsForm)
-        // _params.loadPageIds = JSON.stringify(_params.loadPageIds)
         _params.loadPageIds = _params.loadPageIds.toString()
+        _params.themeId = this.themeId
         this.$http.get('/subscriptionTheme/boundRelation', {params: _params}).then(res => {
           if (res.data.success) {
             this.$message.success('保存成功')

@@ -150,7 +150,8 @@ export default {
     boundRelation () {
       if (this.adSubscriptionsForm.subscriptionId && this.adSubscriptionsForm.loadPageIds.length) {
         let _params = Object.assign({}, this.adSubscriptionsForm)
-        _params.loadPageIds = JSON.stringify(_params.loadPageIds)
+        // _params.loadPageIds = JSON.stringify(_params.loadPageIds)
+        _params.loadPageIds = _params.loadPageIds.toString()
         this.$http.get('/subscriptionTheme/boundRelation', {params: _params}).then(res => {
           if (res.data.success) {
             this.$message.success('保存成功')

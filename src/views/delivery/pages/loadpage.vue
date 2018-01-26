@@ -46,7 +46,7 @@
             <el-table-column prop="loadPageUrl" label="落地页"></el-table-column>
             <el-table-column prop="subscriptionName" label="公众号" width="200"></el-table-column>
             <el-table-column prop="thresholdNum" label="当日阈值" width="100"></el-table-column>
-            <el-table-column prop="todayNewFollow" label="当日新增关注" width="120"></el-table-column>
+            <el-table-column prop="todayFollowNum" label="当日新增关注" width="120"></el-table-column>
             <el-table-column prop="status" label="状态" width="120">
               <template slot-scope="scope">
                 <span v-if="scope.row.status === 0">
@@ -167,20 +167,6 @@ export default {
         status: '',
         thresholdNum: null
       },
-      subscriptionList: [
-        {
-          name: '福利会',
-          id: 1
-        },
-        {
-          name: '红花会',
-          id: 2
-        },
-        {
-          name: '哈哈哈哈会',
-          id: 3
-        }
-      ],
       pageOption: {
         pageNum: 1,
         size: 20

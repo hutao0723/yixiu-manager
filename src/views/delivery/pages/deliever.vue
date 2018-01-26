@@ -78,18 +78,23 @@
         <el-form :model="adPlanForm" ref="adPlanForm" :rules="rules">
           <el-form-item label="广告平台" :label-width="formLabelWidth" prop="adPlat">
             <el-select v-model="adPlanForm.planPlatform" placeholder="请选择投放平台">
-              <el-option label="推啊" value="0"></el-option>
-              <el-option label="广点通" value="1"></el-option>
+              <el-option label="推啊" value="推啊"></el-option>
+              <el-option label="广点通" value="广点通"></el-option>
             </el-select>
           </el-form-item>
           
-          <template v-if="adPlanForm.planPlatform == 0">
+          <template v-if="adPlanForm.planPlatform == '推啊'">
             <el-form-item label="广告计划" :label-width="formLabelWidth"  prop="planName">
-              <el-input v-model="adPlanForm.planName" auto-complete="off"></el-input>
+              <el-select v-model="planIndex" placeholder="请选择">
+                <el-option v-for="(item, index) in planList" :key="item.advertId" :label="item.advertName" :value="index">
+                  <span style="float: left">{{ item.advertName }}</span>
+                  <span style="float: right; color: #8492a6; font-size: 13px">{{ item.advertId }}</span>
+                </el-option>
+              </el-select>
             </el-form-item>              
           </template>
 
-          <template v-else-if="adPlanForm.planPlatform == 1">
+          <template v-else-if="adPlanForm.planPlatform == '广点通'">
             <el-form-item label="广告计划" :label-width="formLabelWidth"  prop="planName">
               <el-input v-model="adPlanForm.planName" auto-complete="off" placeholder="广告计划名称"></el-input>
             </el-form-item> 
@@ -167,11 +172,26 @@ export default {
         pushUrl: '',
         planName: '',
         planId: null,
-        themeId: '',
-        planPlatform: ''
+        themeId: '1',
+        planPlatform: '推啊'
       },
-      themeList: [
-
+      themeList: [],
+      planIndex: null,
+      selectPlan: {
+        advertId: null,
+        advertName: '',
+        promoteURL: ''
+      },
+      planList: [
+        {
+          advertId: 2804,
+          advertName: '132ad',
+          promoteURL: 'http://www.baidu.com'
+        }, {
+          advertId: 2805,
+          advertName: 'test-有效1',
+          promoteURL: 'http://www.tqmall.com'
+        }
       ],
       formLabelWidth: '100px'
     }
@@ -179,7 +199,32 @@ export default {
   created () {
     this.getAllPlanList()
   },
+  mounted () {
+    this.getAllTuiaList()
+    console.log(this.selectPlan)
+  },
+  watch: {
+    'planIndex': function (newVal) {
+      console.log(newVal)
+      if (newVal !== undefined) {
+        this.selectPlan = this.planList[newVal]
+        console.log(this.selectPlan)
+        this.adPlanForm.pushUrl = this.selectPlan.promoteURL
+        this.adPlanForm.planName = this.selectPlan.advertName
+        this.adPlanForm.planId = this.selectPlan.advertId
+      }
+    }
+  },
   methods: {
+    getAllTuiaList () {
+      this.$http.get('/advplan/tuia').then(res => {
+        if (res.data.success) {
+          this.planList = res.data.data
+        }
+      }, () => {
+        this.$message.error('获取推啊投放地址失败')
+      })
+    },
     onSearch () {
       let valueArr = Object.values(this.searchForm)
       let params = {
@@ -312,7 +357,6 @@ export default {
         this.$message.error('网络错误！')
       })
     }
-
   }
 }
 </script>

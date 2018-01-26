@@ -14,15 +14,16 @@
         <template>
           <el-form :inline="true" :model="searchForm" class="form" size="mini">
             <el-form-item>
-                <el-select v-model="searchForm.theme"  filterable remote reserve-keyword placeholder="请输入关键词" :remote-method="remoteMethod">
+              <el-input v-model="searchForm.theme" placeholder="主题名称"></el-input>              
+                <!-- <el-select v-model="searchForm.theme"  filterable remote reserve-keyword placeholder="请输入关键词" :remote-method="remoteMethod">
                     <el-option v-for="item in themeList" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                </el-select>
-            </el-form-item>           
+                </el-select> -->
+            </el-form-item>
             <el-form-item>
               <el-select v-model="searchForm.status" placeholder="主题状态">
                 <el-option label="启用" value="0"></el-option>
-                <el-option label="停用" value="1"></el-option>
-                <el-option label="系统停用" value="2"></el-option>
+                <el-option label="停用" value="2"></el-option>
+                <el-option label="系统停用" value="1"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item>
@@ -42,10 +43,10 @@
                 <span v-if="scope.row.status === 0">
                   启用
                 </span>
-                <span v-else-if="scope.row.status === 1">
+                <span v-else-if="scope.row.status === 2">
                   停用
                 </span>
-                <span v-else-if="scope.row.status === 2">
+                <span v-else-if="scope.row.status === 1">
                   系统停用
                 </span>
               </template>              
@@ -203,6 +204,7 @@ export default {
               type: 'success',
               message: '删除成功!'
             })
+            window.location.reload()
           } else {
             this.$message({
               type: 'error',
@@ -255,7 +257,7 @@ export default {
     onSearch () {
       let theme = this.searchForm.theme
       let status = this.searchForm.status
-      let size = 999
+      let size = 20
       this.$http.get('/subscriptionTheme/list', {params: {theme, status, size}}).then(res => {
         if (res.data.success) {
           if (res.data.data) {
@@ -287,10 +289,10 @@ export default {
       let id = this.themeForm.id
       let status = this.themeForm.status
       this.$http.get('/subscriptionTheme/changeStatus', {params: {id, status}}).then(res => {
-        console.log(res)
         if (res.data.success) {
           this.$message.success('切换成功')
           this.dialogofStatus = false
+          window.location.reload()
         } else {
           this.$message.error('保存失败')
         }
@@ -304,6 +306,7 @@ export default {
         if (res.data.success) {
           this.$message.success('保存成功')
           this.dialogofTheme = false
+          window.location.reload()
         } else {
           this.$message.error('保存失败')
         }

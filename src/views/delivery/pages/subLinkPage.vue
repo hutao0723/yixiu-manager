@@ -20,7 +20,19 @@
             <el-table-column prop="subscriptionName" label="公众号" width="200"></el-table-column>
             <el-table-column prop="thresholdNum" label="当日阈值" width="100"></el-table-column>
             <el-table-column prop="todayNewFollow" label="当日新增关注" width="120"></el-table-column>
-            <el-table-column prop="status" label="状态" width="120"></el-table-column>
+            <el-table-column prop="status" label="状态" width="120">
+              <template slot-scope="scope">
+                <span v-if="scope.row.status === 0">
+                  不可使用
+                </span>
+                <span v-else-if="scope.row.status === 1">
+                  待使用
+                </span>
+                <span v-else-if="scope.row.status === 2">
+                  已使用
+                </span>
+              </template>              
+            </el-table-column>
             <el-table-column  label="操作" width="150">
               <template slot-scope="scope">
                 <el-button type="text" size="small" @click="cancelRelation(scope.row)">移除</el-button>               
@@ -74,21 +86,9 @@ export default {
         {
           key: 1,
           label: '备选1'
-        },
-        {
-          key: 2,
-          label: '备选2'
         }
       ],
-      tableData: [
-        {
-          id: '1',
-          subscriptionName: '王小虎',
-          loadPageUrl: '普陀区',
-          thresholdNum: 1000,
-          todayNewFollow: 0,
-          status: 0
-        }]
+      tableData: []
     }
   },
   created () {
@@ -131,7 +131,6 @@ export default {
       }
     },
     remoteMethod (query) {
-      console.log(query)
       this.$http.get('/subscriptionInfo/list', {params: {name: query}}).then(res => {
         if (res.data.success) {
           let list = res.data.data.lists

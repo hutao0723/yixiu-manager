@@ -172,7 +172,7 @@ export default {
         pushUrl: '',
         planName: '',
         planId: null,
-        themeId: '1',
+        themeId: null,
         planPlatform: '推啊'
       },
       themeList: [],

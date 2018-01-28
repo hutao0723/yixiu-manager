@@ -104,8 +104,8 @@ export default {
       this.dialogVisible = true
     },
     getList () {
-      let id = this.$route.params.id
-      this.$http.get('/subscriptionTheme/getLoadPage', {params: {id}}).then(res => {
+      let themeId = this.$route.params.id
+      this.$http.get('/subscriptionTheme/getLoadPage', {params: {themeId}}).then(res => {
         if (res.data.sucess) {
           this.tableData = res.data.data
         }

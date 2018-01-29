@@ -46,7 +46,19 @@
             <el-table-column prop="pushUrl" label="投放地址"></el-table-column>
             <el-table-column prop="planName" label="广告计划名称（ID）" width="200"></el-table-column>
             <el-table-column prop="themeInfo" label="公众号主题（ID）" width="200"></el-table-column>
-            <el-table-column prop="themeStatus" label="主题状态" width="100"></el-table-column>
+            <el-table-column prop="themeStatus" label="主题状态" width="100">
+              <template slot-scope="scope">
+                <span v-if="scope.row.themeStatus === 0">
+                  启用
+                </span>
+                <span v-else-if="scope.row.themeStatus === 1">
+                  停用
+                </span>
+                <span v-else-if="scope.row.themeStatus === 2">
+                  系统停用
+                </span>
+              </template>               
+            </el-table-column>
             <el-table-column prop="planPlatform" label="广告平台" width="120"></el-table-column>
             <el-table-column  label="操作" width="150">
               <template slot-scope="scope">
@@ -57,7 +69,8 @@
         </template>
       </div>
       <div class="page-control">
-        <el-pagination background layout="prev, pager, next" :total="1000"></el-pagination>
+        <el-pagination background  :page-size="20" :current-page.sync="pageOption.pageNum"
+ @current-change="pageChange" layout="prev, pager, next" :total="totalSize"></el-pagination>
       </div>
     </div>
     <div class="creat-ad-connect-diolog">
@@ -65,18 +78,23 @@
         <el-form :model="adPlanForm" ref="adPlanForm" :rules="rules">
           <el-form-item label="广告平台" :label-width="formLabelWidth" prop="adPlat">
             <el-select v-model="adPlanForm.planPlatform" placeholder="请选择投放平台">
-              <el-option label="推啊" value="0"></el-option>
-              <el-option label="广点通" value="1"></el-option>
+              <el-option label="推啊" value="推啊"></el-option>
+              <el-option label="广点通" value="广点通"></el-option>
             </el-select>
           </el-form-item>
           
-          <template v-if="adPlanForm.planPlatform == 0">
+          <template v-if="adPlanForm.planPlatform == '推啊'">
             <el-form-item label="广告计划" :label-width="formLabelWidth"  prop="planName">
-              <el-input v-model="adPlanForm.planName" auto-complete="off"></el-input>
+              <el-select v-model="planIndex" placeholder="请选择">
+                <el-option v-for="(item, index) in planList" :key="item.advertId" :label="item.advertName" :value="index">
+                  <span style="float: left">{{ item.advertName }}</span>
+                  <span style="float: right; color: #8492a6; font-size: 13px">{{ item.advertId }}</span>
+                </el-option>
+              </el-select>
             </el-form-item>              
           </template>
 
-          <template v-else-if="adPlanForm.planPlatform == 1">
+          <template v-else-if="adPlanForm.planPlatform == '广点通'">
             <el-form-item label="广告计划" :label-width="formLabelWidth"  prop="planName">
               <el-input v-model="adPlanForm.planName" auto-complete="off" placeholder="广告计划名称"></el-input>
             </el-form-item> 
@@ -106,6 +124,7 @@
 
 <script>
 import {rules} from '../components/deliveryValidRules'
+import qs from 'qs'
 
 export default {
   name: 'delivery',
@@ -118,16 +137,16 @@ export default {
       },
       selectOptions: [
         {
-         value: 'planName',
-         label: '广告计划名称' 
+          value: 'planName',
+          label: '广告计划名称'
         },
         {
-         value: 'planId',
-         label: '广告计划id' 
+          value: 'planId',
+          label: '广告计划id'
         },
         {
-         value: 'pushUrl',
-         label: '投放地址' 
+          value: 'pushUrl',
+          label: '投放地址'
         }
 
       ],
@@ -135,30 +154,43 @@ export default {
       tableData: [
         {
           id: 3,
-          pushUrl: "www.tmall.com",
-          planName: "lala",
+          pushUrl: 'www.tmall.com',
+          planName: '',
           planId: 2,
-          planPlatform: "2",
-          themeInfo: "主题1(4)",
+          planPlatform: '',
+          themeInfo: '',
           themeStatus: 1
         }
       ],
+      pageOption: {
+        pageNum: 1,
+        size: 20
+      },
+      totalSize: 50,
       rules: rules,
       adPlanForm: {
         pushUrl: '',
         planName: '',
         planId: null,
-        themeId: '',
-        planPlatform: ''
+        themeId: null,
+        planPlatform: '推啊'
       },
-      themeList: [
+      themeList: [],
+      planIndex: null,
+      selectPlan: {
+        advertId: null,
+        advertName: '',
+        promoteURL: ''
+      },
+      planList: [
         {
-          label: '福利汇',
-          value: '01'
-        },
-        {
-          label: '福利汇1',
-          value: '02'
+          advertId: 2804,
+          advertName: '132ad',
+          promoteURL: 'http://www.baidu.com'
+        }, {
+          advertId: 2805,
+          advertName: 'test-有效1',
+          promoteURL: 'http://www.tqmall.com'
         }
       ],
       formLabelWidth: '100px'
@@ -167,20 +199,49 @@ export default {
   created () {
     this.getAllPlanList()
   },
+  mounted () {
+    this.getAllTuiaList()
+    console.log(this.selectPlan)
+  },
+  watch: {
+    'planIndex': function (newVal) {
+      console.log(newVal)
+      if (newVal !== undefined) {
+        this.selectPlan = this.planList[newVal]
+        console.log(this.selectPlan)
+        this.adPlanForm.pushUrl = this.selectPlan.promoteURL
+        this.adPlanForm.planName = this.selectPlan.advertName
+        this.adPlanForm.planId = this.selectPlan.advertId
+      }
+    }
+  },
   methods: {
-    onSearch() {
+    getAllTuiaList () {
+      this.$http.get('/advplan/tuia').then(res => {
+        if (res.data.success) {
+          this.planList = res.data.data
+        }
+      }, () => {
+        this.$message.error('获取推啊投放地址失败')
+      })
+    },
+    onSearch () {
       let valueArr = Object.values(this.searchForm)
       let params = {
         [valueArr[0]]: valueArr[1],
-        status: valueArr[2],
-        pageNum: 999
+        status: valueArr[2]
       }
-      this.$http.get('//192.168.2.87:9101/advplan/list', {
+      this.$http.get('/advplan/list', {
         params
       }).then(res => {
-        let data = res.data
         if (res.data.success) {
-          this.tableData = res.data.lists
+          if (res.data.data.lists) {
+            this.tableData = res.data.data.lists
+            this.totalSize = res.data.data.totalSize
+          } else {
+            this.tableData = []
+            this.totalSize = 1
+          }
         } else {
           let msg = res.data.desc
           this.$message.error(msg || '获取失败')
@@ -190,10 +251,10 @@ export default {
       })
     },
     getAllPlanList () {
-      this.$http.get('//192.168.2.87:9101/advplan/list').then(res => {
-        let data = res.data
+      this.$http.get('/advplan/list').then(res => {
         if (res.data.success) {
-          this.tableData = res.data.lists
+          this.tableData = res.data.data.lists
+          this.totalSize = res.data.data.totalSize
         } else {
           let msg = res.data.desc
           this.$message.error(msg || '获取失败')
@@ -202,11 +263,28 @@ export default {
         this.$message.error('网络错误！')
       })
     },
-    savePlan() {
+    pageChange () {
+      let valueArr = Object.values(this.searchForm)
+      let params = {
+        [valueArr[0]]: valueArr[1],
+        status: valueArr[2],
+        pageNum: this.pageOption.pageNum
+      }
+      this.$http.get('/advplan/list', {params}).then(res => {
+        if (res.data.success) {
+          this.tableData = res.data.data.lists
+        } else {
+          this.$message.error('获取数据失败')
+        }
+      }, () => {
+        this.$message.error('网络错误')
+      })
+    },
+    savePlan () {
       this.$refs['adPlanForm'].validate((valid) => {
         if (valid) {
           let _params = Object.assign(this.adPlanForm)
-          this.$http.post('//192.168.2.87:9101/advplan/save', _params).then(res => {
+          this.$http.post('/advplan/save', qs.stringify(_params)).then(res => {
             if (res.data.success) {
               this.$message.success('添加成功')
               this.dialogAdVisible = false
@@ -221,7 +299,7 @@ export default {
           console.log('error submit!!')
           return false
         }
-      });
+      })
     },
     delPlan (row) {
       let id = row.id
@@ -230,7 +308,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$http.get('//192.168.2.87:9101/advplan/delete', {params: {id}}).then(res => {
+        this.$http.get('/advplan/delete', {params: {id}}).then(res => {
           let msg = res.data.success
           if (msg) {
             this.$message({
@@ -256,11 +334,11 @@ export default {
       this.dialogAdVisible = true
     },
     // 模糊查询 主题
-    remoteMethod(query) {
-      this.$http.get('//192.168.2.87:9101/subscriptionTheme/list', {
+    remoteMethod (query) {
+      this.$http.get('/subscriptionTheme/list', {
         params: {
           theme: query,
-          pageNum: 999
+          size: 999
         }
       }).then(res => {
         if (res.data.success) {
@@ -279,7 +357,6 @@ export default {
         this.$message.error('网络错误！')
       })
     }
-
   }
 }
 </script>

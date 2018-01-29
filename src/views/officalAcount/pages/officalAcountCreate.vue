@@ -3,7 +3,7 @@
     <div class="title-wrap">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item :to="{ path: '/manager/officalAcount' }">公众号</el-breadcrumb-item>
-        <el-breadcrumb-item :to="{ path: '/manager' }">添加（编辑）</el-breadcrumb-item>
+        <el-breadcrumb-item>添加（编辑）</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="basic-edit-content">
@@ -11,10 +11,7 @@
       <el-form ref="params" :rules="rules"  :model="params" label-width="120px">
         <el-form-item label="公众号"  prop="name">
           <el-input v-model="params.name" placeholder="福利汇1"></el-input>
-        </el-form-item>
-        <el-form-item label="公众号名称" prop="backupName">
-          <el-input v-model="params.backupName" placeholder="福利汇1-小李"></el-input>
-        </el-form-item>
+        </el-form-item> 
         <el-form-item label="微信号" prop="wechatId">
           <el-input v-model="params.wechatId" placeholder="fulihui1"></el-input>
         </el-form-item>
@@ -23,26 +20,30 @@
         </el-form-item>
         <el-form-item label="头像">
           <div>
-            <el-upload class="upload-demo"  action="https://jsonplaceholder.typicode.com/posts/"    list-type="picture">
-              <el-button size="small" type="primary">点击上传</el-button>
-              <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+            <el-upload
+              action="/upyun/adminUploadImage"
+              list-type="picture-card"
+              :on-success="handleAvatarSuccess">
+              <i class="el-icon-plus"></i>
             </el-upload>
           </div>
         </el-form-item>
         <el-form-item label="二维码">
           <div>
-            <el-upload class="upload-demo"  action="https://jsonplaceholder.typicode.com/posts/"    list-type="picture">
-              <el-button size="small" type="primary">点击上传</el-button>
-              <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+            <el-upload
+              action="/upyun/adminUploadImage"
+              list-type="picture-card"
+              :on-success="handleQrcodeSuccess">
+              <i class="el-icon-plus"></i>
             </el-upload>
           </div>         
         </el-form-item>
         <el-form-item label="公众号类型" prop="type">
           <el-select v-model="params.type" placeholder="请选择活动区域">
-            <el-option label="普通订阅号" value="shanghai"></el-option>
-            <el-option label="认证订阅号" value="beijing"></el-option>
-            <el-option label="普通服务号" value="shanghai"></el-option>
-            <el-option label="认证服务号" value="beijing"></el-option>
+            <el-option label="普通订阅号" value="普通订阅号"></el-option>
+            <el-option label="认证订阅号" value="认证订阅号"></el-option>
+            <el-option label="普通服务号" value="普通服务号"></el-option>
+            <el-option label="认证服务号" value="认证服务号"></el-option>
           </el-select>
         </el-form-item>
         <p class="bottom-line">公众号开发设置</p>
@@ -63,7 +64,11 @@
           <el-input v-model="params.serverEaeskey"></el-input>
         </el-form-item>
         <el-form-item label="加密方式">
-          <el-input v-model="params.serverEacryType"></el-input>
+          <el-select v-model="params.serverEacryType" placeholder="请选择加密方式">
+            <el-option label="明文模式" value="明文模式"></el-option>
+            <el-option label="兼容模式" value="兼容模式"></el-option>
+            <el-option label="安全模式" value="安全模式"></el-option>
+          </el-select>
         </el-form-item>                                                                       
       </el-form>
     </div>
@@ -83,7 +88,6 @@ export default {
       rules: ofarules,
       params: {
         name: '',
-        backupName: '',
         wechatId: '',
         originId: '',
         avatar: '',
@@ -106,28 +110,42 @@ export default {
   },
   methods: {
     onSave () {
-      let _params = Object.assign(this.params)
-      this.$http
-        .post('//192.168.2.87:9101/subscriptionInfo/save', _params)
-        .then(res => {
-          let data = res.data
-          if (data.success) {
-            this.$message.success('保存成功')
-          } else {
-            let msg = data.desc || '保存失败'
-            this.$message.error(msg)
-            this.$router.push('/manager/officalAcount')
+      this.$refs['params'].validate((valid) => {
+        if (valid) {
+          let _params = Object.assign(this.params)
+          if (this.id) {
+            _params.id = this.id
           }
-        })
+          this.$http.post('/subscriptionInfo/save', _params).then(res => {
+            let data = res.data
+            if (data.success) {
+              this.$message.success('保存成功')
+            } else {
+              let msg = data.desc || '保存失败'
+              this.$message.error(msg)
+              this.$router.push('/manager/officalAcount')
+            }
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
     },
     getEditMsg (id) {
-      this.$http.get('//192.168.2.87:9101/subscriptionInfo/find', {
+      this.$http.get('/subscriptionInfo/find', {
         params: { id: id }
       }).then(res => {
-        if (res.success) {
+        if (res.data.success) {
           this.params = res.data.data
         }
       })
+    },
+    handleQrcodeSuccess (res) {
+      console.log(res)
+    },
+    handleAvatarSuccess (res) {
+      console.log(res)
     }
   }
 }
@@ -157,6 +175,29 @@ export default {
   .bottom-line {
     border-bottom: 1px dashed #ccc;
     padding: 10px 0;
+  }
+    .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
   }
 }
 </style>

@@ -55,7 +55,7 @@ export default {
     }
   },
   methods: {
-    openCollapse(){
+    openCollapse () {
       console.log(1)
       if (this.isShow) {
         console.log(2)
@@ -109,9 +109,12 @@ export default {
 
 }
 .menu-collapse{
-  background-color: #eee;
+  background-color: #F7F9FA;
     top: 0;
   bottom: 0;
+}
+.el-menu{
+  border-right: none
 }
 .transition-box {
   margin-bottom: 10px;
@@ -129,6 +132,6 @@ export default {
   position: fixed;
   top: 0;
   bottom: 0;
-  background-color: #eee
+  background-color: #F7F9FA
 }
 </style>

@@ -8,6 +8,8 @@ import ElementUI from 'element-ui'
 import './assets/normalize.css'
 import 'element-ui/lib/theme-chalk/index.css'
 import axios from 'axios'
+import qs from 'qs'
+
 Vue.prototype.$http = axios
 
 Vue.use(ElementUI)
@@ -19,6 +21,7 @@ new Vue({
   el: '#app',
   router,
   store,
+  qs,
   template: '<App/>',
   components: { App }
 })

@@ -1,6 +1,3 @@
-import request from '../../../service/delivery'
-import * as types from './mutationTypes'
-
 const state = {
   list: [],
   error: null

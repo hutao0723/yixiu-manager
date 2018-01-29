@@ -6,9 +6,9 @@
       </el-breadcrumb>
       <span class="add-ofa">
         <!-- <i class="iconfont icon-guanlian"></i> -->
-         <router-link :to="{ path: '/manager/officalAcount/create' }">
-          <span class="offical-acount">公众号</span>
-         </router-link>
+         <!-- <router-link :to="{ path: '/manager/officalAcount/create' }"> -->
+          <span class="offical-acount" @click="getWeChatSetting">公众号</span>
+         <!-- </router-link> -->
       </span>
     </div>
     <div class="content">
@@ -39,21 +39,20 @@
           <el-table :data="officalAcountList"  style="width: 100%" >
             <el-table-column prop="id" label="ID" ></el-table-column>
             <el-table-column prop="name" label="公众号" ></el-table-column>
-            <el-table-column prop="backupName" label="公众号名称" ></el-table-column>
             <el-table-column prop="todayNewFollow" label="当日新增关注" ></el-table-column>
             <el-table-column prop="todayNewUnFollow" label="当日取消关注"></el-table-column>
             <el-table-column  label="操作" width="150">
               <template slot-scope="scope">
-                <el-button size="mini" @click="edit(scope.row)">编辑</el-button>
-                <el-button type="danger" size="mini">删除</el-button>               
+                <el-button size="mini" @click="getWeChatSetting">授权</el-button>
+                <el-button type="danger" size="mini" @click="delAcount(scope.row)">删除</el-button>               
               </template>
             </el-table-column>
           </el-table>
         </template>        
       </div>
       <div class="page-control">
-        <el-pagination background  :current-page.sync="pageOption.pageNum"
- @current-change="pageChange" layout="prev, pager, next" :total="1000"></el-pagination>
+        <el-pagination background  :page-size="20" :current-page.sync="pageOption.pageNum"
+ @current-change="pageChange" layout="prev, pager, next" :total="totalSize"></el-pagination>
       </div>    
     </div>     
   </section>
@@ -64,10 +63,6 @@ export default {
   data () {
     return {
       searchOptions: [
-        {
-          value: 'backupName',
-          label: '公众号名称'
-        },
         {
           value: 'name',
           label: '公众号'
@@ -80,18 +75,21 @@ export default {
       },
       pageOption: {
         pageNum: 1,
-        size: 10
+        size: 20
       },
+      totalSize: 1,
       officalAcountList: [
         {
-          id: "1",
-          name: "今日财经",
-          backupName: "今日财经0.1",
-          todayNewFollow: "100",
-          todayNewUnFollow: "200"
+          id: 1,
+          name: 'adsa',
+          todayNewFollow: 10,
+          todayNewUnFollow: 200
         }
       ]
     }
+  },
+  created () {
+    this.getAllList()
   },
   methods: {
     handleCurrentChange () {
@@ -100,11 +98,30 @@ export default {
     onSearch () {
       let searchName = this.ofaSearchForm.searchWay
       let searchValue = this.ofaSearchForm.searchValue
-      let name, backupName
-      searchName === 'name' ? name = searchValue : backupName = searchValue
-      this.$http.get('//192.168.2.87:9101/subscriptionInfo/list', {params: {name: name, backupName: backupName}}).then(res => {
+      let name
+      searchName === 'name' ? name = searchValue : name = searchValue
+      this.$http.get('/subscriptionInfo/list', {params: {name: name, size: 999}}).then(res => {
+        if (res.data.success) {
+          if (res.data.data.lists) {
+            this.officalAcountList = res.data.data.lists
+            // 算出有多少条数据
+            this.totalSize = res.data.data.totalSize
+          } else {
+            this.officalAcountList = []
+            this.totalSize = 1
+          }
+        } else {
+          let msg = res.data.desc || '请求失败'
+          this.$message.error(msg)
+        }
+      })
+    },
+    getAllList () {
+      this.$http.get('/subscriptionInfo/list').then(res => {
         if (res.data.success) {
           this.officalAcountList = res.data.data.lists
+          // 算出有多少条数据
+          this.totalSize = res.data.data.totalSize
         } else {
           let msg = res.data.desc || '请求失败'
           this.$message.error(msg)
@@ -112,7 +129,7 @@ export default {
       })
     },
     pageChange () {
-      this.$http.get('//192.168.2.87:9101/subscriptionInfo/list', {params: this.pageOption}).then(res => {
+      this.$http.get('/subscriptionInfo/list', {params: this.pageOption}).then(res => {
         if (res.data.success) {
           this.officalAcountList = res.data.data.lists
         } else {
@@ -123,7 +140,43 @@ export default {
     },
     edit (row) {
       this.$router.push('/manager/officalAcount/create/' + row.id)
-
+    },
+    delAcount (row) {
+      let id = row.id
+      this.$confirm('确定删除主题吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$http.get('/subscriptionInfo/delete', {params: {id}}).then(res => {
+          let msg = res.data.success
+          if (msg) {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+          } else {
+            this.$message({
+              type: 'error',
+              message: '删除失败!'
+            })
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
+    getWeChatSetting () {
+      this.$http.get('/wechat/getAuthorization').then(res => {
+        console.log(res)
+        if (res.data.success) {
+          let redirectUrl = res.data.data
+          window.location.href = redirectUrl
+        }
+      })
     }
   }
 }

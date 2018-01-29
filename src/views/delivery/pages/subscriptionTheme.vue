@@ -14,15 +14,16 @@
         <template>
           <el-form :inline="true" :model="searchForm" class="form" size="mini">
             <el-form-item>
-                <el-select v-model="searchForm.theme"  filterable remote reserve-keyword placeholder="请输入关键词" :remote-method="remoteMethod">
+              <el-input v-model="searchForm.theme" placeholder="主题名称"></el-input>              
+                <!-- <el-select v-model="searchForm.theme"  filterable remote reserve-keyword placeholder="请输入关键词" :remote-method="remoteMethod">
                     <el-option v-for="item in themeList" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                </el-select>
-            </el-form-item>           
+                </el-select> -->
+            </el-form-item>
             <el-form-item>
               <el-select v-model="searchForm.status" placeholder="主题状态">
                 <el-option label="启用" value="0"></el-option>
-                <el-option label="停用" value="1"></el-option>
-                <el-option label="系统停用" value="2"></el-option>
+                <el-option label="停用" value="2"></el-option>
+                <el-option label="系统停用" value="1"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item>
@@ -37,7 +38,19 @@
             <el-table-column prop="id" label="ID" width="50"></el-table-column>
             <el-table-column prop="name" label="主题"></el-table-column>
             <el-table-column prop="subscriptionNum" label="公众号数量" ></el-table-column>
-            <el-table-column prop="status" label="主题状态" ></el-table-column>
+            <el-table-column prop="status" label="主题状态" >
+              <template slot-scope="scope">
+                <span v-if="scope.row.status === 0">
+                  启用
+                </span>
+                <span v-else-if="scope.row.status === 2">
+                  停用
+                </span>
+                <span v-else-if="scope.row.status === 1">
+                  系统停用
+                </span>
+              </template>              
+            </el-table-column>
             <el-table-column  label="操作" width="250">
               <template slot-scope="scope">
                 <el-button type="text" size="small" @click="openDialogEdit(scope.row)">编辑</el-button>
@@ -53,7 +66,8 @@
         </template>
       </div>
       <div class="page-control">
-        <el-pagination background layout="prev, pager, next" :total="1000"></el-pagination>
+        <el-pagination background :page-size="20"  :current-page.sync="pageOption.pageNum"
+ @current-change="pageChange" layout="prev, pager, next" :total="totalSize"></el-pagination>
       </div>
     </div>
     <div class="add-theme-diolog">
@@ -111,7 +125,7 @@
 
 <script>
 import { themeRules } from '../components/deliveryValidRules'
-console.log(themeRules)
+import qs from 'qs'
 export default {
   name: 'delivery',
   data () {
@@ -122,10 +136,15 @@ export default {
       },
       themeList: [
         {
-          label: 'aa',
-          value: '主题1'
+          label: '',
+          value: ''
         }
       ],
+      pageOption: {
+        pageNum: 1,
+        size: 20
+      },
+      totalSize: 5,
       loading: '',
       formLabelWidth: '80px',
       dialogofTheme: false,
@@ -140,27 +159,20 @@ export default {
         theme: '',
         copyTheme: ''
       },
-      tableData: [
-        {
-          id: '5',
-          name: '王小虎',
-          subscriptionNum: '上海',
-          status: '普陀区'
-        }
-      ]
+      tableData: []
     }
   },
   created () {
     this.getAllThemeList()
   },
   methods: {
-
     openDialogTheme () {
       this.dialogofTheme = true
     },
     openDilogStatus (row) {
       this.dialogofStatus = true
       this.themeForm.id = row.id
+      this.themeForm.status = row.status
     },
     openDialogEdit (row) {
       this.dialogofEdit = true
@@ -170,6 +182,7 @@ export default {
     openDilogCpTheme (row) {
       this.dialogofCpTheme = true
       this.themeForm.copyTheme = row.name + '[复制]'
+      this.themeForm.id = row.id
     },
     redirectLinkPage (row) {
       let theme = row.name
@@ -184,13 +197,14 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$http.get('//192.168.2.87:9101/subscriptionTheme/delete', {params: {id}}).then(res => {
+        this.$http.get('/subscriptionTheme/delete', {params: {id}}).then(res => {
           let msg = res.data.success
-          if (!msg) {
+          if (msg) {
             this.$message({
               type: 'success',
               message: '删除成功!'
             })
+            window.location.reload()
           } else {
             this.$message({
               type: 'error',
@@ -205,70 +219,121 @@ export default {
         })
       })
     },
-    remoteMethod () {
-      
+    remoteMethod (query) {
+      this.$http.get('/subscriptionTheme/list', {
+        params: {
+          theme: query,
+          size: 999
+        }
+      }).then(res => {
+        if (res.data.success) {
+          let data = res.data.data.lists
+          data = data.map(item => {
+            return {
+              label: item.name,
+              value: item.id
+            }
+          })
+          this.themeList = data
+        } else {
+          this.$message.success('获取失败')
+        }
+      }, () => {
+        this.$message.error('网络错误！')
+      })
     },
     getAllThemeList () {
-      this.$http.get('//192.168.2.87:9101/subscriptionTheme/list').then(res => {
+      this.$http.get('/subscriptionTheme/list').then(res => {
         if (res.data.success) {
           this.tableData = res.data.data.lists
+          this.totalSize = res.data.data.totalSize
+        } else {
+          this.$message.error('获取数据失败')
         }
+      }, () => {
+        this.$message.error('网络错误')
       })
     },
     onSearch () {
       let theme = this.searchForm.theme
       let status = this.searchForm.status
-      let pageNum = 999
-      this.$http.get('//192.168.2.87:9101/subscriptionTheme/list', {params: {theme, status,pageNum}}).then(res => {
-        console.log(res)
+      let size = 20
+      this.$http.get('http://192.168.2.87:9101/subscriptionTheme/list', {params: {theme, status, size}}).then(res => {
+        if (res.data.success) {
+          if (res.data.data.lists) {
+            this.tableData = res.data.data.lists
+            this.totalSize = res.data.data.totalSize
+          } else {
+            this.tableData = []
+            this.totalSize = 1
+          }
+        } else {
+          this.$message.error('获取数据失败')
+        }
+      }, () => {
+        this.$message.error('网络错误')
+      })
+    },
+    pageChange () {
+      this.$http.get('/subscriptionTheme/list', {params: this.pageOption}).then(res => {
         if (res.data.success) {
           this.tableData = res.data.data.lists
+        } else {
+          this.$message.error('获取数据失败')
         }
+      }, () => {
+        this.$message.error('网络错误')
       })
     },
     changeStatus () {
       let id = this.themeForm.id
       let status = this.themeForm.status
-      this.$http.get('/subscriptionTheme/changeStatus', {params: {id,status}}).then(res => {
-        console.log(res)
+      this.$http.get('/subscriptionTheme/changeStatus', {params: {id, status}}).then(res => {
         if (res.data.success) {
-          this.$message.success('保存成功')
+          this.$message.success('切换成功')
+          this.dialogofStatus = false
+          window.location.reload()
         } else {
           this.$message.error('保存失败')
         }
-      },() => {
+      }, () => {
         this.$message.error('网络错误')
       })
     },
     addTheme () {
       let newTheme = this.themeForm.newTheme
-      this.$http.post('//192.168.2.87:9101/subscriptionTheme/save', {name:newTheme}).then(res => {
+      this.$http.post('/subscriptionTheme/save', qs.stringify({name: newTheme})).then(res => {
         if (res.data.success) {
           this.$message.success('保存成功')
+          this.dialogofTheme = false
+          window.location.reload()
         } else {
           this.$message.error('保存失败')
         }
-      },() => {
+      }, () => {
         this.$message.error('网络错误！')
       })
     },
     editTheme () {
       let eiittheme = this.themeForm.theme
-      let id =  this.themeForm.id
-      this.$http.post('//192.168.2.87:9101/subscriptionTheme/save', {name: eiittheme, id: id}).then(res => {
+      let id = this.themeForm.id
+      this.$http.post('/subscriptionTheme/save', qs.stringify({name: eiittheme, id: id})).then(res => {
         if (res.data.success) {
           this.$message.success('保存成功')
+          this.dialogofEdit = false
+          window.location.reload()
         } else {
           this.$message.error('保存失败')
         }
-      },() => {
+      }, () => {
         this.$message.error('网络错误！')
       })
     },
     copyTheme () {
       let copyTheme = this.themeForm.copyTheme
       let id = this.themeForm.id
-      this.$http.get('//192.168.2.87:9101/subscriptionTheme/copy', {params: {themeName: copyTheme, id: id}}).then(res => {
+      console.log(id)
+      this.$http.get('/subscriptionTheme/copy', {params: {themeName: copyTheme, id: id}}).then(res => {
         if (res.data.success) {
           this.$message.success('复制成功')
           window.location.reload()
@@ -325,5 +390,10 @@ export default {
   }
 
 }
-
+.el-dialog__body{
+  overflow: hidden;
+  .btn-wrap{
+    float: right;
+  }
+}
 </style>

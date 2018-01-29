@@ -105,8 +105,8 @@ export default {
     },
     getList () {
       let themeId = this.$route.params.id
-      this.$http.get('/subscriptionTheme/getLoadPage', {params: {themeId}}).then(res => {
-        if (res.data.sucess) {
+      this.$http.get('http://192.168.2.87:9101/subscriptionTheme/getLoadPage', {params: {themeId}}).then(res => {
+        if (res.data.success) {
           this.tableData = res.data.data
         }
       })
@@ -170,10 +170,12 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        let id = row.id
-        this.$http.get('/subscriptionTheme/removeBoundRelation', {
+        let loadPageId = row.id
+        let themeId = this.themeId
+        this.$http.get('http://192.168.2.87:9101/subscriptionTheme/removeBoundRelation', {
           params: {
-            id
+            themeId,
+            loadPageId
           }
         }).then(res => {
           if (res.data.success) {

@@ -15,6 +15,10 @@ Vue.use(Router)
 
 export const constantRouterMap = [
   {
+    path: '/',
+    redirect: '/manager/dlv'
+  },
+  {
     path: '/authorization',
     // redirect: '/manager/dlv'
     component: login

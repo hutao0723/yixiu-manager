@@ -259,6 +259,7 @@ export default {
           if (res.data.data) {
             this.dialogStatusVisible = false
             this.$message.success('切换成功')
+            window.location.reload()
           } else {
             this.dialogStatusVisible = false
             this.$message.success('切换失败')
@@ -277,6 +278,7 @@ export default {
         if (res.data.success) {
           this.dialogThresholdVisible = false
           this.$message.success('修改成功')
+          window.location.reload()
         }
       })
     },

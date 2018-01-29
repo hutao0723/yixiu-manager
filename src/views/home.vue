@@ -30,9 +30,9 @@
           </el-col>
           <div class="control-wrap">
             <div class="exit-wrap">
-              <a href="#">
+              <!-- <a href="#">
                 <span class="exit">退出</span>
-              </a>
+              </a> -->
             </div>
             <span class="name">有粉</span>
           </div>

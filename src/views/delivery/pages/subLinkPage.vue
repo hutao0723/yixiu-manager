@@ -105,7 +105,7 @@ export default {
     },
     getList () {
       let themeId = this.$route.params.id
-      this.$http.get('http://192.168.2.87:9101/subscriptionTheme/getLoadPage', {params: {themeId}}).then(res => {
+      this.$http.get('/subscriptionTheme/getLoadPage', {params: {themeId}}).then(res => {
         if (res.data.success) {
           this.tableData = res.data.data
         }
@@ -172,7 +172,7 @@ export default {
       }).then(() => {
         let loadPageId = row.id
         let themeId = this.themeId
-        this.$http.get('http://192.168.2.87:9101/subscriptionTheme/removeBoundRelation', {
+        this.$http.get('/subscriptionTheme/removeBoundRelation', {
           params: {
             themeId,
             loadPageId

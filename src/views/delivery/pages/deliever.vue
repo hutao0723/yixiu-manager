@@ -235,7 +235,7 @@ export default {
         params
       }).then(res => {
         if (res.data.success) {
-          if (res.data.data) {
+          if (res.data.data.lists) {
             this.tableData = res.data.data.lists
             this.totalSize = res.data.data.totalSize
           } else {

@@ -102,9 +102,14 @@ export default {
       searchName === 'name' ? name = searchValue : name = searchValue
       this.$http.get('/subscriptionInfo/list', {params: {name: name, size: 999}}).then(res => {
         if (res.data.success) {
-          this.officalAcountList = res.data.data.lists
-          // 算出有多少条数据
-          this.totalSize = res.data.data.totalSize
+          if (res.data.data.lists) {
+            this.officalAcountList = res.data.data.lists
+            // 算出有多少条数据
+            this.totalSize = res.data.data.totalSize
+          } else {
+            this.officalAcountList = []
+            this.totalSize = 1
+          }
         } else {
           let msg = res.data.desc || '请求失败'
           this.$message.error(msg)

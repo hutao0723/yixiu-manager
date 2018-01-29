@@ -258,9 +258,9 @@ export default {
       let theme = this.searchForm.theme
       let status = this.searchForm.status
       let size = 20
-      this.$http.get('/subscriptionTheme/list', {params: {theme, status, size}}).then(res => {
+      this.$http.get('http://192.168.2.87:9101/subscriptionTheme/list', {params: {theme, status, size}}).then(res => {
         if (res.data.success) {
-          if (res.data.data) {
+          if (res.data.data.lists) {
             this.tableData = res.data.data.lists
             this.totalSize = res.data.data.totalSize
           } else {

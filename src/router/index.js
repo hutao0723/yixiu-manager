@@ -9,13 +9,19 @@ import officalAcount from '@/views/officalAcount/pages/officalAcountList'
 import officalAcountCreate from '@/views/officalAcount/pages/officalAcountCreate'
 import loadpage from '@/views/delivery/pages/loadpage'
 import subLinkPage from '@/views/delivery/pages/subLinkPage'
-
+import login from '../views/login/login'
+import successPage from '../views/login/successPage'
 Vue.use(Router)
 
 export const constantRouterMap = [
   {
-    path: '/',
-    redirect: '/manager/dlv'
+    path: '/authorization',
+    // redirect: '/manager/dlv'
+    component: login
+  },
+  {
+    path: '/successPage',
+    component: successPage
   },
   {
     path: '/manager',

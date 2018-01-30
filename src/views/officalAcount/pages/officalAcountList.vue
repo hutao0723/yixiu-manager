@@ -151,10 +151,18 @@ export default {
         this.$http.get('/subscriptionInfo/delete', {params: {id}}).then(res => {
           let msg = res.data.success
           if (msg) {
-            this.$message({
-              type: 'success',
-              message: '删除成功!'
-            })
+            if (res.data.data) {
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              })
+              window.location.reload()
+            } else {
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              })
+            }
           } else {
             this.$message({
               type: 'error',

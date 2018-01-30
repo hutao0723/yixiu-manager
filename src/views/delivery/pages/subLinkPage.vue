@@ -179,7 +179,12 @@ export default {
           }
         }).then(res => {
           if (res.data.success) {
-            this.$message.success('移除成功')
+            if (res.data.data) {
+              this.$message.success('移除成功')
+              window.location.reload()
+            } else {
+              this.$message.error('移除失败')
+            }
           } else {
             this.$message.error('移除失败')
           }

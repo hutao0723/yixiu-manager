@@ -51,10 +51,10 @@
                 <span v-if="scope.row.themeStatus === 0">
                   启用
                 </span>
-                <span v-else-if="scope.row.themeStatus === 1">
+                <span v-else-if="scope.row.themeStatus === 2">
                   停用
                 </span>
-                <span v-else-if="scope.row.themeStatus === 2">
+                <span v-else-if="scope.row.themeStatus === 1">
                   系统停用
                 </span>
               </template>               
@@ -106,7 +106,7 @@
           </template>
 
           <el-form-item label="投放地址" :label-width="formLabelWidth"  prop="pushUrl">
-            <el-input v-model="adPlanForm.pushUrl" auto-complete="off" placeholder="https://"></el-input>
+            <el-input :disabled="adPlanForm.planPlatform == '推啊'" v-model="adPlanForm.pushUrl" auto-complete="off" placeholder="https://"></el-input>
           </el-form-item>
           <el-form-item label="公众号主题" :label-width="formLabelWidth" prop="themeId">
             <el-select  v-model="adPlanForm.themeId"  filterable remote reserve-keyword placeholder="请选择" :remote-method="remoteMethod">
@@ -311,11 +311,18 @@ export default {
         this.$http.get('/advplan/delete', {params: {id}}).then(res => {
           let msg = res.data.success
           if (msg) {
-            this.$message({
-              type: 'success',
-              message: '删除成功!'
-            })
-            window.location.reload()
+            if (res.data.data) {
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              })
+              window.location.reload()
+            } else {
+              this.$message({
+                type: 'success',
+                message: '删除失败!'
+              })
+            }
           } else {
             this.$message({
               type: 'error',

@@ -71,7 +71,7 @@
         </template>
       </div>
       <div class="page-control">
-        <el-pagination background   :page-size="20" :current-page="pageOption.pageNum"
+        <el-pagination background   :page-size="20" :current-page.sync="pageOption.pageNum"
  @current-change="pageChange" layout="prev, pager, next" :total="totalSize"></el-pagination>
       </div>
     </div>
@@ -140,14 +140,6 @@ export default {
           status: ''
         },
         officalAcountOptions: [
-          {
-            label: '公众号',
-            value: 'name'
-          },
-          {
-            label: '落地页',
-            value: 'loadPageUrl'
-          }
         ]
       },
       loading: false,
@@ -324,11 +316,19 @@ export default {
       }).then(() => {
         this.$http.get('/loadpage/delete', {params: {id}}).then(res => {
           let msg = res.data.success
-          if (!msg) {
-            this.$message({
-              type: 'success',
-              message: '删除成功!'
-            })
+          if (msg) {
+            if (res.data.data) {
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              })
+              window.location.reload()
+            } else {
+              this.$message({
+                type: 'error',
+                message: '删除失败!'
+              })
+            }
           } else {
             this.$message({
               type: 'error',

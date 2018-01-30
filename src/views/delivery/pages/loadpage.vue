@@ -203,7 +203,7 @@ export default {
       })
     },
     getAllList () {
-      this.$http.get('http://192.168.2.87:9101/loadpage/list').then(res => {
+      this.$http.get('/loadpage/list').then(res => {
         if (res.data.success) {
           this.totalSize = res.data.data.totalSize
           this.tableData = res.data.data.lists

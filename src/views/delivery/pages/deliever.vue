@@ -344,7 +344,7 @@ export default {
     remoteMethod (query) {
       this.$http.get('/subscriptionTheme/all', {
         params: {
-          theme: query
+          themeName: query
         }
       }).then(res => {
         if (res.data.success) {

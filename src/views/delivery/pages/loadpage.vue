@@ -140,6 +140,14 @@ export default {
           status: ''
         },
         officalAcountOptions: [
+          {
+            label: '公众号',
+            value: 'name'
+          },
+          {
+            label: '落地页',
+            value: 'loadPageUrl'
+          }
         ]
       },
       loading: false,

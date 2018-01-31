@@ -311,9 +311,13 @@ export default {
       let newTheme = this.themeForm.newTheme
       this.$http.post('/subscriptionTheme/save', qs.stringify({name: newTheme})).then(res => {
         if (res.data.success) {
-          this.$message.success('保存成功')
-          this.dialogofTheme = false
-          window.location.reload()
+          if (res.data.data) {
+            this.$message.success('保存成功')
+            this.dialogofTheme = false
+            window.location.reload()
+          } else {
+            this.$message.error('保存失败')
+          }
         } else {
           this.$message.error('保存失败')
         }
@@ -326,9 +330,13 @@ export default {
       let id = this.themeForm.id
       this.$http.post('/subscriptionTheme/save', qs.stringify({name: eiittheme, id: id})).then(res => {
         if (res.data.success) {
-          this.$message.success('保存成功')
-          this.dialogofEdit = false
-          window.location.reload()
+          if (res.data.data) {
+            this.$message.success('保存成功')
+            this.dialogofEdit = false
+            window.location.reload()
+          } else {
+            this.$message.error('保存失败')
+          }
         } else {
           this.$message.error('保存失败')
         }

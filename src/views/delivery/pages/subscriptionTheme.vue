@@ -350,8 +350,12 @@ export default {
       console.log(id)
       this.$http.get('/subscriptionTheme/copy', {params: {themeName: copyTheme, id: id}}).then(res => {
         if (res.data.success) {
-          this.$message.success('复制成功')
-          window.location.reload()
+          if (res.data.data) {
+            this.$message.success('复制成功')
+            window.location.reload()
+          } else {
+            this.$message.error('复制失败')
+          }
         } else {
           this.$message.error('复制失败')
         }

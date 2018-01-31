@@ -342,10 +342,9 @@ export default {
     },
     // 模糊查询 主题
     remoteMethod (query) {
-      this.$http.get('/subscriptionTheme/list', {
+      this.$http.get('/subscriptionTheme/all', {
         params: {
-          theme: query,
-          size: 999
+          theme: query
         }
       }).then(res => {
         if (res.data.success) {

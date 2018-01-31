@@ -16,7 +16,7 @@
             <el-form-item>
               <el-select v-model="searchForm.data.searchName" placeholder="选取公众号">
                 <el-option
-                  v-for="item in searchForm.officalAcountOptions"
+                  v-for="item in searchForm.selectOptions"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -139,7 +139,7 @@ export default {
           value: '',
           status: ''
         },
-        officalAcountOptions: [
+        selectOptions: [
           {
             label: '公众号',
             value: 'name'
@@ -148,6 +148,9 @@ export default {
             label: '落地页',
             value: 'loadPageUrl'
           }
+        ],
+        officalAcountOptions: [
+
         ]
       },
       loading: false,

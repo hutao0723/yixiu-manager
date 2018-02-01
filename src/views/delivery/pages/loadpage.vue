@@ -16,7 +16,7 @@
             <el-form-item>
               <el-select v-model="searchForm.data.searchName" placeholder="选取公众号">
                 <el-option
-                  v-for="item in searchForm.selectOptions"
+                  v-for="item in searchForm.officalAcountOptions"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -139,18 +139,7 @@ export default {
           value: '',
           status: ''
         },
-        selectOptions: [
-          {
-            label: '公众号',
-            value: 'name'
-          },
-          {
-            label: '落地页',
-            value: 'loadPageUrl'
-          }
-        ],
         officalAcountOptions: [
-
         ]
       },
       loading: false,
@@ -233,13 +222,16 @@ export default {
           params.thresholdNum = +params.thresholdNum
           console.log(params)
           this.$http.post('/loadpage/save', qs.stringify(params)).then(res => {
-            console.log(res)
             if (res.data.success) {
-              this.$message.success('创建成功')
-              this.dialogLoadPageVisible = false
-              window.location.reload()
+              if (res.data.data) {
+                this.$message.success('创建成功')
+                this.dialogLoadPageVisible = false
+                window.location.reload()
+              } else {
+                this.$message.error('创建失败')
+              }
             } else {
-              this.$message.error(`${res.data.desc || 'erroe'}`)
+              this.$message.error(`${res.data.desc || '网络错误'}`)
             }
           }, () => {
             this.$message.error('网络错误')

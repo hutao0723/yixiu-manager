@@ -4,9 +4,9 @@ const checkthresholdNum = (rule, value, callback) => {
   }
   setTimeout(() => {
     console.log(value)
-    var rexp = /^[1-9]\d*$/
+    var rexp = /^[1-9][0-9]*$/
     if (!rexp.test(value)) {
-      callback(new Error('请输入数字值'))
+      callback(new Error('请输入整数'))
     } else {
       if (value > 1000000) {
         callback(new Error('阈值必须小于1000000'))
@@ -22,7 +22,7 @@ const checkloadPageUrl = (rule, value, callback) => {
   }
   setTimeout(() => {
     if (value > 1000) {
-      callback(new Error('阈值必须小于1000000'))
+      callback(new Error('落地页长度必须小于1000000'))
     } else {
       callback()
     }

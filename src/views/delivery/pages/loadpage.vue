@@ -111,7 +111,7 @@
     </div>
     <div class="edit-threshold-diolog">
       <el-dialog title="设置阈值" :visible.sync="dialogThresholdVisible">
-        <el-form :model="changeForm" :rules="rules">
+        <el-form ref="changeThresho" :model="changeForm" :rules="rules">
           <el-form-item label="阈值" :label-width="formLabelWidth"  prop="thresholdNum">
             <el-input v-model="changeForm.thresholdNum" auto-complete="off"></el-input>
           </el-form-item>                     
@@ -274,16 +274,23 @@ export default {
     },
     // 阈值
     changeThresholdNum () {
-      let thresholdNum = +this.changeForm.thresholdNum
-      let id = this.changeForm.id
-      console.log(id)
-      this.$http.get('/loadpage/changethresholdNum', {params: {
-        thresholdNum, id
-      }}).then(res => {
-        if (res.data.success) {
-          this.dialogThresholdVisible = false
-          this.$message.success('修改成功')
-          window.location.reload()
+      this.$refs['changeThresho'].validate((valid) => {
+        if (valid) {
+          let thresholdNum = +this.changeForm.thresholdNum
+          let id = this.changeForm.id
+          console.log(id)
+          this.$http.get('/loadpage/changethresholdNum', {params: {
+            thresholdNum, id
+          }}).then(res => {
+            if (res.data.success) {
+              this.dialogThresholdVisible = false
+              this.$message.success('修改成功')
+              window.location.reload()
+            }
+          })
+        } else {
+          console.log('error submit!!')
+          return false
         }
       })
     },

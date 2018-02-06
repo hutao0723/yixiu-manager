@@ -5,13 +5,13 @@
 			"templateId": 1,
 			"userVersion": "V1.5",
 			"userDesc": "这是帮帮帮1.5版本",
-			"createTime": "2017-09-09"
+			"createTime": 1519202014000
 		},
 		{
 			"templateId": 2,
 			"userVersion": "V1.6",
 			"userDesc": "这是帮帮帮1.6版本",
-			"createTime": "2017-09-09"
+			"createTime": 1519202014000
 		}
 	]
 }

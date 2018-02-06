@@ -89,7 +89,11 @@
               <el-table-column prop="templateId" label="模板ID" ></el-table-column>
               <el-table-column prop="userVersion" label="版本号" ></el-table-column>
               <el-table-column prop="userDesc" label="描述" ></el-table-column>
-              <el-table-column prop="createTime" label="修改时间"></el-table-column>
+              <el-table-column prop="createTime" label="修改时间">
+                <template slot-scope="scope">
+                  {{formatDateNew(scope.row.createTime)}}
+                </template>
+              </el-table-column>
               <el-table-column label="选择">
                 <template slot-scope="scope">
                   <el-radio v-model="templateId" :label="scope.row.templateId">{{labelholder}}</el-radio>
@@ -107,6 +111,7 @@
 </template>
 
 <script>
+import { formatDateNew } from '../../../utils/dateUtils';
 export default {
   data () {
     return {
@@ -149,6 +154,7 @@ export default {
     this.getCodeMngInfo()
   },
   methods: {
+    formatDateNew: formatDateNew,
     getCodeMngInfo () {
       let appId = this.$route.params.id
       this.$http.get('/miniapp/codemng', {params: {appId}}).then(res => {

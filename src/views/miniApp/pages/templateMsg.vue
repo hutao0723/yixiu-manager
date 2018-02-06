@@ -64,6 +64,7 @@
 </template>
 
 <script>
+import { formatDateNew } from '../../../utils/dateUtils';
 export default {
   data () {
     return {
@@ -79,7 +80,7 @@ export default {
       ],
       searchForm: {
         name: 'belongDate',
-        value: ''
+        value: formatDateNew(new Date())
       },
       pageOption: {
         pageNum: 1,
@@ -115,7 +116,12 @@ export default {
     },
     getTempMsgList () {
       let appId = this.$route.params.id
-      this.$http.get('/miniapp/tplmsg/page', {params: {appId}}).then(res => {
+      let valueArr = Object.values(this.searchForm)
+      let params = {
+        appId: appId,
+        [valueArr[0]]: valueArr[1]
+      }
+      this.$http.get('/miniapp/tplmsg/page', {params: params}).then(res => {
         let resp = res.data
         if (resp.success) {
           this.tempMsgList = resp.data.lists

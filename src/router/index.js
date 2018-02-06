@@ -128,13 +128,13 @@ export const constantRouterMap = [
             }
           },
           {
-            path: 'addEditPushMsg/:appId/:odpsId',
+            path: 'addEditPushMsg/:appId/:odpsId/:expireDate',
             component: function (resolve) {
               require(['../views/miniApp/pages/addEditPushMsg'], resolve)
             }
           },
           {
-            path: 'addEditPushMsg/:appId/:odpsId/:id',
+            path: 'addEditPushMsg/:appId/:odpsId/:expireDate/:id',
             component: function (resolve) {
               require(['../views/miniApp/pages/addEditPushMsg'], resolve)
             }

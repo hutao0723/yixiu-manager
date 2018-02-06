@@ -16,7 +16,7 @@
         <template>
           <el-form :inline="true" class="demo-form-inline" size="mini">
             <el-form-item label="小程序:">{{pushInfo.nickName}}</el-form-item>
-            <el-form-item label="创建时间:">{{pushInfo.gmtCreate}}</el-form-item>
+            <el-form-item label="创建时间:">{{formatDateNew(pushInfo.gmtCreate)}}</el-form-item>
             <el-form-item label="触发类型:">{{pushInfo.formTypeValue}}</el-form-item>
           </el-form>
         </template>
@@ -25,16 +25,29 @@
         <template>
           <el-table :data="pushList"  style="width: 100%" >
             <el-table-column prop="id" label="ID" width="60"></el-table-column>
-            <el-table-column prop="gmtCreate" label="创建时间" ></el-table-column>
-            <el-table-column prop="gmtModified" label="更新时间"></el-table-column>
-            <el-table-column prop="pushTime" label="推送时间" ></el-table-column>
+            <el-table-column prop="gmtCreate" label="创建时间" >
+              <template slot-scope="scope">
+                {{formatDateNew(scope.row.gmtCreate)}}
+              </template>
+            </el-table-column>
+            <el-table-column prop="gmtModified" label="更新时间">
+              <template slot-scope="scope">
+                {{formatDateNew(scope.row.gmtModified)}}
+              </template>
+            </el-table-column>
+            <el-table-column prop="pushTime" label="推送时间" >
+              <template slot-scope="scope">
+                {{formatDateNew(scope.row.pushTime)}}
+              </template>
+            </el-table-column>
             <el-table-column prop="pushNum" label="预计可触达用户数" width="140"></el-table-column>
             <el-table-column prop="pushStatusValue" label="推送状态" ></el-table-column>
             <el-table-column  label="操作" >
               <template slot-scope="scope">
-                <router-link :to="{ path: '/manager/miniApp/addEditPushMsg/' + pushInfo.appId + '/' + pushInfo.odpsId + '/' + scope.row.id }">
+                <router-link :to="{ path: '/manager/miniApp/addEditPushMsg/' + pushInfo.appId + '/' + pushInfo.odpsId + '/' + pushInfo.expireDate + '/' + scope.row.id }" v-if="scope.row.pushStatusValue === '待推送'">
                   <el-button type="text" size="mini">编辑</el-button>   
                 </router-link>
+                <el-button type="text" size="mini" disabled v-else>编辑</el-button>
                 <el-button type="text" size="mini" @click="delPlan(scope.row)">删除</el-button>           
               </template>
             </el-table-column>
@@ -46,6 +59,7 @@
 </template>
 
 <script>
+import { formatDateNew } from '../../../utils/dateUtils';
 export default {
   data () {
     return {
@@ -57,6 +71,7 @@ export default {
     this.templatePushList()
   },
   methods: {
+    formatDateNew: formatDateNew,
     templatePushList () {
       let odpsId = this.$route.params.id
       this.$http.get('/miniapp/templatePushList', {params: {odpsId}}).then(res => {
@@ -78,7 +93,7 @@ export default {
           message: '已存在一条推送计划，暂时不能再添加'
         })
       } else {
-        this.$router.push('/manager/miniApp/addEditPushMsg/' + this.pushInfo.appId + '/' + this.pushInfo.odpsId )
+        this.$router.push('/manager/miniApp/addEditPushMsg/' + this.pushInfo.appId + '/' + this.pushInfo.odpsId + '/' + pushInfo.expireDate )
       }
     },
     delPlan (row) {

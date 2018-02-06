@@ -6,7 +6,7 @@
 			"title": "购买成功通知",
 			"templateId": "m5tFj_cMtrLb3rguF5Kh4F1CctUB5KEgqJa4rJaGsfQ",
 			"keywords": "购买地点、购买时间",
-			"gmtCreate": "2017-09-09"
+			"gmtCreate": 1519202014000
 		},
 		{
 			"id": 2,
@@ -14,7 +14,7 @@
 			"title": "拼团成功通知",
 			"templateId": "m5tFj_cMtrLb3rguF5Kh4F1CctUB5KEgqJa4rJaGsfQ",
 			"keywords": "购买地点、购买时间",
-			"gmtCreate": "2017-09-09"
+			"gmtCreate": 1519202014000
 		}
 	]
 

@@ -96,7 +96,6 @@
 export default {
   data () {
     return {
-      dateRange: [1519202014000, 1519202014000],
       id: '',
       title: '',
       time: '',
@@ -112,6 +111,11 @@ export default {
     } 
   },
   computed: {
+    dateRange () {
+      let gmtCreate = new Date().getTime()
+      let expireDate = +this.$route.params.expireDate
+      return [gmtCreate, expireDate]
+    },
     valid () {
       let flag = true
       if (this.pushNow === '1') {
@@ -200,6 +204,13 @@ export default {
       })
     },
     save () {
+      if (this.pushTime && (this.pushTime < new Date().getTime() || this.pushTime > this.dateRange[1])) {
+        this.$message({
+          type: 'error',
+          message: '请在范围内选择推送时间!'
+        })
+        return
+      }
       let params = {
         appId: this.$route.params.appId,
         odpsId: this.$route.params.odpsId,
@@ -219,7 +230,7 @@ export default {
               type: 'success',
               message: '保存成功!'
             })
-            this.$router.push('/manager/miniApp/pushMsg/' + $route.params.odpsId)
+            this.$router.push('/manager/miniApp/pushMsg/' + this.$route.params.odpsId)
           } else {
             let msg = resp.desc || '请求失败'
             this.$message.error(msg)

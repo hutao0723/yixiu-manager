@@ -57,8 +57,6 @@
 </template>
 
 <script>
-// import dlvsidebar from './delivery/pages/dlvSidebar'
-// console.log(dlvsidebar)
 export default {
   name: 'home',
   data () {

@@ -73,12 +73,12 @@
               type="daterange"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
-              :default-time="['00:00:00', '23:59:59']" readonly value-format="yyyy-MM-dd">
+              :default-time="['00:00:00', '23:59:59']" readonly value-format="timestamp">
             </el-date-picker>
           </el-form-item> 
           <el-form-item v-if="pushNow === '0'">
             <span class="temp-title">推送时间:</span>
-            <el-date-picker v-model="pushTime" type="datetime" placeholder="选择推送时间" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+            <el-date-picker v-model="pushTime" type="datetime" placeholder="选择推送时间" value-format="timestamp"></el-date-picker>
           </el-form-item>
         </el-form>
       </div>
@@ -96,7 +96,7 @@
 export default {
   data () {
     return {
-      dateRange: ['2018-02-02', '2018-02-07'],
+      dateRange: [1519202014000, 1519202014000],
       id: '',
       title: '购买成功通知',
       time: '2017-01-11',
@@ -219,7 +219,7 @@ export default {
               type: 'success',
               message: '保存成功!'
             })
-            // this.$router.push('/manager/miniApp/templateStock')
+            this.$router.push('/manager/miniApp/pushMsg/' + $route.params.odpsId)
           } else {
             let msg = resp.desc || '请求失败'
             this.$message.error(msg)

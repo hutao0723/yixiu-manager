@@ -59,7 +59,7 @@
       </div> 
       <div class="btn-wrap">
         <el-button size="small" type="primary" @click="save">保存</el-button>
-        <router-link :to="{ path: '/manager/miniApp/templateStock'}">
+        <router-link :to="{ path: '/manager/miniApp/templateStock/' + $route.params.id}">
           <el-button size="small" type="pain" @click="">取消</el-button>
         </router-link>
       </div>  
@@ -136,7 +136,7 @@ export default {
         title: this.title,
         keywordList: keywordList
       }
-      this.$http.post('/miniapp/templatePushSave', params).then(res => {
+      this.$http.post('/miniapp/msgTemplateAdd', params).then(res => {
         let resp = res.data
         if (resp.success) {
           this.$message({

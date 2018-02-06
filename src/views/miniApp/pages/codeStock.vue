@@ -3,12 +3,12 @@
     <div class="title-wrap">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item :to="{ path: '/manager/miniApp' }">小程序</el-breadcrumb-item>
-        <el-breadcrumb-item :to="{ path: '/manager/miniApp/codeMng/1' }">代码管理</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/manager/miniApp/codeMng/' + $route.params.id }">代码管理</el-breadcrumb-item>
         <el-breadcrumb-item >代码模板库</el-breadcrumb-item>
       </el-breadcrumb>
       <span class="add-ofa">
         <!-- <i class="iconfont icon-guanlian"></i> -->
-        <span class="offical-acount" @click="">更新代码模板库</span>
+        <span class="offical-acount" @click="refreshTemplate">更新代码模板库</span>
       </span>
     </div>
     <div class="content">
@@ -42,8 +42,23 @@ export default {
       this.$http.get('/miniapp/getAllTemplate', {params: {appId}}).then(res => {
         let resp = res.data;
         if (resp.success) {
-          this.templateList = resp.data;
-          console.log(this.templateList)
+          this.templateList = resp.data
+        } else {
+          let msg = resp.desc || '请求失败'
+          this.$message.error(msg)
+        }
+      })
+    },
+    refreshTemplate () {
+      let appId = this.$route.params.id;
+      this.$http.get('/miniapp/refreshTemplate', {params: {appId}}).then(res => {
+        let resp = res.data;
+        if (resp.success && resp.data) {
+          this.$message({
+            type: 'success',
+            message: '刷新成功!'
+          })
+          this.getAllTemplate()
         } else {
           let msg = resp.desc || '请求失败'
           this.$message.error(msg)

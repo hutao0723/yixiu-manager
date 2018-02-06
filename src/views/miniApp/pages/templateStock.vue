@@ -9,7 +9,7 @@
       <span class="add-ofa">
         <i class="iconfont icon-jia"></i>
         <router-link :to="{ path: '/manager/miniApp/addWxTemplate/' + $route.params.id}">
-          <span class="offical-acount" @click="getWeChatSetting">微信模板</span>
+          <span class="offical-acount">微信模板</span>
         </router-link>
       </span>
     </div>
@@ -38,20 +38,7 @@ export default {
   components: {},
   data () {
     return {
-      pageOption: {
-        pageNum: 1,
-        size: 20
-      },
-      totalSize: 40,
-      msgTemplateList: [
-        {
-          id: 1,
-          img: 'https://yun.duiba.com.cn/images/201801/contact.png',
-          name: 'adsa',
-          cratetime: '2018-02-01',
-          isathur: '是'
-        }
-      ]
+      msgTemplateList: []
     }
   },
   created () {
@@ -69,19 +56,6 @@ export default {
           this.$message.error(msg)
         }
       })
-    },
-    pageChange () {
-      this.$http.get('/subscriptionInfo/list', {params: this.pageOption}).then(res => {
-        if (res.data.success) {
-          this.officalAcountList = res.data.data.lists
-        } else {
-          let msg = res.data.desc || '请求失败'
-          this.$message.error(msg)
-        }
-      })
-    },
-    edit (row) {
-      this.$router.push('/manager/officalAcount/create/' + row.id)
     },
     delTemplate (id) {
       this.$confirm('确认删除该微信模板？', '提示', {
@@ -117,23 +91,6 @@ export default {
           type: 'info',
           message: '已取消删除'
         })
-      })
-    },
-    showAppDetail (id) {
-      console.log(id)
-      this.appdetailDialog.show = true
-    },
-    showDomain (id) {
-      console.log(id)
-      this.domainDialog.show = true
-    },
-    getWeChatSetting () {
-      this.$http.get('/wechat/getAuthorization').then(res => {
-        console.log(res)
-        if (res.data.success) {
-          let redirectUrl = res.data.data
-          window.location.href = redirectUrl
-        }
       })
     }
   }

@@ -49,7 +49,7 @@
               <div class="btn-wrap fr" v-if="codeMngInfo.audit.templateStatus === 1">
                 <el-button size="small" type="text" disabled >审核中</el-button>
                 <el-button size="small" type="text" @click="recallAudit">撤回审核</el-button>
-                <el-button size="small" type="text" @click="" >刷新审核状态</el-button>
+                <el-button size="small" type="text" @click="updateAuditstatus" >刷新审核状态</el-button>
               </div>
               <div class="btn-wrap fr" v-if="codeMngInfo.audit.templateStatus === 2">
                 <el-button size="small" type="text" disabled >审核通过</el-button>
@@ -154,7 +154,7 @@ export default {
       this.$http.get('/miniapp/codemng', {params: {appId}}).then(res => {
         let resp = res.data
         if (resp.success) {
-          this.codeMngInfo = resp.data;
+          this.codeMngInfo = resp.data
         } else {
           let msg = resp.desc || '请求失败'
           this.$message.error(msg)
@@ -217,7 +217,7 @@ export default {
               this.getCodeMngInfo()
             } else {
               this.$message({
-                type: 'success',
+                type: 'error',
                 message: '发布失败!'
               })
             }
@@ -248,7 +248,7 @@ export default {
               this.getCodeMngInfo()
             } else {
               this.$message({
-                type: 'success',
+                type: 'error',
                 message: '提交审核失败!'
               })
             }
@@ -259,6 +259,22 @@ export default {
           type: 'info',
           message: '已取消删除'
         })
+      })
+    },
+    updateAuditstatus () {
+      let appId = this.$route.params.id
+      this.$http.get('/miniapp/updateAuditstatus', {params: {appId}}).then(res => {
+        let resp = res.data
+        if (resp.success && resp.data) {
+          this.$message({
+            type: 'success',
+            message: '刷新成功!'
+          })
+          this.getCodeMngInfo()
+        } else {
+          let msg = resp.desc || '请求失败'
+          this.$message.error(msg)
+        }
       })
     },
     recallAudit () {
@@ -279,7 +295,7 @@ export default {
               this.getCodeMngInfo()
             } else {
               this.$message({
-                type: 'success',
+                type: 'error',
                 message: '撤回审核失败!'
               })
             }

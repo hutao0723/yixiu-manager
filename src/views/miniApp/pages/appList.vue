@@ -13,14 +13,18 @@
       <div class="tabel-wrap">
         <template>
           <el-table :data="appList"  style="width: 100%" >
-            <el-table-column prop="id" label="ID" ></el-table-column>
-            <el-table-column label="小程序" min-width="160">
+            <el-table-column prop="id" label="ID" width="80"></el-table-column>
+            <el-table-column label="小程序" >
               <template slot-scope="scope">
                 <img :src="scope.row.headImg" class="app-avatar">
                 <span class="app-name">{{scope.row.name}}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="gmtCreate" label="创建时间" ></el-table-column>
+            <el-table-column label="创建时间" >
+              <template slot-scope="scope">
+                {{formatDateNew(scope.row.gmtCreate)}}
+              </template>
+            </el-table-column>
             <el-table-column prop="authorized" label="是否授权">
               <template slot-scope="scope">
                 {{scope.row.authorized ? '是' : '否'}}
@@ -29,8 +33,7 @@
             <el-table-column  label="操作" width="500">
               <template slot-scope="scope">
                 <el-button type="text" size="mini" @click="showAppDetail(scope.row.id)">详情</el-button>
-                <el-button type="text" size="mini" disabled v-if="scope.row.authorized">授权</el-button>
-                <el-button type="text" size="mini" @click="getMiniApp" v-else>授权</el-button>
+                <el-button type="text" size="mini" @click="getMiniApp">授权</el-button>
                 <el-button type="text" size="mini" @click="showDomain(scope.row.appId)">域名配置</el-button>
                 <router-link :to="{ path: '/manager/miniApp/codeMng/' + scope.row.appId }">
                   <el-button type="text" size="mini">代码管理</el-button>
@@ -49,7 +52,7 @@
       </div>    
     </div>
     <div class="appdetail-diolog">
-      <el-dialog title="小程序基本信息" :visible.sync="appdetailDialog.show">
+      <el-dialog title="小程序基本信息" :visible.sync="appdetailDialog.show" width="600px">
         <el-form label-position="left" size="mini">
           <el-form-item label="名称:" :label-width="appdetailDialog.formLabelWidth">
             <span>{{appDetail.nickName}}</span>
@@ -57,17 +60,14 @@
           <el-form-item label="头像:" :label-width="appdetailDialog.formLabelWidth">
             <img :src="appDetail.headImg" class="app-avatar">
           </el-form-item>
-          <el-form-item label="介绍:" :label-width="appdetailDialog.formLabelWidth">
-            <span>{{appDetail.planPlatform}}</span>
-          </el-form-item>
           <el-form-item label="主体信息:" :label-width="appdetailDialog.formLabelWidth">
             <span>{{appDetail.principalName}}</span>
           </el-form-item>
           <el-form-item label="微信认证:" :label-width="appdetailDialog.formLabelWidth">
-            <span>{{appDetail.serviceTypeInfo}}</span>
+            <span>{{appDetail.serviceTypeInfo === 0 ? '已认证' : '未认证'}}</span>
           </el-form-item>
            <el-form-item label="原始Id:" :label-width="appdetailDialog.formLabelWidth">
-            <span>{{appDetail.planPlatform}}</span>
+            <span>{{appDetail.userName}}</span>
           </el-form-item>     
            <el-form-item label="appId:" :label-width="appdetailDialog.formLabelWidth">
             <span>{{appDetail.appId}}</span>
@@ -76,13 +76,13 @@
       </el-dialog>
     </div>
     <div class="domain-diolog">
-      <el-dialog title="域名配置" :visible.sync="domainDialog.show">
+      <el-dialog title="域名配置" :visible.sync="domainDialog.show" width="600px">
         <el-form label-position="left" size="mini">
           <el-form-item label="request合法域名:" :label-width="domainDialog.formLabelWidth">
             <span v-for="(item, index) in appDomain.requestdomain">{{item}}</span>
           </el-form-item>
           <el-form-item label="socket合法域名:" :label-width="domainDialog.formLabelWidth">
-            <span v-for="(item, index) in appDomain.uploaddomain">{{item}}</span>
+            <span v-for="(item, index) in appDomain.wsrequestdomain">{{item}}</span>
           </el-form-item>
           <el-form-item label="uploadFile合法域名:" :label-width="domainDialog.formLabelWidth">
             <span v-for="(item, index) in appDomain.uploaddomain">{{item}}</span>
@@ -91,7 +91,7 @@
             <span v-for="(item, index) in appDomain.downloaddomain">{{item}}</span>
           </el-form-item>
           <div class="btn-wrap">
-            <el-button size="small" type="primary" @click="">更新域名</el-button>
+            <el-button size="small" type="primary" @click="setDomain(appId)">更新域名</el-button>
           </div> 
         </el-form>
       </el-dialog>
@@ -100,10 +100,11 @@
 </template>
 
 <script>
+import { formatDateNew } from '../../../utils/dateUtils';
 export default {
-  components: {},
   data () {
     return {
+      appId: '',
       appdetailDialog: {
         show: false,
         formLabelWidth: '100px'
@@ -126,6 +127,7 @@ export default {
     this.getAppList()
   },
   methods: {
+    formatDateNew: formatDateNew,
     getAppList () {
       this.$http.get('/miniapp/list').then(res => {
         let resp = res.data
@@ -201,10 +203,26 @@ export default {
     },
     showDomain (appId) {
       this.domainDialog.show = true
+      this.appId = appId
       this.$http.get('/miniapp/getDomain', {params: {appId}}).then(res => {
         let resp = res.data
         if (resp.success) {
           this.appDomain = resp.data
+        } else {
+          let msg = resp.desc || '请求失败'
+          this.$message.error(msg)
+        }
+      })
+    },
+    setDomain (appId) {
+      this.$http.get('/miniapp/setDomain').then(res => {
+        let resp = res.data
+        if (resp.success && resp.data) {
+          this.$message({
+            type: 'success',
+            message: '刷新成功!'
+          })
+          this.showDomain(appId)
         } else {
           let msg = resp.desc || '请求失败'
           this.$message.error(msg)

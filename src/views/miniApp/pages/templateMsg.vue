@@ -67,7 +67,6 @@
 export default {
   data () {
     return {
-      timeRate: '',
       selectOptions: [
         {
           value: 'belongDate',
@@ -81,10 +80,6 @@ export default {
       searchForm: {
         name: 'belongDate',
         value: ''
-      },
-      ofaSearchForm: {
-        searchWay: '',
-        searchValue: ''
       },
       pageOption: {
         pageNum: 1,
@@ -149,15 +144,6 @@ export default {
         } else {
           let msg = resp.desc || '请求失败'
           this.$message.error(msg)
-        }
-      })
-    },
-    getWeChatSetting () {
-      this.$http.get('/wechat/getAuthorization').then(res => {
-        console.log(res)
-        if (res.data.success) {
-          let redirectUrl = res.data.data
-          window.location.href = redirectUrl
         }
       })
     }

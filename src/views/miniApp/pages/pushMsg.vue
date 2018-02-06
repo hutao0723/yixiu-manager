@@ -89,7 +89,7 @@ export default {
       }).then(() => {
         let appId = row.appId
         let id = row.id
-        this.$http.get('/miniapp/delete', {params: {id, appId}}).then(res => {
+        this.$http.get('/miniapp/templatePushDel', {params: {id, appId}}).then(res => {
           let msg = res.data.success
           if (msg) {
             if (res.data.data) {

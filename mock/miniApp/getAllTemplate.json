@@ -2,7 +2,7 @@
 	"success": true,
 	"data": [
 		{
-			"templateId": 1,
+			"templateId": 0,
 			"userVersion": "V1.5",
 			"userDesc": "这是帮帮帮1.5版本",
 			"createTime": 1519202014000

@@ -75,17 +75,10 @@ export default {
   },
   data () {
     return {
-      title: '购买成功通知',
+      title: '',
       time: '2018-01-11',
       keywordSelected: [],
-      keywordList: [
-        {
-            keywordId: "keyword1",
-            name: "购买地点",
-            example: "粤海喜来登酒店",
-            checked: true
-        }
-      ],
+      keywordList: [],
       atId: ''
     }
   },

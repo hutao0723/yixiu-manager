@@ -184,7 +184,7 @@ export default {
     VersionCommit () {
       let appId = this.$route.params.id
       let templateId = this.templateId
-      if (!this.templateId) {
+      if (this.templateId === '') {
         this.$message.error('请选择版本')
         return
       };
@@ -264,7 +264,7 @@ export default {
       }).catch(() => {
         this.$message({
           type: 'info',
-          message: '已取消删除'
+          message: '已取消提交'
         })
       })
     },

@@ -98,7 +98,7 @@ export default {
     return {
       id: '',
       title: '',
-      time: '',
+      time: '2018-01-11',
       labelholder: '加粗',
       emphasisKeyword: '',
       jumpPage: '',

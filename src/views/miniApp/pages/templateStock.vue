@@ -20,7 +20,11 @@
             <el-table-column prop="id" label="ID" ></el-table-column>
             <el-table-column prop="title" label="微信模板名称" ></el-table-column>
             <el-table-column prop="keywords" label="关键词" ></el-table-column>
-            <el-table-column prop="gmtCreate" label="创建时间"></el-table-column>
+            <el-table-column prop="gmtCreate" label="创建时间">
+              <template slot-scope="scope">
+                {{formatDateNew(scope.row.gmtCreate)}}
+              </template>
+            </el-table-column>
             <el-table-column label="操作">
               <template slot-scope="scope">
                 <el-button type="text" size="mini" @click="delTemplate(scope.row.id)">删除</el-button>               
@@ -34,6 +38,7 @@
 </template>
 
 <script>
+import { formatDateNew } from '../../../utils/dateUtils';
 export default {
   components: {},
   data () {
@@ -45,6 +50,7 @@ export default {
     this.getMsgTemplateList()
   },
   methods: {
+    formatDateNew: formatDateNew,
     getMsgTemplateList () {
       let appId = this.$route.params.id
       this.$http.get('/miniapp/msgTemplateList', {params: {appId}}).then(res => {

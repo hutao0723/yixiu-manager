@@ -58,8 +58,8 @@ export default {
   },
   methods: {
     templatePushList () {
-      let id = this.$route.params.id
-      this.$http.get('/miniapp/templatePushList', {params: {id}}).then(res => {
+      let odpsId = this.$route.params.id
+      this.$http.get('/miniapp/templatePushList', {params: {odpsId}}).then(res => {
         let resp = res.data
         if (resp.success) {
           this.pushInfo = resp.data.odpsInfo

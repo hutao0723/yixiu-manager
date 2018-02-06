@@ -113,6 +113,11 @@ export default {
       if (!atId) {
         this.$message.error('请输入模板id')
         return
+      } else {
+        if (!atId.match(/^(?!([a-zA-Z]+|\d+)$)/)) {
+          this.$message.error('请输入正确的模板id')
+          return
+        }
       }
       this.$http.get('/miniapp/templateLibraryGet', { params: {atId, appId}}).then(res => {
         let resp = res.data

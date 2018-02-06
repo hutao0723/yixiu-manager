@@ -119,7 +119,7 @@ export default {
       labelholder: '',
       formLabelWidth: '120px',
       codeMngInfo: {
-        appId: "wx67c98c6a669003c4",
+        appId: "",
         online: {
             templateId: '',
             auditId: '',
@@ -160,7 +160,9 @@ export default {
       this.$http.get('/miniapp/codemng', {params: {appId}}).then(res => {
         let resp = res.data
         if (resp.success) {
-          this.codeMngInfo = resp.data
+          this.codeMngInfo.appId = resp.data.appId
+          if (resp.data.online) this.codeMngInfo.online = resp.data.online
+          if (resp.data.audit) this.codeMngInfo.audit = resp.data.audit
         } else {
           let msg = resp.desc || '请求失败'
           this.$message.error(msg)
@@ -200,8 +202,7 @@ export default {
     showVersion () {
       this.templateId = ""
       this.versionDialog = {
-        show: true,
-        id: this.id
+        show: true
       };
       this.getAllTemplate()
     },

@@ -1,0 +1,23 @@
+{
+	"success": true,
+	"data": {
+		"id": 37,
+		"templateId": "HFL8DsjsURCX7DMXbgi",
+		"jumpPage": "index",
+		"emphasisKeyword": "keyword1",
+		"pushTime": "2017-09-09",
+		"title":"标题",
+        "pushNow":false,
+		"mpPushKeyList": [{
+				"templateKey": "keyword1",
+				"color": "#173177",
+				"templateValue": "粤海喜来登酒店"
+			},
+			{
+				"templateKey": "keyword2",
+				"color": "#173177",
+				"templateValue": "广州市天河区天河路208号"
+			}
+		]
+	}
+}

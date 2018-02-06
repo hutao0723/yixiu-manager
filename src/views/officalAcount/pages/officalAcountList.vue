@@ -43,8 +43,8 @@
             <el-table-column prop="todayNewUnFollow" label="当日取消关注"></el-table-column>
             <el-table-column  label="操作" width="150">
               <template slot-scope="scope">
-                <el-button size="mini" @click="getWeChatSetting">授权</el-button>
-                <el-button type="danger" size="mini" @click="delAcount(scope.row)">删除</el-button>               
+                <el-button type="text" size="mini" @click="getWeChatSetting">授权</el-button>
+                <el-button type="text" size="mini" @click="delAcount(scope.row)">删除</el-button>               
               </template>
             </el-table-column>
           </el-table>

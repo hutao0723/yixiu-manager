@@ -10,15 +10,13 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    // proxyTable: {
-    //   '/api/': {
-    //     target: 'http://192.168.2.87:9101',
-    //     changeOrigin:true,
-    //     pathRewrite: {
-    //     '^/api': ''
-    //       }
-    //     }    
-    // },
+    proxyTable: {
+      '*': {
+        target: 'http://localhost:3000/',
+        secure: false,
+        changeOrigin: true
+      } 
+    },
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST

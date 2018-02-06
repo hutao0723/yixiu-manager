@@ -1,16 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import home from '@/views/home'
-import dlvSidebar from '@/views/delivery/pages/dlvSidebar'
-import theme from '@/views/delivery/pages/subscriptionTheme.vue'
-import deliever from '@/views/delivery/pages/deliever.vue'
-import ofasidebar from '@/views/officalAcount/pages/ofasidebar'
-import officalAcount from '@/views/officalAcount/pages/officalAcountList'
-import officalAcountCreate from '@/views/officalAcount/pages/officalAcountCreate'
-import loadpage from '@/views/delivery/pages/loadpage'
-import subLinkPage from '@/views/delivery/pages/subLinkPage'
-import login from '../views/login/login'
-import successPage from '../views/login/successPage'
 Vue.use(Router)
 
 export const constantRouterMap = [
@@ -21,58 +10,146 @@ export const constantRouterMap = [
   {
     path: '/authorization',
     // redirect: '/manager/dlv'
-    component: login
+    component: function (resolve) {
+      require(['../views/login/login'], resolve)
+    }
   },
   {
     path: '/successPage',
-    component: successPage
+    component: function (resolve) {
+      require(['../views/login/successPage'], resolve)
+    }
   },
   {
     path: '/manager',
-    component: home,
+    component: function (resolve) {
+      require(['../views/home'], resolve)
+    },
     redirect: '/manager/dlv',
     children: [
       {
         path: 'dlv',
-        component: dlvSidebar,
+        component: function (resolve) {
+          require(['../views/delivery/pages/sidebar'], resolve)
+        },
         children: [
           {
             path: '/',
-            component: deliever
+            component: function (resolve) {
+              require(['../views/delivery/pages/deliever'], resolve)
+            }
           },
           {
             path: 'loadpage',
-            component: loadpage
+            component: function (resolve) {
+              require(['../views/delivery/pages/loadpage'], resolve)
+            }
           },
           {
             path: 'theme',
-            component: theme
+            component: function (resolve) {
+              require(['../views/delivery/pages/subscriptionTheme'], resolve)
+            }
           },
           {
             path: 'link',
-            component: subLinkPage
+            component: function (resolve) {
+              require(['../views/delivery/pages/subLinkPage'], resolve)
+            }
           },
           {
             path: 'link/:id',
-            component: subLinkPage
+            component: function (resolve) {
+              require(['../views/delivery/pages/subLinkPage'], resolve)
+            }
           }
         ]
       },
       {
         path: 'officalAcount',
-        component: ofasidebar,
+        component: function (resolve) {
+          require(['../views/officalAcount/pages/sidebar'], resolve)
+        },
         children: [
           {
             path: '/',
-            component: officalAcount
+            component: function (resolve) {
+              require(['../views/officalAcount/pages/officalAcountList'], resolve)
+            }
           },
           {
             path: 'create',
-            component: officalAcountCreate
+            component: function (resolve) {
+              require(['../views/officalAcount/pages/officalAcountCreate'], resolve)
+            }
           },
           {
             path: 'create/:id',
-            component: officalAcountCreate
+            component: function (resolve) {
+              require(['../views/officalAcount/pages/officalAcountCreate'], resolve)
+            }
+          }
+        ]
+      },
+      {
+        path: 'miniApp',
+        component: function (resolve) {
+          require(['../views/miniApp/pages/sidebar'], resolve)
+        },
+        children: [
+          {
+            path: '/',
+            component: function (resolve) {
+              require(['../views/miniApp/pages/appList'], resolve)
+            }
+          },
+          {
+            path: 'codeMng/:id',
+            component: function (resolve) {
+              require(['../views/miniApp/pages/codeMng'], resolve)
+            }
+          },
+          {
+            path: 'templateMsg/:id',
+            component: function (resolve) {
+              require(['../views/miniApp/pages/templateMsg'], resolve)
+            }
+          },
+          {
+            path: 'codeStock/:id',
+            component: function (resolve) {
+              require(['../views/miniApp/pages/codeStock'], resolve)
+            }
+          },
+          {
+            path: 'pushMsg/:id',
+            component: function (resolve) {
+              require(['../views/miniApp/pages/pushMsg'], resolve)
+            }
+          },
+          {
+            path: 'addEditPushMsg/:appId/:odpsId',
+            component: function (resolve) {
+              require(['../views/miniApp/pages/addEditPushMsg'], resolve)
+            }
+          },
+          {
+            path: 'addEditPushMsg/:appId/:odpsId/:id',
+            component: function (resolve) {
+              require(['../views/miniApp/pages/addEditPushMsg'], resolve)
+            }
+          },
+          {
+            path: 'templateStock/:id',
+            component: function (resolve) {
+              require(['../views/miniApp/pages/templateStock'], resolve)
+            }
+          },
+          {
+            path: 'addWxTemplate/:id',
+            component: function (resolve) {
+              require(['../views/miniApp/pages/addWxTemplate'], resolve)
+            }
           }
         ]
       }

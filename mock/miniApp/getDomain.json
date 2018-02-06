@@ -1,0 +1,10 @@
+{
+	"success": true,
+	"data": {
+		"requestdomain": ["https://m.youfen666.com", "https://hws.m.taobao.com"],
+		"wsrequestdomain": ["wss://wechat.youfen666dev.com", "wss://mng.youfen666dev.com"],
+		"uploaddomain": ["https://m.youfen666.com", "https://hws.m.taobao.com"],
+		"downloaddomain": ["https://m.youfen666.com", "https://hws.m.taobao.com"],
+		"webviewdomain": ["https://m.youfen666.com", "https://hws.m.taobao.com"]
+	}
+}

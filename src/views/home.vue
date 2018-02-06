@@ -5,27 +5,36 @@
       <div class="sidebar-container">
           <el-col  :span="24">
             <el-menu  class="el-menu-vertical-demo"  background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
-              <el-menu-item index="1">
+              <!-- <el-menu-item index="1">
                 <span slot="title" ><span class="title-main">导航</span></span>
-              </el-menu-item>
+              </el-menu-item> -->
               <router-link :to="{ path: '/manager/dlv' }">
-                    <el-menu-item index="2">
-                        <span slot="title" >
-                            <span class="title-main">
-                                投放
-                            </span>
-                        </span>
-                    </el-menu-item>
-                </router-link>
-            <router-link :to="{ path: '/manager/officalAcount' }">
-              <el-menu-item index="3">
-                <span slot="title" class="txt-color">   
+                <el-menu-item index="1">
+                  <span slot="title" >
                     <span class="title-main">
-                        公众号   
+                      投放
                     </span>
-                </span>
-              </el-menu-item>
-            </router-link> 
+                  </span>
+                </el-menu-item>
+              </router-link>
+              <router-link :to="{ path: '/manager/officalAcount' }">
+                <el-menu-item index="2">
+                  <span slot="title" class="txt-color">   
+                    <span class="title-main">
+                      公众号   
+                    </span>
+                  </span>
+                </el-menu-item>
+              </router-link> 
+              <router-link :to="{ path: '/manager/miniApp' }">
+                <el-menu-item index="3">
+                  <span slot="title" class="txt-color">   
+                    <span class="title-main">
+                      小程序   
+                    </span>
+                  </span>
+                </el-menu-item>
+              </router-link> 
             </el-menu>
           </el-col>
           <div class="control-wrap">
@@ -39,7 +48,7 @@
       </div>
     </div>
     <el-col :span="24">
-      <div class=" bg-purple">
+      <div class="bg-purple">
         <router-view/>
       </div>
     </el-col> 
@@ -69,6 +78,7 @@ export default {
   background-color: #545c64;
   top: 0;
   bottom: 0;
+  z-index: 100;
   .el-menu{
       border:none
   }
@@ -102,8 +112,7 @@ export default {
   }
 }
 .bg-purple{
-    background: #fff;
-
+  background: #fff;
 }
 .sidebar-container{
   position: fixed;

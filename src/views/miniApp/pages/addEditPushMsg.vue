@@ -141,8 +141,7 @@ export default {
   methods: {
     selectChange () {
       let that = this
-      let appId = this.$route.params.appId
-      let id = this.msgTemplate.templateId
+      let id = this.msgTemplate.id
       this.$http.get('/miniapp/msgTemplateDetail', {params: {id}}).then(res => {
         let resp = res.data
         if (resp.success) {

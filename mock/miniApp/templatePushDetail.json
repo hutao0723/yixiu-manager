@@ -10,11 +10,13 @@
         "pushNow":false,
 		"mpPushKeyList": [{
 				"templateKey": "keyword1",
+				"templateName": "购买地点",
 				"color": "#173177",
 				"templateValue": "粤海喜来登酒店"
 			},
 			{
 				"templateKey": "keyword2",
+				"templateName": "详细地址",
 				"color": "#173177",
 				"templateValue": "广州市天河区天河路208号"
 			}

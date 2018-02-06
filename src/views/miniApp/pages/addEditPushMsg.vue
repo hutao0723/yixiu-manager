@@ -32,7 +32,7 @@
           <div class="temp-content">
             <template v-for="(item, index) in pushKeyList">
               <div class="temp-item">
-                <span class="temp-key">{{item.templateKey}}</span>
+                <span class="temp-key">{{item.templateName}}</span>
                 <span class="temp-value" :class="{fontlarge: item.templateKey === emphasisKeyword }" :style="{color: item.color}">{{item.templateValue}}</span>
               </div>
             </template>
@@ -43,7 +43,7 @@
           <div class="temp-toselect">
             <el-form  size="mini" label-position="left" label-width="80px"> 
               <template v-for="(item, index) in pushKeyList">
-                <el-form-item :label="item.templateKey" required>
+                <el-form-item :label="item.templateName" required>
                   <el-input v-model="item.templateValue"></el-input>
                   <el-color-picker v-model="item.color"></el-color-picker>
                   <el-radio v-model="emphasisKeyword" :label="item.templateKey">{{labelholder}}</el-radio>
@@ -98,26 +98,15 @@ export default {
     return {
       dateRange: [1519202014000, 1519202014000],
       id: '',
-      title: '购买成功通知',
-      time: '2017-01-11',
+      title: '',
+      time: '',
       labelholder: '加粗',
       emphasisKeyword: '',
       jumpPage: '',
       pushNow: '0',
       pushTime: '',
-      templateId: '001',
-      pushKeyList: [
-        {
-            color: "#6D6E70",
-            templateKey: "购买时间",
-            templateValue: "2018-01-11"
-        },
-        {
-            color: "#6D6E70",
-            templateKey: "购买地点",
-            templateValue: "粤海喜来登酒店"
-        }
-      ],
+      templateId: '',
+      pushKeyList: [],
       options: [],
       msgTemplate: {}
     } 
@@ -125,7 +114,7 @@ export default {
   computed: {
     valid () {
       let flag = true
-      if (this.pushNow === '0') {
+      if (this.pushNow === '1') {
         if (!this.jumpPage) {
           flag = false
         } else {
@@ -134,7 +123,7 @@ export default {
           })
         }
       } else {
-        if (!this.jumpPage || !this.pushNow) {
+        if (!this.jumpPage || !this.pushTime) {
           flag = false
         } else {
           this.pushKeyList.forEach(item => {
@@ -152,21 +141,33 @@ export default {
   methods: {
     selectChange () {
       let that = this
-      this.title = this.msgTemplate.title
-      this.templateId = this.msgTemplate.templateId
-      this.emphasisKeyword = ''
-      this.jumpPage = ''
-      this.pushNow = '0'
-      this.pushTime = ''
-      this.pushKeyList = []
-      this.msgTemplate.keywords.split('、').forEach(item => {
-        let pushKey = {
-          color: "#6D6E70",
-          templateKey: item,
-          templateValue: ''
+      let appId = this.$route.params.appId
+      let id = this.msgTemplate.templateId
+      this.$http.get('/miniapp/msgTemplateDetail', {params: {id}}).then(res => {
+        let resp = res.data
+        if (resp.success) {
+          let msgTemplate = resp.data
+          this.title = msgTemplate.title
+          this.templateId = msgTemplate.templateId
+          this.emphasisKeyword = ''
+          this.jumpPage = ''
+          this.pushNow = '0'
+          this.pushTime = ''
+          this.pushKeyList = []
+          msgTemplate.mpMsgTemplateKeyList.forEach(item => {
+            let pushKey = {
+              color: "#6D6E70",
+              templateKey: item.templateKey,
+              templateName: item.templateName,
+              templateValue: item.example
+            }
+            that.pushKeyList.push(pushKey)
+          })
+        } else {
+          let msg = resp.desc || '请求失败'
+          this.$message.error(msg)
         }
-        that.pushKeyList.push(pushKey)
-      })
+      }) 
     },
     getTemplateList () {
       let appId = this.$route.params.appId

@@ -169,7 +169,7 @@ export default {
       })
     },
     getTemplateList () {
-      let appId = this.$route.params.id
+      let appId = this.$route.params.appId
       this.$http.get('/miniapp/msgTemplateList', {params: {appId}}).then(res => {
         let resp = res.data
         if (resp.success) {

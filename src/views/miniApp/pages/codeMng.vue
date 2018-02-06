@@ -18,19 +18,19 @@
         <div class="version-content">
           <el-form label-position="left" size="mini">
             <el-form-item label="模版ID:" :label-width="formLabelWidth">
-              <span>{{codeMngInfo.online.templateId}}</span>
+              <span>{{codeMngInfo.online.templateId || '-'}}</span>
             </el-form-item>
             <el-form-item label="审核编码:" :label-width="formLabelWidth">
-              <span>{{codeMngInfo.online.auditId}}</span>
+              <span>{{codeMngInfo.online.auditId || '-'}}</span>
             </el-form-item>
             <el-form-item label="版本号:" :label-width="formLabelWidth">
-              <span>{{codeMngInfo.online.userVersion}}</span>
+              <span>{{codeMngInfo.online.userVersion || '-'}}</span>
             </el-form-item>
             <el-form-item label="描述:" :label-width="formLabelWidth">
-              <span>{{codeMngInfo.online.userDesc}}</span>
+              <span>{{codeMngInfo.online.userDesc || '-'}}</span>
             </el-form-item>
             <el-form-item label="提交时间:" :label-width="formLabelWidth">
-              <span>{{codeMngInfo.online.gmtCreate}}</span>
+              <span>{{codeMngInfo.online.gmtCreate || '-'}}</span>
             </el-form-item>
           </el-form>
         </div>              
@@ -60,22 +60,22 @@
               </div>
             </div>
             <el-form-item label="模版ID:" :label-width="formLabelWidth">
-              <span>{{codeMngInfo.audit.templateId}}</span>
+              <span>{{codeMngInfo.audit.templateId || '-'}}</span>
             </el-form-item>
             <el-form-item label="审核编码:" :label-width="formLabelWidth">
-              <span>{{codeMngInfo.audit.auditId}}</span>
+              <span>{{codeMngInfo.audit.auditId || '-'}}</span>
             </el-form-item>
             <el-form-item label="版本号:" :label-width="formLabelWidth">
-              <span>{{codeMngInfo.audit.userVersion}}</span>
+              <span>{{codeMngInfo.audit.userVersion || '-'}}</span>
             </el-form-item>
             <el-form-item label="描述:" :label-width="formLabelWidth">
-              <span>{{codeMngInfo.audit.userDesc}}</span>
+              <span>{{codeMngInfo.audit.userDesc || '-'}}</span>
             </el-form-item>
             <el-form-item label="提交时间:" :label-width="formLabelWidth">
-              <span>{{codeMngInfo.audit.gmtCreate}}</span>
+              <span>{{codeMngInfo.audit.gmtCreate || '-'}}</span>
             </el-form-item>
             <el-form-item label="审核不通过原因:" :label-width="formLabelWidth" v-if="codeMngInfo.audit.templateStatus === 3">
-              <span>{{codeMngInfo.audit.failReason}}</span>
+              <span>{{codeMngInfo.audit.failReason || '-'}}</span>
             </el-form-item>
           </el-form>
         </div>              
@@ -116,27 +116,27 @@ export default {
       codeMngInfo: {
         appId: "wx67c98c6a669003c4",
         online: {
-            templateId: 1,
-            auditId: 1234,
-            userVersion: "V1.0",
-            userDesc: "this is a online template",
-            gmtCreate: "2017-09-09"
+            templateId: '',
+            auditId: '',
+            userVersion: '',
+            userDesc: '',
+            gmtCreate: ''
         },
         audit: {
-            templateStatus: 0,
-            templateId: 2,
-            auditId: 222,
-            userVersion: "V2.0",
-            userDesc: "this is a audit template",
-            gmtCreate: "2017-09-09"
+            templateStatus: '',
+            templateId: '',
+            auditId: '',
+            userVersion: '',
+            userDesc: '',
+            gmtCreate: ''
         }
       },
       templateList: [
         {
           templateId: 1,
-          userVersion: "V1.5",
-          userDesc: "这是帮帮帮1.5版本",
-          createTime: "2017-09-09"
+          userVersion: '',
+          userDesc: '',
+          createTime: ''
         }
       ],
       versionDialog: {

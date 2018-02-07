@@ -1,0 +1,22 @@
+{
+	"success": true,
+	"data": {
+		"odpsInfo": {
+			"appId": "wx67c98c6a669003c4",
+			"odpsId": 11,
+			"nickName": "淘优惠",
+			"gmtCreate": 1519202014000,
+			"expireDate": 1519202014000,
+			"formTypeValue": "抢购"
+		},
+		"pushList": [{
+			"id": 37,
+			"appId": "wx67c98c6a669003c4",
+			"gmtCreate": 1519202014000,
+			"gmtModified": 1519202014000,
+			"pushTime": 1519202014000,
+			"pushNum": 100,
+			"pushStatusValue": "待推送"
+		}]
+	}
+}

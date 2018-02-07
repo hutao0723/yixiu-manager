@@ -2,33 +2,19 @@
   <section class="main">
   <el-container>
     <el-aside :width="hiddenWith" >
-      <div class="side-wrap"  v-show="isShow">
-        <p class="page-title" >投放管理</p>
-        <el-menu   class="menu-collapse">
-        <router-link :to="{ path: '/manager/dlv' }">          
+      <div class="side-wrap" v-show="isShow">
+        <p class="page-title" >小程序管理</p>
+        <el-menu :collapse="isCollapse" class="menu-collapse" default-active="1">
           <el-menu-item index="1">
-            <i class="iconfont icon-feiji"></i>
-            <span slot="title">投放管理</span>
+            <i class="iconfont icon-msnui-weixin"></i>
+            <span slot="title" >小程序</span>
           </el-menu-item>
-        </router-link>
-          <router-link :to="{ path: '/manager/dlv/theme' }">          
-          <el-menu-item index="2">
-            <i class="iconfont icon-zhuti"></i>
-            <span slot="title">公众号主题</span>
-          </el-menu-item>
-          </router-link>
-          <router-link :to="{ path: '/manager/dlv/loadpage' }">
-              <el-menu-item index="3">
-                <i class="iconfont icon-gongzhonghao"></i>
-                    <span slot="title">落地页</span>
-              </el-menu-item>
-          </router-link>
         </el-menu>                
       </div>
     </el-aside>
     <el-container>
         <el-header>
-          <hamburger class="hamburger-container" :toggleClick="openCollapse"  :isActive="!isShow"></hamburger>
+          <hamburger class="hamburger-container" :toggleClick="openCollapse" :isActive="!isShow"></hamburger>
         </el-header>
         <el-main>
           <div class="content">
@@ -50,6 +36,7 @@ export default {
   },
   data () {
     return {
+      isCollapse: false,
       hiddenWith: '180px',
       isShow: true
     }
@@ -75,9 +62,6 @@ export default {
 <style scoped lang="less">
 .main{
   margin-left: 60px;
-  a{
-    text-decoration: none;
-  }
   .el-container{
     .el-aside{
       background-color: #fff;
@@ -87,14 +71,18 @@ export default {
       height:30px !important
     }
     .el-main{
-      padding: 10px 20px;
+      padding: 10px 40px;
     }
     .page-title{
       width:100%;
       text-align:center
     }
   }
+  .el-menu{
+    border-right: none
+  }
   .menu-collapse{
+    background-color: #F7F9FA;
       .el-tooltip{
         padding:0;
 
@@ -102,19 +90,14 @@ export default {
     }
   .menu-collapse:not(.el-menu--collapse) {
       width: 180px;
+      li{
+        display:block
+      }
   }
   .content{
 
   }
 
-}
-.menu-collapse{
-  background-color: #F7F9FA;
-    top: 0;
-  bottom: 0;
-}
-.el-menu{
-  border-right: none
 }
 .transition-box {
   margin-bottom: 10px;
@@ -129,9 +112,9 @@ export default {
   margin-right: 20px;
 }
 .side-wrap{
-  position: fixed;
+  background-color: #F7F9FA;
   top: 0;
   bottom: 0;
-  background-color: #F7F9FA
+  position: fixed;
 }
 </style>

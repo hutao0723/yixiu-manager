@@ -4,11 +4,13 @@ const webpack = require('webpack')
 const config = require('../config')
 const merge = require('webpack-merge')
 const path = require('path')
+var express = require('express')
 const baseWebpackConfig = require('./webpack.base.conf')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const portfinder = require('portfinder')
+var glob = require('glob')
 
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
@@ -67,6 +69,31 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     ])
   ]
 })
+
+// api 本地服务器
+var app = express()
+var apiport = '3000'
+module.exports = app.listen(apiport, function(err) {
+  if (err) {
+    console.log(err);
+    return;
+  }
+  console.log('API server Listening at http://localhost:' +  apiport + '\n');
+})
+
+var files = glob.sync('./src/views/*/pages/sidebar.vue');
+
+files.forEach(function(f) {
+  var fileHtmlPath = f.split('.')[1];
+  var fileName = fileHtmlPath.split('views/')[1].split('/')[0];
+  var mock = require('../mock/' + fileName + '/mock.js');
+  var setOnline = mock.setOnline;
+
+  // 动态获取mock
+  setOnline.forEach(function(m) {
+    app[m.type](m.url, mock[m.name]);
+  });
+});
 
 module.exports = new Promise((resolve, reject) => {
   portfinder.basePort = process.env.PORT || config.dev.port

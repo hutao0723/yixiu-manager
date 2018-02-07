@@ -1,0 +1,22 @@
+{
+	"success": true,
+	"data": {
+		"id": 37,
+		"appId": "wx67c98c6a669003c4",
+		"authorizerType": 1,
+		"serviceTypeInfo": 0,
+		"verifyTypeInfo": 0,
+		"nickName": "券邦邦",
+		"userName": "gh_155f3c6e611e",
+		"principalName": "杭州精易网络科技有限公司",
+		"headImg": "http://wx.qlogo.cn/mmopen/ajNVdqHZLLBZANQtGxs4mIw1p5P2auhgnKdWQb2bt5ibAMgn6FPTMlMiaic6j81qcNPMUbKo4GQialWCrcD4rpMbPWtHFL8DsjsURCX7DMXbgicQ/0",
+		"alias": "",
+		"qrcodeUrl": "http://mmbiz.qpic.cn/mmbiz_jpg/fvAzraXxygbr2ePUibcicHR4LqdZkBHiaTgsksc1SdjpNsYKRg6Oh4DwiapFn7NoMFz6O6bZ3s7iaKpr7fOgrerHicsg/0",
+		"authorizationStatus": 1,
+		"businessInfo": "{\"open_card\":0,\"open_pay\":0,\"open_scan\":0,\"open_shake\":0,\"open_store\":0}",
+		"funcInfo": "17,18,19,25,30,31",
+		"deleted": 0,
+		"gmtCreate": 1516777753000,
+		"gmtModified": 1517564711000
+	}
+}

@@ -1,0 +1,21 @@
+{
+	"success": true,
+	"data": {
+		"id": 37,
+		"title": "购买成功通知",
+		"templateId": "m5tFj_cMtrLb3rguF5Kh4F1CctUB5KEgqJa4rJaGsfQ",
+		"keywords": "购买地点、购买时间",
+		"mpMsgTemplateKeyList": [{
+				"templateKey": "keyword1",
+				"templateName": "购买地点",
+				"example": "粤海喜来登酒店"
+			},
+			{
+				"templateKey": "keyword2",
+				"templateName": "购买时间",
+				"example": "2017年1月2日"
+			}
+		]
+	}
+
+}

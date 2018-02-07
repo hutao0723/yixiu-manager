@@ -1,0 +1,22 @@
+{
+    "success": true,
+    "data": {
+        "appId": "wx67c98c6a669003c4",
+        "online": {
+            "templateId": 1,
+            "auditId": 1234,
+            "userVersion": "V1.0",
+            "userDesc": "this is a online template",
+            "gmtCreate": 1519202014000
+        },
+        "audit": {
+            "templateStatus": 0,
+            "templateId": 2,
+            "auditId": 222,
+            "userVersion": "V2.0",
+            "userDesc": "this is a audit template",
+            "gmtCreate": 1519202014000
+
+        }
+    }
+}

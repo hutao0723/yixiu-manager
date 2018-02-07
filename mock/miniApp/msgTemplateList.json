@@ -1,0 +1,21 @@
+{
+	"success": true,
+	"data": [{
+			"id": 1,
+			"appId": "wx67c98c6a669003c4",
+			"title": "购买成功通知",
+			"templateId": "m5tFj_cMtrLb3rguF5Kh4F1CctUB5KEgqJa4rJaGsfQ",
+			"keywords": "购买地点、购买时间",
+			"gmtCreate": 1519202014000
+		},
+		{
+			"id": 2,
+			"appId": "wx67c08c6a669003c4",
+			"title": "拼团成功通知",
+			"templateId": "m5tFj_cMtrLb3rguF5Kh4F1CctUB5KEgqJa4rJaGsfQ",
+			"keywords": "购买地点、购买时间",
+			"gmtCreate": 1519202014000
+		}
+	]
+
+}

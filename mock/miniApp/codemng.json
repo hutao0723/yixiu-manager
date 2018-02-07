@@ -7,7 +7,7 @@
             "auditId": 1234,
             "userVersion": "V1.0",
             "userDesc": "this is a online template",
-            "gmtCreate": "2017-09-09"
+            "gmtCreate": 1519202014000
         },
         "audit": {
             "templateStatus": 0,
@@ -15,7 +15,7 @@
             "auditId": 222,
             "userVersion": "V2.0",
             "userDesc": "this is a audit template",
-            "gmtCreate": "2017-09-09"
+            "gmtCreate": 1519202014000
 
         }
     }

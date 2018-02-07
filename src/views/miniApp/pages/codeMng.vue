@@ -30,7 +30,7 @@
               <span>{{codeMngInfo.online.userDesc || '-'}}</span>
             </el-form-item>
             <el-form-item label="提交时间:" :label-width="formLabelWidth">
-              <span>{{codeMngInfo.online.gmtCreate || '-'}}</span>
+              <span>{{codeMngInfo.online.gmtCreate ? formatDateNew(codeMngInfo.online.gmtCreate) : '-'}}</span>
             </el-form-item>
           </el-form>
         </div>              
@@ -72,7 +72,7 @@
               <span>{{codeMngInfo.audit.userDesc || '-'}}</span>
             </el-form-item>
             <el-form-item label="提交时间:" :label-width="formLabelWidth">
-              <span>{{codeMngInfo.audit.gmtCreate || '-'}}</span>
+              <span>{{codeMngInfo.audit.gmtCreate ? formatDateNew(codeMngInfo.audit.gmtCreate) : '-'}}</span>
             </el-form-item>
             <el-form-item label="审核不通过原因:" :label-width="formLabelWidth" v-if="codeMngInfo.audit.templateStatus === 3">
               <span>{{codeMngInfo.audit.failReason || '-'}}</span>

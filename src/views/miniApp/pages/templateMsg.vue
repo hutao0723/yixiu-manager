@@ -86,7 +86,7 @@ export default {
         pageNum: 1,
         size: 20
       },
-      totalSize: 40,
+      totalSize: 10,
       tempMsgList: []
     }
   },

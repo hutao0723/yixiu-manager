@@ -3,7 +3,7 @@
 	"code": 200,
 	"desc": "失败的话失败信息在该字段中",
 	"data": {
-		"totalSize": 100,
+		"totalSize": 10,
 		"lists": [{
 			"id": 1,
 			"appId": "wx67c98c6a669003c4",

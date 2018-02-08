@@ -3,7 +3,8 @@
 	"data": {
 		"id": "AT0002",
 		"title": "购买成功通知",
-		"keywordList": [{
+		"keywordList": [
+			{
 				"keywordId": 3,
 				"name": "购买地点",
 				"example": "TIT造舰厂"

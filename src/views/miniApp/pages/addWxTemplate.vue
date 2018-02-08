@@ -107,7 +107,7 @@ export default {
         this.$message.error('请输入模板id')
         return
       } else {
-        if (!atId.match(/^(?!([a-zA-Z]+|\d+)$)/)) {
+        if (!atId.match(/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]/)) {
           this.$message.error('请输入正确的模板id')
           return
         }
@@ -200,6 +200,7 @@ export default {
         font-size: 16px;
         float: left;
         background: #ffffff;
+        overflow-y: scroll;
         .temp-title, .temp-subtitle{
           display: block;
           height: 30px;

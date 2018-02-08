@@ -30,7 +30,7 @@
               <span>{{codeMngInfo.online.userDesc || '-'}}</span>
             </el-form-item>
             <el-form-item label="提交时间:" :label-width="formLabelWidth">
-              <span>{{codeMngInfo.online.gmtCreate ? formatDateNew(codeMngInfo.online.gmtCreate) : '-'}}</span>
+              <span>{{codeMngInfo.online.gmtCreate | formatToMs}}</span>
             </el-form-item>
           </el-form>
         </div>              
@@ -72,7 +72,7 @@
               <span>{{codeMngInfo.audit.userDesc || '-'}}</span>
             </el-form-item>
             <el-form-item label="提交时间:" :label-width="formLabelWidth">
-              <span>{{codeMngInfo.audit.gmtCreate ? formatDateNew(codeMngInfo.audit.gmtCreate) : '-'}}</span>
+              <span>{{codeMngInfo.audit.gmtCreate | formatToMs}}</span>
             </el-form-item>
             <el-form-item label="审核不通过原因:" :label-width="formLabelWidth" v-if="codeMngInfo.audit.templateStatus === 3">
               <span>{{codeMngInfo.audit.failReason || '-'}}</span>
@@ -86,15 +86,15 @@
         <div class="tabel-wrap">
           <template>
             <el-table :data="templateList"  style="width: 100%" >
-              <el-table-column prop="templateId" label="模板ID" ></el-table-column>
-              <el-table-column prop="userVersion" label="版本号" ></el-table-column>
+              <el-table-column prop="templateId" label="模板ID" width="80px"></el-table-column>
+              <el-table-column prop="userVersion" label="版本号" width="80px"></el-table-column>
               <el-table-column prop="userDesc" label="描述" ></el-table-column>
               <el-table-column prop="createTime" label="修改时间">
                 <template slot-scope="scope">
-                  {{formatDateNew(scope.row.createTime)}}
+                  {{scope.row.createTime | formatToMs}}
                 </template>
               </el-table-column>
-              <el-table-column label="选择">
+              <el-table-column label="选择" width="60px">
                 <template slot-scope="scope">
                   <el-radio v-model="templateId" :label="scope.row.templateId">{{labelholder}}</el-radio>
                 </template>
@@ -111,7 +111,7 @@
 </template>
 
 <script>
-import { formatDateNew } from '../../../utils/dateUtils';
+import { formatToMs } from '../../../utils/dateUtils';
 export default {
   data () {
     return {
@@ -150,11 +150,13 @@ export default {
       }
     }
   },
+  filters: {
+    formatToMs: formatToMs
+  },
   created () {
     this.getCodeMngInfo()
   },
   methods: {
-    formatDateNew: formatDateNew,
     getCodeMngInfo () {
       let appId = this.$route.params.id
       this.$http.get('/miniapp/codemng', {params: {appId}}).then(res => {

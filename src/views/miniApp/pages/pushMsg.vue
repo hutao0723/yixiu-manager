@@ -16,7 +16,7 @@
         <template>
           <el-form :inline="true" class="demo-form-inline" size="mini">
             <el-form-item label="小程序:">{{pushInfo.nickName}}</el-form-item>
-            <el-form-item label="创建时间:">{{formatDateNew(pushInfo.gmtCreate)}}</el-form-item>
+            <el-form-item label="创建时间:">{{pushInfo.gmtCreate | formatDateNew}}</el-form-item>
             <el-form-item label="触发类型:">{{pushInfo.formTypeValue}}</el-form-item>
           </el-form>
         </template>
@@ -27,17 +27,17 @@
             <el-table-column prop="id" label="ID" width="60"></el-table-column>
             <el-table-column prop="gmtCreate" label="创建时间" >
               <template slot-scope="scope">
-                {{formatDateNew(scope.row.gmtCreate)}}
+                {{scope.row.gmtCreate | formatToMs}}
               </template>
             </el-table-column>
             <el-table-column prop="gmtModified" label="更新时间">
               <template slot-scope="scope">
-                {{formatDateNew(scope.row.gmtModified)}}
+                {{scope.row.gmtModified | formatToMs}}
               </template>
             </el-table-column>
             <el-table-column prop="pushTime" label="推送时间" >
               <template slot-scope="scope">
-                {{formatDateNew(scope.row.pushTime)}}
+                {{scope.row.pushTime | formatToMs}}
               </template>
             </el-table-column>
             <el-table-column prop="pushNum" label="预计可触达用户数" width="140"></el-table-column>
@@ -59,13 +59,17 @@
 </template>
 
 <script>
-import { formatDateNew } from '../../../utils/dateUtils';
+import { formatDateNew, formatToMs } from '../../../utils/dateUtils';
 export default {
   data () {
     return {
       pushInfo: {},
       pushList: []
     }
+  },
+  filters: {
+    formatToMs: formatToMs,
+    formatDateNew: formatDateNew
   },
   created () {
     this.templatePushList()

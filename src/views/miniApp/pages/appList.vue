@@ -22,7 +22,7 @@
             </el-table-column>
             <el-table-column label="创建时间" >
               <template slot-scope="scope">
-                {{formatDateNew(scope.row.gmtCreate)}}
+                {{scope.row.gmtCreate | formatToMs}}
               </template>
             </el-table-column>
             <el-table-column prop="authorized" label="是否授权">
@@ -100,7 +100,7 @@
 </template>
 
 <script>
-import { formatDateNew } from '../../../utils/dateUtils';
+import { formatToMs } from '../../../utils/dateUtils';
 export default {
   data () {
     return {
@@ -123,11 +123,13 @@ export default {
       appList: []
     }
   },
+  filters: {
+    formatToMs: formatToMs
+  },
   created () {
     this.getAppList()
   },
   methods: {
-    formatDateNew: formatDateNew,
     getAppList () {
       this.$http.get('/miniapp/list').then(res => {
         let resp = res.data

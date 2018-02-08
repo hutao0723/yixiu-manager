@@ -13,11 +13,11 @@
         <template>
           <el-form :inline="true" class="demo-form-inline" size="mini">
             <el-form-item >
-              <el-select value-key="id" v-model="msgTemplate" filterable placeholder="请选择" @change="selectChange">
+              <el-select value-key="id" v-model="msgTemplate" filterable placeholder="请选择模板" @change="selectChange">
                 <el-option
                   v-for="item in options"
                   :key="item.id"
-                  :label="item.title"
+                  :label="item.title + '(' + item.id + ')'"
                   :value="item">
                 </el-option>
               </el-select>
@@ -78,7 +78,7 @@
           </el-form-item> 
           <el-form-item v-if="pushNow === '0'">
             <span class="temp-title">推送时间:</span>
-            <el-date-picker v-model="pushTime" type="datetime" placeholder="选择推送时间" value-format="timestamp"></el-date-picker>
+            <el-date-picker v-model="pushTime"  placeholder="选择推送时间" value-format="timestamp"></el-date-picker>
           </el-form-item>
         </el-form>
       </div>
@@ -155,7 +155,7 @@ export default {
           this.emphasisKeyword = ''
           this.jumpPage = ''
           this.pushNow = '0'
-          this.pushTime = ''
+          this.pushTime = +this.$route.params.expireDate
           this.pushKeyList = []
           msgTemplate.mpMsgTemplateKeyList.forEach(item => {
             let pushKey = {

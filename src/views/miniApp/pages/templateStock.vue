@@ -8,9 +8,7 @@
       </el-breadcrumb>
       <span class="add-ofa">
         <i class="iconfont icon-jia"></i>
-        <router-link :to="{ path: '/manager/miniApp/addWxTemplate/' + $route.params.id}">
-          <span class="offical-acount">微信模板</span>
-        </router-link>
+        <span class="offical-acount" @click="addTemplate">微信模板</span>
       </span>
     </div>
     <div class="content">
@@ -22,7 +20,7 @@
             <el-table-column prop="keywords" label="关键词" ></el-table-column>
             <el-table-column prop="gmtCreate" label="创建时间">
               <template slot-scope="scope">
-                {{formatDateNew(scope.row.gmtCreate)}}
+                {{scope.row.gmtCreate | formatToMs}}
               </template>
             </el-table-column>
             <el-table-column label="操作">
@@ -38,7 +36,7 @@
 </template>
 
 <script>
-import { formatDateNew } from '../../../utils/dateUtils';
+import { formatToMs } from '../../../utils/dateUtils';
 export default {
   components: {},
   data () {
@@ -46,11 +44,13 @@ export default {
       msgTemplateList: []
     }
   },
+  filters: {
+    formatToMs: formatToMs
+  },
   created () {
     this.getMsgTemplateList()
   },
   methods: {
-    formatDateNew: formatDateNew,
     getMsgTemplateList () {
       let appId = this.$route.params.id
       this.$http.get('/miniapp/msgTemplateList', {params: {appId}}).then(res => {
@@ -98,7 +98,17 @@ export default {
           message: '已取消删除'
         })
       })
-    }
+    },
+    addTemplate () {
+      if (this.msgTemplateList && this.msgTemplateList.length === 25) {
+        this.$message({
+          type: 'info',
+          message: '暂时只能添加25条模板'
+        })
+      } else {
+        this.$router.push('/manager/miniApp/addWxTemplate/' + this.$route.params.id )
+      }
+    },
   }
 }
 </script>

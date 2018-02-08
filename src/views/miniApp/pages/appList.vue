@@ -90,6 +90,9 @@
           <el-form-item label="downloadFile合法域名:" :label-width="domainDialog.formLabelWidth">
             <span v-for="(item, index) in appDomain.downloaddomain">{{item}}</span>
           </el-form-item>
+          <el-form-item label="业务域名:" :label-width="domainDialog.formLabelWidth">
+            <span v-for="(item, index) in appDomain.webviewdomain">{{item}}</span>
+          </el-form-item>
           <div class="btn-wrap">
             <el-button size="small" type="primary" @click="setDomain(appId)">更新域名</el-button>
           </div> 

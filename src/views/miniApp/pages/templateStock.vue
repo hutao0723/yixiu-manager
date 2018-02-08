@@ -15,7 +15,7 @@
       <div class="tabel-wrap">
         <template>
           <el-table :data="msgTemplateList"  style="width: 100%" >
-            <el-table-column prop="id" label="ID" ></el-table-column>
+            <el-table-column prop="id" label="ID" width="80px"></el-table-column>
             <el-table-column prop="title" label="微信模板名称" ></el-table-column>
             <el-table-column prop="" label="关键词" >
               <template slot-scope="scope">
@@ -27,7 +27,7 @@
                   trigger="hover"
                   :content="scope.row.keywords">
                 </el-popover>
-                <span v-popover:popoverkeywords>{{scope.row.keywords.substr(0,9) + '...'}}</span>
+                <span v-popover:popoverkeywords>{{scope.row.keywords.substr(0,9)}}</span>
               </template>
             </el-table-column>
             <el-table-column prop="gmtCreate" label="创建时间">
@@ -35,7 +35,7 @@
                 {{scope.row.gmtCreate | formatToMs}}
               </template>
             </el-table-column>
-            <el-table-column label="操作">
+            <el-table-column label="操作" width="80px">
               <template slot-scope="scope">
                 <el-button type="text" size="mini" @click="delTemplate(scope.row.id)">删除</el-button>               
               </template>

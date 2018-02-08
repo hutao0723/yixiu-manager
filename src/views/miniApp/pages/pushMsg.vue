@@ -41,8 +41,8 @@
               </template>
             </el-table-column>
             <el-table-column prop="pushNum" label="预计可触达用户数" width="140"></el-table-column>
-            <el-table-column prop="pushStatusValue" label="推送状态" ></el-table-column>
-            <el-table-column  label="操作" >
+            <el-table-column prop="pushStatusValue" label="推送状态" width="100px"></el-table-column>
+            <el-table-column  label="操作" width="80px">
               <template slot-scope="scope">
                 <router-link :to="{ path: '/manager/miniApp/addEditPushMsg/' + pushInfo.appId + '/' + pushInfo.odpsId + '/' + pushInfo.expireDate + '/' + scope.row.id }" v-if="scope.row.pushStatusValue === '待推送'">
                   <el-button type="text" size="mini">编辑</el-button>   

@@ -78,7 +78,7 @@
           </el-form-item> 
           <el-form-item v-if="pushNow === '0'">
             <span class="temp-title">推送时间:</span>
-            <el-date-picker v-model="pushTime"  placeholder="选择推送时间" value-format="timestamp"></el-date-picker>
+            <el-date-picker type="datetime" v-model="pushTime"  placeholder="选择推送时间" value-format="timestamp"></el-date-picker>
           </el-form-item>
         </el-form>
       </div>

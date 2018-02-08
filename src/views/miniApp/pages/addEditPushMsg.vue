@@ -13,12 +13,12 @@
         <template>
           <el-form :inline="true" class="demo-form-inline" size="mini">
             <el-form-item >
-              <el-select value-key="id" v-model="msgTemplate" filterable placeholder="请选择模板" @change="selectChange">
+              <el-select value-key="id" v-model="id" filterable placeholder="请选择模板" @change="selectChange">
                 <el-option
                   v-for="item in options"
                   :key="item.id"
                   :label="item.title + '(' + item.id + ')'"
-                  :value="item">
+                  :value="item.id">
                 </el-option>
               </el-select>
             </el-form-item> 
@@ -74,7 +74,7 @@
               type="daterange"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
-              :default-time="['00:00:00', '23:59:59']" >
+              :default-time="['00:00:00', '23:59:59']" readonly>
             </el-date-picker>
           </el-form-item> 
           <el-form-item v-if="pushNow === '0'">
@@ -108,7 +108,7 @@ export default {
       templateId: '',
       pushKeyList: [],
       options: [],
-      msgTemplate: {}
+      msgTemplateId: ''
     } 
   },
   computed: {
@@ -146,7 +146,7 @@ export default {
   methods: {
     selectChange () {
       let that = this
-      let id = this.msgTemplate.id
+      let id = this.id
       this.$http.get('/miniapp/msgTemplateDetail', {params: {id}}).then(res => {
         let resp = res.data
         if (resp.success) {
@@ -156,7 +156,7 @@ export default {
           this.emphasisKeyword = ''
           this.jumpPage = ''
           this.pushNow = '0'
-          this.pushTime = +this.$route.params.expireDate
+          this.pushTime = ''
           this.pushKeyList = []
           msgTemplate.mpMsgTemplateKeyList.forEach(item => {
             let pushKey = {

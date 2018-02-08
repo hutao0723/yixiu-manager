@@ -220,7 +220,7 @@ export default {
       })
     },
     setDomain (appId) {
-      this.$http.get('/miniapp/setDomain').then(res => {
+      this.$http.get('/miniapp/setDomain', {params: {appId}}).then(res => {
         let resp = res.data
         if (resp.success && resp.data) {
           this.$message({

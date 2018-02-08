@@ -5,10 +5,12 @@
       <div class="side-wrap" v-show="isShow">
         <p class="page-title" >小程序管理</p>
         <el-menu :collapse="isCollapse" class="menu-collapse" default-active="1">
-          <el-menu-item index="1">
-            <i class="iconfont icon-msnui-weixin"></i>
-            <span slot="title" >小程序</span>
-          </el-menu-item>
+          <router-link :to="{ path: '/manager/miniApp' }">    
+            <el-menu-item index="1">
+              <i class="iconfont icon-msnui-weixin"></i>
+              <span slot="title" >小程序</span>
+            </el-menu-item>
+          </router-link>
         </el-menu>                
       </div>
     </el-aside>
@@ -62,6 +64,9 @@ export default {
 <style scoped lang="less">
 .main{
   margin-left: 60px;
+  a{
+    text-decoration: none;
+  }
   .el-container{
     .el-aside{
       background-color: #fff;

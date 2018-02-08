@@ -22,12 +22,12 @@
                 <el-popover
                   ref="popoverkeywords"
                   placement="top-start"
-                  title="标题"
+                  title="关键词"
                   width="200"
                   trigger="hover"
                   :content="scope.row.keywords">
                 </el-popover>
-                <span v-popover:popoverkeywords>{{scope.row.keywords.substr(0,9)}}</span>
+                <span v-popover:popoverkeywords>{{scope.row.keywords.substr(0,9) + '...'}}</span>
               </template>
             </el-table-column>
             <el-table-column prop="gmtCreate" label="创建时间">

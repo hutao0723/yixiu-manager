@@ -2,6 +2,7 @@
 * 将时间格式化到年/月/日 显示：分钟
 */
 export function formatDate(date) {
+  if (!date) return '-';
   if (typeof date !== 'object') {
     date = new Date(date);
   }
@@ -21,6 +22,7 @@ export function formatDate(date) {
 * 将时间格式化到年/月/日
 */
 export function formatDateNew(date) {
+  if (!date) return '-';
   if (typeof date !== 'object') {
     date = new Date(date);
   }
@@ -36,6 +38,7 @@ export function isSameDay(date1, date2) {
 }
 
 export function formatDateTime(date) {
+  if (!date) return '-';
   if (typeof date !== 'object') {
     date = new Date(date);
   }
@@ -47,6 +50,7 @@ export function formatDateTime(date) {
 * 将时间格式化到年/月/日 显示：分钟：秒
 */
 export function formatToMs(date) {
+  if (!date) return '-';
   if (typeof date !== 'object') {
     date = new Date(date);
   }

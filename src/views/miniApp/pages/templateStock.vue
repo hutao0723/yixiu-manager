@@ -17,7 +17,19 @@
           <el-table :data="msgTemplateList"  style="width: 100%" >
             <el-table-column prop="id" label="ID" ></el-table-column>
             <el-table-column prop="title" label="微信模板名称" ></el-table-column>
-            <el-table-column prop="keywords" label="关键词" ></el-table-column>
+            <el-table-column prop="" label="关键词" >
+              <template slot-scope="scope">
+                <el-popover
+                  ref="popoverkeywords"
+                  placement="top-start"
+                  title="标题"
+                  width="200"
+                  trigger="hover"
+                  :content="scope.row.keywords">
+                </el-popover>
+                <span v-popover:popoverkeywords>{{scope.row.keywords.substr(0,9)}}</span>
+              </template>
+            </el-table-column>
             <el-table-column prop="gmtCreate" label="创建时间">
               <template slot-scope="scope">
                 {{scope.row.gmtCreate | formatToMs}}

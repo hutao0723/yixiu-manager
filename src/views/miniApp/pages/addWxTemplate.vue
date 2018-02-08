@@ -126,6 +126,13 @@ export default {
     },
     save () {
       let keywordList = Object.assign([], this.keywordSelected) 
+      if (keywordList.length < 2 || keywordList.length > 10) {
+        this.$message({
+          type: 'info',
+          message: '只能添加2～10条关键词!'
+        })
+        return
+      }
       let appId = this.$route.params.id
       // keywordList.forEach( item => delete item.checked )
       let params = {

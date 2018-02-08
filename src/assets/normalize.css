@@ -24,6 +24,7 @@ html {
 
 body {
   margin: 0;
+  min-width: 1280px;
 }
 
 /**
@@ -444,4 +445,11 @@ template {
 
 [hidden] {
   display: none;
+}
+
+.fr{
+  float: right;
+}
+.el-aside{
+  z-index: 10;
 }

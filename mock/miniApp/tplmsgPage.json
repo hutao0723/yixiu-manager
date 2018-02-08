@@ -1,0 +1,20 @@
+{
+	"success": true,
+	"code": 200,
+	"desc": "失败的话失败信息在该字段中",
+	"data": {
+		"totalSize": 10,
+		"lists": [{
+			"id": 1,
+			"appId": "wx67c98c6a669003c4",
+			"wxAppName": "有粉小程序",
+			"eventType": 1,
+			"eventTypeDesc": "抢购",
+			"touchTotal": 106,
+			"touchUsers": 92,
+			"belongDate": "2018-02-05",
+			"expireDate": "2018-02-11"
+		}]
+
+	}
+}

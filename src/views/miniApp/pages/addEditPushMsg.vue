@@ -50,6 +50,7 @@
                 </el-form-item>
               </template>
             </el-form>
+            <el-button size="small" type="pain" @click="reset" class='fr'>取消加粗</el-button>
           </div>
           <span class="temp-title">配置落地页:</span>
           <div class="temp-selected">
@@ -73,12 +74,12 @@
               type="daterange"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
-              :default-time="['00:00:00', '23:59:59']" readonly >
+              :default-time="['00:00:00', '23:59:59']" >
             </el-date-picker>
           </el-form-item> 
           <el-form-item v-if="pushNow === '0'">
             <span class="temp-title">推送时间:</span>
-            <el-date-picker type="datetime" v-model="pushTime"  placeholder="选择推送时间" value-format="timestamp"></el-date-picker>
+            <el-date-picker type="datetime" v-model="pushTime"  placeholder="选择推送时间"></el-date-picker>
           </el-form-item>
         </el-form>
       </div>
@@ -204,7 +205,8 @@ export default {
       })
     },
     save () {
-      if (this.pushTime && (this.pushTime < new Date().getTime() || this.pushTime > this.dateRange[1])) {
+      let pushTime = new Date(this.pushTime).getTime()
+      if (pushTime && (pushTime < new Date().getTime() || pushTime > this.dateRange[1])) {
         this.$message({
           type: 'error',
           message: '请在范围内选择推送时间!'
@@ -217,7 +219,7 @@ export default {
         templateId: this.templateId,
         jumpPage: this.jumpPage,
         emphasisKeyword: this.emphasisKeyword,
-        pushTime: this.pushNow === '0' ? this.pushTime : '' ,
+        pushTime: this.pushNow === '0' ? pushTime : '' ,
         pushNow: this.pushNow === '0' ? false : true,
         pushKeyList: this.pushKeyList
       } 
@@ -242,7 +244,11 @@ export default {
           message: '请将配置信息填写完整!'
         })
       }
+    },
+    reset () {
+      this.emphasisKeyword = ''
     }
+
   }
 }
 </script>

@@ -45,7 +45,7 @@
             <el-table-column prop="eventTypeDesc" label="触发类型" ></el-table-column>
             <el-table-column prop="touchTotal" label="可触达人次"></el-table-column>
             <el-table-column prop="touchUsers" label="可触达用户数" ></el-table-column>
-            <el-table-column  label="操作" >
+            <el-table-column  label="操作" width="80px">
               <template slot-scope="scope">
                 <router-link :to="{ path: '/manager/miniApp/pushMsg/' + scope.row.id }">
                   <el-button type="text" size="mini">推送</el-button>        

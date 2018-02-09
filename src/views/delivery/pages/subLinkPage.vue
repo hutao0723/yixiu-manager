@@ -47,7 +47,10 @@
         <el-form  :inline="true" :model="adSubscriptionsForm" :rules="rules">
         <el-form-item label="待选公众号">
           <el-select  v-model="subscriptionId"  filterable remote reserve-keyword placeholder="待选公众号" :remote-method="remoteMethod" :loading="loading">
-              <el-option v-for="item in subscriptionsList" :key="item.value" :label="item.label" :value="item.value"></el-option>
+              <el-option v-for="item in subscriptionsList" :key="item.value" :label="item.label" :value="item.value">
+                 <span style="float: left">{{ item.label }}</span>
+                  <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+              </el-option>
           </el-select>
           <el-button type="text"  size="mini" icon="el-icon-search" @click="getLoadPageBySubscription()">查询</el-button>
         </el-form-item> 

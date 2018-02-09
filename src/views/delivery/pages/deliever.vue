@@ -85,12 +85,12 @@
           
           <template v-if="adPlanForm.planPlatform == '推啊'">
             <el-form-item label="广告计划" :label-width="formLabelWidth"  prop="planName">
-              <el-select v-model="planIndex" placeholder="请选择">
-                <el-option v-for="(item, index) in planList" :key="item.advertId" :label="item.advertName" :value="index">
-                  <span style="float: left">{{ item.advertName }}</span>
-                  <span style="float: right; color: #8492a6; font-size: 13px">{{ item.advertId }}</span>
-                </el-option>
-              </el-select>
+              <el-select value-key="id" v-model="planIndex" filterable  placeholder="请选择">
+                  <el-option v-for="(item, index) in planList" :key="item.advertId" :label="item.advertName" :value="index">
+                    <span style="float: left">{{ item.advertName }}</span>
+                    <span style="float: right; color: #8492a6; font-size: 13px">{{ item.advertId }}</span>
+                  </el-option>
+                </el-select>
             </el-form-item>              
           </template>
 
@@ -110,7 +110,10 @@
           </el-form-item>
           <el-form-item label="公众号主题" :label-width="formLabelWidth" prop="themeId">
             <el-select  v-model="adPlanForm.themeId"  filterable remote reserve-keyword placeholder="请选择" :remote-method="remoteMethod">
-                <el-option v-for="item in themeList" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                <el-option v-for="item in themeList" :key="item.value" :label="item.label" :value="item.value">
+                    <span style="float: left">{{ item.label }}</span>
+                    <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+                </el-option>
             </el-select>            
           </el-form-item> 
           <div class="btn-wrap">

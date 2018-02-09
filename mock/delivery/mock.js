@@ -18,10 +18,22 @@ var setOnline = [
     url: '/loadpage/update'
   },
   //公众号主题
-   {
+  {
     name: 'subscriptionTheme',
     type: 'get',
     url: '/subscriptionTheme/list'
+  },
+   //投放广告计划关联广告计划
+  {
+    name: 'themeName',
+    type: 'get',
+    url: '/subscriptionTheme/all'
+  },
+   //公众号待选公众号
+  {
+    name: 'subscriptionname',
+    type: 'get',
+    url: '/subscriptionInfo/list'
   }
 ];
 var fs = require('fs');

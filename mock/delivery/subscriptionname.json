@@ -1,0 +1,10 @@
+{
+	"success":true,
+	"data":{
+	"totalSize":70,
+	"lists":[
+			{"id":72,"appId":"wx46070202383ea715","name":"日惠记","headImg":"http://wx.qlogo.cn/mmopen/QAF2zLNbBdByyulOdkPeDXrNdTEMzjn5OOfNvnibHxNZLjxwOhd3Aicia0TJcj9K192hXB6N1ECL9ZF5oiaI6E0mp6XC7FG9IwUQ/0","originId":"gh_8dd171ecb034","authorized":true,"todayNewFollow":0,"todayNewUnFollow":0,"gmtCreate":1518168271000},
+			{"id":71,"appId":"wx7e3a9c38bd79c0f4","name":"神券来了","headImg":"http://wx.qlogo.cn/mmopen/Q3auHgzwzM4GQI0LHbibvTvIjN3tjLgetPQIarGapQ0OIGHM95C5jSEEwxaGmGiaQ9vVQXcUXtjhDriaRXticHOogNkEYvltibQCzXxdoibicdOfU8/0","originId":"gh_3c596a104da2","authorized":true,"todayNewFollow":0,"todayNewUnFollow":0,"gmtCreate":1518168168000}
+			]
+	}
+}

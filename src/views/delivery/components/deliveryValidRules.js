@@ -98,6 +98,7 @@ export const loadPagerules = {
 
   ],
   loadPageUrl: [{
+    required: true,
     validator: checkloadPageUrl,
     trigger: 'blur'
   }],

@@ -253,7 +253,7 @@ export default {
               if (res.data.data) {
                 this.$message.success('创建成功')
                 this.dialogLoadPageVisible = false
-                window.location.reload()
+                 window.location.reload()
               } else {
                 this.$message.error('创建失败')
               }
@@ -282,7 +282,7 @@ export default {
             if (res.data.success) {
               this.dialogLoadPageUrlVisible = false
               this.$message.success('保存成功')
-              window.location.reload()
+              this.getAllList();
             }
           })
         } else {

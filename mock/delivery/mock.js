@@ -5,7 +5,24 @@
  *         url   线上接口地址
  */
 var setOnline = [
-  
+  //投放落地页列表
+  {
+    name: 'loadPage',
+    type: 'get',
+    url: '/loadpage/list'
+  },
+  //落地页编辑
+  {
+    name: 'updateloadPage',
+    type: 'get',
+    url: '/loadpage/update'
+  },
+  //公众号主题
+   {
+    name: 'subscriptionTheme',
+    type: 'get',
+    url: '/subscriptionTheme/list'
+  }
 ];
 var fs = require('fs');
 

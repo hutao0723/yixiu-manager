@@ -60,11 +60,12 @@
                 </span>
               </template>
               </el-table-column>           
-            <el-table-column  label="操作" width="150">
+            <el-table-column  label="操作" width="240">
               <template slot-scope="scope">
+                <el-button type="text" size="small" @click="openloadPageUrlDilog(scope.row)">落地页</el-button>  
                 <el-button type="text" size="small" @click="openStatusDilog(scope.row)">状态</el-button>
                 <el-button type="text" size="small" @click="openThresholdDilog(scope.row)">阈值</el-button>               
-                <el-button type="text" size="small" @click="deletePageModel(scope.row)">删除</el-button>               
+                <el-button type="text" size="small" @click="deletePageModel(scope.row)">删除</el-button> 
               </template>
             </el-table-column>
           </el-table>
@@ -119,6 +120,20 @@
          <div class="btn-wrap">
           <el-button size="small" type="primary" @click="changeThresholdNum">保存</el-button>
         </div>       
+      </el-dialog> 
+    </div> 
+    <!--落地页编辑-->
+    <div class="edit-loadPageUrl-diolog">
+      <el-dialog title="编辑落地页地址" :visible.sync="dialogLoadPageUrlVisible">
+        <el-form ref="changeLoadPageUrl" :model="changeForm" :rules="rules">
+          <el-form-item label="落地页" :label-width="formLabelWidth"  prop="loadPageUrl">
+            <el-input v-model="changeForm.loadPageUrl" auto-complete="off"></el-input>
+          </el-form-item>                     
+        </el-form>
+         <div class="btn-wrap">
+          <el-button size="small" @click="dialogLoadPageUrlVisible = false">取 消</el-button>
+          <el-button size="small" type="primary" @click="changeLoadPageUrl">保存</el-button>
+        </div>       
       </el-dialog>
     </div>    
   </section>
@@ -155,7 +170,8 @@ export default {
       loading: false,
       totalSize: 50,
       formLabelWidth: '100px',
-      dialogLoadPageVisible: false,
+      dialogLoadPageVisible:false,
+      dialogLoadPageUrlVisible:false,
       dialogStatusVisible: false,
       dialogThresholdVisible: false,
       rules: loadPagerules,
@@ -167,6 +183,7 @@ export default {
       changeForm: {
         id: '',
         status: '',
+        loadPageUrl:'',
         thresholdNum: null
       },
       pageOption: {
@@ -245,6 +262,28 @@ export default {
             }
           }, () => {
             this.$message.error('网络错误')
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    // 编辑落地页
+    changeLoadPageUrl () {
+      this.$refs['changeLoadPageUrl'].validate((valid) => {
+        if (valid) {
+          let loadPageUrl = this.changeForm.loadPageUrl
+          let id = this.changeForm.id
+          console.log(id)
+          this.$http.get('/loadpage/update', {params: {
+            loadPageUrl, id
+          }}).then(res => {
+            if (res.data.success) {
+              this.dialogLoadPageUrlVisible = false
+              this.$message.success('保存成功')
+              window.location.reload()
+            }
           })
         } else {
           console.log('error submit!!')
@@ -370,6 +409,12 @@ export default {
       this.dialogStatusVisible = true
       this.changeForm.id = row.id
       this.changeForm.status = row.status
+    },
+    //新增编辑落地页信息
+    openloadPageUrlDilog (row) {
+      this.dialogLoadPageUrlVisible = true
+      this.changeForm.id = row.id
+      this.changeForm.loadPageUrl = row.loadPageUrl
     },
     openThresholdDilog (row) {
       this.changeForm.id = row.id

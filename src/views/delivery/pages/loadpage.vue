@@ -62,7 +62,7 @@
               </el-table-column>           
             <el-table-column  label="操作" width="240">
               <template slot-scope="scope">
-                <el-button type="text" size="small" @click="openloadPageUrlDilog(scope.row)">落地页</el-button>  
+                <el-button type="text" size="small" @click="openloadPageUrlDialog(scope.row)">落地页</el-button>  
                 <el-button type="text" size="small" @click="openStatusDilog(scope.row)">状态</el-button>
                 <el-button type="text" size="small" @click="openThresholdDilog(scope.row)">阈值</el-button>               
                 <el-button type="text" size="small" @click="deletePageModel(scope.row)">删除</el-button> 
@@ -411,7 +411,7 @@ export default {
       this.changeForm.status = row.status
     },
     //新增编辑落地页信息
-    openloadPageUrlDilog (row) {
+    openloadPageUrlDialog (row) {
       this.dialogLoadPageUrlVisible = true
       this.changeForm.id = row.id
       this.changeForm.loadPageUrl = row.loadPageUrl

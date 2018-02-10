@@ -5,8 +5,8 @@ import App from './App'
 import router from './router'
 import store from './store'
 import ElementUI from 'element-ui'
-import './assets/normalize.css'
 import 'element-ui/lib/theme-chalk/index.css'
+import './styles/main.less';
 import axios from 'axios'
 import qs from 'qs'
 

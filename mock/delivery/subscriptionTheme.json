@@ -1,14 +1,38 @@
 {
-	"success":true,
-	"data":{
-	"totalSize":18,
-	"lists":[
-				{"id":30,"name":"【测试】夏目手账测试","subscriptionNum":1,"status":1},
-				{"id":29,"name":"多买多省","subscriptionNum":0,"status":1},
-				{"id":21,"name":"走在潮流前沿","subscriptionNum":1,"status":0},
-				{"id":20,"name":"便宜秒","subscriptionNum":1,"status":0},
-				{"id":18,"name":"老司机放映室","subscriptionNum":2,"status":0}
-				
-			]
+	"success": true,
+	"data": {
+		"totalSize": 18,
+		"lists": [{
+				"id": 30,
+				"name": "【测试】夏目手账测试",
+				"subscriptionNum": 1,
+				"status": 1
+			},
+			{
+				"id": 29,
+				"name": "多买多省",
+				"subscriptionNum": 0,
+				"status": 1
+			},
+			{
+				"id": 21,
+				"name": "走在潮流前沿",
+				"subscriptionNum": 1,
+				"status": 0
+			},
+			{
+				"id": 20,
+				"name": "便宜秒",
+				"subscriptionNum": 1,
+				"status": 0
+			},
+			{
+				"id": 18,
+				"name": "老司机放映室",
+				"subscriptionNum": 2,
+				"status": 0
+			}
+
+		]
 	}
 }

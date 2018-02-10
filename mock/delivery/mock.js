@@ -23,7 +23,6 @@ var setOnline = [
     type: 'get',
     url: '/subscriptionTheme/list'
   },
-   //投放广告计划关联广告计划
   {
     name: 'themeName',
     type: 'get',
@@ -34,6 +33,11 @@ var setOnline = [
     name: 'subscriptionname',
     type: 'get',
     url: '/subscriptionInfo/list'
+  },
+  {
+    name: 'themeLoadPage',
+    type: 'get',
+    url: '/subscriptionTheme/getLoadPage'
   }
 ];
 var fs = require('fs');

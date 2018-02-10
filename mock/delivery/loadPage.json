@@ -1,16 +1,71 @@
 {
-	"success":true,
-	"data":{
-		"totalSize":43,
-		"lists":[
-			{"id":81,"subscriptionName":"便宜秒","loadPageUrl":"https://yun.duiba.com.cn/developer/assets/pianyimiao12.html","thresholdNum":3000,"status":1,"todayFollowNum":466},
-			{"id":80,"subscriptionName":"夏目手账","loadPageUrl":"https://www.test.com","thresholdNum":2,"status":2,"todayFollowNum":2},
-			{"id":79,"subscriptionName":"有你有惠","loadPageUrl":"http://yun.duiba.com.cn/developer/assets/youni2.html","thresholdNum":3000,"status":1,"todayFollowNum":35},
-			{"id":78,"subscriptionName":"穿搭风格指南","loadPageUrl":"https://yun.duiba.com.cn/developer/assets/chuanda5.html","thresholdNum":1000,"status":1,"todayFollowNum":6},
-			{"id":77,"subscriptionName":"女王书舍","loadPageUrl":"https://yun.duiba.com.cn/developer/assets/nvwangshushe2.html","thresholdNum":500,"status":1,"todayFollowNum":131},
-			{"id":76,"subscriptionName":"每夜睡前趣事","loadPageUrl":"https://yun.duiba.com.cn/developer/assets/shuiqianqushi1.html","thresholdNum":500,"status":2,"todayFollowNum":538},
-			{"id":75,"subscriptionName":"桃花十里我等你","loadPageUrl":"https://yun.duiba.com.cn/developer/assets/shilitaohua5.html","thresholdNum":1500,"status":2,"todayFollowNum":1568},
-			{"id":74,"subscriptionName":"皮皮书","loadPageUrl":"https://yun.duiba.com.cn/developer/assets/pipishu1.html","thresholdNum":500,"status":2,"todayFollowNum":562}
+	"success": true,
+	"data": {
+		"totalSize": 43,
+		"lists": [{
+				"id": 81,
+				"subscriptionName": "便宜秒",
+				"loadPageUrl": "https://yun.duiba.com.cn/developer/assets/pianyimiao12.html",
+				"thresholdNum": 3000,
+				"status": 1,
+				"todayFollowNum": 466
+			},
+			{
+				"id": 80,
+				"subscriptionName": "夏目手账",
+				"loadPageUrl": "https://www.test.com",
+				"thresholdNum": 2,
+				"status": 2,
+				"todayFollowNum": 2
+			},
+			{
+				"id": 79,
+				"subscriptionName": "有你有惠",
+				"loadPageUrl": "http://yun.duiba.com.cn/developer/assets/youni2.html",
+				"thresholdNum": 3000,
+				"status": 1,
+				"todayFollowNum": 35
+			},
+			{
+				"id": 78,
+				"subscriptionName": "穿搭风格指南",
+				"loadPageUrl": "https://yun.duiba.com.cn/developer/assets/chuanda5.html",
+				"thresholdNum": 1000,
+				"status": 1,
+				"todayFollowNum": 6
+			},
+			{
+				"id": 77,
+				"subscriptionName": "女王书舍",
+				"loadPageUrl": "https://yun.duiba.com.cn/developer/assets/nvwangshushe2.html",
+				"thresholdNum": 500,
+				"status": 1,
+				"todayFollowNum": 131
+			},
+			{
+				"id": 76,
+				"subscriptionName": "每夜睡前趣事",
+				"loadPageUrl": "https://yun.duiba.com.cn/developer/assets/shuiqianqushi1.html",
+				"thresholdNum": 500,
+				"status": 2,
+				"todayFollowNum": 538
+			},
+			{
+				"id": 75,
+				"subscriptionName": "桃花十里我等你",
+				"loadPageUrl": "https://yun.duiba.com.cn/developer/assets/shilitaohua5.html",
+				"thresholdNum": 1500,
+				"status": 2,
+				"todayFollowNum": 1568
+			},
+			{
+				"id": 74,
+				"subscriptionName": "皮皮书",
+				"loadPageUrl": "https://yun.duiba.com.cn/developer/assets/pipishu1.html",
+				"thresholdNum": 500,
+				"status": 2,
+				"todayFollowNum": 562
+			}
 		]
 	}
 }

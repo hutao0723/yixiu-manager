@@ -102,7 +102,7 @@
             </el-table>
           </template>  
         </div>
-        <div class="btn-wrap">
+        <div class="btn-wrap mt20">
           <el-button size="small" type="primary" @click="VersionCommit">保存</el-button>
         </div>
       </el-dialog>

@@ -91,7 +91,8 @@ export default {
     }
     .page-title{
       width:100%;
-      text-align:center
+      text-align:center;
+      line-height: 60px;
     }
   }
   .menu-collapse{

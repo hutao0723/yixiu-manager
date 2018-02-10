@@ -71,7 +71,7 @@
 import draggable from 'vuedraggable'
 export default {
   components: {
-  　　draggable
+    draggable
   },
   data () {
     return {
@@ -84,11 +84,11 @@ export default {
   },
   computed: {
     keywordSelecting () {
-      let keywordSelecting = [];
+      let keywordSelecting = []
       this.keywordList.forEach(function (item) {
-        if (item.checked) keywordSelecting.push(item);
+        if (item.checked) keywordSelecting.push(item)
       })
-      return keywordSelecting;
+      return keywordSelecting
     }
   },
   watch: {
@@ -112,7 +112,7 @@ export default {
           return
         }
       }
-      this.$http.get('/miniapp/templateLibraryGet', { params: {atId, appId}}).then(res => {
+      this.$http.get('/miniapp/templateLibraryGet', {params: {atId, appId}}).then(res => {
         let resp = res.data
         if (resp.success) {
           this.keywordList = resp.data.keywordList
@@ -148,7 +148,7 @@ export default {
             type: 'success',
             message: '添加成功!'
           })
-         this.$router.push('/manager/miniApp/templateStock/' + appId)
+          this.$router.push('/manager/miniApp/templateStock/' + appId)
         } else {
           let msg = resp.desc || '请求失败'
           this.$message.error(msg)

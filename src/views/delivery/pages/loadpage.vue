@@ -170,8 +170,8 @@ export default {
       loading: false,
       totalSize: 50,
       formLabelWidth: '100px',
-      dialogLoadPageVisible:false,
-      dialogLoadPageUrlVisible:false,
+      dialogLoadPageVisible: false,
+      dialogLoadPageUrlVisible: false,
       dialogStatusVisible: false,
       dialogThresholdVisible: false,
       rules: loadPagerules,
@@ -183,7 +183,7 @@ export default {
       changeForm: {
         id: '',
         status: '',
-        loadPageUrl:'',
+        loadPageUrl: '',
         thresholdNum: null
       },
       pageOption: {
@@ -253,7 +253,7 @@ export default {
               if (res.data.data) {
                 this.$message.success('创建成功')
                 this.dialogLoadPageVisible = false
-                 window.location.reload()
+                window.location.reload()
               } else {
                 this.$message.error('创建失败')
               }
@@ -282,7 +282,7 @@ export default {
             if (res.data.success) {
               this.dialogLoadPageUrlVisible = false
               this.$message.success('保存成功')
-              this.getAllList();
+              this.getAllList()
             }
           })
         } else {
@@ -410,7 +410,7 @@ export default {
       this.changeForm.id = row.id
       this.changeForm.status = row.status
     },
-    //新增编辑落地页信息
+    // 新增编辑落地页信息
     openloadPageUrlDialog (row) {
       this.dialogLoadPageUrlVisible = true
       this.changeForm.id = row.id

@@ -111,7 +111,7 @@
 </template>
 
 <script>
-import { formatToMs } from '../../../utils/dateUtils';
+import { formatToMs } from '../../../utils/dateUtils'
 export default {
   data () {
     return {
@@ -119,21 +119,21 @@ export default {
       labelholder: '',
       formLabelWidth: '120px',
       codeMngInfo: {
-        appId: "",
+        appId: '',
         online: {
-            templateId: '',
-            auditId: '',
-            userVersion: '',
-            userDesc: '',
-            gmtCreate: ''
+          templateId: '',
+          auditId: '',
+          userVersion: '',
+          userDesc: '',
+          gmtCreate: ''
         },
         audit: {
-            templateStatus: '',
-            templateId: '',
-            auditId: '',
-            userVersion: '',
-            userDesc: '',
-            gmtCreate: ''
+          templateStatus: '',
+          templateId: '',
+          auditId: '',
+          userVersion: '',
+          userDesc: '',
+          gmtCreate: ''
         }
       },
       templateList: [
@@ -202,10 +202,10 @@ export default {
       })
     },
     showVersion () {
-      this.templateId = ""
+      this.templateId = ''
       this.versionDialog = {
         show: true
-      };
+      }
       this.getAllTemplate()
     },
     publish () {
@@ -230,7 +230,7 @@ export default {
                 message: '发布失败!'
               })
             }
-          } 
+          }
         })
       }).catch(() => {
         this.$message({
@@ -261,7 +261,7 @@ export default {
                 message: '提交审核失败!'
               })
             }
-          } 
+          }
         })
       }).catch(() => {
         this.$message({
@@ -308,7 +308,7 @@ export default {
                 message: '撤回审核失败!'
               })
             }
-          } 
+          }
         })
       }).catch(() => {
         this.$message({

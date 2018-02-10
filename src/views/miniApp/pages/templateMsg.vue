@@ -64,7 +64,7 @@
 </template>
 
 <script>
-import { formatDateNew } from '../../../utils/dateUtils';
+import { formatDateNew } from '../../../utils/dateUtils'
 export default {
   data () {
     return {

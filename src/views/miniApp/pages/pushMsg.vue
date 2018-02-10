@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import { formatDateNew, formatToMs } from '../../../utils/dateUtils';
+import { formatDateNew, formatToMs } from '../../../utils/dateUtils'
 export default {
   data () {
     return {

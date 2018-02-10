@@ -110,7 +110,7 @@ const columns = [
     render: (text, record, index) => {
       if (record.status === 0) return '不可使用'
       if (record.status === 1) return '待使用'
-      if (record.status === 2) return '已使用' 
+      if (record.status === 2) return '已使用'
     }
   },
   {
@@ -119,11 +119,11 @@ const columns = [
     width: 20,
     action: true
   }
-];
+]
 export default {
   name: 'delivery',
   components: {
-  　　draggable
+    draggable
   },
   data () {
     return {
@@ -263,7 +263,7 @@ export default {
       this.$http.post('/subscriptionTheme/loadPage/sort', {start, end, id, themeId}).then(res => {
         let resp = res.data
         if (resp.success) {
-          this.$message.success("排序成功")
+          this.$message.success('排序成功')
         } else {
           let msg = resp.desc || '请求失败'
           this.$message.error(msg)

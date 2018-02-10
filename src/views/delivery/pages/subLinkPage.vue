@@ -264,9 +264,11 @@ export default {
         let resp = res.data
         if (resp.success) {
           this.$message.success('排序成功')
+          this.getList()
         } else {
           let msg = resp.desc || '请求失败'
           this.$message.error(msg)
+          this.getList()
         }
       })
     }

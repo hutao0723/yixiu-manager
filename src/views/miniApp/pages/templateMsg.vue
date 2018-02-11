@@ -64,7 +64,7 @@
 </template>
 
 <script>
-import { formatDateNew } from '../../../utils/dateUtils';
+import { formatDateNew } from '../../../utils/dateUtils'
 export default {
   data () {
     return {
@@ -94,7 +94,7 @@ export default {
     this.getTempMsgList()
   },
   methods: {
-    onSearch () { 
+    onSearch () {
       let appId = this.$route.params.id
       let valueArr = Object.values(this.searchForm)
       this.pageOption.pageNum = 1

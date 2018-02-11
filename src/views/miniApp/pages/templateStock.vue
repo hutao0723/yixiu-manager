@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import { formatToMs } from '../../../utils/dateUtils';
+import { formatToMs } from '../../../utils/dateUtils'
 export default {
   components: {},
   data () {
@@ -118,9 +118,9 @@ export default {
           message: '暂时只能添加25条模板'
         })
       } else {
-        this.$router.push('/manager/miniApp/addWxTemplate/' + this.$route.params.id )
+        this.$router.push('/manager/miniApp/addWxTemplate/' + this.$route.params.id)
       }
-    },
+    }
   }
 }
 </script>

@@ -103,7 +103,7 @@
 </template>
 
 <script>
-import { formatToMs } from '../../../utils/dateUtils';
+import { formatToMs } from '../../../utils/dateUtils'
 export default {
   data () {
     return {

@@ -37,7 +37,7 @@
           <el-table :data="tableData"  style="width: 100%">
             <el-table-column prop="id" label="ID" width="50"></el-table-column>
             <el-table-column prop="name" label="主题"></el-table-column>
-            <el-table-column prop="subscriptionNum" label="公众号数量" ></el-table-column>
+            <el-table-column prop="subscriptionNum" label="落地页数量" ></el-table-column>
             <el-table-column prop="status" label="主题状态" >
               <template slot-scope="scope">
                 <span v-if="scope.row.status === 0">

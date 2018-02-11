@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { formatToMs } from '../../../utils/dateUtils';
+import { formatToMs } from '../../../utils/dateUtils'
 export default {
   data () {
     return {
@@ -42,13 +42,13 @@ export default {
     formatToMs: formatToMs
   },
   created () {
-    this.getAllTemplate();
+    this.getAllTemplate()
   },
   methods: {
     getAllTemplate () {
-      let appId = this.$route.params.id;
+      let appId = this.$route.params.id
       this.$http.get('/miniapp/getAllTemplate', {params: {appId}}).then(res => {
-        let resp = res.data;
+        let resp = res.data
         if (resp.success) {
           this.templateList = resp.data
         } else {
@@ -58,9 +58,9 @@ export default {
       })
     },
     refreshTemplate () {
-      let appId = this.$route.params.id;
+      let appId = this.$route.params.id
       this.$http.get('/miniapp/refreshTemplate', {params: {appId}}).then(res => {
-        let resp = res.data;
+        let resp = res.data
         if (resp.success && resp.data) {
           this.$message({
             type: 'success',

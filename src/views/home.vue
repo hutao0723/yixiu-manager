@@ -36,7 +36,7 @@
           </el-col>
           <div class="control-wrap">
             <div class="exit-wrap">
-              <span class="logout" @click="logout">退出</span>
+              <a class="logout" href="/logout">退出</a>
             </div>
               <span class="name">有粉</span>
           </div>
@@ -59,19 +59,7 @@ export default {
 
     }
   },
-  methods: {
-    logout () {
-      this.$http.post('/logout').then(res => {
-        let resp = res.data
-        if (resp.success) {
-          this.$message.success('退出成功')
-        } else {
-          let msg = resp.desc || '请求失败'
-          this.$message.error(msg)
-        }
-      })
-    }
-  }
+  methods: {}
 }
 </script>
 
@@ -110,9 +98,13 @@ export default {
   .exit-wrap{
     margin-bottom:20px;
     .logout{
+      margin: 0 auto;
+      color:#ccc;
+      width:100%;
+      text-align:center;
+      display: inline-block;
       cursor: pointer;
     }
-
   }
   span{
    margin: 0 auto;

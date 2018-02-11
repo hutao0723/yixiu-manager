@@ -125,7 +125,7 @@ export default {
       })
     },
     save () {
-      let keywordList = Object.assign([], this.keywordSelected) 
+      let keywordList = Object.assign([], this.keywordSelected)
       if (keywordList.length < 2 || keywordList.length > 10) {
         this.$message({
           type: 'info',

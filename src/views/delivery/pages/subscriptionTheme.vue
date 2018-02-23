@@ -275,7 +275,7 @@ export default {
             this.totalSize = 1
           }
         } else {
-          this.$message.error('获取数据失败')
+          this.$message.error('获取数据失败啦')
         }
       }, () => {
         this.$message.error('网络错误')

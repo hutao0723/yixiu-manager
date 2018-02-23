@@ -279,9 +279,13 @@ export default {
           this.$http.get('/loadpage/update', {params: {
             loadPageUrl, id
           }}).then(res => {
-            if (res.data.success) {
+            if (res.data.data) {
               this.dialogLoadPageUrlVisible = false
               this.$message.success('保存成功')
+              this.getAllList()
+            }else{
+              this.dialogLoadPageUrlVisible = false
+              this.$message.error('保存失败')
               this.getAllList()
             }
           })

@@ -110,9 +110,7 @@
           </el-form-item>
           <el-form-item label="公众号主题" :label-width="formLabelWidth" prop="themeId">
             <el-select  v-model="adPlanForm.themeId"  filterable remote reserve-keyword placeholder="请选择" :remote-method="remoteMethod">
-                <el-option v-for="item in themeList" :key="item.value" :label="item.label" :value="item.value">
-                    <span style="float: left">{{ item.label }}</span>
-                    <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+                <el-option v-for="item in themeList" :key="item.value" :label="item.label + item.value" :value="item.value">
                 </el-option>
             </el-select>            
           </el-form-item> 

@@ -283,10 +283,9 @@ export default {
               this.dialogLoadPageUrlVisible = false
               this.$message.success('保存成功')
               this.getAllList()
-            }else{
+            } else {
               this.dialogLoadPageUrlVisible = false
               this.$message.error('保存失败')
-              this.getAllList()
             }
           })
         } else {

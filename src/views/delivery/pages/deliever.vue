@@ -345,6 +345,8 @@ export default {
     },
     // 模糊查询 主题
     remoteMethod (query) {
+      console.log('触发了')
+      console.log(this.adPlanForm.themeId)
       this.$http.get('/subscriptionTheme/all', {
         params: {
           themeName: query

@@ -148,6 +148,7 @@
 			setGzhSatus (e,id){
 				this.$http.get('/subscriptionInfo/update', {
 					params: {
+						id: id,
 						serviceStatus: e,
 					}
 				}).then(res => {

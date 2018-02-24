@@ -48,7 +48,7 @@
 						</el-table-column>
 						<el-table-column label="公众号状态">
 							<template slot-scope="scope">
-								<el-select v-model="scope.row.serviceStatus" placeholder="请选择" size="small" @change="setGzhSatus">
+								<el-select v-model="scope.row.serviceStatus" placeholder="请选择" size="small" @change="setGzhSatus($event,scope.row.id)">
 									<el-option v-for="(item,index) in gzhStatus" :key="index" :label="item" :value="index">
 									</el-option>
 								</el-select>
@@ -80,7 +80,7 @@
 			</el-form>
 			<div slot="footer" class="dialog-footer">
 				<el-button @click="dialogAdmin = false">取 消</el-button>
-				<el-button type="primary" @click="setAdminName">确 定</el-button>
+				<el-button type="primary" @click="setAdminName(scope.row.id)">确 定</el-button>
 			</div>
 		</el-dialog>
 	</section>
@@ -128,10 +128,11 @@
 				this.adminName = name ? name : '';
 			},
 			// 设置管理员
-			setAdminName() {
+			setAdminName(id) {
 				let name = this.adminName;
 				this.$http.get('/subscriptionInfo/update', {
 					params: {
+						id: id,
 						managerName: name,
 					}
 				}).then(res => {
@@ -144,7 +145,7 @@
 					}
 				})
 			},
-			setGzhSatus (e){
+			setGzhSatus (e,id){
 				this.$http.get('/subscriptionInfo/update', {
 					params: {
 						serviceStatus: e,

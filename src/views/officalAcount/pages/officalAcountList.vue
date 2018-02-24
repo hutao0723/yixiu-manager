@@ -59,7 +59,7 @@
 						<el-table-column prop="managerName" label="管理员"></el-table-column>
 						<el-table-column label="操作" width="150">
 							<template slot-scope="scope">
-								<el-button type="text" size="mini" @click="openDialogAdmin(scope.row.managerName)">管理员</el-button>
+								<el-button type="text" size="mini" @click="openDialogAdmin(scope.row.managerName,scope.row.id)">管理员</el-button>
 								<el-button type="text" size="mini" @click="getWeChatSetting">授权</el-button>
 								<el-button type="text" size="mini" @click="delAcount(scope.row)">删除</el-button>
 							</template>
@@ -80,7 +80,7 @@
 			</el-form>
 			<div slot="footer" class="dialog-footer">
 				<el-button @click="dialogAdmin = false">取 消</el-button>
-				<el-button type="primary" @click="setAdminName(scope.row.id)">确 定</el-button>
+				<el-button type="primary" @click="setAdminName">确 定</el-button>
 			</div>
 		</el-dialog>
 	</section>
@@ -98,7 +98,7 @@
 				ofaSearchForm: {
 					searchWay: '',
 					searchValue: ''
-				},
+				},	
 				pageOption: {
 					pageNum: 1,
 					size: 20
@@ -115,6 +115,8 @@
 				], // 公众号状态
 				dialogAdmin: false, // 管理员弹窗
 				adminName: '', // 管理员名称
+				adminId: '', // 管理员id
+			
 
 			}
 		},
@@ -123,13 +125,16 @@
 		},
 		methods: {
 			//打开设置管理员弹窗
-			openDialogAdmin(name) {
+			openDialogAdmin(name,id) {
 				this.dialogAdmin = true;
 				this.adminName = name ? name : '';
+				this.adminId = id;
 			},
 			// 设置管理员
-			setAdminName(id) {
+			setAdminName() {
 				let name = this.adminName;
+				let id = this.adminId;
+				
 				this.$http.get('/subscriptionInfo/update', {
 					params: {
 						id: id,

@@ -144,6 +144,7 @@
 					this.dialogAdmin = false;
 					if (res.data.success) {
 						this.$message.success('修改管理员成功')
+						this.onSearch();
 					} else {
 						let msg = res.data.desc || '请求失败'
 						this.$message.error(msg)

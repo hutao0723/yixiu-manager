@@ -146,218 +146,224 @@
 						label: '投放地址'
 					}
 
-				],
-				dialogAdVisible: false,
-				tableData: [
-					{
-						id: 3,
-						pushUrl: 'www.tmall.com',
-						planName: '',
-						planId: 2,
-						planPlatform: '',
-						themeInfo: '',
-						themeStatus: 1
-					}
-				],
-				pageOption: {
-					pageNum: 1,
-					size: 20
-				},
-				totalSize: 50,
-				rules: rules,
-				adPlanForm: {
-					pushUrl: '',
-					planName: '',
-					planId: null,
-					themeId: null,
-					planPlatform: '推啊'
-				},
-				themeList: [],
-				planIndex: null,
-				selectPlan: {
-					advertId: null,
-					advertName: '',
-					promoteURL: ''
-				},
-				planList: [
-					{
-						advertId: 2804,
-						advertName: '132ad',
-						promoteURL: 'http://www.baidu.com'
-					}, {
-						advertId: 2805,
-						advertName: 'test-有效1',
-						promoteURL: 'http://www.tqmall.com'
-					}
-				],
-				formLabelWidth: '100px'
-			}
-		},
-		created() {
-			this.getAllPlanList()
-			this.getThemeList()
-		},
-		mounted() {
-			this.getAllTuiaList()
-			console.log(this.selectPlan)
-		},
-		watch: {
-			'planIndex': function (newVal) {
-				console.log(newVal)
-				if (newVal !== undefined) {
-					this.selectPlan = this.planList[newVal]
-					console.log(this.selectPlan)
-					this.adPlanForm.pushUrl = this.selectPlan.promoteURL
-					this.adPlanForm.planName = this.selectPlan.advertName
-					this.adPlanForm.planId = this.selectPlan.advertId
-				}
-			}
-		},
-		methods: {
-			getAllTuiaList() {
-				this.$http.get('/advplan/tuia').then(res => {
-					if (res.data.success) {
-						this.planList = res.data.data
-					}
-				}, () => {
-					this.$message.error('获取推啊投放地址失败')
-				})
-			},
-			onSearch() {
-				let valueArr = Object.values(this.searchForm)
-				let params = {
-					[valueArr[0]]: valueArr[1],
-					status: valueArr[2]
-				}
-				this.$http.get('/advplan/list', {
-					params
-				}).then(res => {
-					if (res.data.success) {
-						if (res.data.data.lists) {
-							this.tableData = res.data.data.lists
-							this.totalSize = res.data.data.totalSize
-						} else {
-							this.tableData = []
-							this.totalSize = 1
-						}
-					} else {
-						let msg = res.data.desc
-						this.$message.error(msg || '获取失败')
-					}
-				}, () => {
-					this.$message.error('网络错误！')
-				})
-			},
-			getAllPlanList() {
-				this.$http.get('/advplan/list').then(res => {
-					if (res.data.success) {
-						this.tableData = res.data.data.lists
-						this.totalSize = res.data.data.totalSize
-					} else {
-						let msg = res.data.desc
-						this.$message.error(msg || '获取失败')
-					}
-				}, () => {
-					this.$message.error('网络错误！')
-				})
-			},
-			pageChange() {
-				let valueArr = Object.values(this.searchForm)
-				let params = {
-					[valueArr[0]]: valueArr[1],
-					status: valueArr[2],
-					pageNum: this.pageOption.pageNum
-				}
-				this.$http.get('/advplan/list', { params }).then(res => {
-					if (res.data.success) {
-						this.tableData = res.data.data.lists
-					} else {
-						this.$message.error('获取数据失败')
-					}
-				}, () => {
-					this.$message.error('网络错误')
-				})
-			},
-			savePlan() {
-				this.$refs['adPlanForm'].validate((valid) => {
-					if (valid) {
-						let _params = Object.assign(this.adPlanForm)
-						this.$http.post('/advplan/save', qs.stringify(_params)).then(res => {
-							if (res.data.success) {
-								this.$message.success('添加成功')
-								this.dialogAdVisible = false
-								window.location.reload()
-							} else {
-								this.$message.error('添加失败')
-							}
-						}, () => {
-							this.$message.error('网络错误')
-						})
-					} else {
-						console.log('error submit!!')
-						return false
-					}
-				})
-			},
-			delPlan(row) {
-				let id = row.id
-				this.$confirm('确定删除主题吗?', '提示', {
-					confirmButtonText: '确定',
-					cancelButtonText: '取消',
-					type: 'warning'
-				}).then(() => {
-					this.$http.get('/advplan/delete', { params: { id } }).then(res => {
-						let msg = res.data.success
-						if (msg) {
-							if (res.data.data) {
-								this.$message({
-									type: 'success',
-									message: '删除成功!'
-								})
-								window.location.reload()
-							} else {
-								this.$message({
-									type: 'success',
-									message: '删除失败!'
-								})
-							}
-						} else {
-							this.$message({
-								type: 'error',
-								message: '删除失败!'
-							})
-						}
-					})
-				}).catch(() => {
-					this.$message({
-						type: 'info',
-						message: '已取消删除'
-					})
-				})
-			},
-			openDialogAd() {
-				this.dialogAdVisible = true
-			},
-			getThemeList() {
-				let appId = this.$route.params.appId
-				this.$http.get('/subscriptionTheme/all', { params: { appId } }).then(res => {
-					if (res.data.success) {
-						let data = res.data.data.lists
-						data = data.map(item => {
-							return {
-								label: item.name,
-								value: item.id
-							}
-						})
-						this.themeList = data
-					} else {
-						let msg = resp.desc || '请求失败'
-						this.$message.error(msg)
-					}
-				})
-			}
-		}
-	}
+      ],
+      dialogAdVisible: false,
+      tableData: [
+        {
+          id: 3,
+          pushUrl: 'www.tmall.com',
+          planName: '',
+          planId: 2,
+          planPlatform: '',
+          themeInfo: '',
+          themeStatus: 1
+        }
+      ],
+      pageOption: {
+        pageNum: 1,
+        size: 20
+      },
+      totalSize: 50,
+      rules: rules,
+      adPlanForm: {
+        pushUrl: '',
+        planName: '',
+        planId: null,
+        themeId: null,
+        planPlatform: '推啊'
+      },
+      themeList: [],
+      planIndex: null,
+      selectPlan: {
+        advertId: null,
+        advertName: '',
+        promoteURL: ''
+      },
+      planList: [
+        {
+          advertId: 2804,
+          advertName: '132ad',
+          promoteURL: 'http://www.baidu.com'
+        }, {
+          advertId: 2805,
+          advertName: 'test-有效1',
+          promoteURL: 'http://www.tqmall.com'
+        }
+      ],
+      formLabelWidth: '100px'
+    }
+  },
+  created () {
+    this.getAllPlanList()
+  },
+  mounted () {
+    this.getAllTuiaList()
+    console.log(this.selectPlan)
+  },
+  watch: {
+    'planIndex': function (newVal) {
+      console.log(newVal)
+      if (newVal !== undefined) {
+        this.selectPlan = this.planList[newVal]
+        console.log(this.selectPlan)
+        this.adPlanForm.pushUrl = this.selectPlan.promoteURL
+        this.adPlanForm.planName = this.selectPlan.advertName
+        this.adPlanForm.planId = this.selectPlan.advertId
+      }
+    }
+  },
+  methods: {
+    getAllTuiaList () {
+      this.$http.get('/advplan/tuia').then(res => {
+        if (res.data.success) {
+          this.planList = res.data.data
+        }
+      }, () => {
+        this.$message.error('获取推啊投放地址失败')
+      })
+    },
+    onSearch () {
+      let valueArr = Object.values(this.searchForm)
+      let params = {
+        [valueArr[0]]: valueArr[1],
+        status: valueArr[2]
+      }
+      this.$http.get('/advplan/list', {
+        params
+      }).then(res => {
+        if (res.data.success) {
+          if (res.data.data.lists) {
+            this.tableData = res.data.data.lists
+            this.totalSize = res.data.data.totalSize
+          } else {
+            this.tableData = []
+            this.totalSize = 1
+          }
+        } else {
+          let msg = res.data.desc
+          this.$message.error(msg || '获取失败')
+        }
+      }, () => {
+        this.$message.error('网络错误！')
+      })
+    },
+    getAllPlanList () {
+      this.$http.get('/advplan/list').then(res => {
+        if (res.data.success) {
+          this.tableData = res.data.data.lists
+          this.totalSize = res.data.data.totalSize
+        } else {
+          let msg = res.data.desc
+          this.$message.error(msg || '获取失败')
+        }
+      }, () => {
+        this.$message.error('网络错误！')
+      })
+    },
+    pageChange () {
+      let valueArr = Object.values(this.searchForm)
+      let params = {
+        [valueArr[0]]: valueArr[1],
+        status: valueArr[2],
+        pageNum: this.pageOption.pageNum
+      }
+      this.$http.get('/advplan/list', {params}).then(res => {
+        if (res.data.success) {
+          this.tableData = res.data.data.lists
+        } else {
+          this.$message.error('获取数据失败')
+        }
+      }, () => {
+        this.$message.error('网络错误')
+      })
+    },
+    savePlan () {
+      this.$refs['adPlanForm'].validate((valid) => {
+        if (valid) {
+          let _params = Object.assign(this.adPlanForm)
+          this.$http.post('/advplan/save', qs.stringify(_params)).then(res => {
+            if (res.data.success) {
+              this.$message.success('添加成功')
+              this.dialogAdVisible = false
+              window.location.reload()
+            } else {
+              this.$message.error('添加失败')
+            }
+          }, () => {
+            this.$message.error('网络错误')
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    delPlan (row) {
+      let id = row.id
+      this.$confirm('确定删除主题吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$http.get('/advplan/delete', {params: {id}}).then(res => {
+          let msg = res.data.success
+          if (msg) {
+            if (res.data.data) {
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              })
+              window.location.reload()
+            } else {
+              this.$message({
+                type: 'success',
+                message: '删除失败!'
+              })
+            }
+          } else {
+            this.$message({
+              type: 'error',
+              message: '删除失败!'
+            })
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
+    openDialogAd () {
+      this.dialogAdVisible = true
+    },
+    // 模糊查询 主题
+    remoteMethod (query) {
+      console.log('触发了')
+      console.log(this.adPlanForm.themeId)
+      this.$http.get('/subscriptionTheme/all', {
+        params: {
+          themeName: query
+        }
+      }).then(res => {
+        if (res.data.success) {
+          let data = res.data.data.lists
+          data = data.map(item => {
+            return {
+              label: item.name,
+              value: item.id
+            }
+          })
+          this.themeList = data
+        } else {
+          this.$message.success('获取失败')
+        }
+      }, () => {
+        this.$message.error('网络错误！')
+      })
+    }
+  }
+}
 </script>
 
 <style lang="less">

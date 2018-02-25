@@ -149,6 +149,7 @@ export default {
   },
   created () {
     this.getList()
+    this.getsubscriptionList()
     this.themeId = this.$route.params.id
   },
   computed: mapState({
@@ -186,8 +187,9 @@ export default {
         })
       }
     },
-    remoteMethod (query) {
-      this.$http.get('/subscriptionInfo/list', {params: {name: query}}).then(res => {
+    getsubscriptionList () {
+      let appId = this.$route.params.appId
+      this.$http.get('/subscriptionInfo/list', {params: {appId}}).then(res => {
         if (res.data.success) {
           let list = res.data.data.lists
           list = list.map(item => {
@@ -200,6 +202,9 @@ export default {
           if (this.subscriptionsList) {
             this.loading = false
           }
+        } else {
+          let msg = resp.desc || '请求失败'
+          this.$message.error(msg)
         }
       })
     },

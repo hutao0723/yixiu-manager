@@ -1,0 +1,24 @@
+{
+	"success": true,
+	"data": {
+		"lists": [{
+				"id": 3,
+				"name": "测试",
+				"subscriptionNum": 0,
+				"status": 1
+			},
+			{
+				"id": 29,
+				"name": "多买多省",
+				"subscriptionNum": 0,
+				"status": 1
+			},
+			{
+				"id": 30,
+				"name": "【测试】夏目手账测试",
+				"subscriptionNum": 0,
+				"status": 1
+			}
+		]
+	}
+}

@@ -5,9 +5,6 @@
       <div class="sidebar-container">
           <el-col  :span="24">
             <el-menu  class="el-menu-vertical-demo"  background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
-              <!-- <el-menu-item index="1">
-                <span slot="title" ><span class="title-main">导航</span></span>
-              </el-menu-item> -->
               <router-link :to="{ path: '/manager/dlv' }">
                 <el-menu-item index="1">
                   <span slot="title" >
@@ -39,11 +36,9 @@
           </el-col>
           <div class="control-wrap">
             <div class="exit-wrap">
-              <!-- <a href="#">
-                <span class="exit">退出</span>
-              </a> -->
+              <a class="logout" href="/logout">退出</a>
             </div>
-            <span class="name">有粉</span>
+              <span class="name">有粉</span>
           </div>
       </div>
     </div>
@@ -63,7 +58,8 @@ export default {
     return {
 
     }
-  }
+  },
+  methods: {}
 }
 </script>
 
@@ -100,7 +96,15 @@ export default {
   width:100%;
   color:#ccc;
   .exit-wrap{
-    margin-bottom:10px
+    margin-bottom:20px;
+    .logout{
+      margin: 0 auto;
+      color:#ccc;
+      width:100%;
+      text-align:center;
+      display: inline-block;
+      cursor: pointer;
+    }
   }
   span{
    margin: 0 auto;

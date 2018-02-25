@@ -1,0 +1,41 @@
+{
+	"success": true,
+	"data": [
+	{
+		"id": 13,
+		"subscriptionName": "夏目",
+		"loadPageUrl": "https://www.bilibili.com/",
+		"thresholdNum": 12,
+		"status": 1,
+		"todayFollowNum": 2,
+		"sort": 11
+	},
+	{
+		"id": 21,
+		"subscriptionName": "夏目手账666",
+		"loadPageUrl": "https://www.bilibili.com/",
+		"thresholdNum": 12,
+		"status": 1,
+		"todayFollowNum": 2,
+		"sort": 12
+	},
+	{
+		"id": 31,
+		"subscriptionName": "夏目手账2333",
+		"loadPageUrl": "https://www.bilibili.com/",
+		"thresholdNum": 12,
+		"status": 1,
+		"todayFollowNum": 2,
+		"sort": 13
+	},
+	{
+		"id": 24,
+		"subscriptionName": "夏目手账333",
+		"loadPageUrl": "https://www.bilibili.com/",
+		"thresholdNum": 12,
+		"status": 1,
+		"todayFollowNum": 2,
+		"sort": 14
+	}
+	]
+}

@@ -85,12 +85,12 @@
           
           <template v-if="adPlanForm.planPlatform == '推啊'">
             <el-form-item label="广告计划" :label-width="formLabelWidth"  prop="planName">
-              <el-select v-model="planIndex" placeholder="请选择">
-                <el-option v-for="(item, index) in planList" :key="item.advertId" :label="item.advertName" :value="index">
-                  <span style="float: left">{{ item.advertName }}</span>
-                  <span style="float: right; color: #8492a6; font-size: 13px">{{ item.advertId }}</span>
-                </el-option>
-              </el-select>
+              <el-select value-key="id" v-model="planIndex" filterable  placeholder="请选择">
+                  <el-option v-for="(item, index) in planList" :key="item.advertId" :label="item.advertName" :value="index">
+                    <span style="float: left">{{ item.advertName }}</span>
+                    <span style="float: right; color: #8492a6; font-size: 13px">{{ item.advertId }}</span>
+                  </el-option>
+                </el-select>
             </el-form-item>              
           </template>
 
@@ -109,8 +109,9 @@
             <el-input :disabled="adPlanForm.planPlatform == '推啊'" v-model="adPlanForm.pushUrl" auto-complete="off" placeholder="https://"></el-input>
           </el-form-item>
           <el-form-item label="公众号主题" :label-width="formLabelWidth" prop="themeId">
-            <el-select  v-model="adPlanForm.themeId"  filterable remote reserve-keyword placeholder="请选择" :remote-method="remoteMethod">
-                <el-option v-for="item in themeList" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            <el-select value-key="id"  v-model="adPlanForm.themeId"  placeholder="请选择"  filterable >
+                <el-option v-for="item in themeList" :key="item.value" :label="item.label + item.value" :value="item.value">
+                </el-option>
             </el-select>            
           </el-form-item> 
           <div class="btn-wrap">
@@ -198,6 +199,7 @@ export default {
   },
   created () {
     this.getAllPlanList()
+    this.getThemeList()
   },
   mounted () {
     this.getAllTuiaList()
@@ -340,13 +342,9 @@ export default {
     openDialogAd () {
       this.dialogAdVisible = true
     },
-    // 模糊查询 主题
-    remoteMethod (query) {
-      this.$http.get('/subscriptionTheme/all', {
-        params: {
-          themeName: query
-        }
-      }).then(res => {
+    getThemeList () {
+      let appId = this.$route.params.appId
+      this.$http.get('/subscriptionTheme/all', {params: {appId}}).then(res => {
         if (res.data.success) {
           let data = res.data.data.lists
           data = data.map(item => {
@@ -357,10 +355,9 @@ export default {
           })
           this.themeList = data
         } else {
-          this.$message.success('获取失败')
+          let msg = resp.desc || '请求失败'
+          this.$message.error(msg)
         }
-      }, () => {
-        this.$message.error('网络错误！')
       })
     }
   }

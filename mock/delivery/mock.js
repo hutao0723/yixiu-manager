@@ -5,7 +5,40 @@
  *         url   线上接口地址
  */
 var setOnline = [
-  
+  //投放落地页列表
+  {
+    name: 'loadPage',
+    type: 'get',
+    url: '/loadpage/list'
+  },
+  //落地页编辑
+  {
+    name: 'updateloadPage',
+    type: 'get',
+    url: '/loadpage/update'
+  },
+  //公众号主题
+  {
+    name: 'subscriptionTheme',
+    type: 'get',
+    url: '/subscriptionTheme/list'
+  },
+  {
+    name: 'themeName',
+    type: 'get',
+    url: '/subscriptionTheme/all'
+  },
+   //公众号待选公众号
+  {
+    name: 'subscriptionname',
+    type: 'get',
+    url: '/subscriptionInfo/list'
+  },
+  {
+    name: 'themeLoadPage',
+    type: 'get',
+    url: '/subscriptionTheme/getLoadPage'
+  }
 ];
 var fs = require('fs');
 

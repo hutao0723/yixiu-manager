@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import { formatDateNew, formatToMs } from '../../../utils/dateUtils';
+import { formatDateNew, formatToMs } from '../../../utils/dateUtils'
 export default {
   data () {
     return {
@@ -97,7 +97,7 @@ export default {
           message: '已存在一条推送计划，暂时不能再添加'
         })
       } else {
-        this.$router.push('/manager/miniApp/addEditPushMsg/' + this.pushInfo.appId + '/' + this.pushInfo.odpsId + '/' + this.pushInfo.expireDate )
+        this.$router.push('/manager/miniApp/addEditPushMsg/' + this.pushInfo.appId + '/' + this.pushInfo.odpsId + '/' + this.pushInfo.expireDate)
       }
     },
     delPlan (row) {

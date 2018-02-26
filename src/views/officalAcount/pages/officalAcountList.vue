@@ -73,9 +73,9 @@
 			</div>
 		</div>
 		<el-dialog title="设置管理员" :visible.sync="dialogAdmin" width="30%">
-			<el-form>
-				<el-form-item label="管理员名称" label-width="100px">
-					<el-input v-model="adminName" auto-complete="off"></el-input>
+			<el-form :rules="rules" ref="adminForm" :model="adminForm">
+				<el-form-item label="管理员名称" label-width="100px" prop="adminName">
+					<el-input v-model="adminForm.adminName" auto-complete="off"></el-input>
 				</el-form-item>
 			</el-form>
 			<div slot="footer" class="dialog-footer">
@@ -98,7 +98,7 @@
 				ofaSearchForm: {
 					searchWay: '',
 					searchValue: ''
-				},	
+				},
 				pageOption: {
 					pageNum: 1,
 					size: 20
@@ -116,7 +116,25 @@
 				dialogAdmin: false, // 管理员弹窗
 				adminName: '', // 管理员名称
 				adminId: '', // 管理员id
-			
+				adminForm: {
+					adminName: '',
+				},
+				rules: {
+					adminName: [
+						{
+							required: true,
+							message: '请输入管理员名称',
+							trigger: 'blur'
+						},
+						{
+							min: 1,
+							max: 64,
+							message: '长度在 1 到 64 个字符',
+							trigger: 'blur'
+						}
+					],
+				}
+
 
 			}
 		},
@@ -125,33 +143,36 @@
 		},
 		methods: {
 			//打开设置管理员弹窗
-			openDialogAdmin(name,id) {
+			openDialogAdmin(name, id) {
 				this.dialogAdmin = true;
-				this.adminName = name ? name : '';
+				this.adminForm.adminName = name ? name : '';
 				this.adminId = id;
 			},
 			// 设置管理员
 			setAdminName() {
-				let name = this.adminName;
-				let id = this.adminId;
-				
-				this.$http.get('/subscriptionInfo/update', {
-					params: {
-						id: id,
-						managerName: name,
-					}
-				}).then(res => {
-					this.dialogAdmin = false;
-					if (res.data.success) {
-						this.$message.success('修改管理员成功')
-						this.onSearch();
-					} else {
-						let msg = res.data.desc || '请求失败'
-						this.$message.error(msg)
+				this.$refs['adminForm'].validate((valid) => {
+					if (valid) {
+						let name = this.adminForm.adminName;
+						let id = this.adminId;
+						this.$http.get('/subscriptionInfo/update', {
+							params: {
+								id: id,
+								managerName: name,
+							}
+						}).then(res => {
+							this.dialogAdmin = false;
+							if (res.data.success) {
+								this.$message.success('修改管理员成功')
+								this.onSearch();
+							} else {
+								let msg = res.data.desc || '请求失败'
+								this.$message.error(msg)
+							}
+						})
 					}
 				})
 			},
-			setGzhSatus (e,id){
+			setGzhSatus(e, id) {
 				this.$http.get('/subscriptionInfo/update', {
 					params: {
 						id: id,
@@ -164,7 +185,7 @@
 						this.$message.error(msg)
 					}
 				})
-			},	
+			},
 			handleCurrenthange() {
 				console.log(this.pageOption.currentPage)
 			},

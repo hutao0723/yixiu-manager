@@ -180,6 +180,7 @@
 					}
 				}).then(res => {
 					if (res.data.success) {
+						this.$message.success('切换成功')
 					} else {
 						let msg = res.data.desc || '请求失败'
 						this.$message.error(msg)

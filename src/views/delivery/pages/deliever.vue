@@ -170,7 +170,8 @@
 					planName: '',
 					planId: null,
 					themeId: null,
-					planPlatform: '推啊'
+					planPlatform: '推啊',
+					partnerId: null
 				},
 				themeList: [],
 				planIndex: null,
@@ -179,17 +180,7 @@
 					advertName: '',
 					promoteURL: ''
 				},
-				planList: [
-					{
-						advertId: 2804,
-						advertName: '132ad',
-						promoteURL: 'http://www.baidu.com'
-					}, {
-						advertId: 2805,
-						advertName: 'test-有效1',
-						promoteURL: 'http://www.tqmall.com'
-					}
-				],
+				planList: [],
 				formLabelWidth: '100px'
 			}
 		},
@@ -210,12 +201,14 @@
 					this.adPlanForm.pushUrl = this.selectPlan.promoteURL
 					this.adPlanForm.planName = this.selectPlan.advertName
 					this.adPlanForm.planId = this.selectPlan.advertId
+					this.adPlanForm.partnerId = this.selectPlan.partnerId
 				}
 			}
 		},
 		methods: {
 			getAllTuiaList() {
 				this.$http.get('/advplan/tuia').then(res => {
+					console.log(res.data.data);
 					if (res.data.success) {
 						this.planList = res.data.data
 					}

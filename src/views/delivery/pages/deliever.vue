@@ -278,7 +278,8 @@
 							if (res.data.success) {
 								this.$message.success('添加成功')
 								this.dialogAdVisible = false
-								window.location.reload()
+								// window.location.reload()
+								this.getAllPlanList()
 							} else {
 								this.$message.error('添加失败')
 							}

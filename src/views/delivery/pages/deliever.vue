@@ -208,7 +208,6 @@
 		methods: {
 			getAllTuiaList() {
 				this.$http.get('/advplan/tuia').then(res => {
-					console.log(res.data.data);
 					if (res.data.success) {
 						this.planList = res.data.data
 					}

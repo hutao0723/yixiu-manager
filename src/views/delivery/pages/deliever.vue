@@ -274,6 +274,10 @@
 				this.$refs['adPlanForm'].validate((valid) => {
 					if (valid) {
 						let _params = Object.assign(this.adPlanForm)
+						if(this.adPlanForm.planPlatform == '广点通'){
+							console.log(_params.partnerId)
+							delete _params.partnerId
+						}							
 						this.$http.post('/advplan/save', qs.stringify(_params)).then(res => {
 							if (res.data.success) {
 								this.$message.success('添加成功')

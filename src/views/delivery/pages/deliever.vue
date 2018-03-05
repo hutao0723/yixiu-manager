@@ -84,6 +84,7 @@
 							<el-select value-key="id" v-model="planIndex" filterable placeholder="请选择">
 								<el-option v-for="(item, index) in planList" :key="item.advertId" :label="item.advertName" :value="index">
 									<span style="float: left">{{ item.advertName }}</span>
+									<span style="display:none">{{ item.partnerId }}</span>
 									<span style="float: right; color: #8492a6; font-size: 13px">{{ item.advertId }}</span>
 								</el-option>
 							</el-select>
@@ -180,6 +181,7 @@
 					advertName: '',
 					promoteURL: ''
 				},
+				partnerOneId: null,
 				planList: [],
 				formLabelWidth: '100px'
 			}
@@ -202,6 +204,7 @@
 					this.adPlanForm.planName = this.selectPlan.advertName
 					this.adPlanForm.planId = this.selectPlan.advertId
 					this.adPlanForm.partnerId = this.selectPlan.partnerId
+					this.partnerOneId = this.selectPlan.partnerId;
 				}
 			}
 		},
@@ -275,7 +278,10 @@
 					if (valid) {
 						let _params = Object.assign(this.adPlanForm)
 						if(this.adPlanForm.planPlatform == '广点通'){
-							_params.partnerId = ''
+							_params.partnerId  = ''
+						}else{
+							console.log(this.adPlanForm);
+							_params.partnerId = this.partnerOneId;
 						}							
 						this.$http.post('/advplan/save', qs.stringify(_params)).then(res => {
 							if (res.data.success) {

@@ -84,6 +84,7 @@
 							<el-select value-key="id" v-model="planIndex" filterable placeholder="请选择">
 								<el-option v-for="(item, index) in planList" :key="item.advertId" :label="item.advertName" :value="index">
 									<span style="float: left">{{ item.advertName }}</span>
+									<span style="display:none">{{ item.partnerId }}</span>
 									<span style="float: right; color: #8492a6; font-size: 13px">{{ item.advertId }}</span>
 								</el-option>
 							</el-select>
@@ -170,7 +171,8 @@
 					planName: '',
 					planId: null,
 					themeId: null,
-					planPlatform: '推啊'
+					planPlatform: '推啊',
+					partnerId: null
 				},
 				themeList: [],
 				planIndex: null,
@@ -179,17 +181,8 @@
 					advertName: '',
 					promoteURL: ''
 				},
-				planList: [
-					{
-						advertId: 2804,
-						advertName: '132ad',
-						promoteURL: 'http://www.baidu.com'
-					}, {
-						advertId: 2805,
-						advertName: 'test-有效1',
-						promoteURL: 'http://www.tqmall.com'
-					}
-				],
+				partnerOneId: null,
+				planList: [],
 				formLabelWidth: '100px'
 			}
 		},
@@ -210,6 +203,8 @@
 					this.adPlanForm.pushUrl = this.selectPlan.promoteURL
 					this.adPlanForm.planName = this.selectPlan.advertName
 					this.adPlanForm.planId = this.selectPlan.advertId
+					this.adPlanForm.partnerId = this.selectPlan.partnerId
+					this.partnerOneId = this.selectPlan.partnerId;
 				}
 			}
 		},
@@ -282,11 +277,18 @@
 				this.$refs['adPlanForm'].validate((valid) => {
 					if (valid) {
 						let _params = Object.assign(this.adPlanForm)
+						if(this.adPlanForm.planPlatform == '广点通'){
+							_params.partnerId  = ''
+						}else{
+							console.log(this.adPlanForm);
+							_params.partnerId = this.partnerOneId;
+						}							
 						this.$http.post('/advplan/save', qs.stringify(_params)).then(res => {
 							if (res.data.success) {
 								this.$message.success('添加成功')
 								this.dialogAdVisible = false
-								window.location.reload()
+								// window.location.reload()
+								this.getAllPlanList()
 							} else {
 								this.$message.error('添加失败')
 							}

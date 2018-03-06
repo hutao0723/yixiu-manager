@@ -17,6 +17,12 @@ var setOnline = [
     type: 'get',
     url: '/loadpage/update'
   },
+  // 推啊广告计划
+  {
+    name: 'tuiaPlanList',
+    type: 'get',
+    url: '/advplan/tuia'
+  },
   //公众号主题
   {
     name: 'subscriptionTheme',

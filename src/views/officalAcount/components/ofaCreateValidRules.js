@@ -56,6 +56,19 @@ const ofarules = {
   ],
   serverEaeskey: [
     { min: 1, max: 1000, message: '长度在 1 到 1000 个字符', trigger: 'blur' }
+  ],
+  text: [
+    { required: true, message: '请输入图文标题', trigger: 'blur' },
+    { min: 1, max: 50, message: '长度在 1 到 100 个字符', trigger: 'blur' }
+  ],
+  type1: [
+    { min: 0, max: 50, message: '长度在 0 到 10 个字符', trigger: 'blur' }
+  ],
+  type2: [
+    { min: 0, max: 10, message: '长度在 0 到 10 个字符', trigger: 'blur' }
+  ],
+  type3: [
+    { min: 0, max: 10, message: '长度在 0 到 10 个字符', trigger: 'blur' }
   ]
 }
 export default ofarules

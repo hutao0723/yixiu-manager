@@ -1,4 +1,3 @@
-
 <template>
   <section class="ofa-main-wrap">
     <div class="title-wrap">
@@ -6,12 +5,11 @@
         <el-breadcrumb-item>图文类型</el-breadcrumb-item>
       </el-breadcrumb>
       <span class="add-ofa">
-        <!-- <i class="iconfont icon-guanlian"></i> -->
         <a class="add" href="http://yun.duiba.com.cn/maila/file/活动名称_2017-07-29.csv">
           <i class="iconhandle"></i>
           下载模板
         </a>
-        <span class="connect-ad" @click="">导入内容</span>
+        <span class="connect-ad" @click="openUploadFile">导入内容</span>
       </span>
     </div>
     <div class="content">
@@ -52,7 +50,6 @@
                 <router-link :to="{ path: '/manager/officalAcount/editGraphType/' + scope.row.id }">
                   <el-button type="text" size="mini">编辑</el-button>        
                 </router-link>   
-                <!-- delAcount(scope.row) -->
                 <el-button type="text" size="mini" @click="deletePageModel(scope.row)">删除</el-button>  
               </template>
             </el-table-column>
@@ -63,15 +60,41 @@
         <el-pagination background  :page-size="20" :current-page.sync="pageOption.pageNum"
  @current-change="pageChange" layout="prev, pager, next" :total="totalSize"></el-pagination>
       </div>    
-    </div>     
+    </div>
+    <!--上传弹框-->
+      <div class="upload-diolog">
+        <el-dialog title="导入内容" :visible.sync="uploadVisible">
+          <el-form ref="uploadFile" :model="uploadForm" :rules="rules">
+            <el-form-item label="Excel附件" :label-width="formLabelWidth"  prop="uploadUrl">
+              <div class="input-width"><el-input v-model="uploadForm.uploadUrl" auto-complete="off" :disabled="true"></el-input></div>
+              <el-upload class="upload-demo" ref="upload" action="https://jsonplaceholder.typicode.com/posts/"
+   :on-remove="handleRemove"  :file-list="fileList" :auto-upload="false" :beforeUpload="beforeAvatarUpload" :on-change="handleChange" :show-file-list="false" :on-error="handleError" :on-success="handleSuccess">
+                <el-button slot="trigger"  type="primary">选取文件</el-button>
+              </el-upload>           
+            </el-form-item>                     
+          </el-form>
+           <div class="btn-wrap">
+            <el-button size="small" @click="uploadVisible = false">取 消</el-button>
+            <!-- <el-button size="small" type="primary" @click="saveUploadFile">确定</el-button> -->
+            <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">确认</el-button>
+          </div>       
+        </el-dialog>
+      </div> 
   </section>
 </template>
 
 <script>
 import { formatDateNew } from '../../../utils/dateUtils'
+ import ofarules from '../components/ofaCreateValidRules'
 export default {
   data () {
     return {
+      rules: ofarules,
+      uploadForm: {
+        uploadUrl: ''
+      },
+      fileList: [],
+      formLabelWidth: '100px',
       searchForm: {
         type1: '',
         type2: '',
@@ -79,7 +102,8 @@ export default {
         time1: formatDateNew(new Date()),
         time2: formatDateNew(new Date())
       },
-      dialogAdVisible: false,
+      loading: '',
+      uploadVisible: false,
       pageOption: {
         pageNum: 1,
         size: 20
@@ -92,6 +116,7 @@ export default {
     this.getgraphMsgList()
   },
   methods: {
+    // 查询图文列表
     onSearch () {
       let appId = this.$route.params.id
       this.pageOption.pageNum = 1
@@ -111,9 +136,12 @@ export default {
         }
       })
     },
-    openDialogAd() {
-      this.dialogAdVisible = true
+    // 打开上传弹框
+    openUploadFile() {
+      this.uploadForm.uploadUrl = ''
+      this.uploadVisible = true
     },
+    // 获取图文列表
     getgraphMsgList () {
       let appId = this.$route.params.id
       let valueArr = Object.values(this.searchForm)
@@ -133,6 +161,7 @@ export default {
         }
       })
     },
+    // 分页请求
     pageChange () {
       let appId = this.$route.params.id
       let valueArr = Object.values(this.searchForm)
@@ -155,7 +184,6 @@ export default {
     },
     // 删除
     deletePageModel (row) {
-      // TODO
       let id = row.id
       this.$confirm('确认删除本条记录吗?', '提示', {
         confirmButtonText: '确定',
@@ -170,7 +198,6 @@ export default {
                 type: 'success',
                 message: '删除成功!'
               })
-              // window.location.reload()
               this.getgraphMsgList();
             } else {
               this.$message({
@@ -191,6 +218,48 @@ export default {
           message: '已取消删除'
         })
       })
+    },
+    // 提交上传文件
+    submitUpload() {
+      this.$refs['uploadFile'].validate((valid) => {
+        if (valid) {
+          this.$refs.upload.submit();
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    // 上传失败的处理方式
+    handleError(err, file, fileList) {
+      this.$message.error('上传失败')
+      this.uploadVisible = false
+      this.uploadForm.uploadUrl = ''
+      console.log('handleError' + err + "," + file)
+    },
+    // 上传成功
+    handleSuccess(response, file, fileList) {
+      console.log(response)
+      this.$message.success('上传成功')
+      this.uploadVisible = false
+      this.uploadForm.uploadUrl = ''
+    },
+    handleRemove(file, fileList) {
+      console.log('handleRemove' + file + " ," + fileList)
+    },
+    // 获取上传文件的名字
+    handleChange(file, fileList){
+      this.uploadForm.uploadUrl = file.name
+      console.log('handleChange' + file.name)
+    },
+    // 上传前对文件的大小的判断
+    beforeAvatarUpload (file) {
+      const extension1 = file.name.split('.')[1] === 'xls'
+      const extension2 = file.name.split('.')[1] === 'xlsx'
+      if (!extension1 && !extension2) {
+       this.$message.error('上传模板只能是 xls、xlsx格式!')
+      }
+      return extension1 || extension2
     }
   }
 }
@@ -218,6 +287,8 @@ export default {
       font-size: 12px;
       a{
         text-decoration: none;
+        color: #909399;
+        margin-right:20px;
       }
       .connect-ad {
         cursor: pointer;
@@ -246,6 +317,13 @@ export default {
     &:after {
       clear: both;
     }
+  }
+  .input-width{
+    display: inline-block;
+    width: 85%;
+  }
+  .upload-demo{
+    display:inline-block;
   }
 }
 </style>

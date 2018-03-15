@@ -57,20 +57,20 @@ const ofarules = {
   serverEaeskey: [
     { min: 1, max: 1000, message: '长度在 1 到 1000 个字符', trigger: 'blur' }
   ],
-  text: [
+  title: [
     { required: true, message: '请输入图文标题', trigger: 'blur' },
     { min: 1, max: 50, message: '长度在 1 到 100 个字符', trigger: 'blur' }
   ],
   date: [
     { required: true, message: '请选择时间', trigger: 'blur' }
   ],
-  type1: [
+  typeOne: [
     { min: 0, max: 50, message: '长度在 0 到 10 个字符', trigger: 'blur' }
   ],
-  type2: [
+  typeTwo: [
     { min: 0, max: 10, message: '长度在 0 到 10 个字符', trigger: 'blur' }
   ],
-  type3: [
+  typeThree: [
     { min: 0, max: 10, message: '长度在 0 到 10 个字符', trigger: 'blur' }
   ],
   uploadUrl: [

@@ -17,19 +17,20 @@
         <template>
           <el-form :inline="true" :model="searchForm" class="demo-form-inline" size="mini">
             <el-form-item>
-              <el-input v-model="searchForm.type1" placeholder="图文类型1"></el-input>
+              <el-input v-model="searchForm.typeOne" placeholder="图文类型1"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-input v-model="searchForm.type2" placeholder="图文类型2"></el-input>
+              <el-input v-model="searchForm.typeTwo" placeholder="图文类型2"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-input v-model="searchForm.type3" placeholder="图文类型3"></el-input>
+              <el-input v-model="searchForm.typeThree" placeholder="图文类型3"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-date-picker v-model="searchForm.time1" type="date" value-format="yyyy-MM-dd" placeholder="时间"></el-date-picker>
+              <el-date-picker v-model="searchForm.startTime" type="date" value-format="yyyy-MM-dd" placeholder="时间"></el-date-picker>
             </el-form-item>
+            <div class="in-line"><span>—</span></div>
             <el-form-item>
-              <el-date-picker v-model="searchForm.time2" type="date" value-format="yyyy-MM-dd" placeholder="时间"></el-date-picker>
+              <el-date-picker v-model="searchForm.endTime" type="date" value-format="yyyy-MM-dd" placeholder="时间"></el-date-picker>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="onSearch">查询</el-button>
@@ -41,10 +42,10 @@
         <template>
           <el-table :data="graphMsgList"  style="width: 100%" >
             <el-table-column prop="date" label="日期" width="180"></el-table-column>
-            <el-table-column prop="type1" label="类型1" width="150"></el-table-column>
-            <el-table-column prop="type2" label="类型2" width="150"></el-table-column>
-            <el-table-column prop="type3" label="类型3" width="150"></el-table-column>
-            <el-table-column prop="text" label="图文标题" ></el-table-column>
+            <el-table-column prop="typeOne" label="类型1" width="150"></el-table-column>
+            <el-table-column prop="typeTwo" label="类型2" width="150"></el-table-column>
+            <el-table-column prop="typeThree" label="类型3" width="150"></el-table-column>
+            <el-table-column prop="title" label="图文标题" ></el-table-column>
             <el-table-column  label="操作" width="200">
               <template slot-scope="scope">
                 <router-link :to="{ path: '/manager/officalAcount/editGraphType/' + scope.row.id }">
@@ -57,7 +58,7 @@
         </template>        
       </div>
       <div class="page-control">
-        <el-pagination background  :page-size="20" :current-page.sync="pageOption.pageNum"
+        <el-pagination background  :page-size="50" :current-page.sync="pageOption.pageNum"
  @current-change="pageChange" layout="prev, pager, next" :total="totalSize"></el-pagination>
       </div>    
     </div>
@@ -67,7 +68,7 @@
           <el-form ref="uploadFile" :model="uploadForm" :rules="rules">
             <el-form-item label="Excel附件" :label-width="formLabelWidth"  prop="uploadUrl">
               <div class="input-width"><el-input v-model="uploadForm.uploadUrl" auto-complete="off" :disabled="true"></el-input></div>
-              <el-upload class="upload-demo" ref="upload" action="https://jsonplaceholder.typicode.com/posts/"
+              <el-upload class="upload-demo" ref="upload" action="/graphicType/export"
    :on-remove="handleRemove"  :file-list="fileList" :auto-upload="false" :beforeUpload="beforeAvatarUpload" :on-change="handleChange" :show-file-list="false" :on-error="handleError" :on-success="handleSuccess">
                 <el-button slot="trigger"  type="primary">选取文件</el-button>
               </el-upload>           
@@ -75,7 +76,6 @@
           </el-form>
            <div class="btn-wrap">
             <el-button size="small" @click="uploadVisible = false">取 消</el-button>
-            <!-- <el-button size="small" type="primary" @click="saveUploadFile">确定</el-button> -->
             <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">确认</el-button>
           </div>       
         </el-dialog>
@@ -85,7 +85,7 @@
 
 <script>
 import { formatDateNew } from '../../../utils/dateUtils'
- import ofarules from '../components/ofaCreateValidRules'
+import ofarules from '../components/ofaCreateValidRules'
 export default {
   data () {
     return {
@@ -96,17 +96,16 @@ export default {
       fileList: [],
       formLabelWidth: '100px',
       searchForm: {
-        type1: '',
-        type2: '',
-        type3: '',
-        time1: formatDateNew(new Date()),
-        time2: formatDateNew(new Date())
+        typeOne: '',
+        typeTwo: '',
+        typeThree: '',
+        startTime: formatDateNew(new Date()),
+        endTime : formatDateNew(new Date())
       },
-      loading: '',
       uploadVisible: false,
       pageOption: {
         pageNum: 1,
-        size: 20
+        pageSize: 50
       },
       totalSize: 10,
       graphMsgList: []
@@ -118,13 +117,23 @@ export default {
   methods: {
     // 查询图文列表
     onSearch () {
-      let appId = this.$route.params.id
-      this.pageOption.pageNum = 1
-      // let params = {
-      //   appId: appId,
-      //   [valueArr[0]]: valueArr[1]
-      // }
-      this.$http.get('/officalAcount/graphmsg/page', {params: this.searchForm}).then(res => {
+      const {
+        typeOne,
+        typeTwo,
+        typeThree,
+        startTime,
+        endTime
+      } = this.searchForm
+      let params = {
+        pageNum: 1,
+        typeOne,
+        typeTwo,
+        typeThree,
+        startTime,
+        endTime,
+        pageSize:50
+      }
+      this.$http.get('/graphicType/pageList', {params}).then(res => {
         let resp = res.data
         if (resp.success) {
           this.tempMsgList = resp.data.lists
@@ -137,19 +146,13 @@ export default {
       })
     },
     // 打开上传弹框
-    openUploadFile() {
+    openUploadFile () {
       this.uploadForm.uploadUrl = ''
       this.uploadVisible = true
     },
     // 获取图文列表
     getgraphMsgList () {
-      let appId = this.$route.params.id
-      let valueArr = Object.values(this.searchForm)
-      let params = {
-        appId: appId,
-        [valueArr[0]]: valueArr[1]
-      }
-      this.$http.get('/officalAcount/graphmsg/page', {params: params}).then(res => {
+      this.$http.get('/graphicType/pageList', {}).then(res => {
         let resp = res.data
         if (resp.success) {
           this.graphMsgList = resp.data.lists
@@ -163,14 +166,23 @@ export default {
     },
     // 分页请求
     pageChange () {
-      let appId = this.$route.params.id
-      let valueArr = Object.values(this.searchForm)
+      const {
+        typeOne,
+        typeTwo,
+        typeThree,
+        startTime,
+        endTime
+      } = this.searchForm
       let params = {
-        appId: appId,
-        [valueArr[0]]: valueArr[1],
-        pageNum: this.pageOption.pageNum
+        pageNum: this.pageOption.pageNum,
+        typeOne,
+        typeTwo,
+        typeThree,
+        startTime,
+        endTime,
+        pageSize:50
       }
-      this.$http.get('/officalAcount/graphmsg/page', {params: params}).then(res => {
+      this.$http.get('/graphicType/pageList', {params: params}).then(res => {
         let resp = res.data
         if (resp.success) {
           this.graphMsgList = resp.data.lists
@@ -190,7 +202,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$http.get('/officalAcount/del/graph', {params: {id}}).then(res => {
+        this.$http.get('/graphicType/delete', {params: {id}}).then(res => {
           let msg = res.data.success
           if (msg) {
             if (res.data.data) {
@@ -198,7 +210,7 @@ export default {
                 type: 'success',
                 message: '删除成功!'
               })
-              this.getgraphMsgList();
+              this.getgraphMsgList()
             } else {
               this.$message({
                 type: 'error',
@@ -220,10 +232,10 @@ export default {
       })
     },
     // 提交上传文件
-    submitUpload() {
+    submitUpload () {
       this.$refs['uploadFile'].validate((valid) => {
         if (valid) {
-          this.$refs.upload.submit();
+          this.$refs.upload.submit()
         } else {
           console.log('error submit!!')
           return false
@@ -231,24 +243,24 @@ export default {
       })
     },
     // 上传失败的处理方式
-    handleError(err, file, fileList) {
+    handleError (err, file, fileList) {
       this.$message.error('上传失败')
       this.uploadVisible = false
       this.uploadForm.uploadUrl = ''
-      console.log('handleError' + err + "," + file)
+      console.log('handleError' + err + ',' + file)
     },
     // 上传成功
-    handleSuccess(response, file, fileList) {
+    handleSuccess (response, file, fileList) {
       console.log(response)
       this.$message.success('上传成功')
       this.uploadVisible = false
       this.uploadForm.uploadUrl = ''
     },
-    handleRemove(file, fileList) {
-      console.log('handleRemove' + file + " ," + fileList)
+    handleRemove (file, fileList) {
+      console.log('handleRemove' + file + ',' + fileList)
     },
     // 获取上传文件的名字
-    handleChange(file, fileList){
+    handleChange (file, fileList) {
       this.uploadForm.uploadUrl = file.name
       console.log('handleChange' + file.name)
     },
@@ -257,7 +269,7 @@ export default {
       const extension1 = file.name.split('.')[1] === 'xls'
       const extension2 = file.name.split('.')[1] === 'xlsx'
       if (!extension1 && !extension2) {
-       this.$message.error('上传模板只能是 xls、xlsx格式!')
+        this.$message.error('上传模板只能是 xls、xlsx格式!')
       }
       return extension1 || extension2
     }
@@ -323,7 +335,13 @@ export default {
     width: 85%;
   }
   .upload-demo{
-    display:inline-block;
+    display: inline-block;
+  }
+  .in-line{
+    display: inline-block;
+    margin-right: 10px;
+    color: #aaa;
+    margin-top: 4px;
   }
 }
 </style>

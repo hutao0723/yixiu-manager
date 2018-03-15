@@ -1,12 +1,13 @@
 {
-	"success": true,
-	"data": 
-	{
-		"id": 35,
-		"type1": "券邦邦",
-		"type2": "其他",
-		"type3": "其他",
-		"date": "2018-03-02",
-		"text": "美妆博主初学者教学视频每日精选每日好物跳楼价"
-	}
+    "success": true,
+    "code": null,
+    "desc": null,
+    "data": {
+        "id": 41,
+        "title": "美妆博主初学者教学视频每日精选每日好物跳楼价",
+        "date": "2017-03-12",
+        "typeOne": "其他",
+        "typeTwo": "其他",
+        "typeThree": "hh"
+    }
 }

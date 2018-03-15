@@ -9,25 +9,31 @@ var setOnline = [
   {
     name: 'graphTextList',
     type: 'get',
-    url: '/officalAcount/graphmsg/page'
+    url: '/graphicType/pageList'
   },
   // 编辑单一图文类型
   {
     name: 'getGraphText',
     type: 'get',
-    url: '/officalAcount/getGraph'
+    url: '/graphicType/detail'
   },
   // 编辑保存
   {
     name: 'editGraphText',
     type: 'post',
-    url: '/officalAcount/edit/graph'
+    url: '/graphicType/update'
   },
   // 删除
   {
     name: 'editGraphText',
     type: 'get',
-    url: '/officalAcount/del/graph'
+    url: '/graphicType/delete'
+  },
+  // 上传excel
+  {
+    name: 'editGraphText',
+    type: 'post',
+    url: '/graphicType/export'
   }
 ];
 var fs = require('fs');

@@ -65,7 +65,7 @@ const ofarules = {
     { required: true, message: '请选择时间', trigger: 'blur' }
   ],
   typeOne: [
-    { min: 0, max: 50, message: '长度在 0 到 10 个字符', trigger: 'blur' }
+    { min: 0, max: 10, message: '长度在 0 到 10 个字符', trigger: 'blur' }
   ],
   typeTwo: [
     { min: 0, max: 10, message: '长度在 0 到 10 个字符', trigger: 'blur' }

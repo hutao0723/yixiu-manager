@@ -5,7 +5,7 @@
         <el-breadcrumb-item>图文类型</el-breadcrumb-item>
       </el-breadcrumb>
       <span class="add-ofa">
-        <a class="add" href="http://yun.duiba.com.cn/maila/file/活动名称_2017-07-29.csv">
+        <a class="add" href="/图文类型模版.xlsx">
           <i class="iconhandle"></i>
           下载模板
         </a>

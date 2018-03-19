@@ -42,9 +42,9 @@
         <template>
           <el-table :data="graphMsgList"  style="width: 100%" >
             <el-table-column prop="date" label="日期" width="180"></el-table-column>
-            <el-table-column prop="typeOne" label="类型1" width="150"></el-table-column>
-            <el-table-column prop="typeTwo" label="类型2" width="150"></el-table-column>
-            <el-table-column prop="typeThree" label="类型3" width="150"></el-table-column>
+            <el-table-column prop="typeOne" label="类型1" width="160"></el-table-column>
+            <el-table-column prop="typeTwo" label="类型2" width="160"></el-table-column>
+            <el-table-column prop="typeThree" label="类型3" width="160"></el-table-column>
             <el-table-column prop="title" label="图文标题" ></el-table-column>
             <el-table-column  label="操作" width="200">
               <template slot-scope="scope">
@@ -99,8 +99,8 @@ export default {
         typeOne: '',
         typeTwo: '',
         typeThree: '',
-        startTime: formatDateNew(new Date()),
-        endTime : formatDateNew(new Date())
+        startTime: '',
+        endTime : ''
       },
       uploadVisible: false,
       pageOption: {
@@ -255,6 +255,8 @@ export default {
       this.$message.success('上传成功')
       this.uploadVisible = false
       this.uploadForm.uploadUrl = ''
+      this.pageOption.pageNum = 1
+      this.getgraphMsgList()
     },
     handleRemove (file, fileList) {
       console.log('handleRemove' + file + ',' + fileList)

@@ -16,7 +16,7 @@
       <div class="search-bar">
         <template>
           <el-form :inline="true" :model="searchForm" class="demo-form-inline" size="mini">
-            <el-form-item>
+            <el-form-item class="type-input">
               <el-input v-model="searchForm.typeOne" placeholder="图文类型1"></el-input>
             </el-form-item>
             <el-form-item>
@@ -125,7 +125,7 @@ export default {
         endTime
       } = this.searchForm
       let params = {
-        pageNum: 1,
+        pageNum: this.pageOption.pageNum,
         typeOne,
         typeTwo,
         typeThree,
@@ -342,6 +342,9 @@ export default {
     margin-right: 10px;
     color: #aaa;
     margin-top: 4px;
+  }
+  .el-date-editor.el-input, .el-date-editor.el-input__inner{
+    width:150px;
   }
 }
 </style>

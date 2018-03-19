@@ -136,9 +136,9 @@ export default {
       this.$http.get('/graphicType/pageList', {params}).then(res => {
         let resp = res.data
         if (resp.success) {
-          this.tempMsgList = resp.data.lists
+          this.tempMsgList = resp.data.content
           // 算出有多少条数据
-          this.totalSize = resp.data.totalSize
+          this.totalSize = resp.data.totalElements
         } else {
           let msg = resp.desc || '请求失败'
           this.$message.error(msg)
@@ -155,9 +155,9 @@ export default {
       this.$http.get('/graphicType/pageList', {}).then(res => {
         let resp = res.data
         if (resp.success) {
-          this.graphMsgList = resp.data.lists
+          this.graphMsgList = resp.data.content
           // 算出有多少条数据
-          this.totalSize = resp.data.totalSize
+          this.totalSize = resp.data.totalElements
         } else {
           let msg = resp.desc || '请求失败'
           this.$message.error(msg)
@@ -185,9 +185,9 @@ export default {
       this.$http.get('/graphicType/pageList', {params: params}).then(res => {
         let resp = res.data
         if (resp.success) {
-          this.graphMsgList = resp.data.lists
+          this.graphMsgList = resp.data.content
           // 算出有多少条数据
-          this.totalSize = resp.data.totalSize
+          this.totalSize = resp.data.totalElements
         } else {
           let msg = resp.desc || '请求失败'
           this.$message.error(msg)

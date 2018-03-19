@@ -1,8 +1,8 @@
 {
     "success": true,
     "data": {
-        "totalSize": 180,
-        "lists": [{
+        "totalElements": 180,
+        "content": [{
                 "id": 41,
                 "title": "看看朋友圈谁会默默关注你每日精选每日好物跳楼价",
                 "date": "2017-03-11",

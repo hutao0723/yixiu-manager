@@ -32,6 +32,9 @@
             </el-table-column>
             <el-table-column  label="操作" width="500">
               <template slot-scope="scope">
+                <router-link :to="{ path: '/manager/miniApp/contentType/' + scope.row.appId }">
+                  <el-button type="text" size="mini">内容</el-button>
+                </router-link>
                 <el-button type="text" size="mini" @click="showAppDetail(scope.row.id)">详情</el-button>
                 <el-button type="text" size="mini" @click="getMiniApp">授权</el-button>
                 <el-button type="text" size="mini" @click="showDomain(scope.row.appId)">域名配置</el-button>

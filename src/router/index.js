@@ -162,6 +162,18 @@ export const constantRouterMap = [
             component: function (resolve) {
               require(['../views/miniApp/pages/addWxTemplate'], resolve)
             }
+          },
+          {
+            path: 'contentManage',
+            component: function (resolve) {
+              require(['../views/miniApp/pages/contentManage'], resolve)
+            }
+          },
+          {
+            path: 'contentType/:id',
+            component: function (resolve) {
+              require(['../views/miniApp/pages/contentType'], resolve)
+            }
           }
         ]
       }

@@ -11,6 +11,13 @@
               <span slot="title" >小程序</span>
             </el-menu-item>
           </router-link>
+          <router-link :to="{ path: '/manager/miniApp/contentManage' }">   
+            <el-menu-item index="2">
+              <i class="iconfont icon-msnui-weixin"></i>
+              <span slot="title">内容管理</span>
+            </el-menu-item>
+          </router-link> 
+
         </el-menu>                
       </div>
     </el-aside>

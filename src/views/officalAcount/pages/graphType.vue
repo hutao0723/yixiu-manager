@@ -252,8 +252,7 @@ export default {
     },
     // 上传成功
     handleSuccess (response, file, fileList) {
-      console.log(response)
-      this.$message.success('上传成功')
+      this.$message.success(response.desc)
       this.uploadVisible = false
       this.uploadForm.uploadUrl = ''
       this.pageOption.pageNum = 1

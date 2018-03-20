@@ -102,7 +102,7 @@ export default {
         startTime: '',
         endTime : ''
       },
-      dataname:{file:'file'},
+      dataname:{file:'111'},
       uploadVisible: false,
       pageOption: {
         pageNum: 1,
@@ -137,9 +137,9 @@ export default {
       this.$http.get('/graphicType/pageList', {params}).then(res => {
         let resp = res.data
         if (resp.success) {
-          this.tempMsgList = resp.data.content
+          this.tempMsgList = resp.data.data.content
           // 算出有多少条数据
-          this.totalSize = resp.data.totalElements
+          this.totalSize = resp.data.data.totalElements
         } else {
           let msg = resp.desc || '请求失败'
           this.$message.error(msg)
@@ -186,9 +186,9 @@ export default {
       this.$http.get('/graphicType/pageList', {params: params}).then(res => {
         let resp = res.data
         if (resp.success) {
-          this.graphMsgList = resp.data.content
+          this.graphMsgList = resp.data.data.content
           // 算出有多少条数据
-          this.totalSize = resp.data.totalElements
+          this.totalSize = resp.data.data.totalElements
         } else {
           let msg = resp.desc || '请求失败'
           this.$message.error(msg)
@@ -259,6 +259,17 @@ export default {
       this.pageOption.pageNum = 1
       this.getgraphMsgList()
     },
+    // beforeUpload (file) {
+    //   console.log(file)
+    //   let fd = new FormData()
+    //   fd.append('file', file)
+    //   fd.append('groupId', this.groupId)
+    //     // console.log(fd)
+    //     newVideo(fd).then(res => {
+    //      console.log(res)
+    //    })
+    //  return true
+    // },
     handleRemove (file, fileList) {
       console.log('handleRemove' + file + ',' + fileList)
     },

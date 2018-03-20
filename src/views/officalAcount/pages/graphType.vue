@@ -5,7 +5,7 @@
         <el-breadcrumb-item>图文类型</el-breadcrumb-item>
       </el-breadcrumb>
       <span class="add-ofa">
-        <a class="add" href="/图文类型模版.xlsx">
+        <a class="add" href="/图文类型模版_2018-03-12.xlsx">
           <i class="iconhandle"></i>
           下载模板
         </a>
@@ -69,10 +69,10 @@
             <el-form-item label="Excel附件" :label-width="formLabelWidth"  prop="uploadUrl">
               <div class="input-width"><el-input v-model="uploadForm.uploadUrl" auto-complete="off" :disabled="true"></el-input></div>
               <el-upload class="upload-demo" ref="upload" action="/graphicType/export"
-   :on-remove="handleRemove"  :file-list="fileList" :auto-upload="false" :beforeUpload="beforeAvatarUpload" :on-change="handleChange" :show-file-list="false" :on-error="handleError" :on-success="handleSuccess">
+   :on-remove="handleRemove"  :file-list="fileList" :auto-upload="false" :beforeUpload="beforeAvatarUpload" :on-change="handleChange" :show-file-list="false" :on-error="handleError" :on-success="handleSuccess" :data="dataname">
                 <el-button slot="trigger"  type="primary">选取文件</el-button>
               </el-upload>           
-            </el-form-item>                     
+            </el-form-item> 
           </el-form>
            <div class="btn-wrap">
             <el-button size="small" @click="uploadVisible = false">取 消</el-button>
@@ -102,6 +102,7 @@ export default {
         startTime: '',
         endTime : ''
       },
+      dataname:{file:'file'},
       uploadVisible: false,
       pageOption: {
         pageNum: 1,

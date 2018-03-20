@@ -135,7 +135,7 @@
               } else {
                 let msg = data.desc || '保存失败'
                 this.$message.error(msg)
-                this.$router.push('/manager/officalAcount')
+                this.$router.push('/manager/officalAcount/graphType')
               }
             })
           } else {

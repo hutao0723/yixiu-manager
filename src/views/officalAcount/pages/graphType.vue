@@ -345,7 +345,7 @@ export default {
   }
   .input-width{
     display: inline-block;
-    width: 85%;
+    width: 80%;
   }
   .upload-demo{
     display: inline-block;

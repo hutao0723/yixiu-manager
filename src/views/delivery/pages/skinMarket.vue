@@ -46,7 +46,7 @@
       </div>
       <div class="page-control">
         <el-pagination background :page-size="searchOption.pageSize" :current-page.sync="searchOption.pageNum"
-                       @current-change="pageChange" layout="prev, pager, next"
+                       @current-change="onloadList" layout="prev, pager, next"
                        :total="searchOption.totalSize"></el-pagination>
       </div>
       <el-dialog
@@ -79,10 +79,6 @@
       this.onloadList()
     },
     methods: {
-      pageChange(pageNum) {
-        this.searchOption.pageNum = pageNum;
-        this.onSearch();
-      },
 
       showLarge(item) {
         this.bigPictureUrl = item;
@@ -90,7 +86,8 @@
       },
 
       // 列表获取
-      onloadList() {
+      onloadList(pageNum) {
+        this.searchOption.pageNum = pageNum || 1;
         let {skinName, pageNum, pageSize} = this.searchOption;
         let params = {skinName, pageNum, pageSize};
         this.load(params)

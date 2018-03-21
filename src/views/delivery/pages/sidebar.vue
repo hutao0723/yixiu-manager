@@ -24,11 +24,17 @@
               </el-menu-item>
             </router-link>
             <router-link :to="{ path: '/manager/dlv/putcontent' }">
-              <el-menu-item index="4">
+              <el-menu-item index="5">
                 <i class="iconfont icon-gongzhonghao"></i>
                 <span slot="title">投放内容</span>
               </el-menu-item>
             </router-link>
+            <router-link :to="{ path: '/manager/dlv/skinMarket' }">
+            <el-menu-item index="4">
+              <i class="iconfont icon-gongzhonghao"></i>
+              <span slot="title">皮肤市场</span>
+            </el-menu-item>
+          </router-link>
           </el-menu>
         </div>
       </el-aside>

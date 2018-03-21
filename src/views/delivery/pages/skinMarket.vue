@@ -81,7 +81,7 @@
     methods: {
       pageChange(pageNum) {
         this.searchOption.pageNum = pageNum;
-        this.onloadList();
+        this.onSearch();
       },
 
       showLarge(item) {
@@ -115,7 +115,7 @@
           this.$message.error('网络错误')
         })
       },
-      
+
       // 删除皮肤
       deletePageModel(row) {
         let id = row.id

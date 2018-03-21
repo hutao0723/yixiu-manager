@@ -57,10 +57,13 @@
           </el-table>
         </template>        
       </div>
-      <div class="page-control">
-        <el-pagination background  :page-size="50" :current-page.sync="pageOption.pageNum"
- @current-change="pageChange" layout="prev, pager, next" :total="totalSize"></el-pagination>
-      </div>    
+      <div class="page-content">
+        <div class="fl total-num" v-if="totalSize > 0">共<span class="blue">{{totalSize}}</span>条</div>
+        <div class="page-control">
+          <el-pagination background  :page-size="50" :current-page.sync="pageOption.pageNum"
+   @current-change="pageChange" layout="prev, pager, next" :total="totalSize"></el-pagination>
+        </div>
+      </div>   
     </div>
     <!--上传弹框-->
       <div class="upload-diolog">
@@ -358,6 +361,17 @@ export default {
   }
   .el-date-editor.el-input, .el-date-editor.el-input__inner{
     width:150px;
+  }
+  .page-content{
+    overflow:hidden;
+    .total-num{
+      margin-top: 28px;
+      margin-left: 10px;
+      color: #606266;
+      .blue{
+        color: #409EFF;
+      }
+    }
   }
 }
 </style>

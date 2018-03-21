@@ -59,7 +59,7 @@ const ofarules = {
   ],
   title: [
     { required: true, message: '请输入图文标题', trigger: 'blur' },
-    { min: 1, max: 50, message: '长度在 1 到 100 个字符', trigger: 'blur' }
+    { min: 1, max: 100, message: '长度在 1 到 100 个字符', trigger: 'blur' }
   ],
   date: [
     { required: true, message: '请选择时间', trigger: 'blur' }

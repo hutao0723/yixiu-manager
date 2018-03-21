@@ -52,6 +52,12 @@ export const constantRouterMap = [
             }
           },
           {
+            path: 'putcontent',
+            component: function (resolve) {
+              require(['../views/delivery/pages/putcontent'], resolve)
+            }
+          },
+          {
             path: 'link',
             component: function (resolve) {
               require(['../views/delivery/pages/subLinkPage'], resolve)

@@ -76,12 +76,12 @@
       }
     },
     created() {
-      this.onSearch()
+      this.onloadList()
     },
     methods: {
       pageChange(pageNum) {
         this.searchOption.pageNum = pageNum;
-        this.onSearch();
+        this.onloadList();
       },
 
       showLarge(item) {
@@ -89,10 +89,21 @@
         this.picVisible = true;
       },
 
-      // 列表获取&搜索
-      onSearch() {
+      // 列表获取
+      onloadList() {
         let {skinName, pageNum, pageSize} = this.searchOption;
         let params = {skinName, pageNum, pageSize};
+        this.load(params)
+      },
+
+      // 搜索
+      onSearch() {
+        let {skinName} = this.searchOption;
+        let params = {skinName};
+        this.load(params)
+      },
+
+      load(params){
         this.$http.get('/skin/list', {params}).then(res => {
           if (res.data.success) {
             this.searchOption.skinList = res.data.data.lists;
@@ -104,7 +115,7 @@
           this.$message.error('网络错误')
         })
       },
-
+      
       // 删除皮肤
       deletePageModel(row) {
         let id = row.id
@@ -118,7 +129,7 @@
               type: 'success',
               message: '删除成功'
             });
-            this.onSearch();
+            this.onloadList();
           })
         }).catch(() => {
           this.$message({

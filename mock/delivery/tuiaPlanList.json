@@ -1,0 +1,29 @@
+{
+	"success": true,
+	"data": [
+		{
+			"advertId": 123,
+			"advertName": "铁观音茶叶礼盒装", 
+			"promoteURL": "已失效",
+			"partnerId": 23
+		},
+		{
+			"advertId": 354,
+			"advertName": "春季男版透气运动鞋", 
+			"promoteURL": "http://www.baidu.com",
+			"partnerId": 4
+		},
+		{
+			"advertId": 457,
+			"advertName": "时尚女生的穿搭", 
+			"promoteURL": "http://www.duiba.com",
+			"partnerId": 11
+		},
+		{
+			"advertId": 775,
+			"advertName": "男款秋季羽绒服", 
+			"promoteURL": "http://www.abcdeg.com",
+			"partnerId": 8
+		}
+	]
+}

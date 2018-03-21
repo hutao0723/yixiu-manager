@@ -59,7 +59,8 @@
           skinName: '',
           skinCode: '',
           loadPageIds: '',
-          pictureUrl: ''
+          pictureUrl: '',
+          id: ''
         },
         rules: {
           skinName: [
@@ -81,7 +82,8 @@
     methods: {
       loadForm() {
         const query = getParams();
-        if(!query.id) return
+        if (!query.id) return
+        this.id = query.id;
         this.$http.get('/skin/find', {params: {id: query.id}}).then(res => {
           if (res.data.success) {
             this.editForm = Object.assign({}, this.editForm, res.data.data)
@@ -113,11 +115,12 @@
       save() {
         this.$refs['editForm'].validate((valid) => {
           if (valid) {
-            let {skinName, pictureUrl, skinCode} = this.editForm
+            let {skinName, pictureUrl, skinCode, id} = this.editForm
             let params = {
               skinName,
               pictureUrl,
-              skinCode
+              skinCode,
+              id
             };
             this.$http.post('/skin/save', qs.stringify(params)).then(res => {
               if (res.data.success) {

@@ -5,13 +5,13 @@
       <div class="side-wrap"  v-show="isShow">
         <p class="page-title">投放管理</p>
         <el-menu   class="menu-collapse" default-active="1">
-        <router-link :to="{ path: '/manager/dlv' }">          
+        <router-link :to="{ path: '/manager/dlv' }">
           <el-menu-item index="1">
             <i class="iconfont icon-feiji"></i>
             <span slot="title">投放管理</span>
           </el-menu-item>
         </router-link>
-          <router-link :to="{ path: '/manager/dlv/theme' }">          
+          <router-link :to="{ path: '/manager/dlv/theme' }">
           <el-menu-item index="2">
             <i class="iconfont icon-zhuti"></i>
             <span slot="title">公众号主题</span>
@@ -23,7 +23,13 @@
                     <span slot="title">落地页</span>
               </el-menu-item>
           </router-link>
-        </el-menu>                
+          <router-link :to="{ path: '/manager/dlv/skinMarket' }">
+            <el-menu-item index="4">
+              <i class="iconfont icon-gongzhonghao"></i>
+              <span slot="title">皮肤市场</span>
+            </el-menu-item>
+          </router-link>
+        </el-menu>
       </div>
     </el-aside>
     <el-container>
@@ -35,7 +41,7 @@
               <router-view/>
           </div>
         </el-main>
-    </el-container>  
+    </el-container>
   </el-container>
   </section>
 </template>

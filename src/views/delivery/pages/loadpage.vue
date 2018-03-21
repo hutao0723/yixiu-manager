@@ -20,12 +20,12 @@
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
-                </el-option>              
+                </el-option>
               </el-select>
             </el-form-item>
             <el-form-item >
               <el-input v-model="searchForm.data.value" placeholder="名称"></el-input>
-            </el-form-item> 
+            </el-form-item>
             <el-form-item>
               <el-select v-model="searchForm.data.status" placeholder="状态">
                 <el-option label="已使用" :value="2"></el-option>
@@ -59,13 +59,13 @@
                   已使用
                 </span>
               </template>
-              </el-table-column>           
+              </el-table-column>
             <el-table-column  label="操作" width="240">
               <template slot-scope="scope">
-                <el-button type="text" size="small" @click="openloadPageUrlDialog(scope.row)">落地页</el-button>  
+                <el-button type="text" size="small" @click="openloadPageUrlDialog(scope.row)">落地页</el-button>
                 <el-button type="text" size="small" @click="openStatusDilog(scope.row)">状态</el-button>
-                <el-button type="text" size="small" @click="openThresholdDilog(scope.row)">阈值</el-button>               
-                <el-button type="text" size="small" @click="deletePageModel(scope.row)">删除</el-button> 
+                <el-button type="text" size="small" @click="openThresholdDilog(scope.row)">阈值</el-button>
+                <el-button type="text" size="small" @click="deletePageModel(scope.row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -89,7 +89,7 @@
           </el-form-item>
           <el-form-item label="阈值" :label-width="formLabelWidth"  prop="thresholdNum">
             <el-input v-model="addLoadPage.thresholdNum" auto-complete="off"></el-input>
-          </el-form-item>           
+          </el-form-item>
         </el-form>
         <div class="btn-wrap">
           <el-button size="small" type="primary" @click="addPage">保存</el-button>
@@ -115,27 +115,27 @@
         <el-form ref="changeThresho" :model="changeForm" :rules="rules">
           <el-form-item label="阈值" :label-width="formLabelWidth"  prop="thresholdNum">
             <el-input v-model="changeForm.thresholdNum" auto-complete="off"></el-input>
-          </el-form-item>                     
+          </el-form-item>
         </el-form>
          <div class="btn-wrap">
           <el-button size="small" type="primary" @click="changeThresholdNum">保存</el-button>
-        </div>       
-      </el-dialog> 
-    </div> 
+        </div>
+      </el-dialog>
+    </div>
     <!--落地页编辑-->
     <div class="edit-loadPageUrl-diolog">
       <el-dialog title="编辑落地页地址" :visible.sync="dialogLoadPageUrlVisible">
         <el-form ref="changeLoadPageUrl" :model="changeForm" :rules="rules">
           <el-form-item label="落地页" :label-width="formLabelWidth"  prop="loadPageUrl">
             <el-input v-model="changeForm.loadPageUrl" auto-complete="off"></el-input>
-          </el-form-item>                     
+          </el-form-item>
         </el-form>
          <div class="btn-wrap">
           <el-button size="small" @click="dialogLoadPageUrlVisible = false">取 消</el-button>
           <el-button size="small" type="primary" @click="changeLoadPageUrl">保存</el-button>
-        </div>       
+        </div>
       </el-dialog>
-    </div>    
+    </div>
   </section>
 </template>
 

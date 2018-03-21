@@ -15,7 +15,8 @@
           <el-form-item label="皮肤图片" prop="pictureUrl">
             <el-upload
               class="avatar-uploader"
-              action="https://jsonplaceholder.typicode.com/posts/"
+              action="/upload/image"
+              name="imageFile"
               :show-file-list="false"
               :on-success="handleAvatarSuccess"
               :before-upload="beforeAvatarUpload">

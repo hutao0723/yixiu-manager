@@ -86,8 +86,8 @@
       },
 
       // 列表获取
-      onloadList(pageNum) {
-        this.searchOption.pageNum = pageNum || 1;
+      onloadList(num) {
+        this.searchOption.pageNum = num ;
         let {skinName, pageNum, pageSize} = this.searchOption;
         let params = {skinName, pageNum, pageSize};
         this.load(params)
@@ -100,7 +100,7 @@
         this.load(params)
       },
 
-      load(params){
+      load(params) {
         this.$http.get('/skin/list', {params}).then(res => {
           if (res.data.success) {
             this.searchOption.skinList = res.data.data.lists;

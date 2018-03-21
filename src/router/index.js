@@ -170,9 +170,21 @@ export const constantRouterMap = [
             }
           },
           {
+            path: 'typeManage',
+            component: function (resolve) {
+              require(['../views/miniApp/pages/typeManage'], resolve)
+            }
+          },
+          {
             path: 'contentType/:id',
             component: function (resolve) {
               require(['../views/miniApp/pages/contentType'], resolve)
+            }
+          },
+          {
+            path: 'editContent/:id',
+            component: function (resolve) {
+              require(['../views/miniApp/pages/editContent'], resolve)
             }
           }
         ]

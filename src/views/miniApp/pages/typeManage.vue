@@ -2,49 +2,30 @@
   <section class="ofa-main-wrap">
     <div class="title-wrap">
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item>内容管理</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/manager/miniApp/contentManage' }">内容管理</el-breadcrumb-item>
+        <el-breadcrumb-item>类型管理</el-breadcrumb-item>
       </el-breadcrumb>
-      <span class="code-stock">
-        <i class="iconfont icon-guanlian"></i>
-        <router-link :to="{ path: '/manager/miniApp/typeManage/'}">
-          <span class="offical-acount">类型管理</span>
-        </router-link>
+      <span class="link-theme">
+        <i class="iconfont icon-jia" style="vertical-align: middle;"></i>
+        <span class="connect-ad" @click="openDialogTheme" style="vertical-align: middle;">类型</span>
       </span>
     </div>
     <div class="content">
       <div class="search-bar">
         <template>
-          <el-form :inline="true" :model="searchForm" class="demo-form-inline fl" size="mini">
-            <el-form-item class="type-input">
-             <el-select v-model="searchForm.typeTwo" placeholder="二级类型" >
-                <el-option v-for="item in bTypeList" :key="item.value" :label="item.label" :value="item.value"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="onSearch">查询</el-button>
-            </el-form-item>
-          </el-form>
-          <span class="add-ofa fr">
-            <a class="add" href="/图文类型模版_2018-03-12.xlsx">
-              <i class="iconhandle"></i>
-              下载模板
-            </a>
-            <span class="connect-ad" @click="openUploadFile">导入内容</span>
-          </span>
         </template>
       </div>
       <div class="tabel-wrap">
         <template>
-          <el-table :data="contentList"  style="width: 100%" >
-            <el-table-column prop="id" label="ID" width="180"></el-table-column>
-            <el-table-column prop="description" label="描述词" ></el-table-column>
-            <el-table-column prop="descontent" label="描述内容" width="400"></el-table-column>
-            <el-table-column prop="bClassType" label="二级类型"></el-table-column>
-            <el-table-column  label="操作">
+          <el-table :data="graphMsgList"  style="width: 100%" >
+            <el-table-column prop="date" label="日期" width="180"></el-table-column>
+            <el-table-column prop="typeOne" label="类型1" width="160"></el-table-column>
+            <el-table-column prop="typeTwo" label="类型2" width="160"></el-table-column>
+            <el-table-column prop="typeThree" label="类型3" width="160"></el-table-column>
+            <el-table-column prop="title" label="图文标题" ></el-table-column>
+            <el-table-column  label="操作" width="200">
               <template slot-scope="scope">
-                <router-link :to="{ path: '/manager/miniApp/editContent/' + scope.row.id }">
-                  <el-button type="text" size="mini">编辑</el-button>        
-                </router-link>   
+                <el-button type="text" size="mini">编辑</el-button>        
                 <el-button type="text" size="mini" @click="deletePageModel(scope.row)">删除</el-button>  
               </template>
             </el-table-column>
@@ -56,24 +37,27 @@
  @current-change="pageChange" layout="prev, pager, next" :total="totalSize"></el-pagination>
       </div>    
     </div>
-    <!--上传弹框-->
-      <div class="upload-diolog">
-        <el-dialog title="导入内容" :visible.sync="uploadVisible">
-          <el-form ref="uploadFile" :model="uploadForm" >
-            <el-form-item label="Excel附件" :label-width="formLabelWidth"  prop="uploadUrl">
-              <div class="input-width"><el-input v-model="uploadForm.uploadUrl" auto-complete="off" :disabled="true"></el-input></div>
-              <el-upload class="upload-demo" ref="upload" action="/graphicType/export"
-   :on-remove="handleRemove"  :file-list="fileList" :auto-upload="false" :beforeUpload="beforeAvatarUpload" :on-change="handleChange" :show-file-list="false" :on-error="handleError" :on-success="handleSuccess" :data="dataname">
-                <el-button slot="trigger"  type="primary">选取文件</el-button>
-              </el-upload>           
-            </el-form-item> 
-          </el-form>
-           <div class="btn-wrap">
-            <el-button size="small" @click="uploadVisible = false">取 消</el-button>
-            <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">确认</el-button>
-          </div>       
-        </el-dialog>
-      </div> 
+    <!--添加类型-->
+    <div class="ad-loadPage-diolog">
+      <el-dialog title="添加落地页" :visible.sync="dialogLoadPageVisible">
+        <el-form :model="addLoadPage" ref="addLoadPage" >
+          <el-form-item label="公众号" :label-width="formLabelWidth" prop="subscriptionId">
+          <el-select  v-model="addLoadPage.subscriptionId"  filterable remote reserve-keyword placeholder="公众号名称" >
+              <el-option v-for="item in searchForm.officalAcountOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+          </el-select>
+          </el-form-item>
+          <el-form-item label="落地页名称" :label-width="formLabelWidth"  prop="loadPageUrl">
+            <el-input placeholder="https://" v-model="addLoadPage.loadPageUrl" auto-complete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="阈值" :label-width="formLabelWidth"  prop="thresholdNum">
+            <el-input v-model="addLoadPage.thresholdNum" auto-complete="off"></el-input>
+          </el-form-item>           
+        </el-form>
+        <div class="btn-wrap">
+          <el-button size="small" type="primary" @click="">保存</el-button>
+        </div>
+      </el-dialog>
+    </div>
   </section>
 </template>
 
@@ -88,64 +72,42 @@ export default {
       fileList: [],
       formLabelWidth: '100px',
       searchForm: {
-        typeTwo: ''
+        typeOne: '',
+        typeTwo: '',
+        typeThree: '',
+        startTime: '',
+        endTime : ''
       },
-      bTypeList: [],
+      addLoadPage: {
+        loadPageUrl: 'https://',
+        subscriptionId: '',
+        thresholdNum: null
+      },
       dataname:{file:'111'},
       uploadVisible: false,
+      dialogLoadPageVisible: false,
       pageOption: {
         pageNum: 1,
         pageSize: 50
       },
       totalSize: 10,
-      contentList: []
+      graphMsgList: []
     }
   },
   created () {
-    this.getcontentList()
+    this.getgraphMsgList()
   },
   methods: {
-    // 查询图文列表
-    onSearch () {
-      const {
-        typeOne,
-        typeTwo,
-        typeThree,
-        startTime,
-        endTime
-      } = this.searchForm
-      let params = {
-        pageNum: this.pageOption.pageNum,
-        typeOne,
-        typeTwo,
-        typeThree,
-        startTime,
-        endTime,
-        pageSize:50
-      }
-      this.$http.get('/graphicType/pageList', {params}).then(res => {
-        let resp = res.data
-        if (resp.success) {
-          this.contentList = resp.data.content
-          // 算出有多少条数据
-          this.totalSize = resp.data.totalElements
-        } else {
-          let msg = resp.desc || '请求失败'
-          this.$message.error(msg)
-        }
-      })
-    },
-    // 打开上传弹框
-    openUploadFile () {
-      this.uploadForm.uploadUrl = ''
-      this.uploadVisible = true
+    // 打开添加类型弹框
+    openDialogTheme () {
+      this.dialogLoadPageVisible = true
     },
     // 获取图文列表
-    getcontentList () {
+    getgraphMsgList () {
       this.$http.get('/graphicType/pageList', {}).then(res => {
         let resp = res.data
         if (resp.success) {
-          this.contentList = resp.data.content
+          this.graphMsgList = resp.data.content
           // 算出有多少条数据
           this.totalSize = resp.data.totalElements
         } else {
@@ -175,7 +137,7 @@ export default {
       this.$http.get('/graphicType/pageList', {params: params}).then(res => {
         let resp = res.data
         if (resp.success) {
-          this.contentList = resp.data.content
+          this.graphMsgList = resp.data.content
           // 算出有多少条数据
           this.totalSize = resp.data.totalElements
         } else {
@@ -200,7 +162,7 @@ export default {
                 type: 'success',
                 message: '删除成功!'
               })
-              this.getcontentList()
+              this.getgraphMsgList()
             } else {
               this.$message({
                 type: 'error',
@@ -245,7 +207,7 @@ export default {
       this.uploadVisible = false
       this.uploadForm.uploadUrl = ''
       this.pageOption.pageNum = 1
-      this.getcontentList()
+      this.getgraphMsgList()
     },
     // beforeUpload (file) {
     //   console.log(file)
@@ -292,7 +254,8 @@ export default {
       bottom: 10px;
       font-size: 16px;
     }
-    .code-stock {
+
+    .add-ofa {
       display: inline-block;
       position: absolute;
       right: 0;
@@ -300,37 +263,28 @@ export default {
       font-size: 12px;
       a{
         text-decoration: none;
+        color: #909399;
+        margin-right:20px;
+      }
+      .connect-ad {
+        cursor: pointer;
+        color: #909399;
+        font-weight: 400;
+        &:hover {
+          color: #333
+        }
       }
     }
-    .offical-acount {
-      cursor: pointer;
-      color: #909399;
-      font-weight: 400;
-      &:hover {
-        color: #333;
-      }
+    .link-theme{
+      display: inline-block;
+      position: absolute;
+      right: 0;
+      bottom: 10px;
+      font-size: 12px;
     }
   }
   .search-bar {
     margin-top: 20px;
-  }
-  .add-ofa {
-    display: inline-block;
-    bottom: 10px;
-    font-size: 12px;
-    a{
-      text-decoration: none;
-      color: #909399;
-      margin-right:20px;
-    }
-    .connect-ad {
-      cursor: pointer;
-      color: #909399;
-      font-weight: 400;
-      &:hover {
-        color: #333
-      }
-    }
   }
   .page-control {
     float: right;

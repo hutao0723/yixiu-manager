@@ -2,8 +2,8 @@
   <section class="ofa-main-wrap">
     <div class="title-wrap">
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item :to="{ path: '/manager/miniApp' }">小程序</el-breadcrumb-item>
-        <el-breadcrumb-item>内容</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/manager/miniApp/contentManage' }">内容管理</el-breadcrumb-item>
+        <el-breadcrumb-item>编辑内容</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="content">
@@ -14,18 +14,19 @@
       <div class="tabel-wrap">
         <!-- :rules="rules" -->
         <el-form ref="graphForm" :model="typeForm" label-width="80px" >
-            <el-form-item label="一级类型" prop="aClassType">
-              <el-select v-model="typeForm.aClassType" placeholder="一级类型" style="width: 60%;">
-                <el-option v-for="item in aTypeList" :key="item.value" :label="item.label" :value="item.value"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="二级类型" prop="bClassType">
+            <el-form-item label="二级类型" prop="aClassType">
               <el-select v-model="typeForm.bClassType" placeholder="二级类型" style="width: 60%;">
                 <el-option v-for="item in bTypeList" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
+            <el-form-item label="描述词"  prop="descriptions">
+              <el-input v-model="typeForm.descriptions" style="width: 60%;"></el-input>
+            </el-form-item>
+            <el-form-item label="描述内容"  prop="descontent">
+              <el-input v-model="typeForm.descontent" style="width: 60%;" type="textarea" :rows="8"></el-input>
+            </el-form-item>
             <el-form-item>
-              <router-link :to="{ path: '/manager/miniApp'}">
+              <router-link :to="{ path: '/manager/miniApp/contentManage'}">
                   <el-button type="pain">取消</el-button>
               </router-link>
               <el-button type="primary" @click="">保存</el-button>
@@ -43,10 +44,10 @@
     data () {
       return {
         typeForm: {
-          aClassType: '',
-          bClassType: ''
+          bClassType: '',
+          descriptions: '',
+          descontent: ''
         },
-        aTypeList: [],
         bTypeList: []
       }
     }

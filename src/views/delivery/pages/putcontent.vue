@@ -13,9 +13,9 @@
       <div class="search-bar">
         <template>
           <el-form :inline="true" :model="searchForm.data" class="demo-form-inline" size="mini">
-            <el-form-item>
-              <el-input v-model="searchForm.data.value" placeholder="公众号"></el-input>
-            </el-form-item>
+            <el-select v-model="searchForm.data.value" placeholder="请选择公众号">
+              <el-option v-for="item in publicArr" :key="item.id" :label="item.nickName" :value="item.id"></el-option>
+            </el-select>
             <el-form-item>
               <el-button type="primary" @click="onSearch">查询</el-button>
             </el-form-item>
@@ -123,6 +123,7 @@
     },
     created() {
       this.getAllList()
+      this.getPublicList();
     },
     methods: {
       beforeImage(file) {
@@ -190,7 +191,7 @@
       onSearch() {
         let searchForm = this.searchForm.data
         let params = {}
-        params["contentName"] = searchForm.value
+        params["subscriptionId"] = searchForm.value
         this.$http.get('/put/content/list', { params }).then(res => {
           if (res.data.success) {
             this.totalSize = res.data.data.totalSize
@@ -225,7 +226,6 @@
       },
       // 新增编辑落地页信息
       openAddDialog(row) {
-        this.getPublicList();
         this.fileList = [];
         if (row.id) {
           let params = {

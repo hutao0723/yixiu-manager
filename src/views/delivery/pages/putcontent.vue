@@ -70,7 +70,7 @@
             <el-upload class="upload-demo" action="/upload/image" :on-success="submitImage" name="imageFile" :on-remove="removeImage"
               :before-upload="beforeImage" :limit="10" :file-list="fileList" list-type="picture">
               <el-button size="small" type="primary">点击上传</el-button>
-              <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过100kb</div>
+              <div slot="tip" class="el-upload__tip">只能上传jpeg/jpg/png文件，且不超过100kb</div>
             </el-upload>
           </el-form-item>
         </el-form>
@@ -127,10 +127,10 @@
     methods: {
       beforeImage(file) {
         console.log(file)
-        const isJPG = file.type === 'image/jpg' || file.type === 'image/png';
+        const isJPG = file.type === 'image/jpg' || file.type === 'image/png' || file.type === 'image/jpeg';
         const isLt2M = file.size / 1024 < 100;
         if (!isJPG) {
-          this.$message.error('上传图片只能是 jpg/png 格式!');
+          this.$message.error('上传图片只能是 jpeg/jpg/png 格式!');
         }
         if (!isLt2M) {
           this.$message.error('上传图片大小不能超过 100kb!');

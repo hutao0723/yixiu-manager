@@ -13,22 +13,22 @@
       </div>
       <div class="tabel-wrap">
         <!-- :rules="rules" -->
-        <el-form ref="graphForm" :model="typeForm" label-width="80px" >
+        <el-form ref="typeForm" :model="typeForm" label-width="80px" :rules="rules">
             <el-form-item label="一级类型" prop="aClassType">
-              <el-select v-model="typeForm.aClassType" placeholder="一级类型" style="width: 60%;">
-                <el-option v-for="item in aTypeList" :key="item.value" :label="item.label" :value="item.value"></el-option>
+              <el-select v-model="planIndex" placeholder="一级类型" style="width: 60%;" value-key="id" >
+                <el-option v-for="(item, index)  in aTypeList" :key="item.id" :label="item.aClassType" :value="index"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="二级类型" prop="bClassType">
               <el-select v-model="typeForm.bClassType" placeholder="二级类型" style="width: 60%;">
-                <el-option v-for="item in bTypeList" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                <el-option v-for="(item, index) in bTypeList" :key="item.id" :label="item.aClassType" :value="index"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item>
               <router-link :to="{ path: '/manager/miniApp'}">
                   <el-button type="pain">取消</el-button>
               </router-link>
-              <el-button type="primary" @click="">保存</el-button>
+              <el-button type="primary" @click="saveContentType">保存</el-button>
             </el-form-item>
         </el-form>
       </div>
@@ -38,17 +38,91 @@
 </template>
 <script>
   import { formatDateNew } from '../../../utils/dateUtils'
+  import minirules from '../components/miniValidRules'
   import qs from 'qs'
   export default {
     data () {
       return {
+        rules: minirules,
         typeForm: {
           aClassType: '',
           bClassType: ''
         },
+        planIndex: '',
         aTypeList: [],
         bTypeList: []
       }
+    },
+    created () {
+      this.getAClassType()
+    },
+    watch: {
+      'planIndex': function (newVal) {
+        if (newVal !== undefined) {
+          this.typeForm.aClassType = this.aTypeList[newVal].id
+          this.getbClassType(this.aTypeList[newVal])
+        }
+      }
+    },
+    methods: {
+      getAClassType () {
+        let appId = this.$route.params.id
+        this.$http.get('/miniapp/getaClass', {params: {appId}}).then(res => {
+          let resp = res.data
+          if (resp.success) {
+            console.log(resp.data)
+            this.aTypeList = resp.data
+          } else {
+            let msg = resp.desc || '请求失败' 
+            this.$message.error(msg)
+          }
+        })
+      },
+      getbClassType (row) {
+        let appId = this.$route.params.id
+        let aid = row.id
+        this.$http.get('/miniapp/getaClass', {params: {aid, appId}}).then(res => {
+          let resp = res.data
+          if (resp.success) {
+            console.log(resp.data)
+            this.bTypeList = resp.data
+          } else {
+            let msg = resp.desc || '请求失败' 
+            this.$message.error(msg)
+          }
+        })
+      },
+      // 编辑保存图文
+      saveContentType () {
+        this.$refs['typeForm'].validate((valid) => {
+          if (valid) {
+            const {
+              aClassType,
+              bClassType
+            } = this.typeForm
+            let params = {
+              appId: this.$route.params.id,
+              aClassType,
+              bClassType
+            }
+            this.$http.post('/miniapp/contentType', qs.stringify(params)).then(res => {
+              let data = res.data
+              if (data.success) {
+                this.$message.success('保存成功')
+                this.$router.push('/manager/miniApp')
+              } else {
+                let msg = data.desc || '保存失败'
+                this.$message.error(msg)
+                this.$router.push('/manager/miniApp')
+              }
+            })
+          } else {
+            console.log('error submit!!')
+            return false
+          }
+        })
+      }
+
     }
   }
 </script>

@@ -1,0 +1,21 @@
+{
+	"success": true,
+	"data": [
+		{
+			"id": 12,
+			"aClassType": "测试类" 
+		},
+		{
+			"id": 2,
+			"aClassType": "星座类" 
+		},
+		{
+			"id": 13,
+			"aClassType": "科普类" 
+		},
+		{
+			"id": 5,
+			"aClassType": "小说类" 
+		}
+	]
+}

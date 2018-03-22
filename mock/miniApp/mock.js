@@ -75,6 +75,41 @@ var setOnline = [
     name: 'tplmsgPage',
     type: 'get',
     url: '/miniapp/tplmsg/page'
+  },
+  // 获取类型列表
+  {
+    name: 'typeList',
+    type: 'get',
+    url: '/miniApp/typeList'
+  },
+  // 编辑小程序类型
+  {
+    name: 'delete',
+    type: 'get',
+    url: '/miniApp/typeUpdate'
+  },
+  // 删除类型
+  {
+    name: 'delete',
+    type: 'get',
+    url: '/miniApp/typeDelete'
+  },
+  // 获取一级类型/miniapp/getaClass
+  {
+    name: 'type',
+    type: 'get',
+    url: '/miniapp/getaClass'
+  },
+  // 选择小程序设置内容类型
+  {
+    name: 'save',
+    type: 'post',
+    url: '/miniapp/contentType'
+  },
+  {
+    name: 'tabList',
+    type: 'get',
+    url: '/miniApp/getTabList'
   }
 ];
 var fs = require('fs');

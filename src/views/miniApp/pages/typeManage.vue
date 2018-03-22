@@ -7,7 +7,7 @@
       </el-breadcrumb>
       <span class="link-theme">
         <i class="iconfont icon-jia" style="vertical-align: middle;"></i>
-        <span class="connect-ad" @click="openDialogTheme" style="vertical-align: middle;">类型</span>
+        <span class="connect-ad" @click="openDialogType" style="vertical-align: middle;">类型</span>
       </span>
     </div>
     <div class="content">
@@ -17,44 +17,40 @@
       </div>
       <div class="tabel-wrap">
         <template>
-          <el-table :data="graphMsgList"  style="width: 100%" >
-            <el-table-column prop="date" label="日期" width="180"></el-table-column>
-            <el-table-column prop="typeOne" label="类型1" width="160"></el-table-column>
-            <el-table-column prop="typeTwo" label="类型2" width="160"></el-table-column>
-            <el-table-column prop="typeThree" label="类型3" width="160"></el-table-column>
-            <el-table-column prop="title" label="图文标题" ></el-table-column>
-            <el-table-column  label="操作" width="200">
+          <el-table :data="typeList" style="width: 100%" >
+            <el-table-column prop="id" label="ID" ></el-table-column>
+            <el-table-column prop="aType" label="一级类型" ></el-table-column>
+            <el-table-column prop="bType" label="二级类型" ></el-table-column>
+            <el-table-column  label="操作" >
               <template slot-scope="scope">
-                <el-button type="text" size="mini">编辑</el-button>        
-                <el-button type="text" size="mini" @click="deletePageModel(scope.row)">删除</el-button>  
+                <el-button type="text" size="mini" @click="openDialogType(scope.row)">编辑</el-button>        
+                <el-button type="text" size="mini" @click="deleteType(scope.row)">删除</el-button>  
               </template>
             </el-table-column>
           </el-table>
         </template>        
       </div>
-      <div class="page-control">
-        <el-pagination background  :page-size="50" :current-page.sync="pageOption.pageNum"
- @current-change="pageChange" layout="prev, pager, next" :total="totalSize"></el-pagination>
-      </div>    
+      <div class="page-content">
+        <div class="fl total-num">共<span class="blue">{{totalSize}}</span>条</div>
+        <div class="page-control">
+          <el-pagination background  :page-size="20" :current-page.sync="pageOption.pageNum" @current-change="pageChange" layout="prev, pager, next" :total="totalSize"></el-pagination>
+        </div>    
+      </div>
     </div>
     <!--添加类型-->
-    <div class="ad-loadPage-diolog">
-      <el-dialog title="添加落地页" :visible.sync="dialogLoadPageVisible">
-        <el-form :model="addLoadPage" ref="addLoadPage" >
-          <el-form-item label="公众号" :label-width="formLabelWidth" prop="subscriptionId">
-          <el-select  v-model="addLoadPage.subscriptionId"  filterable remote reserve-keyword placeholder="公众号名称" >
-              <el-option v-for="item in searchForm.officalAcountOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
-          </el-select>
+    <div class="add-type-diolog">
+      <el-dialog title="添加编辑类型" :visible.sync="dialogTypeVisible">
+        <el-form :model="typeForm" ref="typeForm" :rules="rules">
+          <el-form-item label="一级类型" :label-width="formLabelWidth"  prop="aType">
+            <el-input v-model="typeForm.aType" auto-complete="off"></el-input>
           </el-form-item>
-          <el-form-item label="落地页名称" :label-width="formLabelWidth"  prop="loadPageUrl">
-            <el-input placeholder="https://" v-model="addLoadPage.loadPageUrl" auto-complete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="阈值" :label-width="formLabelWidth"  prop="thresholdNum">
-            <el-input v-model="addLoadPage.thresholdNum" auto-complete="off"></el-input>
+          <el-form-item label="二级类型" :label-width="formLabelWidth"  prop="bType">
+            <el-input v-model="typeForm.bType" auto-complete="off"></el-input>
           </el-form-item>           
         </el-form>
         <div class="btn-wrap">
-          <el-button size="small" type="primary" @click="">保存</el-button>
+          <el-button size="small" @click="dialogTypeVisible = false">取 消</el-button>
+          <el-button size="small" type="primary" @click="saveType">保存</el-button>
         </div>
       </el-dialog>
     </div>
@@ -63,51 +59,43 @@
 
 <script>
 import { formatDateNew } from '../../../utils/dateUtils'
+import minirules from '../components/miniValidRules'
 export default {
   data () {
     return {
-      uploadForm: {
-        uploadUrl: ''
-      },
-      fileList: [],
+      rules: minirules,
       formLabelWidth: '100px',
-      searchForm: {
-        typeOne: '',
-        typeTwo: '',
-        typeThree: '',
-        startTime: '',
-        endTime : ''
+      typeForm: {
+        id: '',
+        aType: '',
+        bType: ''
       },
-      addLoadPage: {
-        loadPageUrl: 'https://',
-        subscriptionId: '',
-        thresholdNum: null
-      },
-      dataname:{file:'111'},
-      uploadVisible: false,
-      dialogLoadPageVisible: false,
+      dialogTypeVisible: false,
       pageOption: {
         pageNum: 1,
-        pageSize: 50
+        pageSize: 20
       },
       totalSize: 10,
-      graphMsgList: []
+      typeList: []
     }
   },
   created () {
-    this.getgraphMsgList()
+    this.getTypeList()
   },
   methods: {
     // 打开添加类型弹框
-    openDialogTheme () {
-      this.dialogLoadPageVisible = true
+    openDialogType (row) {
+      this.dialogTypeVisible = true
+      this.typeForm.id = row.id
+      this.typeForm.aType = row.aType
+      this.typeForm.bType = row.bType
     },
-    // 获取图文列表
-    getgraphMsgList () {
-      this.$http.get('/graphicType/pageList', {}).then(res => {
+    // 获取类型列表
+    getTypeList () {
+      this.$http.get('/miniApp/typeList', {}).then(res => {
         let resp = res.data
         if (resp.success) {
-          this.graphMsgList = resp.data.content
+          this.typeList = resp.data.content
           // 算出有多少条数据
           this.totalSize = resp.data.totalElements
         } else {
@@ -116,28 +104,41 @@ export default {
         }
       })
     },
+    // 编辑类型
+    saveType () {
+      this.$refs['typeForm'].validate((valid) => {
+        if (valid) {
+          let aType = this.typeForm.aType
+          let bType = this.typeForm.bType
+          let id = this.typeForm.id
+          this.$http.get('/miniApp/typeUpdate', {params: {
+            aType, bType, id
+          }}).then(res => {
+            if (res.data.data) {
+              this.dialogTypeVisible = false
+              this.$message.success('保存成功')
+              this.getTypeList()
+            } else {
+              this.dialogTypeVisible = false
+              this.$message.error('保存失败')
+            }
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
     // 分页请求
     pageChange () {
-      const {
-        typeOne,
-        typeTwo,
-        typeThree,
-        startTime,
-        endTime
-      } = this.searchForm
       let params = {
         pageNum: this.pageOption.pageNum,
-        typeOne,
-        typeTwo,
-        typeThree,
-        startTime,
-        endTime,
-        pageSize:50
+        pageSize:20
       }
-      this.$http.get('/graphicType/pageList', {params: params}).then(res => {
+      this.$http.get('/miniApp/typeList', {params: params}).then(res => {
         let resp = res.data
         if (resp.success) {
-          this.graphMsgList = resp.data.content
+          this.typeList = resp.data.content
           // 算出有多少条数据
           this.totalSize = resp.data.totalElements
         } else {
@@ -147,14 +148,14 @@ export default {
       })
     },
     // 删除
-    deletePageModel (row) {
+    deleteType (row) {
       let id = row.id
       this.$confirm('确认删除本条记录吗?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$http.get('/graphicType/delete', {params: {id}}).then(res => {
+        this.$http.get('/miniApp/typeDelete', {params: {id}}).then(res => {
           let msg = res.data.success
           if (msg) {
             if (res.data.data) {
@@ -162,7 +163,7 @@ export default {
                 type: 'success',
                 message: '删除成功!'
               })
-              this.getgraphMsgList()
+              this.getTypeList()
             } else {
               this.$message({
                 type: 'error',
@@ -182,60 +183,6 @@ export default {
           message: '已取消删除'
         })
       })
-    },
-    // 提交上传文件
-    submitUpload () {
-      this.$refs['uploadFile'].validate((valid) => {
-        if (valid) {
-          this.$refs.upload.submit()
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
-    },
-    // 上传失败的处理方式
-    handleError (err, file, fileList) {
-      this.$message.error('上传失败')
-      this.uploadVisible = false
-      this.uploadForm.uploadUrl = ''
-      console.log('handleError' + err + ',' + file)
-    },
-    // 上传成功
-    handleSuccess (response, file, fileList) {
-      this.$message.success(response.desc || '上传成功')
-      this.uploadVisible = false
-      this.uploadForm.uploadUrl = ''
-      this.pageOption.pageNum = 1
-      this.getgraphMsgList()
-    },
-    // beforeUpload (file) {
-    //   console.log(file)
-    //   let fd = new FormData()
-    //   fd.append('file', file)
-    //   fd.append('groupId', this.groupId)
-    //     // console.log(fd)
-    //     newVideo(fd).then(res => {
-    //      console.log(res)
-    //    })
-    //  return true
-    // },
-    handleRemove (file, fileList) {
-      console.log('handleRemove' + file + ',' + fileList)
-    },
-    // 获取上传文件的名字
-    handleChange (file, fileList) {
-      this.uploadForm.uploadUrl = file.name
-      console.log('handleChange' + file.name)
-    },
-    // 上传前对文件的大小的判断
-    beforeAvatarUpload (file) {
-      const extension1 = file.name.split('.')[1] === 'xls'
-      const extension2 = file.name.split('.')[1] === 'xlsx'
-      if (!extension1 && !extension2) {
-        this.$message.error('上传模板只能是 xls、xlsx格式!')
-      }
-      return extension1 || extension2
     }
   }
 }
@@ -286,13 +233,25 @@ export default {
   .search-bar {
     margin-top: 20px;
   }
-  .page-control {
-    float: right;
-    margin-top: 20px;
-    &:after {
-      clear: both;
+  .page-content{
+    overflow: hidden;
+    .total-num{
+      margin-top: 28px;
+      margin-left: 10px;
+      color: #606266;
+      .blue{
+        color: #409eff;
+      }
+    }
+    .page-control {
+      float: right;
+      margin-top: 20px;
+      &:after {
+        clear: both;
+      }
     }
   }
+  
   .input-width{
     display: inline-block;
     width: 80%;

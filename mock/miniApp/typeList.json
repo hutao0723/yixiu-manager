@@ -1,0 +1,23 @@
+{
+	"success": true,
+	"data": {
+		"totalElements": 100,
+		"content": [
+		{
+			"id": 3,
+			"aType": "测试类",
+			"bType": "星座类"
+		},
+		{
+			"id": 5,
+			"aType": "小说类",
+			"bType": "购物类"
+		},
+		{
+			"id": 9,
+			"aType": "美妆类",
+			"bType": "科普类"
+		}
+	]
+	}
+}

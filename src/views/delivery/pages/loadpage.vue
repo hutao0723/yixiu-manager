@@ -387,7 +387,7 @@
             thresholdNum,
             putContentId,
             skinId,
-            putContentType,
+            putContentId,
           }
         }
        
@@ -421,7 +421,7 @@
                 thresholdNum,
                 loadPageType,
                 skinId,
-                putContentType,
+                putContentId,
               }
             }
 

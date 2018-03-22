@@ -129,6 +129,21 @@
         const isJPG = file.type === 'image/jpg' || 'image/png';
         const isLt2M = file.size / 1024 / 1024 / 1024 < 100;
 
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          var data = e.target.result;
+          //加载图片获取图片真实宽度和高度
+          var image = new Image();
+          image.onload = function () {
+            var width = image.width;
+            var height = image.height;
+            isAllow = width >= Max_Width && height >= Max_Height;
+            showTip2(isAllow);
+          };
+          image.src = data;
+        };
+        reader.readAsDataURL(fileData);
+
         if (!isJPG) {
           this.$message.error('上传图片只能是 JPG/PNG 格式!');
         }
@@ -145,9 +160,9 @@
         var arr = [];
         for (let i = 0; i < fileList.length; i++) {
           const element = fileList[i];
-          if(element.response){
+          if (element.response) {
             arr.push({ url: element.response.data.fileUrl })
-          }else{
+          } else {
             arr.push({ url: element.url })
           }
         }

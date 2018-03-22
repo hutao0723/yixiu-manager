@@ -95,6 +95,7 @@ export const loadPagerules = {
     trigger: 'blur'
   }],
   thresholdNum: [{
+    required: true,
     validator: checkthresholdNum,
     trigger: 'blur'
   }],

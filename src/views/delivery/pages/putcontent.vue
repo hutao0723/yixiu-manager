@@ -5,7 +5,7 @@
         <el-breadcrumb-item :to="{ path: '/manager' }">投放内容</el-breadcrumb-item>
       </el-breadcrumb>
       <span class="link-theme">
-        <i class="iconfont icon-guanlian"></i>
+        <i class="iconfont icon-jia" style="vertical-align: middle;"></i>
         <span class="connect-ad" @click="openAddDialog">投放内容</span>
       </span>
     </div>
@@ -13,9 +13,9 @@
       <div class="search-bar">
         <template>
           <el-form :inline="true" :model="searchForm.data" class="demo-form-inline" size="mini">
-            <el-form-item>
-              <el-input v-model="searchForm.data.value" placeholder="公众号"></el-input>
-            </el-form-item>
+            <el-select v-model="searchForm.data.value" placeholder="请选择公众号" size="mini">
+              <el-option v-for="item in publicArr" :key="item.id" :label="item.nickName" :value="item.id"></el-option>
+            </el-select>
             <el-form-item>
               <el-button type="primary" @click="onSearch">查询</el-button>
             </el-form-item>
@@ -32,7 +32,8 @@
                 <span v-text="scope.row.subscriptionName"></span>
               </template>
             </el-table-column>
-            <el-table-column prop="contentName" label="内容类型"></el-table-column>
+            <el-table-column prop="contentType" label="内容类型"></el-table-column>
+            <el-table-column prop="contentName" label="内容名称"></el-table-column>
             <el-table-column label="操作" width="240">
               <template slot-scope="scope">
                 <el-button type="text" size="small" @click="openAddDialog(scope.row)">编辑</el-button>
@@ -48,9 +49,9 @@
       </div>
     </div>
 
-    <!--落地页编辑-->
+    <!--投放内容编辑-->
     <div>
-      <el-dialog title="编辑落地页地址" :visible.sync="dialogAddVisible">
+      <el-dialog title="投放内容" :visible.sync="dialogAddVisible">
         <el-form ref="addForm" :model="addForm" :rules="rules">
           <el-form-item label="公众号" prop="subscriptionId" :label-width="formLabelWidth">
             <el-select v-model="addForm.subscriptionId">
@@ -66,10 +67,10 @@
             <el-input v-model="addForm.contentName"></el-input>
           </el-form-item>
           <el-form-item label="图片素材" prop="pictureUrl" :label-width="formLabelWidth">
-            <el-upload class="upload-demo" action="/upload/image" :on-success="submitImage"
-              :data="imageFile" :on-remove="removeImage" :limit="10" :file-list="fileList" list-type="picture">
+            <el-upload class="upload-demo" action="/upload/image" :on-success="submitImage" name="imageFile" :on-remove="removeImage"
+              :before-upload="beforeImage" :limit="10" :file-list="fileList" list-type="picture">
               <el-button size="small" type="primary">点击上传</el-button>
-              <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过100kb</div>
+              <div slot="tip" class="el-upload__tip">只能上传jpeg/jpg/png文件，且不超过100kb，图片宽度限制750px</div>
             </el-upload>
           </el-form-item>
         </el-form>
@@ -122,25 +123,58 @@
     },
     created() {
       this.getAllList()
+      this.getPublicList();
     },
     methods: {
-      // 上传图片
+      beforeImage(file) {
+        console.log(file)
+        const isJPG = file.type === 'image/jpg' || file.type === 'image/png' || file.type === 'image/jpeg';
+        const isLt2M = file.size / 1024 < 100;
+        if (!isJPG) {
+          this.$message.error('上传图片只能是 jpeg/jpg/png 格式!');
+        }
+        if (!isLt2M) {
+          this.$message.error('上传图片大小不能超过 100kb!');
+        }
+        return isJPG && isLt2M;
+      },
 
+      // 上传图片
       submitImage(res, file, fileList) {
-        var arr = [];
+        let self = this
+        let arr = [];
         for (let i = 0; i < fileList.length; i++) {
           const element = fileList[i];
-          arr.push({ url: element.response.data.fileUrl })
+          let url;
+          if (element.response) {
+            url = element.response.data.fileUrl
+          } else {
+            url = element.url
+          }
+          let image = new Image();
+          image.src = url
+          image.onload = function () {
+            let width = image.width;
+            if (width == 750) {
+              arr.push({ url: url })
+            } else {
+              self.$message.error('上传图片的宽度必须为 750px!');
+            }
+          };
         }
-
         this.fileList = arr;
 
       },
       removeImage(file, fileList) {
-        var arr = [];
+        console.log(file)
+        let arr = [];
         for (let i = 0; i < fileList.length; i++) {
           const element = fileList[i];
-          arr.push({ url: element.response.data.fileUrl })
+          if (element.response) {
+            arr.push({ url: element.response.data.fileUrl })
+          } else {
+            arr.push({ url: element.url })
+          }
         }
         this.fileList = arr;
       },
@@ -157,8 +191,8 @@
       onSearch() {
         let searchForm = this.searchForm.data
         let params = {}
-        params["contentName"] = searchForm.value
-        this.$http.get('/loadpage/list', { params }).then(res => {
+        params["subscriptionId"] = searchForm.value
+        this.$http.get('/put/content/list', { params }).then(res => {
           if (res.data.success) {
             this.totalSize = res.data.data.totalSize
             console.log(res.data.data.lists)
@@ -179,7 +213,7 @@
 
       // 列表
       getAllList() {
-        this.$http.get('/put/content/list',{params: this.pageOption}).then(res => {
+        this.$http.get('/put/content/list', { params: this.pageOption }).then(res => {
           if (res.data.success) {
             this.totalSize = res.data.data.totalSize
             this.tableData = res.data.data.lists
@@ -192,7 +226,6 @@
       },
       // 新增编辑落地页信息
       openAddDialog(row) {
-        this.getPublicList();
         this.fileList = [];
         if (row.id) {
           let params = {
@@ -235,30 +268,30 @@
           }
         }
         this.dialogAddVisible = true
-        if(this.$refs['addForm'].resetFields){
+        if (this.$refs['addForm']) {
           this.$refs['addForm'].resetFields();
         }
       },
       // 新增落地页
       submitPutContent() {
+        let urlArr = [];
+        for (let i = 0; i < this.fileList.length; i++) {
+          const element = this.fileList[i];
+          urlArr.push(element.url)
+        }
+        this.addForm.pictureUrl = urlArr.join(',')
+
+        if (!this.addForm.subscriptionName) {
+          for (let i = 0; i < this.publicArr.length; i++) {
+            const element = this.publicArr[i];
+            if (this.addForm.subscriptionId == element.id) {
+              this.addForm.subscriptionName = element.nickName;
+              break;
+            }
+          }
+        }
         this.$refs['addForm'].validate((valid) => {
           if (valid) {
-            let urlArr = [];
-            for (let i = 0; i < this.fileList.length; i++) {
-              const element = this.fileList[i];
-              urlArr.push(element.url)
-            }
-            this.addForm.pictureUrl = urlArr.join(',')
-
-            if (!this.addForm.subscriptionName) {
-              for (let i = 0; i < this.publicArr.length; i++) {
-                const element = this.publicArr[i];
-                if (this.addForm.subscriptionId == element.id) {
-                  this.addForm.subscriptionName = element.nickName;
-                  break;
-                }
-              }
-            }
             let params = Object.assign(this.addForm)
             this.$http.post('/put/content/save', qs.stringify(params)).then(res => {
               if (res.data.success) {

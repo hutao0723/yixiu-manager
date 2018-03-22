@@ -5,8 +5,8 @@
         <el-breadcrumb-item :to="{ path: '/manager' }">落地页</el-breadcrumb-item>
       </el-breadcrumb>
       <span class="link-theme">
-        <i class="iconfont icon-guanlian"></i>
-        <span class="connect-ad" @click="openDialogAd">落地页</span>
+        <i class="iconfont icon-jia" style="vertical-align: middle;"></i>
+        <span class="connect-ad" @click="openAddDialog">落地页</span>
       </span>
     </div>
     <div class="conbtent">
@@ -39,7 +39,11 @@
         <template>
           <el-table :data="tableData" style="width: 100%">
             <el-table-column prop="id" label="ID" width="50"></el-table-column>
-            <el-table-column prop="loadPageUrl" label="落地页"></el-table-column>
+            <el-table-column label="落地页">
+              <template slot-scope="scope">
+                <a :href="scope.row.loadPageUrl" target="_blank">{{scope.row.loadPageUrl}}</a>
+              </template>
+            </el-table-column>
             <el-table-column prop="subscriptionName" label="公众号" width="200"></el-table-column>
             <el-table-column prop="thresholdNum" label="当日阈值" width="100"></el-table-column>
             <el-table-column prop="todayFollowNum" label="当日新增关注" width="120"></el-table-column>
@@ -58,7 +62,7 @@
             </el-table-column>
             <el-table-column label="操作" width="240">
               <template slot-scope="scope">
-                <el-button type="text" size="small" @click="openloadPageUrlDialog(scope.row)">落地页</el-button>
+                <el-button type="text" size="small" @click="openAddDialog(scope.row)">编辑</el-button>
                 <el-button type="text" size="small" @click="openStatusDilog(scope.row)">状态</el-button>
                 <el-button type="text" size="small" @click="openThresholdDilog(scope.row)">阈值</el-button>
                 <el-button type="text" size="small" @click="deletePageModel(scope.row)">删除</el-button>
@@ -73,10 +77,10 @@
       </div>
     </div>
     <div class="ad-loadPage-diolog">
-      <el-dialog title="添加落地页" :visible.sync="dialogLoadPageVisible">
+      <el-dialog title="落地页" :visible.sync="dialogLoadPageVisible">
         <el-form :model="addLoadPage" ref="addLoadPage" :rules="rules">
           <el-form-item label="落地页类型" :label-width="formLabelWidth" prop="type">
-            <el-radio-group v-model="addLoadPage.loadPageType">
+            <el-radio-group v-model="addLoadPage.loadPageType" @change="changeLoadpageType">
               <el-radio :label="1">外部</el-radio>
               <el-radio :label="2">内部</el-radio>
             </el-radio-group>
@@ -88,7 +92,7 @@
           </el-form-item>
           <el-form-item label="内容类型" :label-width="formLabelWidth" v-show="addLoadPage.loadPageType==2">
             <el-select v-model="addLoadPage.putContentType" filterable remote reserve-keyword :remote-method="remoteMethod" :loading="loading">
-              <el-option label="平铺" value="0"></el-option>
+              <el-option label="平铺" :value="0"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="内容名称" :label-width="formLabelWidth" prop="putContentId" v-show="addLoadPage.loadPageType==2">
@@ -102,9 +106,9 @@
             </el-select>
           </el-form-item>
           <el-form-item label="落地页名称" :label-width="formLabelWidth" prop="loadPageUrl">
-            <el-input placeholder="https://" v-model="addLoadPage.loadPageUrl" auto-complete="off"></el-input>
+            <el-input placeholder="https://" v-model="addLoadPage.loadPageUrl" auto-complete="off" :disabled="addLoadPage.loadPageType == 2"></el-input>
           </el-form-item>
-          <el-form-item label="阈值" :label-width="formLabelWidth" prop="thresholdNum">
+          <el-form-item label="阈值" :label-width="formLabelWidth" prop="thresholdNum" v-show="isFormEdit">
             <el-input v-model="addLoadPage.thresholdNum" auto-complete="off"></el-input>
           </el-form-item>
         </el-form>
@@ -195,13 +199,13 @@
         rules: {},
         addLoadPage: {
           loadPageUrl: 'https://',
-          subscriptionId: '',
+          subscriptionId: null,
           thresholdNum: null,
-
           loadPageType: 1,
           skinId: null,
-          putContentType: "0",
+          putContentType: 0,
           putContentId: null,
+          id: null,
         },
         changeForm: {
           id: '',
@@ -221,6 +225,8 @@
 
         contentArr: [], // 内容名称
         dermaArr: [], // 皮肤
+
+        isFormEdit: false,
       }
     },
     created() {
@@ -248,6 +254,77 @@
         }, () => {
           this.$message.error('获取皮肤列表失败')
         })
+      },
+      // 新增编辑落地页信息
+      openAddDialog(row) {
+        this.getDermaList();
+        this.getPutNameList();
+        this.fileList = [];
+        if (row.id) {
+          let params = {
+            id: row.id
+          }
+          this.$http.get('/loadpage/find', { params: params }).then(res => {
+            if (res.data.success) {
+              const {
+                id,
+                subscriptionId,
+                loadPageUrl,
+                thresholdNum,
+                loadPageType,
+                skinId,
+                putContentId
+              } = res.data.data;
+
+              this.addLoadPage = {
+                id,
+                subscriptionId,
+                loadPageUrl,
+                thresholdNum,
+                loadPageType,
+                skinId,
+                putContentId,
+                putContentType: 0,
+              }
+              this.isFormEdit = false;
+            }
+          })
+        } else {
+          this.addLoadPage = {
+            id: "",
+            subscriptionId: "",
+            loadPageUrl: "https://",
+            thresholdNum: "",
+            loadPageType: 1,
+            skinId: "",
+            putContentId: "",
+            putContentType: 0,
+          }
+          this.isFormEdit = true;
+        }
+        const {
+          loadPageUrl, subscriptionId, thresholdNum, putContentId, skinId, putContentType
+        } = loadPagerules;
+        if (this.addLoadPage.loadPageType == 1) {
+          this.rules = {
+            loadPageUrl,
+            subscriptionId,
+            thresholdNum,
+          }
+        } else if (this.addLoadPage.loadPageType == 2) {
+          this.rules = {
+            loadPageUrl,
+            subscriptionId,
+            thresholdNum,
+            putContentId,
+            skinId,
+            putContentId,
+          }
+        }
+        this.dialogLoadPageVisible = true
+        if (this.$refs['addLoadPage'].resetFields) {
+          this.$refs['addLoadPage'].resetFields();
+        }
       },
 
       // < -- 分割线以上20180321liugaoshuai新增 -- >
@@ -306,10 +383,13 @@
           this.$message.error('网络错误')
         })
       },
+      changeLoadpageType(){
+        if (this.$refs['addLoadPage'].clearValidate) {
+          this.$refs['addLoadPage'].clearValidate();
+        }
+      },
       // 新增落地页
       addPage() {
-        let field = [];
-
         const {
           loadPageUrl, subscriptionId, thresholdNum, putContentId, skinId, putContentType
         } = loadPagerules;
@@ -326,9 +406,10 @@
             thresholdNum,
             putContentId,
             skinId,
-            putContentType,
+            putContentId,
           }
         }
+       
         this.$refs['addLoadPage'].validate((valid) => {
           if (valid) {
             const {
@@ -339,11 +420,13 @@
               skinId,
               putContentType,
               putContentId,
+              id,
             } = this.addLoadPage;
 
             let params = {};
             if (loadPageType == 1) {
               params = {
+                id,
                 loadPageUrl,
                 subscriptionId,
                 thresholdNum,
@@ -351,17 +434,17 @@
               }
             } else if (loadPageType == 2) {
               params = {
+                id,
                 loadPageUrl,
                 subscriptionId,
                 thresholdNum,
                 loadPageType,
                 skinId,
-                putContentType,
+                putContentId,
               }
             }
 
             params = Object.assign(params)
-            params.thresholdNum = +params.thresholdNum
             console.log(params)
 
             this.$http.post('/loadpage/save', qs.stringify(params)).then(res => {

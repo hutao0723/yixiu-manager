@@ -5,7 +5,7 @@
         <el-breadcrumb-item :to="{ path: '/manager' }">落地页</el-breadcrumb-item>
       </el-breadcrumb>
       <span class="link-theme">
-        <i class="iconfont icon-guanlian"></i>
+        <i class="iconfont icon-jia" style="vertical-align: middle;"></i>
         <span class="connect-ad" @click="openAddDialog">落地页</span>
       </span>
     </div>

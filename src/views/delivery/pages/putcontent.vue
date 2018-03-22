@@ -5,7 +5,7 @@
         <el-breadcrumb-item :to="{ path: '/manager' }">投放内容</el-breadcrumb-item>
       </el-breadcrumb>
       <span class="link-theme">
-        <i class="iconfont icon-guanlian"></i>
+        <i class="iconfont icon-jia" style="vertical-align: middle;"></i>
         <span class="connect-ad" @click="openAddDialog">投放内容</span>
       </span>
     </div>
@@ -13,7 +13,7 @@
       <div class="search-bar">
         <template>
           <el-form :inline="true" :model="searchForm.data" class="demo-form-inline" size="mini">
-            <el-select v-model="searchForm.data.value" placeholder="请选择公众号">
+            <el-select v-model="searchForm.data.value" placeholder="请选择公众号" size="mini">
               <el-option v-for="item in publicArr" :key="item.id" :label="item.nickName" :value="item.id"></el-option>
             </el-select>
             <el-form-item>

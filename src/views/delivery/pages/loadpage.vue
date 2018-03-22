@@ -196,7 +196,7 @@
         dialogLoadPageUrlVisible: false,
         dialogStatusVisible: false,
         dialogThresholdVisible: false,
-        rules: loadPagerules,
+        rules: {},
         addLoadPage: {
           loadPageUrl: 'https://',
           subscriptionId: null,
@@ -301,6 +301,25 @@
             putContentType: 0,
           }
           this.isFormEdit = true;
+        }
+        const {
+          loadPageUrl, subscriptionId, thresholdNum, putContentId, skinId, putContentType
+        } = loadPagerules;
+        if (this.addLoadPage.loadPageType == 1) {
+          this.rules = {
+            loadPageUrl,
+            subscriptionId,
+            thresholdNum,
+          }
+        } else if (this.addLoadPage.loadPageType == 2) {
+          this.rules = {
+            loadPageUrl,
+            subscriptionId,
+            thresholdNum,
+            putContentId,
+            skinId,
+            putContentId,
+          }
         }
         this.dialogLoadPageVisible = true
         if (this.$refs['addLoadPage'].resetFields) {

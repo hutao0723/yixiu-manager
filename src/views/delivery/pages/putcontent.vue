@@ -32,7 +32,8 @@
                 <span v-text="scope.row.subscriptionName"></span>
               </template>
             </el-table-column>
-            <el-table-column prop="contentName" label="内容类型"></el-table-column>
+            <el-table-column prop="contentType" label="内容类型"></el-table-column>
+            <el-table-column prop="contentName" label="内容名称"></el-table-column>
             <el-table-column label="操作" width="240">
               <template slot-scope="scope">
                 <el-button type="text" size="small" @click="openAddDialog(scope.row)">编辑</el-button>
@@ -126,36 +127,43 @@
     methods: {
       beforeImage(file) {
         console.log(file)
-        const isJPG = file.type === 'image/jpg' || 'image/png';
-        const isLt2M = file.size / 1024 / 1024 / 1024 < 100;
-
-        var reader = new FileReader();
-        reader.onload = function (e) {
-          var data = e.target.result;
-          //加载图片获取图片真实宽度和高度
-          var image = new Image();
-          image.onload = function () {
-            var width = image.width;
-            var height = image.height;
-            isAllow = width >= Max_Width && height >= Max_Height;
-            showTip2(isAllow);
-          };
-          image.src = data;
-        };
-        reader.readAsDataURL(fileData);
-
+        const isJPG = file.type === 'image/jpg' || file.type === 'image/png';
+        const isLt2M = file.size / 1024 < 100;
         if (!isJPG) {
-          this.$message.error('上传图片只能是 JPG/PNG 格式!');
+          this.$message.error('上传图片只能是 jpg/png 格式!');
         }
         if (!isLt2M) {
-          this.$message.error('上传图片大小不能超过 100KB!');
+          this.$message.error('上传图片大小不能超过 100kb!');
         }
         return isJPG && isLt2M;
       },
 
       // 上传图片
-
       submitImage(res, file, fileList) {
+        var arr = [];
+        for (let i = 0; i < fileList.length; i++) {
+          const element = fileList[i];
+          var url;
+          if (element.response) {
+            url = element.response.data.fileUrl
+          } else {
+            url = element.url
+          }
+          var image = new Image();
+          image.src = url
+          image.onload = function () {
+            var width = image.width;
+            if (width != 750) {
+              this.$message.error('上传图片大小不能超过 100kb!');
+            } else {
+              arr.push({ url: url })
+            }
+          };
+        }
+        this.fileList = arr;
+
+      },
+      removeImage(file, fileList) {
         console.log(file)
         var arr = [];
         for (let i = 0; i < fileList.length; i++) {
@@ -167,15 +175,6 @@
           }
         }
 
-        this.fileList = arr;
-
-      },
-      removeImage(file, fileList) {
-        var arr = [];
-        for (let i = 0; i < fileList.length; i++) {
-          const element = fileList[i];
-          arr.push({ url: element.response.data.fileUrl })
-        }
         this.fileList = arr;
       },
       // 获取公众号列,表

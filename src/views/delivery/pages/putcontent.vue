@@ -48,9 +48,9 @@
       </div>
     </div>
 
-    <!--落地页编辑-->
+    <!--投放内容编辑-->
     <div>
-      <el-dialog title="编辑落地页地址" :visible.sync="dialogAddVisible">
+      <el-dialog title="投放内容" :visible.sync="dialogAddVisible">
         <el-form ref="addForm" :model="addForm" :rules="rules">
           <el-form-item label="公众号" prop="subscriptionId" :label-width="formLabelWidth">
             <el-select v-model="addForm.subscriptionId">
@@ -66,8 +66,8 @@
             <el-input v-model="addForm.contentName"></el-input>
           </el-form-item>
           <el-form-item label="图片素材" prop="pictureUrl" :label-width="formLabelWidth">
-            <el-upload class="upload-demo" action="/upload/image" :on-success="submitImage"
-              :data="imageFile" :on-remove="removeImage" :limit="10" :file-list="fileList" list-type="picture">
+            <el-upload class="upload-demo" action="https://www.easy-mock.com/mock/5ab0db192f746420c10e810e/test/upload/image" :on-success="submitImage"
+              :data="imageFile" :on-remove="removeImage" :before-upload="beforeImage" :limit="10" :file-list="fileList" list-type="picture">
               <el-button size="small" type="primary">点击上传</el-button>
               <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过100kb</div>
             </el-upload>
@@ -124,9 +124,24 @@
       this.getAllList()
     },
     methods: {
+      beforeImage(file){
+        console.log(file)
+        const isJPG = file.type === 'image/jpg' || 'image/png';
+        const isLt2M = file.size / 1024 / 1024 < 2;
+
+        if (!isJPG) {
+          this.$message.error('上传图片只能是 JPG/PNG 格式!');
+        }
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 2MB!');
+        }
+        return isJPG && isLt2M;
+      },
+
       // 上传图片
 
       submitImage(res, file, fileList) {
+        console.log(file)
         var arr = [];
         for (let i = 0; i < fileList.length; i++) {
           const element = fileList[i];
@@ -158,7 +173,7 @@
         let searchForm = this.searchForm.data
         let params = {}
         params["contentName"] = searchForm.value
-        this.$http.get('/loadpage/list', { params }).then(res => {
+        this.$http.get('/put/content/list', { params }).then(res => {
           if (res.data.success) {
             this.totalSize = res.data.data.totalSize
             console.log(res.data.data.lists)

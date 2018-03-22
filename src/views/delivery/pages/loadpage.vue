@@ -264,7 +264,7 @@
           let params = {
             id: row.id
           }
-          this.$http.get('https://www.easy-mock.com/mock/5ab0db192f746420c10e810e/test/loadpage/find', { params: params }).then(res => {
+          this.$http.get('/loadpage/find', { params: params }).then(res => {
             if (res.data.success) {
               const {
                 id,
@@ -401,11 +401,13 @@
               skinId,
               putContentType,
               putContentId,
+              id,
             } = this.addLoadPage;
 
             let params = {};
             if (loadPageType == 1) {
               params = {
+                id,
                 loadPageUrl,
                 subscriptionId,
                 thresholdNum,
@@ -413,6 +415,7 @@
               }
             } else if (loadPageType == 2) {
               params = {
+                id,
                 loadPageUrl,
                 subscriptionId,
                 thresholdNum,
@@ -423,7 +426,6 @@
             }
 
             params = Object.assign(params)
-            params.thresholdNum = +params.thresholdNum
             console.log(params)
 
             this.$http.post('/loadpage/save', qs.stringify(params)).then(res => {

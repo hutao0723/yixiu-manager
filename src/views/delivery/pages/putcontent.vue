@@ -66,8 +66,8 @@
             <el-input v-model="addForm.contentName"></el-input>
           </el-form-item>
           <el-form-item label="图片素材" prop="pictureUrl" :label-width="formLabelWidth">
-            <el-upload class="upload-demo" action="/upload/image" :on-success="submitImage"
-              name="imageFile" :on-remove="removeImage" :before-upload="beforeImage" :limit="10" :file-list="fileList" list-type="picture">
+            <el-upload class="upload-demo" action="/upload/image" :on-success="submitImage" name="imageFile" :on-remove="removeImage"
+              :before-upload="beforeImage" :limit="10" :file-list="fileList" list-type="picture">
               <el-button size="small" type="primary">点击上传</el-button>
               <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过100kb</div>
             </el-upload>
@@ -124,16 +124,16 @@
       this.getAllList()
     },
     methods: {
-      beforeImage(file){
+      beforeImage(file) {
         console.log(file)
         const isJPG = file.type === 'image/jpg' || 'image/png';
-        const isLt2M = file.size / 1024 / 1024 < 2;
+        const isLt2M = file.size / 1024 / 1024 / 1024 < 100;
 
         if (!isJPG) {
           this.$message.error('上传图片只能是 JPG/PNG 格式!');
         }
         if (!isLt2M) {
-          this.$message.error('上传头像图片大小不能超过 2MB!');
+          this.$message.error('上传图片大小不能超过 100KB!');
         }
         return isJPG && isLt2M;
       },
@@ -194,7 +194,7 @@
 
       // 列表
       getAllList() {
-        this.$http.get('/put/content/list',{params: this.pageOption}).then(res => {
+        this.$http.get('/put/content/list', { params: this.pageOption }).then(res => {
           if (res.data.success) {
             this.totalSize = res.data.data.totalSize
             this.tableData = res.data.data.lists
@@ -250,30 +250,30 @@
           }
         }
         this.dialogAddVisible = true
-        if(this.$refs['addForm'].resetFields){
+        if (this.$refs['addForm'].resetFields) {
           this.$refs['addForm'].resetFields();
         }
       },
       // 新增落地页
       submitPutContent() {
+        let urlArr = [];
+        for (let i = 0; i < this.fileList.length; i++) {
+          const element = this.fileList[i];
+          urlArr.push(element.url)
+        }
+        this.addForm.pictureUrl = urlArr.join(',')
+
+        if (!this.addForm.subscriptionName) {
+          for (let i = 0; i < this.publicArr.length; i++) {
+            const element = this.publicArr[i];
+            if (this.addForm.subscriptionId == element.id) {
+              this.addForm.subscriptionName = element.nickName;
+              break;
+            }
+          }
+        }
         this.$refs['addForm'].validate((valid) => {
           if (valid) {
-            let urlArr = [];
-            for (let i = 0; i < this.fileList.length; i++) {
-              const element = this.fileList[i];
-              urlArr.push(element.url)
-            }
-            this.addForm.pictureUrl = urlArr.join(',')
-
-            if (!this.addForm.subscriptionName) {
-              for (let i = 0; i < this.publicArr.length; i++) {
-                const element = this.publicArr[i];
-                if (this.addForm.subscriptionId == element.id) {
-                  this.addForm.subscriptionName = element.nickName;
-                  break;
-                }
-              }
-            }
             let params = Object.assign(this.addForm)
             this.$http.post('/put/content/save', qs.stringify(params)).then(res => {
               if (res.data.success) {

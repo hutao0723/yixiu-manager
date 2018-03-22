@@ -67,7 +67,7 @@
           </el-form-item>
           <el-form-item label="图片素材" prop="pictureUrl" :label-width="formLabelWidth">
             <el-upload class="upload-demo" action="/upload/image" :on-success="submitImage"
-              :data="imageFile" :on-remove="removeImage" :before-upload="beforeImage" :limit="10" :file-list="fileList" list-type="picture">
+              name="imageFile" :on-remove="removeImage" :before-upload="beforeImage" :limit="10" :file-list="fileList" list-type="picture">
               <el-button size="small" type="primary">点击上传</el-button>
               <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过100kb</div>
             </el-upload>

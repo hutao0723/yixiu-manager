@@ -140,32 +140,33 @@
 
       // 上传图片
       submitImage(res, file, fileList) {
-        var arr = [];
+        let self = this
+        let arr = [];
         for (let i = 0; i < fileList.length; i++) {
           const element = fileList[i];
-          var url;
+          let url;
           if (element.response) {
             url = element.response.data.fileUrl
           } else {
             url = element.url
           }
-          var image = new Image();
+          let image = new Image();
           image.src = url
           image.onload = function () {
-            var width = image.width;
-            if (width != 750) {
-              this.$message.error('上传图片大小不能超过 100kb!');
-            } else {
+            let width = image.width;
+            if (width == 750) {
               arr.push({ url: url })
+            } else {
+              self.$message.error('上传图片的宽度必须为 750px!');
             }
           };
         }
-        this.fileList = this.fileList.concat(arr);
+        this.fileList = arr;
 
       },
       removeImage(file, fileList) {
         console.log(file)
-        var arr = [];
+        let arr = [];
         for (let i = 0; i < fileList.length; i++) {
           const element = fileList[i];
           if (element.response) {
@@ -174,8 +175,7 @@
             arr.push({ url: element.url })
           }
         }
-        this.fileList = this.fileList.concat(arr);
-        
+        this.fileList = arr;
       },
       // 获取公众号列,表
       getPublicList() {
@@ -268,7 +268,7 @@
           }
         }
         this.dialogAddVisible = true
-        if (this.$refs['addForm'].resetFields) {
+        if (this.$refs['addForm']) {
           this.$refs['addForm'].resetFields();
         }
       },

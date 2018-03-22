@@ -145,7 +145,11 @@
         var arr = [];
         for (let i = 0; i < fileList.length; i++) {
           const element = fileList[i];
-          arr.push({ url: element.response.data.fileUrl })
+          if(element.response){
+            arr.push({ url: element.response.data.fileUrl })
+          }else{
+            arr.push({ url: element.url })
+          }
         }
 
         this.fileList = arr;

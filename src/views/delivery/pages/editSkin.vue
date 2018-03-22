@@ -65,7 +65,7 @@
         },
         rules: {
           skinName: [
-            {required: true, message: '请输入活动名称', trigger: 'blur'},
+            {required: true, message: '请输入皮肤名称', trigger: 'blur'},
             {min: 1, max: 100, message: '长度在 1 到 100 个字符', trigger: 'blur'}
           ],
           skinCode: [
@@ -101,13 +101,13 @@
       },
 
       beforeAvatarUpload(file) {
-        const isJLtType = file.type === 'image/jpeg' || file.type === 'image/png';
+        const isJLtType = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/gif';
         const isLtSize = file.size / 1024 <= 100;
         if (!isJLtType) {
-          this.$message.error('上传头像图片只能是 JPG/PNG 格式!');
+          this.$message.error('上传皮肤图片只能是 JPG/PNG/GIF 格式!');
         }
         if (!isLtSize) {
-          this.$message.error('上传头像图片大小不能超过 100KB!');
+          this.$message.error('上传皮肤图片大小不能超过 100KB!');
         }
         return isJLtType && isLtSize;
       },

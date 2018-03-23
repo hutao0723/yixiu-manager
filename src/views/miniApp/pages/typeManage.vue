@@ -7,7 +7,7 @@
       </el-breadcrumb>
       <span class="link-theme">
         <i class="iconfont icon-jia" style="vertical-align: middle;"></i>
-        <span class="connect-ad" @click="openDialogType" style="vertical-align: middle;">类型</span>
+        <span class="connect-ad" @click="openaddDialogType" style="vertical-align: middle;">类型</span>
       </span>
     </div>
     <div class="content">
@@ -19,8 +19,8 @@
         <template>
           <el-table :data="typeList" style="width: 100%" >
             <el-table-column prop="id" label="ID" ></el-table-column>
-            <el-table-column prop="aType" label="一级类型" ></el-table-column>
-            <el-table-column prop="bType" label="二级类型" ></el-table-column>
+            <el-table-column prop="parentName" label="一级类型" ></el-table-column>
+            <el-table-column prop="name" label="二级类型" ></el-table-column>
             <el-table-column  label="操作" >
               <template slot-scope="scope">
                 <el-button type="text" size="mini" @click="openDialogType(scope.row)">编辑</el-button>        
@@ -39,13 +39,30 @@
     </div>
     <!--添加类型-->
     <div class="add-type-diolog">
+      <el-dialog title="添加编辑类型" :visible.sync="dialogaddTypeVisible">
+        <el-form :model="typeForm" ref="typeForm" :rules="rules">
+          <el-form-item label="一级类型" :label-width="formLabelWidth"  prop="parentName">
+            <el-input v-model="typeForm.parentName" auto-complete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="二级类型" :label-width="formLabelWidth"  prop="name">
+            <el-input v-model="typeForm.name" auto-complete="off"></el-input>
+          </el-form-item>           
+        </el-form>
+        <div class="btn-wrap">
+          <el-button size="small" @click="dialogTypeVisible = false">取 消</el-button>
+          <el-button size="small" type="primary" @click="addType">保存</el-button>
+        </div>
+      </el-dialog>
+    </div>
+    <!--添加类型-->
+    <div class="add-type-diolog">
       <el-dialog title="添加编辑类型" :visible.sync="dialogTypeVisible">
         <el-form :model="typeForm" ref="typeForm" :rules="rules">
-          <el-form-item label="一级类型" :label-width="formLabelWidth"  prop="aType">
-            <el-input v-model="typeForm.aType" auto-complete="off"></el-input>
+          <el-form-item label="一级类型" :label-width="formLabelWidth"  prop="parentName">
+            <el-input v-model="typeForm.parentName" auto-complete="off"></el-input>
           </el-form-item>
-          <el-form-item label="二级类型" :label-width="formLabelWidth"  prop="bType">
-            <el-input v-model="typeForm.bType" auto-complete="off"></el-input>
+          <el-form-item label="二级类型" :label-width="formLabelWidth"  prop="name">
+            <el-input v-model="typeForm.name" auto-complete="off"></el-input>
           </el-form-item>           
         </el-form>
         <div class="btn-wrap">
@@ -60,6 +77,7 @@
 <script>
 import { formatDateNew } from '../../../utils/dateUtils'
 import minirules from '../components/miniValidRules'
+import qs from 'qs'
 export default {
   data () {
     return {
@@ -67,10 +85,12 @@ export default {
       formLabelWidth: '100px',
       typeForm: {
         id: '',
-        aType: '',
-        bType: ''
+        parentId: '',
+        parentName: '',
+        name: ''
       },
       dialogTypeVisible: false,
+      dialogaddTypeVisible: false,
       pageOption: {
         pageNum: 1,
         pageSize: 20
@@ -87,12 +107,19 @@ export default {
     openDialogType (row) {
       this.dialogTypeVisible = true
       this.typeForm.id = row.id
-      this.typeForm.aType = row.aType
-      this.typeForm.bType = row.bType
+      this.typeForm.parentId = row.parentId
+      this.typeForm.parentName = row.parentName
+      this.typeForm.name = row.name
+    },
+    // 打开添加类型弹框
+    openaddDialogType (row) {
+      this.dialogaddTypeVisible = true
+      this.typeForm.parentName = row.parentName
+      this.typeForm.name = row.name
     },
     // 获取类型列表
     getTypeList () {
-      this.$http.get('/miniApp/typeList', {}).then(res => {
+      this.$http.get('/content/type/pageList', {}).then(res => {
         let resp = res.data
         if (resp.success) {
           this.typeList = resp.data.content
@@ -104,23 +131,52 @@ export default {
         }
       })
     },
-    // 编辑类型
+    // 保存
     saveType () {
       this.$refs['typeForm'].validate((valid) => {
         if (valid) {
-          let aType = this.typeForm.aType
-          let bType = this.typeForm.bType
-          let id = this.typeForm.id
-          this.$http.get('/miniApp/typeUpdate', {params: {
-            aType, bType, id
-          }}).then(res => {
+          let params = {
+            parentName: this.typeForm.parentName,
+            name: this.typeForm.name,
+            parentId: this.typeForm.parentId,
+            id: this.typeForm.id
+          }
+          this.$http.post('/content/type/update', qs.stringify(params)).then(res => {
             if (res.data.data) {
               this.dialogTypeVisible = false
               this.$message.success('保存成功')
               this.getTypeList()
             } else {
+              let msg =res.data.desc || "保存失败"
+              this.$message.error(msg)
               this.dialogTypeVisible = false
-              this.$message.error('保存失败')
+             
+            }
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    // 新增类型
+    addType () {
+      this.$refs['typeForm'].validate((valid) => {
+        if (valid) {
+          let params = {
+            parentName: this.typeForm.parentName,
+            name: this.typeForm.name
+          }
+          this.$http.post('/content/type/add', qs.stringify(params)).then(res => {
+            if (res.data.data) {
+              this.dialogTypeVisible = false
+              this.$message.success('保存成功')
+              this.getTypeList()
+            } else {
+              let msg =res.data.desc || "保存失败"
+              this.$message.error(msg)
+              this.dialogTypeVisible = false
+             
             }
           })
         } else {
@@ -135,7 +191,7 @@ export default {
         pageNum: this.pageOption.pageNum,
         pageSize:20
       }
-      this.$http.get('/miniApp/typeList', {params: params}).then(res => {
+      this.$http.get('/content/type/pageList', {params: params}).then(res => {
         let resp = res.data
         if (resp.success) {
           this.typeList = resp.data.content
@@ -155,7 +211,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$http.get('/miniApp/typeDelete', {params: {id}}).then(res => {
+        this.$http.get('/content/type/delete', {params: {id}}).then(res => {
           let msg = res.data.success
           if (msg) {
             if (res.data.data) {

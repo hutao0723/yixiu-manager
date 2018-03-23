@@ -80,21 +80,27 @@ var setOnline = [
   {
     name: 'typeList',
     type: 'get',
-    url: '/miniApp/typeList'
+    url: '/content/type/pageList'
   },
   // 编辑小程序类型
   {
-    name: 'delete',
-    type: 'get',
-    url: '/miniApp/typeUpdate'
+    name: 'save',
+    type: 'post',
+    url: '/content/type/update'
+  },
+  // 新增小程序类型
+  {
+    name: 'save',
+    type: 'post',
+    url: '/content/type/add'
   },
   // 删除类型
   {
     name: 'delete',
     type: 'get',
-    url: '/miniApp/typeDelete'
+    url: '/content/type/delete'
   },
-  // 获取一级类型/miniapp/getaClass
+  // 获取一级类型
   {
     name: 'type',
     type: 'get',
@@ -106,10 +112,35 @@ var setOnline = [
     type: 'post',
     url: '/miniapp/contentType'
   },
+  // 获取Tab标签
   {
     name: 'tabList',
     type: 'get',
-    url: '/miniApp/getTabList'
+    url: '/content/type/List'
+  },
+  // 获取内容管理数据
+  {
+    name: 'contentList',
+    type: 'get',
+    url: '/content/detail/pageList'
+  },
+  // 删除内容管理数据
+  {
+    name: 'delete',
+    type: 'get',
+    url: '/content/detail/delete'
+  },
+  // 获取内容详情
+  {
+    name: 'contentDetail',
+    type: 'get',
+    url: '/content/detail/get'
+  },
+  // 获取内容详情
+  {
+    name: 'save',
+    type: 'post',
+    url: '/content/detail/update'
   }
 ];
 var fs = require('fs');

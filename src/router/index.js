@@ -182,7 +182,7 @@ export const constantRouterMap = [
             }
           },
           {
-            path: 'editContent/:typeId/:id',
+            path: 'editContent/:parentId/:id',
             component: function (resolve) {
               require(['../views/miniApp/pages/editContent'], resolve)
             }

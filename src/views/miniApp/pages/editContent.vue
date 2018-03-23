@@ -13,23 +13,23 @@
       </div>
       <div class="tabel-wrap">
         <!-- :rules="rules" -->
-        <el-form ref="graphForm" :model="typeForm" label-width="80px" >
-            <el-form-item label="二级类型" prop="aClassType">
-              <el-select v-model="typeForm.bClassType" placeholder="二级类型" style="width: 60%;">
-                <el-option v-for="item in bTypeList" :key="item.value" :label="item.label" :value="item.value"></el-option>
+        <el-form ref="typeForm" :model="typeForm" label-width="80px" >
+            <el-form-item label="二级类型" prop="secondtypename">
+              <el-select v-model="planIndex" placeholder="二级类型" >
+                <el-option v-for="(item,index) in bTypeList" :key="item.id" :label="item.name" :value="index"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="描述词"  prop="descriptions">
-              <el-input v-model="typeForm.descriptions" style="width: 60%;"></el-input>
+            <el-form-item label="描述词"  prop="keyword">
+              <el-input v-model="typeForm.keyWord" style="width: 60%;"></el-input>
             </el-form-item>
-            <el-form-item label="描述内容"  prop="descontent">
-              <el-input v-model="typeForm.descontent" style="width: 60%;" type="textarea" :rows="8"></el-input>
+            <el-form-item label="描述内容"  prop="description">
+              <el-input v-model="typeForm.description" style="width: 60%;" type="textarea" :rows="8"></el-input>
             </el-form-item>
             <el-form-item>
               <router-link :to="{ path: '/manager/miniApp/contentManage'}">
                   <el-button type="pain">取消</el-button>
               </router-link>
-              <el-button type="primary" @click="">保存</el-button>
+              <el-button type="primary" @click="saveContent">保存</el-button>
             </el-form-item>
         </el-form>
       </div>
@@ -44,11 +44,83 @@
     data () {
       return {
         typeForm: {
-          bClassType: '',
-          descriptions: '',
-          descontent: ''
+          id: '',
+          secondTypeName: '',
+          firstTypeId: '',
+          secondTypeId: '',
+          description: '',
+          keyWord: ''
         },
+        planIndex: '',
         bTypeList: []
+      }
+    },
+    created () {
+      this.getContentDetail()
+      this.getTwoTypeList()
+    },
+    watch: {
+      'planIndex': function (newVal) {
+        if (this.bTypeList[newVal] !== undefined) {
+        // 选择下拉数据
+          this.typeForm.secondTypeId = this.bTypeList[newVal].id
+          console.log(this.secondTypeId)
+        }
+      }
+    },
+    methods: {
+      // 编辑保存图文
+      saveContent () {
+        this.$refs['typeForm'].validate((valid) => {
+          if (valid) {
+            this.typeForm.id = this.$route.params.id
+            this.typeForm.firstTypeId = this.$route.params.parentId
+            this.$http.post('/content/detail/update', qs.stringify(this.typeForm)).then(res => {
+              let data = res.data
+              if (data.success) {
+                this.$message.success('保存成功')
+                // this.$router.push('/manager/miniApp/contentManage')
+              } else {
+                let msg = data.desc || '保存失败'
+                this.$message.error(msg)
+                // this.$router.push('/manager/miniApp/contentManage')
+              }
+            })
+          } else {
+            console.log('error submit!!')
+            return false
+          }
+        })
+      },
+      // 获得单个内容详情
+      getContentDetail () {
+        let id = this.$route.params.id
+        let params = {
+          id: id
+        }
+        this.$http.get('/content/detail/get', {params: params}).then(res => {
+          let resp = res.data
+          if (resp.success) {
+            this.typeForm = resp.data
+            this.planIndex = this.typeForm.secondTypeName
+          } else {
+            let msg = resp.desc || '请求失败'
+            this.$message.error(msg)
+          }
+        })
+      },
+      // 获取二级列表数据
+      getTwoTypeList () {
+        let parentId = this.$route.params.parentId
+        this.$http.get('/content/type/List', {params:{parentId}}).then(res => {
+          let resp = res.data
+          if (resp.success) {
+            this.bTypeList = resp.data
+          } else {
+            let msg = resp.desc || '请求失败'
+            this.$message.error(msg)
+          }
+        })
       }
     }
   }

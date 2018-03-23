@@ -1,21 +1,18 @@
 {
-	"success": true,
-	"data": [
-		{
-			"id": 12,
-			"aClassType": "测试类" 
-		},
-		{
-			"id": 2,
-			"aClassType": "星座类" 
-		},
-		{
-			"id": 13,
-			"aClassType": "科普类" 
-		},
-		{
-			"id": 5,
-			"aClassType": "小说类" 
-		}
-	]
+    "success": true,
+    "data": [{
+            "id": 1,
+            "parentId": 0,
+            "name": "测试类",
+            "gmtCreate": "2017-12-12 12:00:00",
+            "gmtModified": "2017-12-12 12:00:00"
+        },
+        {
+            "id": 2,
+            "parentId": "0",
+            "name": "印象词类",
+            "gmtCreate": "2017-12-12 12:00:00",
+            "gmtModified": "2017-12-12 12:00:00"
+        }
+    ]
 }

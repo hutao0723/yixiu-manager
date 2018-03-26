@@ -29,8 +29,7 @@ const checkloadPageUrl = (rule, value, callback) => {
   }, 500)
 }
 export const rules = {
-  planPlatform: [
-    {
+  planPlatform: [{
       required: true,
       message: '请输入活动名称',
       trigger: 'blur'
@@ -42,8 +41,7 @@ export const rules = {
       trigger: 'blur'
     }
   ],
-  planName: [
-    {
+  planName: [{
       required: true,
       message: '请广告计划名称',
       trigger: 'blur'
@@ -66,8 +64,7 @@ export const rules = {
     message: '最多30个字符',
     trigger: 'blur'
   }],
-  pushUrl: [
-    {
+  pushUrl: [{
       required: true,
       message: '请输入广告计划的投放链接',
       trigger: 'blur'
@@ -79,33 +76,67 @@ export const rules = {
       trigger: 'blur'
     }
   ],
-  themeId: [
-    {
-      required: true,
-      message: '请选择公众号',
-      trigger: 'change'
-    }
-  ]
+  themeId: [{
+    required: true,
+    message: '请选择公众号',
+    trigger: 'change'
+  }]
 }
 
 export const loadPagerules = {
-  subscriptionId: [
-    {
-      required: true,
-      message: '请选择公众号名称',
-      trigger: 'change'
-    }
-
-  ],
+  subscriptionId: [{
+    required: true,
+    message: '请选择公众号名称',
+    trigger: 'change'
+  }],
   loadPageUrl: [{
     required: true,
     validator: checkloadPageUrl,
     trigger: 'blur'
   }],
   thresholdNum: [{
+    required: true,
     validator: checkthresholdNum,
     trigger: 'blur'
-  }]
+  }],
+  loadPageType: [{
+    required: true,
+    message: '请选择内容类型',
+    trigger: 'change'
+  }],
+  skinId: [{
+    required: true,
+    message: '请选择皮肤',
+    trigger: 'change'
+  }],
+  putContentId: [{
+    required: true,
+    message: '请选择内容名称',
+    trigger: 'change'
+  }],
+}
+export const putContentRules = {
+  subscriptionId: [{
+    required: true,
+    message: '请选择公众号名称',
+    trigger: 'change'
+  }],
+  contentType: [{
+    required: true,
+    message: '请选择内容类型',
+    trigger: 'change'
+  }],
+  contentName: [{
+    required: true,
+    message: '请输入内容名称',
+    trigger: 'change'
+  }],
+  pictureUrl: [{
+    required: true,
+    message: '请上传图片素材',
+    trigger: 'change'
+  }],
+
 }
 export const themeRules = {
   newTheme: [{
@@ -118,8 +149,7 @@ export const themeRules = {
     message: '长度在 1 到 20 个字符',
     trigger: 'blur'
   }],
-  theme: [
-    {
+  theme: [{
       required: true,
       message: '请输入主题名称',
       trigger: 'blur'
@@ -143,3 +173,4 @@ export const themeRules = {
   }]
 
 }
+

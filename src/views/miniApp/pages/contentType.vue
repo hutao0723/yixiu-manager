@@ -14,14 +14,14 @@
       <div class="tabel-wrap">
         <!-- :rules="rules" -->
         <el-form ref="typeForm" :model="typeForm" label-width="80px" :rules="rules">
-            <el-form-item label="一级类型" prop="aClassType">
-              <el-select v-model="planIndex" placeholder="一级类型" style="width: 60%;" value-key="id" >
-                <el-option v-for="(item, index)  in aTypeList" :key="item.id" :label="item.aClassType" :value="index"></el-option>
+            <el-form-item label="一级类型" prop="firstTypeId">
+              <el-select v-model="typeOneId" placeholder="一级类型" style="width: 60%;" value-key="id" >
+                <el-option v-for="(item, index)  in aTypeList" :key="item.id" :label="item.name" :value="index"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="二级类型" prop="bClassType">
-              <el-select v-model="typeForm.bClassType" placeholder="二级类型" style="width: 60%;">
-                <el-option v-for="(item, index) in bTypeList" :key="item.id" :label="item.aClassType" :value="index"></el-option>
+            <el-form-item label="二级类型" prop="typeId">
+              <el-select v-model="typeTwoId" placeholder="二级类型" style="width: 60%;">
+                <el-option v-for="(item, index) in bTypeList" :key="item.id" :label="item.name" :value="index"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item>
@@ -45,32 +45,41 @@
       return {
         rules: minirules,
         typeForm: {
-          aClassType: '',
-          bClassType: ''
+          firstTypeId: '',
+          typeId: '',
+          parentName: '',
+          name: ''
         },
-        planIndex: '',
+        typeOneId: '',
+        typeTwoId: '',
         aTypeList: [],
         bTypeList: []
       }
     },
     created () {
       this.getAClassType()
+      this.getContentDetail()
     },
     watch: {
-      'planIndex': function (newVal) {
-        if (newVal !== undefined) {
-          this.typeForm.aClassType = this.aTypeList[newVal].id
-          this.getbClassType(this.aTypeList[newVal])
+      'typeOneId': function (newVal) {
+        if (this.aTypeList[newVal] !== undefined) {
+          console.log(this.aTypeList[newVal])
+          this.typeForm.firstTypeId = this.aTypeList[newVal].id
+          this.getTwoTypeList(this.aTypeList[newVal].id)
+        }
+      },
+      'typeTwoId': function (newVal) {
+        if (this.bTypeList[newVal] !== undefined) {
+          this.typeForm.typeId = this.bTypeList[newVal].id
         }
       }
     },
     methods: {
+      // 获取一级类型
       getAClassType () {
-        let appId = this.$route.params.id
-        this.$http.get('/miniapp/getaClass', {params: {appId}}).then(res => {
+        this.$http.get('/content/type/List', {}).then(res => {
           let resp = res.data
           if (resp.success) {
-            console.log(resp.data)
             this.aTypeList = resp.data
           } else {
             let msg = resp.desc || '请求失败' 
@@ -78,16 +87,15 @@
           }
         })
       },
-      getbClassType (row) {
-        let appId = this.$route.params.id
-        let aid = row.id
-        this.$http.get('/miniapp/getaClass', {params: {aid, appId}}).then(res => {
+      // 根据一级类型获取二级列表数据
+      getTwoTypeList (parentId) {
+        let that = this
+        this.$http.get('/content/type/List', {params:{parentId}}).then(res => {
           let resp = res.data
           if (resp.success) {
-            console.log(resp.data)
             this.bTypeList = resp.data
           } else {
-            let msg = resp.desc || '请求失败' 
+            let msg = resp.desc || '请求失败'
             this.$message.error(msg)
           }
         })
@@ -97,15 +105,15 @@
         this.$refs['typeForm'].validate((valid) => {
           if (valid) {
             const {
-              aClassType,
-              bClassType
+              firstTypeId,
+              typeId
             } = this.typeForm
             let params = {
-              appId: this.$route.params.id,
-              aClassType,
-              bClassType
+              authorizerId: this.$route.params.id,
+              firstTypeId,
+              typeId
             }
-            this.$http.post('/miniapp/contentType', qs.stringify(params)).then(res => {
+            this.$http.post('/wxAuthorizerExt/addOrUpdate', qs.stringify(params)).then(res => {
               let data = res.data
               if (data.success) {
                 this.$message.success('保存成功')
@@ -121,8 +129,28 @@
             return false
           }
         })
+      },
+      // 获得单个内容详情
+      getContentDetail () {
+        let id = this.$route.params.id
+        let params = {
+          authorizerId: id
+        }
+        this.$http.get('/wxAuthorizerExt/get', {params: params}).then(res => {
+          let resp = res.data
+          if (resp.success) {
+            this.typeForm = resp.data
+            this.typeForm.firstTypeId = this.typeForm.parentId
+            this.typeForm.typeId = this.typeForm.typeId
+            this.getTwoTypeList(this.typeForm.firstTypeId)
+            this.typeOneId = this.typeForm.parentName
+            this.typeTwoId = this.typeForm.name
+          } else {
+            let msg = resp.desc || '请求失败'
+            this.$message.error(msg)
+          }
+        })
       }
-
     }
   }
 </script>

@@ -9,10 +9,10 @@ const minirules = {
     { min: 1, max: 10, message: '长度在 1 到 10 个字符', trigger: 'blur' }
   ],
   // 内容编辑修改
-  secondtypename: [
+  secondTypeName: [
     { required: true, message: '请选择二级类型', trigger: 'blur' }
   ],
-  keyword: [
+  keyWord: [
     { required: true, message: '请输入描述词', trigger: 'blur' },
     { min: 1, max: 8, message: '长度在 1 到 8个字符', trigger: 'blur' }
   ],
@@ -21,10 +21,10 @@ const minirules = {
     { min: 1, max: 75, message: '长度在 1 到 75 个字符', trigger: 'blur' }
   ],
   // 小程序内容选择类型
-  aClassType: [
+  firstTypeId: [
     { required: true, message: '请选择一级类型', trigger: 'blur' }
   ],
-  bClassType: [
+  typeId: [
     { required: true, message: '请选择二级类型', trigger: 'blur' },
   ]
 }

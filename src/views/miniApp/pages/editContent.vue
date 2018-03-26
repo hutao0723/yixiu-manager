@@ -13,13 +13,13 @@
       </div>
       <div class="tabel-wrap">
         <!-- :rules="rules" -->
-        <el-form ref="typeForm" :model="typeForm" label-width="80px" >
-            <el-form-item label="二级类型" prop="secondtypename">
-              <el-select v-model="planIndex" placeholder="二级类型" >
+        <el-form ref="typeForm" :model="typeForm" label-width="80px" :rules="rules">
+            <el-form-item label="二级类型" prop="secondTypeName">
+              <el-select v-model="typeTwo" placeholder="二级类型" >
                 <el-option v-for="(item,index) in bTypeList" :key="item.id" :label="item.name" :value="index"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="描述词"  prop="keyword">
+            <el-form-item label="描述词"  prop="keyWord">
               <el-input v-model="typeForm.keyWord" style="width: 60%;"></el-input>
             </el-form-item>
             <el-form-item label="描述内容"  prop="description">
@@ -39,10 +39,12 @@
 </template>
 <script>
   import { formatDateNew } from '../../../utils/dateUtils'
+  import minirules from '../components/miniValidRules'
   import qs from 'qs'
   export default {
     data () {
       return {
+        rules: minirules,
         typeForm: {
           id: '',
           secondTypeName: '',
@@ -51,7 +53,7 @@
           description: '',
           keyWord: ''
         },
-        planIndex: '',
+        typeTwo: '',
         bTypeList: []
       }
     },
@@ -60,7 +62,7 @@
       this.getTwoTypeList()
     },
     watch: {
-      'planIndex': function (newVal) {
+      'typeTwo': function (newVal) {
         if (this.bTypeList[newVal] !== undefined) {
         // 选择下拉数据
           this.typeForm.secondTypeId = this.bTypeList[newVal].id
@@ -79,11 +81,11 @@
               let data = res.data
               if (data.success) {
                 this.$message.success('保存成功')
-                // this.$router.push('/manager/miniApp/contentManage')
+                this.$router.push('/manager/miniApp/contentManage')
               } else {
                 let msg = data.desc || '保存失败'
                 this.$message.error(msg)
-                // this.$router.push('/manager/miniApp/contentManage')
+                this.$router.push('/manager/miniApp/contentManage')
               }
             })
           } else {
@@ -102,7 +104,8 @@
           let resp = res.data
           if (resp.success) {
             this.typeForm = resp.data
-            this.planIndex = this.typeForm.secondTypeName
+            console.log(this.typeForm)
+            this.typeTwo = this.typeForm.secondTypeName
           } else {
             let msg = resp.desc || '请求失败'
             this.$message.error(msg)

@@ -39,7 +39,7 @@
     </div>
     <!--添加类型-->
     <div class="add-type-diolog">
-      <el-dialog title="添加编辑类型" :visible.sync="dialogaddTypeVisible">
+      <el-dialog title="添加类型" :visible.sync="dialogaddTypeVisible">
         <el-form :model="typeForm" ref="typeForm" :rules="rules">
           <el-form-item label="一级类型" :label-width="formLabelWidth"  prop="parentName">
             <el-input v-model="typeForm.parentName" auto-complete="off"></el-input>
@@ -54,9 +54,9 @@
         </div>
       </el-dialog>
     </div>
-    <!--添加类型-->
+    <!--编辑类型-->
     <div class="add-type-diolog">
-      <el-dialog title="添加编辑类型" :visible.sync="dialogTypeVisible">
+      <el-dialog title="编辑类型" :visible.sync="dialogTypeVisible">
         <el-form :model="typeForm" ref="typeForm" :rules="rules">
           <el-form-item label="一级类型" :label-width="formLabelWidth"  prop="parentName">
             <el-input v-model="typeForm.parentName" auto-complete="off"></el-input>
@@ -205,13 +205,15 @@ export default {
     },
     // 删除
     deleteType (row) {
-      let id = row.id
+      let params ={
+        id : row.id
+      }
       this.$confirm('确认删除本条记录吗?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$http.get('/content/type/delete', {params: {id}}).then(res => {
+        this.$http.post('/content/type/delete', qs.stringify(params)).then(res => {
           let msg = res.data.success
           if (msg) {
             if (res.data.data) {

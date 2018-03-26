@@ -20,7 +20,7 @@
           <template>
             <el-form :inline="true" :model="searchForm" class="demo-form-inline fl" size="mini">
               <el-form-item class="type-input">
-               <el-select v-model="planIndex" placeholder="二级类型" >
+               <el-select v-model="typeTwo" placeholder="二级类型" >
                   <el-option v-for="(item,index) in bTypeList" :key="item.secondTypeId" :label="item.name" :value="index"></el-option>
                 </el-select>
               </el-form-item>
@@ -66,7 +66,7 @@
         <el-form ref="uploadFile" :model="uploadForm" >
           <el-form-item label="Excel附件" :label-width="formLabelWidth"  prop="uploadUrl">
             <div class="input-width"><el-input v-model="uploadForm.uploadUrl" auto-complete="off" :disabled="true"></el-input></div>
-            <el-upload class="upload-demo" ref="upload" action="/graphicType/export" :on-remove="handleRemove"  :file-list="fileList" :auto-upload="false" :beforeUpload="beforeAvatarUpload" :on-change="handleChange" :show-file-list="false" :on-error="handleError" :on-success="handleSuccess" :data="dataname">
+            <el-upload class="upload-demo" ref="upload" action="/content/export" :on-remove="handleRemove"  :file-list="fileList" :auto-upload="false" :beforeUpload="beforeAvatarUpload" :on-change="handleChange" :show-file-list="false" :on-error="handleError" :on-success="handleSuccess" :data="dataname">
               <el-button slot="trigger"  type="primary">选取文件</el-button>
             </el-upload>           
           </el-form-item> 
@@ -85,6 +85,7 @@
 
 <script>
 import { formatDateNew } from '../../../utils/dateUtils'
+import qs from 'qs'
 export default {
   data () {
     return {
@@ -101,10 +102,12 @@ export default {
       },
       tabId: '',
       typeTwoId: '',
-      planIndex: '',
+      typeTwo: '',
       bTypeList: [],
       tabList: [],
-      dataname:{file:'111'},
+      dataname:{
+        firstTypeId: ''
+      },
       uploadVisible: false,
       pageOption: {
         pageNum: 1,
@@ -118,8 +121,8 @@ export default {
     this.getTypeList()
   },
   watch: {
-    'planIndex': function (newVal) {
-      if (newVal !== undefined) {
+    'typeTwo': function (newVal) {
+      if (this.bTypeList[newVal] !== undefined) {
         // 二级类型切换内容
         this.typeTwoId = this.bTypeList[newVal].id
         this.getContentList(this.typeTwoId)
@@ -152,6 +155,8 @@ export default {
       if(this.tabList[tab.index].id == this.tabId){
         return
       }
+      this.typeTwo = ''
+      this.typeTwoId = ''
       this.tabId = this.tabList[tab.index].id
       // 获取全部内容
       this.getContentList(this.tabId)
@@ -172,7 +177,7 @@ export default {
       })
     },
     copyMessage () {
-      this.$refs.copyTips[0].select(); // 选择对象
+      this.$refs.copyTips.select(); // 选择对象
       try {
         var successful = document.execCommand('copy')
         if (successful) {
@@ -182,12 +187,13 @@ export default {
     },
     // 打开上传弹框
     openUploadFile () {
+      this.dataname.firstTypeId = this.tabId
+      this.resultMessage = ''
       this.uploadForm.uploadUrl = ''
       this.uploadVisible = true
     },
     // 获取全部内容列表
     getContentList (parentId) {
-      console.log(11111)
       let params = {
         firstTypeId: this.tabId,
         secondTypeId: this.typeTwoId,
@@ -210,7 +216,6 @@ export default {
     },
     // 分页请求
     pageChange () {
-      console.log(22222)
       let params = {
         firstTypeId: this.tabId,
         secondTypeId: this.typeTwoId,
@@ -231,13 +236,15 @@ export default {
     },
     // 删除
     deletePageModel (row) {
-      let id = row.id
+      let params ={
+        id : row.id
+      }
       this.$confirm('确认删除本条记录吗?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$http.get('/content/detail/delete', {params: {id}}).then(res => {
+        this.$http.post('/content/detail/delete', qs.stringify(params)).then(res => {
           let msg = res.data.success
           if (msg) {
             if (res.data.data) {
@@ -245,7 +252,7 @@ export default {
                 type: 'success',
                 message: '删除成功!'
               })
-              this.getContentList()
+              this.getContentList(this.tabId)
             } else {
               this.$message({
                 type: 'error',
@@ -286,22 +293,18 @@ export default {
     },
     // 上传成功
     handleSuccess (response, file, fileList) {
-      this.$message.success(response.desc || '上传成功')
-      this.uploadVisible = false
-      this.uploadForm.uploadUrl = ''
-      this.pageOption.pageNum = 1
-      this.getContentList()
-    },
-    beforeUpload (file) {
-      console.log(file)
-      let fd = new FormData()
-      fd.append('file', file)
-      fd.append('groupId', this.groupId)
-        // console.log(fd)
-        newVideo(fd).then(res => {
-         console.log(res)
-       })
-     return true
+      if(response.success){
+        this.$message.success(response.desc || '上传成功')
+        this.uploadVisible = false
+        this.uploadForm.uploadUrl = ''
+        this.pageOption.pageNum = 1
+        this.getContentList(this.tabId)
+      }else{
+        this.resultMessage = response.desc
+        this.pageOption.pageNum = 1
+        this.getContentList(this.tabId)
+      }
+      
     },
     handleRemove (file, fileList) {
       console.log('handleRemove' + file + ',' + fileList)

@@ -16,12 +16,14 @@
         <el-form ref="typeForm" :model="typeForm" label-width="80px" :rules="rules">
             <el-form-item label="二级类型" prop="secondTypeName">
               <el-select v-model="typeTwo" placeholder="二级类型" >
-                <el-option v-for="(item,index) in bTypeList" :key="item.id" :label="item.name" :value="index"></el-option>
+                <el-option v-for="(item,index) in secondTypeList" :key="item.id" :label="item.name" :value="index"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="描述词"  prop="keyWord">
-              <el-input v-model="typeForm.keyWord" style="width: 60%;"></el-input>
-            </el-form-item>
+            <div v-if="typeTwo == '测试机'">
+              <el-form-item label="描述词" prop="keyWord">
+                <el-input v-model="typeForm.keyWord" style="width: 60%;"></el-input>
+              </el-form-item>
+            </div>
             <el-form-item label="描述内容"  prop="description">
               <el-input v-model="typeForm.description" style="width: 60%;" type="textarea" :rows="8"></el-input>
             </el-form-item>
@@ -54,7 +56,7 @@
           keyWord: ''
         },
         typeTwo: '',
-        bTypeList: []
+        secondTypeList: []
       }
     },
     created () {
@@ -63,10 +65,11 @@
     },
     watch: {
       'typeTwo': function (newVal) {
-        if (this.bTypeList[newVal] !== undefined) {
+        if (this.secondTypeList[newVal] !== undefined) {
         // 选择下拉数据
-          this.typeForm.secondTypeId = this.bTypeList[newVal].id
-          this.typeForm.secondTypeName = this.bTypeList[newVal].name
+          this.typeForm.secondTypeId = this.secondTypeList[newVal].id
+          this.typeForm.secondTypeName = this.secondTypeList[newVal].name
+          this.typeTwo = this.secondTypeList[newVal].name
         }
       }
     },
@@ -77,6 +80,9 @@
           if (valid) {
             this.typeForm.id = this.$route.params.id
             this.typeForm.firstTypeId = this.$route.params.parentId
+            if(this.typeForm.secondTypeName === "印象词"){
+              this.typeForm.keyWord = ''
+            }
             this.$http.post('/content/detail/update', qs.stringify(this.typeForm)).then(res => {
               let data = res.data
               if (data.success) {
@@ -104,7 +110,6 @@
           let resp = res.data
           if (resp.success) {
             this.typeForm = resp.data
-            console.log(this.typeForm)
             this.typeTwo = this.typeForm.secondTypeName
           } else {
             let msg = resp.desc || '请求失败'
@@ -118,7 +123,7 @@
         this.$http.get('/content/type/List', {params:{parentId}}).then(res => {
           let resp = res.data
           if (resp.success) {
-            this.bTypeList = resp.data
+            this.secondTypeList = resp.data
           } else {
             let msg = resp.desc || '请求失败'
             this.$message.error(msg)

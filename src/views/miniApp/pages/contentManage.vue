@@ -6,7 +6,7 @@
       </el-breadcrumb>
       <span class="code-stock">
         <i class="iconfont icon-guanlian"></i>
-        <router-link :to="{ path: '/manager/miniApp/typeManage/'}">
+        <router-link :to="{ path: '/manager/miniApp/typeManage'}">
           <span class="offical-acount">类型管理</span>
         </router-link>
       </span>
@@ -26,8 +26,8 @@
               </el-form-item>
             </el-form>
             <span class="add-ofa fr">
-              <a class="add" href="/图文类型模版_2018-03-12.xlsx">
-                <i class="iconhandle"></i>
+              <a class="add" href="/测试类_2018-03-26.xlsx">
+                <i class="iconhandle"></i> 
                 下载模板
               </a>
               <span class="connect-ad" @click="openUploadFile">导入内容</span>
@@ -37,10 +37,10 @@
         <div class="tabel-wrap">
           <template>
             <el-table :data="contentList">
-              <el-table-column prop="id" label="ID" width="180"></el-table-column>
-              <el-table-column prop="keyWord" label="描述词" ></el-table-column>
-              <el-table-column prop="description" label="描述内容" width="400"></el-table-column>
-              <el-table-column prop="secondTypeName" label="二级类型"></el-table-column>
+              <el-table-column prop="id" label="ID" ></el-table-column>
+              <el-table-column prop="keyWord" label="描述词"  ></el-table-column>
+              <el-table-column prop="description" label="描述内容" width="600"></el-table-column>
+              <el-table-column prop="secondTypeName" label="二级类型" ></el-table-column>
               <el-table-column  label="操作">
                 <template slot-scope="scope">
                   <router-link :to="{ path: '/manager/miniApp/editContent/' + scope.row.firstTypeId + '/'+ scope.row.id}">
@@ -101,7 +101,7 @@ export default {
         name: ''
       },
       tabId: '',
-      typeTwoId: '',
+      secondId: '',
       typeTwo: '',
       bTypeList: [],
       tabList: [],
@@ -124,8 +124,8 @@ export default {
     'typeTwo': function (newVal) {
       if (this.bTypeList[newVal] !== undefined) {
         // 二级类型切换内容
-        this.typeTwoId = this.bTypeList[newVal].id
-        this.getContentList(this.typeTwoId)
+        this.secondId = this.bTypeList[newVal].id
+        this.getContentList(this.secondId)
       }
     }
   },
@@ -156,7 +156,7 @@ export default {
         return
       }
       this.typeTwo = ''
-      this.typeTwoId = ''
+      this.secondId = ''
       this.tabId = this.tabList[tab.index].id
       // 获取全部内容
       this.getContentList(this.tabId)
@@ -176,6 +176,7 @@ export default {
         }
       })
     },
+    // 复制
     copyMessage () {
       this.$refs.copyTips.select(); // 选择对象
       try {
@@ -196,11 +197,10 @@ export default {
     getContentList (parentId) {
       let params = {
         firstTypeId: this.tabId,
-        secondTypeId: this.typeTwoId,
+        secondTypeId: this.secondId,
         pageNum: 1,
         pageSize:20
       }
-      // pageSize
       this.$http.get('/content/detail/pageList', {params:params}).then(res => {
         let resp = res.data
         if (resp.success) {
@@ -218,7 +218,7 @@ export default {
     pageChange () {
       let params = {
         firstTypeId: this.tabId,
-        secondTypeId: this.typeTwoId,
+        secondTypeId: this.secondId,
         pageNum: this.pageOption.pageNum,
         pageSize:20
       }
@@ -304,7 +304,6 @@ export default {
         this.pageOption.pageNum = 1
         this.getContentList(this.tabId)
       }
-      
     },
     handleRemove (file, fileList) {
       console.log('handleRemove' + file + ',' + fileList)

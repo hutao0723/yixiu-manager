@@ -57,7 +57,7 @@
       }
     },
     created () {
-      this.getAClassType()
+      this.getfirstClassType()
       this.getContentDetail()
     },
     watch: {
@@ -65,7 +65,7 @@
         if (this.aTypeList[newVal] !== undefined) {
           console.log(this.aTypeList[newVal])
           this.typeForm.firstTypeId = this.aTypeList[newVal].id
-          this.getTwoTypeList(this.aTypeList[newVal].id)
+          this.getSecondTypeList(this.aTypeList[newVal].id)
         }
       },
       'typeTwoId': function (newVal) {
@@ -76,7 +76,7 @@
     },
     methods: {
       // 获取一级类型
-      getAClassType () {
+      getfirstClassType () {
         this.$http.get('/content/type/List', {}).then(res => {
           let resp = res.data
           if (resp.success) {
@@ -88,7 +88,7 @@
         })
       },
       // 根据一级类型获取二级列表数据
-      getTwoTypeList (parentId) {
+      getSecondTypeList (parentId) {
         let that = this
         this.$http.get('/content/type/List', {params:{parentId}}).then(res => {
           let resp = res.data
@@ -142,7 +142,7 @@
             this.typeForm = resp.data
             this.typeForm.firstTypeId = this.typeForm.parentId
             this.typeForm.typeId = this.typeForm.typeId
-            this.getTwoTypeList(this.typeForm.firstTypeId)
+            this.getSecondTypeList(this.typeForm.firstTypeId)
             this.typeOneId = this.typeForm.parentName
             this.typeTwoId = this.typeForm.name
           } else {

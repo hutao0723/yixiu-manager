@@ -64,7 +64,7 @@
         if (this.bTypeList[newVal] !== undefined) {
         // 选择下拉数据
           this.typeForm.secondTypeId = this.bTypeList[newVal].id
-          console.log(this.secondTypeId)
+          this.typeForm.secondTypeName = this.bTypeList[newVal].name
         }
       }
     },

@@ -26,6 +26,9 @@ const minirules = {
   ],
   typeId: [
     { required: true, message: '请选择二级类型', trigger: 'blur' },
+  ],
+  uploadUrl: [
+    { required: true, message: '请选择文件'}
   ]
 }
 export default minirules

@@ -169,13 +169,13 @@ export default {
           }
           this.$http.post('/content/type/add', qs.stringify(params)).then(res => {
             if (res.data.data) {
-              this.dialogTypeVisible = false
+              this.dialogaddTypeVisible = false
               this.$message.success('保存成功')
               this.getTypeList()
             } else {
               let msg =res.data.desc || "保存失败"
               this.$message.error(msg)
-              this.dialogTypeVisible = false
+              this.dialogaddTypeVisible = false
              
             }
           })

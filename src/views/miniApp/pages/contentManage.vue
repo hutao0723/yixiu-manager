@@ -63,7 +63,7 @@
     </div>
     <div class="upload-diolog">
       <el-dialog title="导入内容" :visible.sync="uploadVisible">
-        <el-form ref="uploadFile" :model="uploadForm" >
+        <el-form ref="uploadFile" :model="uploadForm" :rules="rules">
           <el-form-item label="Excel附件" :label-width="formLabelWidth"  prop="uploadUrl">
             <div class="input-width"><el-input v-model="uploadForm.uploadUrl" auto-complete="off" :disabled="true"></el-input></div>
             <el-upload class="upload-demo" ref="upload" action="/content/export" :on-remove="handleRemove"  :file-list="fileList" :auto-upload="false" :beforeUpload="beforeAvatarUpload" :on-change="handleChange" :show-file-list="false" :on-error="handleError" :on-success="handleSuccess" :data="dataname">
@@ -85,10 +85,12 @@
 
 <script>
 import { formatDateNew } from '../../../utils/dateUtils'
+import minirules from '../components/miniValidRules'
 import qs from 'qs'
 export default {
   data () {
     return {
+      rules: minirules,
       uploadForm: {
         uploadUrl: ''
       },

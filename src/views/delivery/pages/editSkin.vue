@@ -96,9 +96,10 @@
         })
       },
 
-      handleAvatarSuccess(res, file) {
+      handleAvatarSuccess(res,file) {
+        console.log(res+'-'+file);
         const image = new Image();
-        image.src = file.url;
+        image.src = file.response.data.fileUrl;
         image.onload = function () {
           const width = image.width;
           if (width == 750) {

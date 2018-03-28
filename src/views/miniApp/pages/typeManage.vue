@@ -95,7 +95,7 @@ export default {
         pageNum: 1,
         pageSize: 20
       },
-      totalSize: 10,
+      totalSize: 0,
       typeList: []
     }
   },

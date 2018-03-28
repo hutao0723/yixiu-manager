@@ -116,7 +116,7 @@ export default {
         pageNum: 1,
         pageSize: 50
       },
-      totalSize: 10,
+      totalSize: 0,
       contentList: []
     }
   },

@@ -392,7 +392,6 @@
             putContentId,
           }
         }
-
         this.$refs['addLoadPage'].validate((valid) => {
           console.log(valid)
           if (valid) {

@@ -48,8 +48,7 @@
           firstTypeId: '',
           typeId: '',
           parentName: '',
-          name: '',
-          appId: ''
+          name: ''
         },
         typeOneId: '',
         typeTwoId: '',
@@ -109,14 +108,13 @@
           if (valid) {
             const {
               firstTypeId,
-              typeId,
-              appId
+              typeId
             } = this.typeForm
             let params = {
               authorizerId: this.$route.params.id,
               firstTypeId,
               typeId,
-              appId
+              appId: this.$route.params.appId
             }
             this.$http.post('/wxAuthorizerExt/addOrUpdate', qs.stringify(params)).then(res => {
               let data = res.data
@@ -144,13 +142,14 @@
         this.$http.get('/wxAuthorizerExt/getByAuthorizerId', {params: params}).then(res => {
           let resp = res.data
           if (resp.success) {
-            this.typeForm = resp.data
-            this.typeForm.firstTypeId = this.typeForm.parentId
-            this.typeForm.typeId = this.typeForm.typeId
-            this.typeForm.appId = this.typeForm.appId
-            this.getSecondTypeList(this.typeForm.firstTypeId)
-            this.typeOneId = this.typeForm.parentName
-            this.typeTwoId = this.typeForm.name
+            if(resp.data){
+              this.typeForm = resp.data
+              this.typeForm.firstTypeId = this.typeForm.parentId
+              this.typeForm.typeId = this.typeForm.typeId
+              this.getSecondTypeList(this.typeForm.firstTypeId)
+              this.typeOneId = this.typeForm.parentName
+              this.typeTwoId = this.typeForm.name
+            }
           } else {
             let msg = resp.desc || '请求失败'
             this.$message.error(msg)

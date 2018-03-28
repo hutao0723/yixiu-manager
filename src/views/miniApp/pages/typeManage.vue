@@ -217,16 +217,11 @@ export default {
           let msg = res.data.success
           if (msg) {
             if (res.data.data) {
-              this.$message({
-                type: 'success',
-                message: '删除成功!'
-              })
+              this.$message.success('删除成功')
               this.getTypeList()
             } else {
-              this.$message({
-                type: 'error',
-                message: '删除失败!'
-              })
+              let msg = res.data.desc || '删除失败'
+              this.$message.error(msg)
             }
           } else {
             this.$message({

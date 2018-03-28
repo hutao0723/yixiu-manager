@@ -32,7 +32,7 @@
             </el-table-column>
             <el-table-column  label="操作" width="500">
               <template slot-scope="scope">
-                <router-link :to="{ path: '/manager/miniApp/contentType/' + scope.row.id }">
+                <router-link :to="{ path: '/manager/miniApp/contentType/' + scope.row.id +'/' + scope.row.appId}">
                   <el-button type="text" size="mini">内容</el-button>
                 </router-link>
                 <el-button type="text" size="mini" @click="showAppDetail(scope.row.id)">详情</el-button>

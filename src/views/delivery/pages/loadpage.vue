@@ -196,7 +196,7 @@
         dialogLoadPageUrlVisible: false,
         dialogStatusVisible: false,
         dialogThresholdVisible: false,
-        rules: {},
+        rules: loadPagerules,
         addLoadPage: {
           loadPageUrl: 'https://',
           subscriptionId: null,
@@ -394,6 +394,7 @@
         }
 
         this.$refs['addLoadPage'].validate((valid) => {
+          console.log(valid)
           if (valid) {
             const {
               loadPageUrl,
@@ -428,7 +429,7 @@
             }
 
             params = Object.assign(params)
-            console.log(params)
+
 
             this.$http.post('/loadpage/save', qs.stringify(params)).then(res => {
               if (res.data.success) {

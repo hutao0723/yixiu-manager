@@ -67,7 +67,7 @@
       return {
         searchOption: {
           pageNum: 1,
-          pageSize: 6,
+          pageSize: 9,
           skinName: '',
           totalSize: 0,
           skinList: [],

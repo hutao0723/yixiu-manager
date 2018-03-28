@@ -72,7 +72,7 @@
         </template>
       </div>
       <div class="page-control">
-        <el-pagination background :page-size="20" :current-page.sync="pageOption.pageNum" @current-change="pageChange" layout="prev, pager, next"
+        <el-pagination background :page-size="20" :current-page.sync="pageOption.pageNum" @current-change="pageChange" layout="total,prev, pager, next"
           :total="totalSize"></el-pagination>
       </div>
     </div>
@@ -91,17 +91,17 @@
             </el-select>
           </el-form-item>
           <el-form-item label="内容类型" :label-width="formLabelWidth" v-show="addLoadPage.loadPageType==2">
-            <el-select v-model="addLoadPage.putContentType" filterable remote reserve-keyword :remote-method="remoteMethod" :loading="loading">
+            <el-select v-model="addLoadPage.putContentType">
               <el-option label="平铺" :value="0"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="内容名称" :label-width="formLabelWidth" prop="putContentId" v-show="addLoadPage.loadPageType==2">
-            <el-select v-model="addLoadPage.putContentId" filterable remote reserve-keyword :remote-method="remoteMethod" :loading="loading">
+            <el-select v-model="addLoadPage.putContentId">
               <el-option v-for="item in contentArr" :key="item.id" :label="item.contentName" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="皮肤" :label-width="formLabelWidth" prop="skinId" v-show="addLoadPage.loadPageType==2">
-            <el-select v-model="addLoadPage.skinId" filterable remote reserve-keyword :remote-method="remoteMethod" :loading="loading">
+            <el-select v-model="addLoadPage.skinId">
               <el-option v-for="item in dermaArr" :key="item.id" :label="item.skinName" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
@@ -215,7 +215,7 @@
         },
         pageOption: {
           pageNum: 1,
-          size: 20
+          pageSize: 20
         },
         subList: [],
         default: [
@@ -259,6 +259,7 @@
       openAddDialog(row) {
         this.getDermaList();
         this.getPutNameList();
+        this.remoteMethod();  
         this.fileList = [];
         if (row.id) {
           let params = {
@@ -372,7 +373,7 @@
         })
       },
       getAllList() {
-        this.$http.get('/loadpage/list').then(res => {
+        this.$http.get('/loadpage/list', { params: this.pageOption }).then(res => {
           if (res.data.success) {
             this.totalSize = res.data.data.totalSize
             this.tableData = res.data.data.lists
@@ -384,9 +385,20 @@
         })
       },
       changeLoadpageType(){
-        if (this.$refs['addLoadPage'].clearValidate) {
-          this.$refs['addLoadPage'].clearValidate();
+        
+        if (this.$refs['addLoadPage']) {
+          this.$refs['addLoadPage'].resetFields();
         }
+        this.addLoadPage = {
+            id: this.addLoadPage.id,
+            subscriptionId: "",
+            loadPageUrl: "https://",
+            thresholdNum: "",
+            loadPageType: this.addLoadPage.loadPageType,
+            skinId: "",
+            putContentId: "",
+            putContentType: 0,
+          }
       },
       // 新增落地页
       addPage() {
@@ -542,7 +554,6 @@
         })
       },
       remoteMethod(query) {
-        console.log(query)
         this.$http.get('/subscriptionInfo/list', { params: { name: query } }).then(res => {
           if (res.data.success) {
             let list = res.data.data.lists

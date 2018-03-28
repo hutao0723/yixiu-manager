@@ -130,6 +130,11 @@ export const putContentRules = {
     required: true,
     message: '请输入内容名称',
     trigger: 'change'
+  }, {
+    min: 1,
+    max: 50,
+    message: '长度在 1 到 50 个字符',
+    trigger: 'blur'
   }],
   pictureUrl: [{
     required: true,

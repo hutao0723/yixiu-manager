@@ -97,14 +97,13 @@
       },
 
       handleAvatarSuccess(res,file) {
-        console.log(JSON.stringify(res)+'-'+JSON.stringify(file))
         const image = new Image();
-        image.src = file.response.data.fileUrl;
+        image.src = 'https:'+res.data.fileUrl;
         image.onload = function () {
-          console.log(JSON.stringify(res)+'-'+JSON.stringify(file))
           const width = image.width;
+          console.log(width);
           if (width == 750) {
-            this.editForm.pictureUrl = URL.createObjectURL(file.raw);
+            this.editForm.pictureUrl = res.data.fileUrl;
           } else {
             this.$message.error('上传图片的宽度必须为 750px!')
           }

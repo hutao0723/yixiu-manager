@@ -17,7 +17,7 @@
               class="avatar-uploader"
               action="/upload/image"
               name="imageFile"
-              :show-file-list="false"
+              :show-file-list=false
               :on-success="handleAvatarSuccess"
               :before-upload="beforeAvatarUpload">
               <img v-if="editForm.pictureUrl" :src="editForm.pictureUrl" class="avatar">
@@ -92,12 +92,22 @@
             this.$message.error('请求失败')
           }
         }).catch(() => {
-          this.$message.error('网络错误')
+
         })
       },
 
-      handleAvatarSuccess(res, file) {
-        this.editForm.pictureUrl = URL.createObjectURL(file.raw);
+      handleAvatarSuccess(res,file) {
+        const that =this;
+        const image = new Image();
+        image.src = 'https:'+res.data.fileUrl;
+        image.onload = function () {
+          const width = image.width;
+          if (width == 750) {
+            that.editForm.pictureUrl = res.data.fileUrl;
+          } else {
+            that.$message.error('上传图片的宽度必须为 750px!')
+          }
+        };
       },
 
       beforeAvatarUpload(file) {

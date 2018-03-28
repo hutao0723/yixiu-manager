@@ -134,7 +134,7 @@ export default {
   methods: {
     // 获取tab列表数据
     getTypeList () {
-      this.$http.get('/content/type/List', {}).then(res => {
+      this.$http.get('/content/type/getList', {}).then(res => {
         let resp = res.data
         if (resp.success) {
           if(resp.data[0] != undefined){
@@ -168,7 +168,7 @@ export default {
     // 获取二级列表数据
     getTwoTypeList (parentId) {
       let that = this
-      this.$http.get('/content/type/List', {params:{parentId}}).then(res => {
+      this.$http.get('/content/type/getList', {params:{parentId}}).then(res => {
         let resp = res.data
         if (resp.success) {
           this.bTypeList = resp.data

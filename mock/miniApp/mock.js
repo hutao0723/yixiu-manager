@@ -110,7 +110,7 @@ var setOnline = [
   {
     name: 'tabList',
     type: 'get',
-    url: '/content/type/List'
+    url: '/content/type/getList'
   },
   // 7.获取内容管理数据
   {

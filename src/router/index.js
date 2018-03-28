@@ -96,6 +96,18 @@ export const constantRouterMap = [
             }
           },
           {
+            path: 'graphType',
+            component: function (resolve) {
+              require(['../views/officalAcount/pages/graphType'], resolve)
+            }
+          },
+          {
+            path: 'editGraphType/:id',
+            component: function (resolve) {
+              require(['../views/officalAcount/pages/editGraphType'], resolve)
+            }
+          },
+          {
             path: 'create',
             component: function (resolve) {
               require(['../views/officalAcount/pages/officalAcountCreate'], resolve)

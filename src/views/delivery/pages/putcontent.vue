@@ -58,8 +58,8 @@
       <el-dialog title="投放内容" :visible.sync="dialogAddVisible">
         <el-form ref="addForm" :model="addForm" :rules="rules">
           <el-form-item label="公众号" prop="subscriptionId" :label-width="formLabelWidth">
-            <el-select v-model="addForm.subscriptionId">
-              <el-option v-for="item in publicArr" :key="item.id" :label="item.nickName" :value="item.id"></el-option>
+            <el-select v-model="addForm.subscriptionId" filterable remote reserve-keyword :remote-method="remoteMethod" :loading="loading">
+              <el-option v-for="item in officalAcountOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="内容类型" prop="contentType" :label-width="formLabelWidth">
@@ -248,10 +248,7 @@
       },
       // 新增编辑落地页信息
       openAddDialog(row) {
-        if (this.$refs['addForm']) {
-          this.$refs['addForm'].resetFields();
-        }
-        // this.fileList = [];
+        this.fileList = [];
         if (row.id) {
           let params = {
             id: row.id

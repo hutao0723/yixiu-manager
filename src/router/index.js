@@ -46,9 +46,27 @@ export const constantRouterMap = [
             }
           },
           {
+            path: 'skinMarket',
+            component: function (resolve) {
+              require(['../views/delivery/pages/skinMarket'], resolve)
+            }
+          },
+          {
+            path: 'editSkin',
+            component: function (resolve) {
+              require(['../views/delivery/pages/editSkin'], resolve)
+            }
+          },
+          {
             path: 'theme',
             component: function (resolve) {
               require(['../views/delivery/pages/subscriptionTheme'], resolve)
+            }
+          },
+          {
+            path: 'putcontent',
+            component: function (resolve) {
+              require(['../views/delivery/pages/putcontent'], resolve)
             }
           },
           {

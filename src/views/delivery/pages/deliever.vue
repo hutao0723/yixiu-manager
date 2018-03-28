@@ -84,6 +84,7 @@
 							<el-select value-key="id" v-model="planIndex" filterable placeholder="请选择">
 								<el-option v-for="(item, index) in planList" :key="item.advertId" :label="item.advertName" :value="index">
 									<span style="float: left">{{ item.advertName }}</span>
+									<span style="display:none">{{ item.partnerId }}</span>
 									<span style="float: right; color: #8492a6; font-size: 13px">{{ item.advertId }}</span>
 								</el-option>
 							</el-select>

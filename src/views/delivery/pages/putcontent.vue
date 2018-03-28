@@ -249,6 +249,7 @@
       },
       // 新增编辑落地页信息
       openAddDialog(row) {
+        this.remoteMethod();
         this.fileList = [];
         if (row.id) {
           let params = {

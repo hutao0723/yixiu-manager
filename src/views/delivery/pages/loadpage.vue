@@ -259,7 +259,7 @@
       openAddDialog(row) {
         this.getDermaList();
         this.getPutNameList();
-        this.remoteMethod();  
+        this.remoteMethod();
         this.fileList = [];
         if (row.id) {
           let params = {
@@ -303,32 +303,13 @@
           }
           this.isFormEdit = true;
         }
-        const {
-          loadPageUrl, subscriptionId, thresholdNum, putContentId, skinId, putContentType
-        } = loadPagerules;
-        if (this.addLoadPage.loadPageType == 1) {
-          this.rules = {
-            loadPageUrl,
-            subscriptionId,
-            thresholdNum,
-          }
-        } else if (this.addLoadPage.loadPageType == 2) {
-          this.rules = {
-            loadPageUrl,
-            subscriptionId,
-            thresholdNum,
-            putContentId,
-            skinId,
-            putContentId,
-          }
-        }
+        
+
         this.dialogLoadPageVisible = true
-        if (this.$refs['addLoadPage'].resetFields) {
+        if (this.$refs['addLoadPage']) {
           this.$refs['addLoadPage'].resetFields();
         }
       },
-
-      // < -- 分割线以上20180321liugaoshuai新增 -- >
 
       // 获取内容
       getContentArr() {
@@ -384,8 +365,8 @@
           this.$message.error('网络错误')
         })
       },
-      changeLoadpageType(){
-        this.addLoadPage.loadPageUrl =  "https://";
+      changeLoadpageType() {
+        this.addLoadPage.loadPageUrl = "https://";
         if (this.$refs['addLoadPage']) {
           this.$refs['addLoadPage'].clearValidate();
         }
@@ -411,7 +392,7 @@
             putContentId,
           }
         }
-       
+
         this.$refs['addLoadPage'].validate((valid) => {
           if (valid) {
             const {

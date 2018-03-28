@@ -6,7 +6,7 @@
       </el-breadcrumb>
       <span class="link-theme">
         <i class="iconfont icon-guanlian"></i>
-        <router-link to="editSkin">添加皮肤</router-link>
+        <router-link to="editSkin" class="add-skin">添加皮肤</router-link>
       </span>
     </div>
     <div class="conbtent">
@@ -42,6 +42,7 @@
               </el-card>
             </el-col>
           </el-row>
+          <div class="no-content">———— 暂无数据 ————</div>
         </template>
       </div>
       <div class="page-control">
@@ -66,7 +67,7 @@
       return {
         searchOption: {
           pageNum: 1,
-          pageSize: 6,
+          pageSize: 9,
           skinName: '',
           totalSize: 0,
           skinList: [],
@@ -140,6 +141,15 @@
 </script>
 
 <style lang="less">
+  .no-content{text-align: center;color: #909399}
+  .add-skin {
+    color: #909399;
+    font-weight: 400;
+    &:hover {
+      color: #333
+    }
+  }
+
   .right {
     float: right;
   }

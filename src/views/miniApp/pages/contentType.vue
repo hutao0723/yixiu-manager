@@ -77,7 +77,7 @@
     methods: {
       // 获取一级类型
       getfirstClassType () {
-        this.$http.get('/content/type/List', {}).then(res => {
+        this.$http.get('/content/type/getList', {}).then(res => {
           let resp = res.data
           if (resp.success) {
             this.aTypeList = resp.data
@@ -90,7 +90,7 @@
       // 根据一级类型获取二级列表数据
       getSecondTypeList (parentId) {
         let that = this
-        this.$http.get('/content/type/List', {params:{parentId}}).then(res => {
+        this.$http.get('/content/type/getList', {params:{parentId}}).then(res => {
           let resp = res.data
           if (resp.success) {
             this.bTypeList = resp.data

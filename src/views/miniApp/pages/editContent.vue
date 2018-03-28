@@ -120,7 +120,7 @@
       // 获取二级列表数据
       getTwoTypeList () {
         let parentId = this.$route.params.parentId
-        this.$http.get('/content/type/List', {params:{parentId}}).then(res => {
+        this.$http.get('/content/type/getList', {params:{parentId}}).then(res => {
           let resp = res.data
           if (resp.success) {
             this.secondTypeList = resp.data

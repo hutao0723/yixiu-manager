@@ -55,7 +55,7 @@
       </div>
     </el-tabs>
     <div class="page-content">
-      <div class="fl total-num">共<span class="blue">{{totalSize}}</span>条</div>
+      <div class="fl total-num" v-if="totalSize > 0">共<span class="blue">{{totalSize}}</span>条</div>
       <div class="page-control">
         <el-pagination background  :page-size="20" :current-page.sync="pageOption.pageNum" @current-change="pageChange" layout="prev, pager, next" :total="totalSize">
         </el-pagination>
@@ -108,7 +108,8 @@ export default {
       bTypeList: [],
       tabList: [],
       dataname:{
-        firstTypeId: ''
+        firstTypeId: '',
+        file: 'file'
       },
       uploadVisible: false,
       pageOption: {

@@ -390,11 +390,9 @@
           this.$refs['addLoadPage'].clearValidate();
         }
         this.addLoadPage = {
-            id: "",
             subscriptionId: "",
             loadPageUrl: "https://",
             thresholdNum: "",
-            loadPageType: 1,
             skinId: "",
             putContentId: "",
             putContentType: 0,
@@ -402,8 +400,8 @@
       },
       // 新增落地页
       addPage() {
-        if (this.$refs['addLoadPage'].clearValidate) {
-          this.$refs['addLoadPage'].clearValidate();
+        if (this.$refs['addLoadPage']) {
+          this.$refs['addLoadPage'].resetFields();
         }
         const {
           loadPageUrl, subscriptionId, thresholdNum, putContentId, skinId, putContentType

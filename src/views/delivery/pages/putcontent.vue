@@ -13,7 +13,7 @@
       <div class="search-bar">
         <template>
           <el-form :inline="true" :model="searchForm.data" class="demo-form-inline" size="mini">
-            <el-select v-model="searchForm.data.value" filterable remote reserve-keyword :remote-method="remoteMethod" :loading="loading">
+            <el-select v-model="searchForm.data.value" filterable remote reserve-keyword :remote-method="remoteMethod" :loading="loading" size="mini">
               <el-option v-for="item in officalAcountOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
             <el-form-item>
@@ -32,7 +32,11 @@
                 <span v-text="scope.row.subscriptionName"></span>
               </template>
             </el-table-column>
-            <el-table-column label="内容类型">平铺</el-table-column>
+            <el-table-column label="内容类型">
+              <template slot-scope="scope">
+                <span>平铺</span>
+              </template>
+            </el-table-column>
             <el-table-column prop="contentName" label="内容名称"></el-table-column>
             <el-table-column label="操作" width="240">
               <template slot-scope="scope">
@@ -244,8 +248,8 @@
       },
       // 新增编辑落地页信息
       openAddDialog(row) {
-        if (this.$refs['addForm'].clearValidate) {
-          this.$refs['addForm'].clearValidate();
+        if (this.$refs['addForm']) {
+          this.$refs['addForm'].resetFields();
         }
         // this.fileList = [];
         if (row.id) {

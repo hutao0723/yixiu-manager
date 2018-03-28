@@ -164,6 +164,7 @@
 
       // 上传图片
       submitImage(res, file, fileList) {
+        console.log(file)
         let self = this
         let arr = [];
         for (let i = 0; i < fileList.length; i++) {

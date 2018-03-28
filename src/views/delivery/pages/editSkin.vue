@@ -17,7 +17,7 @@
               class="avatar-uploader"
               action="/upload/image"
               name="imageFile"
-              :show-file-list="false"
+              :show-file-list=false
               :on-success="handleAvatarSuccess"
               :before-upload="beforeAvatarUpload">
               <img v-if="editForm.pictureUrl" :src="editForm.pictureUrl" class="avatar">
@@ -97,6 +97,7 @@
       },
 
       handleAvatarSuccess(res, file) {
+        console.log(res)
         const image = new Image();
         image.src = file.url;
         image.onload = function () {

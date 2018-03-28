@@ -385,20 +385,10 @@
         })
       },
       changeLoadpageType(){
-        
+        this.addLoadPage.loadPageUrl =  "https://";
         if (this.$refs['addLoadPage']) {
-          this.$refs['addLoadPage'].resetFields();
+          this.$refs['addLoadPage'].clearValidate();
         }
-        this.addLoadPage = {
-            id: this.addLoadPage.id,
-            subscriptionId: "",
-            loadPageUrl: "https://",
-            thresholdNum: "",
-            loadPageType: this.addLoadPage.loadPageType,
-            skinId: "",
-            putContentId: "",
-            putContentType: 0,
-          }
       },
       // 新增落地页
       addPage() {

@@ -13,8 +13,8 @@
       <div class="search-bar">
         <template>
           <el-form :inline="true" :model="searchForm.data" class="demo-form-inline" size="mini">
-            <el-select v-model="searchForm.data.value" placeholder="请选择公众号" size="mini">
-              <el-option v-for="item in publicArr" :key="item.id" :label="item.nickName" :value="item.id"></el-option>
+            <el-select v-model="searchForm.data.value" filterable remote reserve-keyword :remote-method="remoteMethod" :loading="loading" size="mini">
+              <el-option v-for="item in officalAcountOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
             <el-form-item>
               <el-button type="primary" @click="onSearch">查询</el-button>
@@ -32,7 +32,11 @@
                 <span v-text="scope.row.subscriptionName"></span>
               </template>
             </el-table-column>
-            <el-table-column prop="contentType" label="内容类型"></el-table-column>
+            <el-table-column label="内容类型">
+              <template slot-scope="scope">
+                <span>平铺</span>
+              </template>
+            </el-table-column>
             <el-table-column prop="contentName" label="内容名称"></el-table-column>
             <el-table-column label="操作" width="240">
               <template slot-scope="scope">
@@ -44,7 +48,7 @@
         </template>
       </div>
       <div class="page-control">
-        <el-pagination background :page-size="20" :current-page.sync="pageOption.pageNum" @current-change="pageChange" layout="prev, pager, next"
+        <el-pagination background :page-size="20" :current-page.sync="pageOption.pageNum" @current-change="pageChange" layout="total,prev, pager, next"
           :total="totalSize"></el-pagination>
       </div>
     </div>
@@ -54,8 +58,8 @@
       <el-dialog title="投放内容" :visible.sync="dialogAddVisible">
         <el-form ref="addForm" :model="addForm" :rules="rules">
           <el-form-item label="公众号" prop="subscriptionId" :label-width="formLabelWidth">
-            <el-select v-model="addForm.subscriptionId">
-              <el-option v-for="item in publicArr" :key="item.id" :label="item.nickName" :value="item.id"></el-option>
+            <el-select v-model="addForm.subscriptionId" filterable remote reserve-keyword :remote-method="remoteMethod" :loading="loading">
+              <el-option v-for="item in officalAcountOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="内容类型" prop="contentType" :label-width="formLabelWidth">
@@ -118,7 +122,9 @@
         fileList: [],
         imageFile: {
           imageFile: 'image',
-        }
+        },
+        loading: false,
+        officalAcountOptions: [],
       }
     },
     created() {
@@ -126,6 +132,23 @@
       this.getPublicList();
     },
     methods: {
+      remoteMethod(query) {
+        this.$http.get('/subscriptionInfo/list', { params: { name: query } }).then(res => {
+          if (res.data.success) {
+            let list = res.data.data.lists
+            list = list.map(item => {
+              return {
+                label: item.name,
+                value: item.id
+              }
+            })
+            this.officalAcountOptions = list
+            if (this.officalAcountOptions) {
+              this.loading = false
+            }
+          }
+        })
+      },
       beforeImage(file) {
         console.log(file)
         const isJPG = file.type === 'image/jpg' || file.type === 'image/png' || file.type === 'image/jpeg';
@@ -163,7 +186,6 @@
           };
         }
         this.fileList = arr;
-
       },
       removeImage(file, fileList) {
         console.log(file)
@@ -422,6 +444,20 @@
       width: 50px;
       display: inline-block;
       vertical-align: middle;
+    }
+    .el-upload-list--picture .el-upload-list__item{
+      padding: 20px 10px 20px 100px;
+      float: left;
+      // font-size: 0;
+      margin: 10px;
+      width: auto;
+      height: auto;
+    }
+    .el-upload-list__item-name{
+      // margin-right: 0;
+    }
+    .el-upload-list--picture .el-upload-list__item.is-success .el-upload-list__item-name{
+      display: none;
     }
 
   }

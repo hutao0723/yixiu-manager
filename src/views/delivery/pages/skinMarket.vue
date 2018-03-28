@@ -42,12 +42,12 @@
               </el-card>
             </el-col>
           </el-row>
-          <div class="no-content">———— 暂无数据 ————</div>
+          <div class="no-content" v-if="searchOption.skinList.length === 0">———— 暂无数据 ————</div>
         </template>
       </div>
       <div class="page-control">
         <el-pagination background :page-size="searchOption.pageSize" :current-page.sync="searchOption.pageNum"
-                       @current-change="onloadList" layout="prev, pager, next"
+                       @current-change="onloadList" layout="total, prev, pager, next"
                        :total="searchOption.totalSize"></el-pagination>
       </div>
       <el-dialog

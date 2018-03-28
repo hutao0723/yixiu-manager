@@ -196,7 +196,7 @@
         dialogLoadPageUrlVisible: false,
         dialogStatusVisible: false,
         dialogThresholdVisible: false,
-        rules: {},
+        rules: loadPagerules,
         addLoadPage: {
           loadPageUrl: 'https://',
           subscriptionId: null,
@@ -259,7 +259,7 @@
       openAddDialog(row) {
         this.getDermaList();
         this.getPutNameList();
-        this.remoteMethod();  
+        this.remoteMethod();
         this.fileList = [];
         if (row.id) {
           let params = {
@@ -303,32 +303,13 @@
           }
           this.isFormEdit = true;
         }
-        const {
-          loadPageUrl, subscriptionId, thresholdNum, putContentId, skinId, putContentType
-        } = loadPagerules;
-        if (this.addLoadPage.loadPageType == 1) {
-          this.rules = {
-            loadPageUrl,
-            subscriptionId,
-            thresholdNum,
-          }
-        } else if (this.addLoadPage.loadPageType == 2) {
-          this.rules = {
-            loadPageUrl,
-            subscriptionId,
-            thresholdNum,
-            putContentId,
-            skinId,
-            putContentId,
-          }
-        }
+        
+
         this.dialogLoadPageVisible = true
-        if (this.$refs['addLoadPage'].resetFields) {
+        if (this.$refs['addLoadPage']) {
           this.$refs['addLoadPage'].resetFields();
         }
       },
-
-      // < -- 分割线以上20180321liugaoshuai新增 -- >
 
       // 获取内容
       getContentArr() {
@@ -384,21 +365,11 @@
           this.$message.error('网络错误')
         })
       },
-      changeLoadpageType(){
-        
+      changeLoadpageType() {
+        this.addLoadPage.loadPageUrl = "https://";
         if (this.$refs['addLoadPage']) {
-          this.$refs['addLoadPage'].resetFields();
+          this.$refs['addLoadPage'].clearValidate();
         }
-        this.addLoadPage = {
-            id: this.addLoadPage.id,
-            subscriptionId: "",
-            loadPageUrl: "https://",
-            thresholdNum: "",
-            loadPageType: this.addLoadPage.loadPageType,
-            skinId: "",
-            putContentId: "",
-            putContentType: 0,
-          }
       },
       // 新增落地页
       addPage() {
@@ -421,8 +392,9 @@
             putContentId,
           }
         }
-       
+
         this.$refs['addLoadPage'].validate((valid) => {
+          console.log(valid)
           if (valid) {
             const {
               loadPageUrl,
@@ -457,7 +429,7 @@
             }
 
             params = Object.assign(params)
-            console.log(params)
+
 
             this.$http.post('/loadpage/save', qs.stringify(params)).then(res => {
               if (res.data.success) {

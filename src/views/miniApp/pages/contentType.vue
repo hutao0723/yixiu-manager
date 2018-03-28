@@ -90,16 +90,18 @@
       },
       // 根据一级类型获取二级列表数据
       getSecondTypeList (parentId) {
-        let that = this
-        this.$http.get('/content/type/getList', {params:{parentId}}).then(res => {
-          let resp = res.data
-          if (resp.success) {
-            this.bTypeList = resp.data
-          } else {
-            let msg = resp.desc || '请求失败'
-            this.$message.error(msg)
-          }
-        })
+        if(parentId){
+          let that = this
+          this.$http.get('/content/type/getList', {params:{parentId}}).then(res => {
+            let resp = res.data
+            if (resp.success) {
+              this.bTypeList = resp.data
+            } else {
+              let msg = resp.desc || '请求失败'
+              this.$message.error(msg)
+            }
+          })
+        }
       },
       // 编辑保存图文
       saveContentType () {

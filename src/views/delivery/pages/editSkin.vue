@@ -97,10 +97,11 @@
       },
 
       handleAvatarSuccess(res,file) {
-        console.log(res+'-'+file);
+        console.log(JSON.stringify(res)+'-'+JSON.stringify(file))
         const image = new Image();
         image.src = file.response.data.fileUrl;
         image.onload = function () {
+          console.log(JSON.stringify(res)+'-'+JSON.stringify(file))
           const width = image.width;
           if (width == 750) {
             this.editForm.pictureUrl = URL.createObjectURL(file.raw);

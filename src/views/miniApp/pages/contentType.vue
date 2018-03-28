@@ -136,7 +136,7 @@
         let params = {
           authorizerId: id
         }
-        this.$http.get('/wxAuthorizerExt/get', {params: params}).then(res => {
+        this.$http.get('/wxAuthorizerExt/getByAuthorizerId', {params: params}).then(res => {
           let resp = res.data
           if (resp.success) {
             this.typeForm = resp.data

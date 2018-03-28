@@ -140,13 +140,13 @@ var setOnline = [
   {
     name: 'chooseType',
     type: 'get',
-    url: '/wxAuthorizerExt/get'
+    url: '/wxAuthorizerExt/getByAuthorizerId'
   },
   // 13.导入文件
   {
     name: 'export',
     type: 'post',
-    url: '/content/export'
+    url: '/content/detail/export'
   }
 ];
 var fs = require('fs');

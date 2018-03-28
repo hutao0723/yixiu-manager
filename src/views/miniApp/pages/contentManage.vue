@@ -66,7 +66,7 @@
         <el-form ref="uploadFile" :model="uploadForm" :rules="rules">
           <el-form-item label="Excel附件" :label-width="formLabelWidth"  prop="uploadUrl">
             <div class="input-width"><el-input v-model="uploadForm.uploadUrl" auto-complete="off" :disabled="true"></el-input></div>
-            <el-upload class="upload-demo" ref="upload" action="/content/export" :on-remove="handleRemove"  :file-list="fileList" :auto-upload="false" :beforeUpload="beforeAvatarUpload" :on-change="handleChange" :show-file-list="false" :on-error="handleError" :on-success="handleSuccess" :data="dataname">
+            <el-upload class="upload-demo" ref="upload" action="/content/detail/export" :on-remove="handleRemove"  :file-list="fileList" :auto-upload="false" :beforeUpload="beforeAvatarUpload" :on-change="handleChange" :show-file-list="false" :on-error="handleError" :on-success="handleSuccess" :data="dataname">
               <el-button slot="trigger"  type="primary">选取文件</el-button>
             </el-upload>           
           </el-form-item> 

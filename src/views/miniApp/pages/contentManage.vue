@@ -410,9 +410,9 @@ export default {
       margin: 0 auto;
       display: block;
       margin-bottom: 20px;
-      height: 50px;
+      height: 60px;
       line-height: 20px;
-      text-align: center;
+      text-align: left;
       resize: none;
       border: 0;
       outline: 0;

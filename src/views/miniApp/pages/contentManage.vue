@@ -258,10 +258,8 @@ export default {
               this.$message.error(msg)
             }
           } else {
-            this.$message({
-              type: 'error',
-              message: '删除失败!'
-            })
+            let msg = res.data.desc || '删除失败'
+            this.$message.error(msg)
           }
         })
       }).catch(() => {

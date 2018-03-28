@@ -92,12 +92,21 @@
             this.$message.error('请求失败')
           }
         }).catch(() => {
-          this.$message.error('网络错误')
+
         })
       },
 
       handleAvatarSuccess(res, file) {
-        this.editForm.pictureUrl = URL.createObjectURL(file.raw);
+        const image = new Image();
+        image.src = file.url;
+        image.onload = function () {
+          const width = image.width;
+          if (width == 750) {
+            this.editForm.pictureUrl = URL.createObjectURL(file.raw);
+          } else {
+            this.$message.error('上传图片的宽度必须为 750px!')
+          }
+        };
       },
 
       beforeAvatarUpload(file) {

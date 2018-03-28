@@ -123,11 +123,18 @@
           type: 'warning'
         }).then(() => {
           this.$http.get('/skin/delete', {params: {id}}).then(res => {
-            this.$message({
-              type: 'success',
-              message: '删除成功'
-            });
-            this.onloadList();
+            if(res.data){
+              this.$message({
+                type: 'success',
+                message: '删除成功'
+              });
+              this.onloadList();
+            }else{
+              this.$message({
+                type: 'error',
+                message: '请确认该皮肤是否正在使用'
+              });
+            }
           })
         }).catch(() => {
           this.$message({

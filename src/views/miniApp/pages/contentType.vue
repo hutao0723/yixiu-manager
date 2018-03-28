@@ -48,7 +48,8 @@
           firstTypeId: '',
           typeId: '',
           parentName: '',
-          name: ''
+          name: '',
+          appId: ''
         },
         typeOneId: '',
         typeTwoId: '',
@@ -106,12 +107,14 @@
           if (valid) {
             const {
               firstTypeId,
-              typeId
+              typeId,
+              appId
             } = this.typeForm
             let params = {
               authorizerId: this.$route.params.id,
               firstTypeId,
-              typeId
+              typeId,
+              appId
             }
             this.$http.post('/wxAuthorizerExt/addOrUpdate', qs.stringify(params)).then(res => {
               let data = res.data
@@ -142,6 +145,7 @@
             this.typeForm = resp.data
             this.typeForm.firstTypeId = this.typeForm.parentId
             this.typeForm.typeId = this.typeForm.typeId
+            this.typeForm.appId = this.typeForm.appId
             this.getSecondTypeList(this.typeForm.firstTypeId)
             this.typeOneId = this.typeForm.parentName
             this.typeTwoId = this.typeForm.name

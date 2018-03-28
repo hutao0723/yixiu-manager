@@ -402,6 +402,9 @@
       },
       // 新增落地页
       addPage() {
+        if (this.$refs['addLoadPage'].clearValidate) {
+          this.$refs['addLoadPage'].clearValidate();
+        }
         const {
           loadPageUrl, subscriptionId, thresholdNum, putContentId, skinId, putContentType
         } = loadPagerules;

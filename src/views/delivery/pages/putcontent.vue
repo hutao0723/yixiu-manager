@@ -13,7 +13,7 @@
       <div class="search-bar">
         <template>
           <el-form :inline="true" :model="searchForm.data" class="demo-form-inline" size="mini">
-            <el-select v-model="addLoadPage.data.value" filterable remote reserve-keyword :remote-method="remoteMethod" :loading="loading" placeholder="请输入公众号">
+            <el-select v-model="searchForm.data.value" filterable remote reserve-keyword :remote-method="remoteMethod" :loading="loading">
               <el-option v-for="item in officalAcountOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
             <el-form-item>
@@ -244,6 +244,9 @@
       },
       // 新增编辑落地页信息
       openAddDialog(row) {
+        if (this.$refs['addForm'].clearValidate) {
+          this.$refs['addForm'].clearValidate();
+        }
         // this.fileList = [];
         if (row.id) {
           let params = {

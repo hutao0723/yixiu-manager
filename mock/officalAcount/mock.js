@@ -5,7 +5,36 @@
  *         url   线上接口地址
  */
 var setOnline = [
-  
+  // 图文类型列表
+  {
+    name: 'graphTextList',
+    type: 'get',
+    url: '/graphicType/pageList'
+  },
+  // 编辑单一图文类型
+  {
+    name: 'getGraphText',
+    type: 'get',
+    url: '/graphicType/detail'
+  },
+  // 编辑保存
+  {
+    name: 'editGraphText',
+    type: 'post',
+    url: '/graphicType/update'
+  },
+  // 删除
+  {
+    name: 'editGraphText',
+    type: 'get',
+    url: '/graphicType/delete'
+  },
+  // 上传excel
+  {
+    name: 'editGraphText',
+    type: 'post',
+    url: '/graphicType/export'
+  }
 ];
 var fs = require('fs');
 
@@ -16,7 +45,6 @@ exports.setOnline = setOnline;
 for (var i = 0, len = setOnline.length; i < len; i++) {
   (function() {
     var name = setOnline[i].name;
-
     exports[name] = function(req, res) {
       fs.readFile('./mock/officalAcount/' + name + '.json', function(err, data) {
         if (err) throw err;

@@ -42,7 +42,7 @@
               </el-card>
             </el-col>
           </el-row>
-          <div class="no-content" v-if="searchOption.skinList.length === 0">———— 暂无数据 ————</div>
+          <div class="no-content" v-if="searchOption.skinList && searchOption.skinList.length === 0">———— 暂无数据 ————</div>
         </template>
       </div>
       <div class="page-control">
@@ -104,7 +104,7 @@
       load(params) {
         this.$http.get('/skin/list', {params}).then(res => {
           if (res.data.success) {
-            this.searchOption.skinList = res.data.data.lists;
+            this.searchOption.skinList = res.data.data.lists || [];
             this.searchOption.totalSize = res.data.data.totalSize
           } else {
             this.$message.error('获取数据失败')

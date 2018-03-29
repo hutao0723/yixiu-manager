@@ -133,12 +133,12 @@
     },
     methods: {
       remoteMethod(query) {
-        this.$http.get('/subscriptionInfo/list', { params: { name: query } }).then(res => {
+        this.$http.get('/subscriptionInfo/all', { params: { name: query } }).then(res => {
           if (res.data.success) {
-            let list = res.data.data.lists
+            let list = res.data.data
             list = list.map(item => {
               return {
-                label: item.name,
+                label: item.nickName,
                 value: item.id
               }
             })

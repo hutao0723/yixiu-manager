@@ -5,7 +5,7 @@
         <el-breadcrumb-item>皮肤市场</el-breadcrumb-item>
       </el-breadcrumb>
       <span class="link-theme">
-        <i class="iconfont icon-guanlian"></i>
+        <i class="iconfont icon-jia" style="vertical-align: middle;"></i>
         <router-link to="editSkin" class="add-skin">添加皮肤</router-link>
       </span>
     </div>

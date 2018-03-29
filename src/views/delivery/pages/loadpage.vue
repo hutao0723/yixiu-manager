@@ -86,7 +86,8 @@
             </el-radio-group>
           </el-form-item>
           <el-form-item label="公众号" :label-width="formLabelWidth" prop="subscriptionId">
-            <el-select v-model="addLoadPage.subscriptionId" filterable remote reserve-keyword :remote-method="remoteMethod" :loading="loading" @change="getPutNameList">
+            <el-select v-model="addLoadPage.subscriptionId" filterable remote reserve-keyword :remote-method="remoteMethod" :loading="loading"
+              @change="getPutNameList">
               <el-option v-for="item in searchForm.officalAcountOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
           </el-form-item>
@@ -246,11 +247,11 @@
       },
       // 获取内容名称列表
       getPutNameList(id) {
-        
+
         let params = {
           subscriptionId: id
-          }
-        this.$http.get('/put/content/all',{ params: params }).then(res => {
+        }
+        this.$http.get('/put/content/all', { params: params }).then(res => {
           if (res.data.success) {
             console.log(res)
             this.contentArr = res.data.data;
@@ -307,7 +308,7 @@
           }
           this.isFormEdit = true;
         }
-        
+
 
         this.dialogLoadPageVisible = true
         if (this.$refs['addLoadPage']) {
@@ -370,6 +371,8 @@
         })
       },
       changeLoadpageType() {
+        console.log(1)
+
         this.addLoadPage.loadPageUrl = "https://";
         if (this.$refs['addLoadPage']) {
           this.$refs['addLoadPage'].clearValidate();
@@ -396,8 +399,8 @@
             putContentId,
           }
         }
+        this.$apply();
         this.$refs['addLoadPage'].validate((valid) => {
-          console.log(valid)
           if (valid) {
             const {
               loadPageUrl,

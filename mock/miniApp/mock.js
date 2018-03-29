@@ -75,6 +75,78 @@ var setOnline = [
     name: 'tplmsgPage',
     type: 'get',
     url: '/miniapp/tplmsg/page'
+  },
+  // 3.获取类型列表
+  {
+    name: 'typeList',
+    type: 'get',
+    url: '/content/type/pageList'
+  },
+  // 4.编辑小程序类型
+  {
+    name: 'save',
+    type: 'post',
+    url: '/content/type/update'
+  },
+  // 5.新增小程序类型
+  {
+    name: 'save',
+    type: 'post',
+    url: '/content/type/add'
+  },
+  // 6.删除类型
+  {
+    name: 'delete',
+    type: 'post',
+    url: '/content/type/delete'
+  },
+  // 11.选择小程序设置内容类型
+  {
+    name: 'save',
+    type: 'post',
+    url: '/wxAuthorizerExt/addOrUpdate'
+  },
+  // 1.获取Tab标签
+  {
+    name: 'tabList',
+    type: 'get',
+    url: '/content/type/getList'
+  },
+  // 7.获取内容管理数据
+  {
+    name: 'contentList',
+    type: 'get',
+    url: '/content/detail/pageList'
+  },
+  // 9.删除内容管理数据
+  {
+    name: 'delete',
+    type: 'post',
+    url: '/content/detail/delete'
+  },
+  // 10.获取内容详情
+  {
+    name: 'contentDetail',
+    type: 'get',
+    url: '/content/detail/get'
+  },
+  // 8.获取内容详情
+  {
+    name: 'save',
+    type: 'post',
+    url: '/content/detail/update'
+  },
+  // 12.获取小程序关联的类型的选择
+  {
+    name: 'chooseType',
+    type: 'get',
+    url: '/wxAuthorizerExt/getByAuthorizerId'
+  },
+  // 13.导入文件
+  {
+    name: 'export',
+    type: 'post',
+    url: '/content/detail/export'
   }
 ];
 var fs = require('fs');

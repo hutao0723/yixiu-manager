@@ -153,7 +153,7 @@
     </div>
     <div class="edit-threshold-diolog">
       <el-dialog title="设置阈值" :visible.sync="dialogThresholdVisible">
-        <el-form ref="changeThresho" :model="changeForm" :rules="rules">
+        <el-form ref="changeThresho" :model="changeForm" :rules="externalRules">
           <el-form-item label="阈值" :label-width="formLabelWidth" prop="thresholdNum">
             <el-input v-model="changeForm.thresholdNum" auto-complete="off"></el-input>
           </el-form-item>
@@ -166,7 +166,7 @@
     <!--落地页编辑-->
     <div class="edit-loadPageUrl-diolog">
       <el-dialog title="编辑落地页地址" :visible.sync="dialogLoadPageUrlVisible">
-        <el-form ref="changeLoadPageUrl" :model="changeForm" :rules="rules">
+        <el-form ref="changeLoadPageUrl" :model="changeForm" :rules="externalRules">
           <el-form-item label="落地页" :label-width="formLabelWidth" prop="loadPageUrl">
             <el-input v-model="changeForm.loadPageUrl" auto-complete="off"></el-input>
           </el-form-item>

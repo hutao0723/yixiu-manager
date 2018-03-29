@@ -267,15 +267,23 @@
       },
       // 获取内容名称列表
       getPutNameList(id) {
-
         let params = {
           subscriptionId: id
         }
         this.$http.get('/put/content/all', { params: params }).then(res => {
           if (res.data.success) {
-            console.log(res)
             this.contentArr = res.data.data;
-            this.addLoadPage.putContentId = [];
+            let ifClearId = true;
+            for (let i = 0; i < this.contentArr.length; i++) {
+              const element = this.contentArr[i];
+              if(element.id == this.addLoadPage.putContentId){
+                ifClearId = false;
+                break;
+              };
+            }
+            if(ifClearId){
+              this.addLoadPage.putContentId = [];
+            }
           }
         }, () => {
           this.$message.error('获取皮肤列表失败')
@@ -302,6 +310,8 @@
                 putContentId
               } = res.data.data;
 
+              this.getPutNameList(subscriptionId)
+              
               this.addLoadPage = {
                 id,
                 subscriptionId,

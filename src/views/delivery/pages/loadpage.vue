@@ -87,7 +87,7 @@
           </el-form-item>
           <el-form-item label="公众号" :label-width="formLabelWidth" prop="subscriptionId">
             <el-select v-model="addLoadPage.subscriptionId" filterable remote reserve-keyword :remote-method="remoteMethod" :loading="loading">
-              <el-option v-for="item in searchForm.officalAcountOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+              <el-option v-for="item in searchForm.officalAcountOptions" :key="item.id" :label="item.nickName" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="内容类型" :label-width="formLabelWidth" v-show="addLoadPage.loadPageType==2">

@@ -104,7 +104,7 @@
       load(params) {
         this.$http.get('/skin/list', {params}).then(res => {
           if (res.data.success) {
-            this.searchOption.skinList = res.data.data.lists;
+            this.searchOption.skinList = res.data.data.lists || [];
             this.searchOption.totalSize = res.data.data.totalSize
           } else {
             this.$message.error('获取数据失败')

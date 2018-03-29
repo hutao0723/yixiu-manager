@@ -4,7 +4,7 @@
       <el-aside :width="hiddenWith">
         <div class="side-wrap" v-show="isShow">
           <p class="page-title">投放管理</p>
-          <el-menu class="menu-collapse" default-active="1">
+          <el-menu class="menu-collapse" :default-active="pathIndex">
             <router-link :to="{ path: '/manager/dlv' }">
               <el-menu-item index="1">
                 <i class="iconfont icon-feiji"></i>
@@ -63,8 +63,35 @@
     data() {
       return {
         hiddenWith: '180px',
-        isShow: true
+        isShow: true,
+        pathIndex: "1",
       }
+    },
+    created() {
+      console.log(this.$route.path)
+      let pathIndex;
+      let path = this.$route.path;
+      switch (path) {
+        case '/manager/dlv':
+          pathIndex = "1";
+          break;
+        case '/manager/dlv/theme':
+          pathIndex = "2";
+          break;
+        case '/manager/dlv/loadpage':
+          pathIndex = "3";
+          break;
+        case '/manager/dlv/putcontent':
+          pathIndex = "4";
+          break;
+        case '/manager/dlv/skinMarket':
+          pathIndex = "5";
+          break;
+      
+        default:
+          break;
+      }
+      this.pathIndex = pathIndex;
     },
     methods: {
       openCollapse() {

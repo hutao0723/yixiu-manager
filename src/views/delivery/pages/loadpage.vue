@@ -78,13 +78,32 @@
     </div>
     <div class="ad-loadPage-diolog">
       <el-dialog title="落地页" :visible.sync="dialogLoadPageVisible">
-        <el-form :model="addLoadPage" ref="addLoadPage" :rules="rules">
+        <el-form :model="addLoadPage">
           <el-form-item label="落地页类型" :label-width="formLabelWidth" prop="type">
             <el-radio-group v-model="addLoadPage.loadPageType" @change="changeLoadpageType">
               <el-radio :label="1">外部</el-radio>
               <el-radio :label="2">内部</el-radio>
             </el-radio-group>
           </el-form-item>
+        </el-form>
+
+        <el-form :model="addLoadPage" ref="externalPage" :rules="externalRules" v-show="addLoadPage.loadPageType == 1">
+          <el-form-item label="公众号" :label-width="formLabelWidth" prop="subscriptionId">
+            <el-select v-model="addLoadPage.subscriptionId" filterable remote reserve-keyword :remote-method="remoteMethod" :loading="loading"
+              @change="getPutNameList">
+              <el-option v-for="item in searchForm.officalAcountOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="落地页名称" :label-width="formLabelWidth" prop="loadPageUrl">
+            <el-input placeholder="https://" v-model="addLoadPage.loadPageUrl" auto-complete="off" :disabled="addLoadPage.loadPageType == 2"></el-input>
+          </el-form-item>
+          <el-form-item label="阈值" :label-width="formLabelWidth" prop="thresholdNum" v-show="isFormEdit">
+            <el-input v-model="addLoadPage.thresholdNum" auto-complete="off"></el-input>
+          </el-form-item>
+        </el-form>
+
+
+        <el-form :model="addLoadPage" ref="internalPage" :rules="internalRules" v-show="addLoadPage.loadPageType == 2">
           <el-form-item label="公众号" :label-width="formLabelWidth" prop="subscriptionId">
             <el-select v-model="addLoadPage.subscriptionId" filterable remote reserve-keyword :remote-method="remoteMethod" :loading="loading"
               @change="getPutNameList">
@@ -162,7 +181,8 @@
 </template>
 
 <script>
-  import { loadPagerules } from '../components/deliveryValidRules'
+  import { externalRules, internalRules } from '../components/deliveryValidRules'
+  
   import qs from 'qs'
 
   console.log(loadPagerules)
@@ -197,7 +217,8 @@
         dialogLoadPageUrlVisible: false,
         dialogStatusVisible: false,
         dialogThresholdVisible: false,
-        rules: loadPagerules,
+        externalRules: externalRules,
+        internalRules: internalRules,
         addLoadPage: {
           loadPageUrl: 'https://',
           subscriptionId: null,
@@ -311,8 +332,11 @@
 
 
         this.dialogLoadPageVisible = true
-        if (this.$refs['addLoadPage']) {
-          this.$refs['addLoadPage'].resetFields();
+        if (this.$refs['externalPage']) {
+          this.$refs['externalPage'].resetFields();
+        }
+        if (this.$refs['internalPage']) {
+          this.$refs['internalPage'].resetFields();
         }
       },
 
@@ -371,11 +395,13 @@
         })
       },
       changeLoadpageType() {
-        console.log(1)
 
         this.addLoadPage.loadPageUrl = "https://";
-        if (this.$refs['addLoadPage']) {
-          this.$refs['addLoadPage'].clearValidate();
+        if (this.$refs['externalPage']) {
+          this.$refs['externalPage'].clearValidate();
+        }
+        if (this.$refs['internalPage']) {
+          this.$refs['internalPage'].clearValidate();
         }
       },
       // 新增落地页
@@ -383,24 +409,10 @@
         const {
           loadPageUrl, subscriptionId, thresholdNum, putContentId, skinId, putContentType
         } = loadPagerules;
-        if (this.addLoadPage.loadPageType == 1) {
-          this.rules = {
-            loadPageUrl,
-            subscriptionId,
-            thresholdNum,
-          }
-        } else if (this.addLoadPage.loadPageType == 2) {
-          this.rules = {
-            loadPageUrl,
-            subscriptionId,
-            thresholdNum,
-            putContentId,
-            skinId,
-            putContentId,
-          }
-        }
-        this.$apply();
-        this.$refs['addLoadPage'].validate((valid) => {
+
+        let rules = this.addLoadPage.loadPageType == 1?'externalPage':'internalPage'
+        
+        this.$refs[rules].validate((valid) => {
           if (valid) {
             const {
               loadPageUrl,

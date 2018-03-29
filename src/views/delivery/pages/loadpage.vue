@@ -86,7 +86,7 @@
             </el-radio-group>
           </el-form-item>
           <el-form-item label="公众号" :label-width="formLabelWidth" prop="subscriptionId">
-            <el-select v-model="addLoadPage.subscriptionId" filterable remote reserve-keyword :remote-method="remoteMethod" :loading="loading">
+            <el-select v-model="addLoadPage.subscriptionId" filterable remote reserve-keyword :remote-method="remoteMethod" :loading="loading" @change="getPutNameList">
               <el-option v-for="item in searchForm.officalAcountOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
           </el-form-item>
@@ -245,11 +245,16 @@
         })
       },
       // 获取内容名称列表
-      getPutNameList() {
-        this.$http.get('/put/content/all').then(res => {
+      getPutNameList(id) {
+        
+        let params = {
+          subscriptionId: id
+          }
+        this.$http.get('/put/content/all',{ params: params }).then(res => {
           if (res.data.success) {
             console.log(res)
             this.contentArr = res.data.data;
+            this.addLoadPage.putContentId = [];
           }
         }, () => {
           this.$message.error('获取皮肤列表失败')
@@ -258,7 +263,6 @@
       // 新增编辑落地页信息
       openAddDialog(row) {
         this.getDermaList();
-        this.getPutNameList();
         this.remoteMethod();
         this.fileList = [];
         if (row.id) {
@@ -594,7 +598,6 @@
       },
       openDialogAd() {
         this.getDermaList();
-        this.getPutNameList();
         this.dialogLoadPageVisible = true
       },
       openStatusDilog(row) {

@@ -321,7 +321,7 @@ export default {
   }
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .content-manage-box {
   width: 100%;
   .title-wrap {
@@ -423,13 +423,6 @@ export default {
   }
   .el-dialog__wrapper{
     z-index:3000!important;
-  }
-}
-.wrap-box{
-  .el-table{
-    .cell{
-      white-space:pre-wrap;
-    }
   }
 }
 </style>

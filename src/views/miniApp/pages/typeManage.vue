@@ -49,7 +49,7 @@
           </el-form-item>           
         </el-form>
         <div class="btn-wrap">
-          <el-button size="small" @click="dialogTypeVisible = false">取 消</el-button>
+          <el-button size="small" @click="dialogaddTypeVisible = false">取 消</el-button>
           <el-button size="small" type="primary" @click="addType">保存</el-button>
         </div>
       </el-dialog>

@@ -185,7 +185,6 @@
   
   import qs from 'qs'
 
-  console.log(loadPagerules)
   export default {
     name: 'delivery',
     data() {
@@ -406,9 +405,7 @@
       },
       // 新增落地页
       addPage() {
-        const {
-          loadPageUrl, subscriptionId, thresholdNum, putContentId, skinId, putContentType
-        } = loadPagerules;
+        
 
         let rules = this.addLoadPage.loadPageType == 1?'externalPage':'internalPage'
         

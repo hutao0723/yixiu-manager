@@ -525,7 +525,7 @@
         })
       },
       remoteMethod(query) {
-        this.$http.get('/subscriptionInfo/list', { params: { name: query } }).then(res => {
+        this.$http.get('/subscriptionInfo/all', { params: { subscriptionName: query } }).then(res => {
           if (res.data.success) {
             let list = res.data.data.lists
             list = list.map(item => {

@@ -1,5 +1,5 @@
 <template>
-  <section class="ofa-main-wrap">
+  <section class="content-manage-box wrap-box">
     <div class="title-wrap">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>内容管理</el-breadcrumb-item>
@@ -321,8 +321,8 @@ export default {
   }
 }
 </script>
-<style lang="less" scoped>
-.ofa-main-wrap {
+<style lang="less">
+.content-manage-box {
   width: 100%;
   .title-wrap {
     width: 100%;
@@ -425,5 +425,11 @@ export default {
     z-index:3000!important;
   }
 }
-
+.wrap-box{
+  .el-table{
+    .cell{
+      white-space:pre-wrap;
+    }
+  }
+}
 </style>

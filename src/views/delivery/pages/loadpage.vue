@@ -78,15 +78,35 @@
     </div>
     <div class="ad-loadPage-diolog">
       <el-dialog title="落地页" :visible.sync="dialogLoadPageVisible">
-        <el-form :model="addLoadPage" ref="addLoadPage" :rules="rules">
+        <el-form :model="addLoadPage">
           <el-form-item label="落地页类型" :label-width="formLabelWidth" prop="type">
             <el-radio-group v-model="addLoadPage.loadPageType" @change="changeLoadpageType">
               <el-radio :label="1">外部</el-radio>
               <el-radio :label="2">内部</el-radio>
             </el-radio-group>
           </el-form-item>
+        </el-form>
+
+        <el-form :model="addLoadPage" ref="externalPage" :rules="externalRules" v-show="addLoadPage.loadPageType == 1">
           <el-form-item label="公众号" :label-width="formLabelWidth" prop="subscriptionId">
-            <el-select v-model="addLoadPage.subscriptionId" filterable remote reserve-keyword :remote-method="remoteMethod" :loading="loading">
+            <el-select v-model="addLoadPage.subscriptionId" filterable remote reserve-keyword :remote-method="remoteMethod" :loading="loading"
+              @change="getPutNameList">
+              <el-option v-for="item in searchForm.officalAcountOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="落地页名称" :label-width="formLabelWidth" prop="loadPageUrl">
+            <el-input placeholder="https://" v-model="addLoadPage.loadPageUrl" auto-complete="off" :disabled="addLoadPage.loadPageType == 2"></el-input>
+          </el-form-item>
+          <el-form-item label="阈值" :label-width="formLabelWidth" prop="thresholdNum" v-show="isFormEdit">
+            <el-input v-model="addLoadPage.thresholdNum" auto-complete="off"></el-input>
+          </el-form-item>
+        </el-form>
+
+
+        <el-form :model="addLoadPage" ref="internalPage" :rules="internalRules" v-show="addLoadPage.loadPageType == 2">
+          <el-form-item label="公众号" :label-width="formLabelWidth" prop="subscriptionId">
+            <el-select v-model="addLoadPage.subscriptionId" filterable remote reserve-keyword :remote-method="remoteMethod" :loading="loading"
+              @change="getPutNameList">
               <el-option v-for="item in searchForm.officalAcountOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
           </el-form-item>
@@ -133,7 +153,7 @@
     </div>
     <div class="edit-threshold-diolog">
       <el-dialog title="设置阈值" :visible.sync="dialogThresholdVisible">
-        <el-form ref="changeThresho" :model="changeForm" :rules="rules">
+        <el-form ref="changeThresho" :model="changeForm" :rules="externalRules">
           <el-form-item label="阈值" :label-width="formLabelWidth" prop="thresholdNum">
             <el-input v-model="changeForm.thresholdNum" auto-complete="off"></el-input>
           </el-form-item>
@@ -146,7 +166,7 @@
     <!--落地页编辑-->
     <div class="edit-loadPageUrl-diolog">
       <el-dialog title="编辑落地页地址" :visible.sync="dialogLoadPageUrlVisible">
-        <el-form ref="changeLoadPageUrl" :model="changeForm" :rules="rules">
+        <el-form ref="changeLoadPageUrl" :model="changeForm" :rules="externalRules">
           <el-form-item label="落地页" :label-width="formLabelWidth" prop="loadPageUrl">
             <el-input v-model="changeForm.loadPageUrl" auto-complete="off"></el-input>
           </el-form-item>
@@ -161,10 +181,10 @@
 </template>
 
 <script>
-  import { loadPagerules } from '../components/deliveryValidRules'
+  import { externalRules, internalRules } from '../components/deliveryValidRules'
+  
   import qs from 'qs'
 
-  console.log(loadPagerules)
   export default {
     name: 'delivery',
     data() {
@@ -196,7 +216,8 @@
         dialogLoadPageUrlVisible: false,
         dialogStatusVisible: false,
         dialogThresholdVisible: false,
-        rules: loadPagerules,
+        externalRules: externalRules,
+        internalRules: internalRules,
         addLoadPage: {
           loadPageUrl: 'https://',
           subscriptionId: null,
@@ -245,11 +266,24 @@
         })
       },
       // 获取内容名称列表
-      getPutNameList() {
-        this.$http.get('/put/content/all').then(res => {
+      getPutNameList(id) {
+        let params = {
+          subscriptionId: id
+        }
+        this.$http.get('/put/content/all', { params: params }).then(res => {
           if (res.data.success) {
-            console.log(res)
             this.contentArr = res.data.data;
+            let ifClearId = true;
+            for (let i = 0; i < this.contentArr.length; i++) {
+              const element = this.contentArr[i];
+              if(element.id == this.addLoadPage.putContentId){
+                ifClearId = false;
+                break;
+              };
+            }
+            if(ifClearId){
+              this.addLoadPage.putContentId = [];
+            }
           }
         }, () => {
           this.$message.error('获取皮肤列表失败')
@@ -258,7 +292,6 @@
       // 新增编辑落地页信息
       openAddDialog(row) {
         this.getDermaList();
-        this.getPutNameList();
         this.remoteMethod();
         this.fileList = [];
         if (row.id) {
@@ -277,6 +310,8 @@
                 putContentId
               } = res.data.data;
 
+              this.getPutNameList(subscriptionId)
+              
               this.addLoadPage = {
                 id,
                 subscriptionId,
@@ -303,11 +338,14 @@
           }
           this.isFormEdit = true;
         }
-        
+
 
         this.dialogLoadPageVisible = true
-        if (this.$refs['addLoadPage']) {
-          this.$refs['addLoadPage'].resetFields();
+        if (this.$refs['externalPage']) {
+          this.$refs['externalPage'].resetFields();
+        }
+        if (this.$refs['internalPage']) {
+          this.$refs['internalPage'].resetFields();
         }
       },
 
@@ -366,34 +404,22 @@
         })
       },
       changeLoadpageType() {
+
         this.addLoadPage.loadPageUrl = "https://";
-        if (this.$refs['addLoadPage']) {
-          this.$refs['addLoadPage'].clearValidate();
+        if (this.$refs['externalPage']) {
+          this.$refs['externalPage'].clearValidate();
+        }
+        if (this.$refs['internalPage']) {
+          this.$refs['internalPage'].clearValidate();
         }
       },
       // 新增落地页
       addPage() {
-        const {
-          loadPageUrl, subscriptionId, thresholdNum, putContentId, skinId, putContentType
-        } = loadPagerules;
-        if (this.addLoadPage.loadPageType == 1) {
-          this.rules = {
-            loadPageUrl,
-            subscriptionId,
-            thresholdNum,
-          }
-        } else if (this.addLoadPage.loadPageType == 2) {
-          this.rules = {
-            loadPageUrl,
-            subscriptionId,
-            thresholdNum,
-            putContentId,
-            skinId,
-            putContentId,
-          }
-        }
-        this.$refs['addLoadPage'].validate((valid) => {
-          console.log(valid)
+        
+
+        let rules = this.addLoadPage.loadPageType == 1?'externalPage':'internalPage'
+        
+        this.$refs[rules].validate((valid) => {
           if (valid) {
             const {
               loadPageUrl,
@@ -525,12 +551,12 @@
         })
       },
       remoteMethod(query) {
-        this.$http.get('/subscriptionInfo/list', { params: { name: query } }).then(res => {
+        this.$http.get('/subscriptionInfo/all', { params: { subscriptionName: query } }).then(res => {
           if (res.data.success) {
-            let list = res.data.data.lists
+            let list = res.data.data
             list = list.map(item => {
               return {
-                label: item.name,
+                label: item.nickName,
                 value: item.id
               }
             })
@@ -594,7 +620,6 @@
       },
       openDialogAd() {
         this.getDermaList();
-        this.getPutNameList();
         this.dialogLoadPageVisible = true
       },
       openStatusDilog(row) {

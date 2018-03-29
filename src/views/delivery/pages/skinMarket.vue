@@ -42,7 +42,7 @@
               </el-card>
             </el-col>
           </el-row>
-          <div class="no-content" v-if="searchOption.skinList.length === 0">———— 暂无数据 ————</div>
+          <div class="no-content" v-if="searchOption.skinList && searchOption.skinList.length === 0">———— 暂无数据 ————</div>
         </template>
       </div>
       <div class="page-control">

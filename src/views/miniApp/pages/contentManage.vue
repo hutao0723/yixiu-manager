@@ -186,6 +186,8 @@ export default {
         var successful = document.execCommand('copy')
         if (successful) {
           this.$message.success("复制成功")
+          this.resultMessage = ''
+          this.uploadVisible = false
         }
       } catch (err) {}
     },

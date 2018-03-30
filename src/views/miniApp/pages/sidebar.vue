@@ -61,6 +61,9 @@ export default {
       case '/manager/miniApp/contentManage':
         pathIndex = "2";
         break;
+      case '/manager/miniApp/typeManage':
+        pathIndex = "2";
+        break;
       default:
         break;
     }

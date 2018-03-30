@@ -4,7 +4,7 @@
     <el-aside :width="hiddenWith" >
       <div class="side-wrap" v-show="isShow">
         <p class="page-title" >小程序管理</p>
-        <el-menu :collapse="isCollapse" class="menu-collapse" default-active="1">
+        <el-menu :collapse="isCollapse" class="menu-collapse" :default-active="pathIndex">
           <router-link :to="{ path: '/manager/miniApp' }">    
             <el-menu-item index="1">
               <i class="iconfont icon-msnui-weixin"></i>
@@ -50,6 +50,23 @@ export default {
       isShow: true
     }
   },
+  created() {
+    console.log(this.$route.path)
+    let pathIndex;
+    let path = this.$route.path;
+    switch (path) {
+      case '/manager/miniApp':
+        pathIndex = "1";
+        break;
+      case '/manager/miniApp/contentManage':
+        pathIndex = "2";
+        break;
+      default:
+        break;
+    }
+    this.pathIndex = pathIndex;
+  },
+
   methods: {
     openCollapse () {
       console.log(1)

@@ -47,13 +47,18 @@ export default {
     return {
       isCollapse: false,
       hiddenWith: '180px',
-      isShow: true
+      isShow: true,
+      pathIndex: 1
     }
   },
   created() {
     console.log(this.$route.path)
     let pathIndex;
     let path = this.$route.path;
+    if(path.indexOf("/manager/miniApp/editContent") != -1){
+      path = '/manager/miniApp/editContent'
+    }
+    console.log(path)
     switch (path) {
       case '/manager/miniApp':
         pathIndex = "1";
@@ -61,10 +66,14 @@ export default {
       case '/manager/miniApp/contentManage':
         pathIndex = "2";
         break;
+      case '/manager/miniApp/editContent':
+        pathIndex = "2";
+        break;
       case '/manager/miniApp/typeManage':
         pathIndex = "2";
         break;
-      default:
+      default: 
+        pathIndex = "1";
         break;
     }
     this.pathIndex = pathIndex;

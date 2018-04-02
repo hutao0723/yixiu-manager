@@ -66,6 +66,8 @@
           console.log(this.aTypeList[newVal])
           this.typeForm.firstTypeId = this.aTypeList[newVal].id
           this.getSecondTypeList(this.aTypeList[newVal].id)
+          this.typeTwoId = ''
+          this.typeForm.typeId = ''
         }
       },
       'typeTwoId': function (newVal) {

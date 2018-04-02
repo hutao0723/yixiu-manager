@@ -5,7 +5,7 @@
         <el-breadcrumb-item :to="{ path: '/manager/miniApp/contentManage' }">内容管理</el-breadcrumb-item>
         <el-breadcrumb-item>类型管理</el-breadcrumb-item>
       </el-breadcrumb>
-      <span class="link-theme">
+      <span class="add-type">
         <i class="iconfont icon-jia" style="vertical-align: middle;"></i>
         <span class="connect-ad" @click="openaddDialogType" style="vertical-align: middle;">类型</span>
       </span>
@@ -253,7 +253,7 @@ export default {
       font-size: 16px;
     }
 
-    .add-ofa {
+    .add-type {
       display: inline-block;
       position: absolute;
       right: 0;

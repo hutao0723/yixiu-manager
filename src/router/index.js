@@ -180,6 +180,30 @@ export const constantRouterMap = [
             component: function (resolve) {
               require(['../views/miniApp/pages/addWxTemplate'], resolve)
             }
+          },
+          {
+            path: 'contentManage',
+            component: function (resolve) {
+              require(['../views/miniApp/pages/contentManage'], resolve)
+            }
+          },
+          {
+            path: 'typeManage',
+            component: function (resolve) {
+              require(['../views/miniApp/pages/typeManage'], resolve)
+            }
+          },
+          {
+            path: 'contentType/:id/:appId',
+            component: function (resolve) {
+              require(['../views/miniApp/pages/contentType'], resolve)
+            }
+          },
+          {
+            path: 'editContent/:parentId/:id',
+            component: function (resolve) {
+              require(['../views/miniApp/pages/editContent'], resolve)
+            }
           }
         ]
       }

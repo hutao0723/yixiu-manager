@@ -1,0 +1,25 @@
+{
+	"success": true,
+	"data": {
+		"totalElements": 100,
+		"content": [{
+			"id": 3,
+			"parentId": 10,
+			"name": "测试",
+			"parentName": "测试类"
+		},
+		{
+			"id": 4,
+			"parentId": 16,
+			"name": "印象",
+			"parentName": "印象类"
+		},
+		{
+			"id": 8,
+			"parentId": 2,
+			"name": "星座",
+			"parentName": "星座类"
+		}]
+	}
+}
+

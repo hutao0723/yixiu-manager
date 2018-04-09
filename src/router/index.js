@@ -226,31 +226,31 @@ export const constantRouterMap = [
             }
           },
           {
-            path: '/curriculum',
+            path: 'curriculum',
             component: function (resolve) {
               require(['../views/knowledge/pages/curriculum'], resolve)
             }
           },
           {
-            path: '/specialColumn',
+            path: 'specialColumn',
             component: function (resolve) {
               require(['../views/knowledge/pages/specialColumn'], resolve)
             }
           },
           {
-            path: '/goodsGroup',
+            path: 'goodsGroup',
             component: function (resolve) {
               require(['../views/knowledge/pages/goodsGroup'], resolve)
             }
           },
           {
-            path: '/order',
+            path: 'order',
             component: function (resolve) {
               require(['../views/knowledge/pages/order'], resolve)
             }
           },
           {
-            path: '/lecturer',
+            path: 'lecturer',
             component: function (resolve) {
               require(['../views/knowledge/pages/lecturer'], resolve)
             }

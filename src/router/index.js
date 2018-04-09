@@ -212,6 +212,50 @@ export const constantRouterMap = [
             }
           }
         ]
+      },
+      {
+        path: 'knowledge',
+        component: function (resolve) {
+          require(['../views/knowledge/pages/sidebar'], resolve)
+        },
+        children: [
+          {
+            path: '/',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/page'], resolve)
+            }
+          },
+          {
+            path: '/curriculum',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/curriculum'], resolve)
+            }
+          },
+          {
+            path: '/specialColumn',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/specialColumn'], resolve)
+            }
+          },
+          {
+            path: '/goodsGroup',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/goodsGroup'], resolve)
+            }
+          },
+          {
+            path: '/order',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/order'], resolve)
+            }
+          },
+          {
+            path: '/lecturer',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/lecturer'], resolve)
+            }
+          },
+        ]
       }
     ]
   }

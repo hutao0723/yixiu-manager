@@ -82,7 +82,14 @@ var setOnline = [
     name: 'teacherList',
     type: 'get',
     url: '/lecturer/list'
+  },
+  // 讲师删除
+  {
+    name: 'goodsList',
+    type: 'get',
+    url: '/associate/goods'
   }
+
 ];
 var fs = require('fs');
 

@@ -1,0 +1,47 @@
+{
+	"success": true,
+	"data": {
+		"totalElements": 100,
+		"content": [{
+			"id": 1,
+			"goodsInfo": "人气推荐王",
+			"goodsType": " 美妆",
+			"selected" : true
+		},
+		{
+			"id": 2,
+			"goodsInfo": "热销推荐王",
+			"goodsType": " 衣物",
+			"selected" : true
+		},
+		{
+			"id": 3,
+			"goodsInfo": "爆款推荐王",
+			"goodsType": " 零食",
+			"selected" : true
+		},{
+			"id": 4,
+			"goodsInfo": "人气推荐王",
+			"goodsType": " 美妆",
+			"selected" : true
+		},
+		{
+			"id": 5,
+			"goodsInfo": "热销推荐王",
+			"goodsType": " 衣物",
+			"selected" : true
+		},
+		{
+			"id": 6,
+			"goodsInfo": "爆款推荐王",
+			"goodsType": " 零食",
+			"selected" : true
+		},{
+			"id": 7,
+			"goodsInfo": "人气推荐王",
+			"goodsType": " 美妆",
+			"selected" : true
+		}]
+	}
+}
+

@@ -7,7 +7,7 @@
       </el-breadcrumb>
       <span class="link-theme">
         <i class="iconfont icon-jia"></i>
-        <span class="connect-ad" @click="openDialogSubscrition">商品</span>
+        <span class="connect-ad" @click="openDialogGoods">商品</span>
       </span>
     </div>
     <div class="conbtent">
@@ -52,25 +52,49 @@
         </template>
       </div>
     </div>
-    <!-- <div class="connect-loadPage-diolog">
-      <el-dialog title="新增公众号" :visible.sync="dialogVisible" width="800px">
-        <el-form  :inline="true" :model="adSubscriptionsForm" :rules="rules">
-        <el-form-item label="待选公众号">
-          <el-select  v-model="subscriptionId"  filterable remote reserve-keyword placeholder="待选公众号" :remote-method="remoteMethod" :loading="loading">
-              <el-option v-for="item in subscriptionsList" :key="item.value" :label="item.label + item.value" :value="item.value">
-              </el-option>
-          </el-select>
-          <el-button type="text"  size="mini" icon="el-icon-search" @click="getLoadPageBySubscription()">查询</el-button>
-        </el-form-item> 
-        <el-form-item label="待选落地页">
-          <el-transfer  :titles="['待选落地页', '已选落地页']" v-model="adSubscriptionsForm.loadPageIds" :data="loadpagesList" width="300px"></el-transfer>
-        </el-form-item> 
-        <div class="btn-wrap">
-          <el-button size="small" :disabled="!adSubscriptionsForm.loadPageIds.length" type="primary" @click="boundRelation">保存</el-button>
-        </div>         
-        </el-form>
+
+    <div class="connect-loadPage-diolog">
+      <el-dialog title="收货地址" :visible.sync="dialogTableVisible">
+        <el-tabs v-model="activeType" type="card" @tab-click="handleClick" class="pad-length">
+          <el-tab-pane :label="item.name" :name="item.name" v-for="(item,index) in tabList" :key="item.id"  :value="index">
+            <!--上传弹框-->
+          </el-tab-pane>
+          <div class="content">
+            <div class="search-bar">
+              <template>
+                <el-form :inline="true" :model="searchForm" class="demo-form-inline fl" size="mini">
+                  <el-form-item>
+                    <el-input v-model="searchForm.goodsTitle" placeholder="商品标题"></el-input>
+                  </el-form-item>
+                  <el-form-item>
+                    <el-button type="primary" @click="">查询</el-button>
+                  </el-form-item>
+                </el-form>
+              </template>
+            </div>
+            <div class="tabel-wrap">
+              <template>
+                <el-table :data="goodsList" ref="multipleTable" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange" >
+                  <el-table-column property="id" label="ID" width="150"></el-table-column>
+                  <el-table-column property="goodsInfo" label="商品信息" width="280"></el-table-column>
+                  <el-table-column property="goodsType" label="商品类型"></el-table-column>
+                  <el-table-column type="selection" width="205" label="选择"></el-table-column>
+                </el-table>
+              </template>        
+            </div>    
+          </div>
+        </el-tabs>
+      <div class="page-control">
+        <el-pagination background  :page-size="10" :current-page.sync="pageOption.pageNum" @current-change="pageChange" layout="total, prev, pager, next" :total="totalSize">
+        </el-pagination>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogTableVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogTableVisible = false">确 定</el-button>
+      </div>
       </el-dialog>
-    </div> -->
+      
+    </div>
   </section>
 </template>
 
@@ -116,36 +140,42 @@ export default {
     return {
       columns: columns,
       themeId: null,
-      dialogVisible: false,
-      adSubscriptionsForm: {
-        // subscriptionId: null,
-        loadPageIds: []
-      },
-      subscriptionId: null,
-      loading: true,
-      subscriptionsList: [
+      tableData: [],
+      goodsList: [],
+      dialogTableVisible: false,
+      dialogFormVisible: false,
 
-      ],
-      loadpagesList: [
-        {
-          key: 1,
-          label: '备选1'
-        }
-      ],
-      tableData: []
+      activeType: '课程',
+      activeName: '',
+      tabList: [{
+        name: '课程'
+      },{
+        name: '专栏'
+      }],
+      searchForm:{
+        goodsTitle: ''
+      },
+      pageOption: {
+        pageNum: 1,
+        pageSize: 10
+      },
+      multipleSelection:[],
+      totalSize: 0
     }
   },
+
   created () {
     this.getList()
     this.themeId = this.$route.params.id
   },
-  computed: mapState({
-    themeName: state => state.theme
-  }),
+  mounted(){
+    this.getContentList(this.activeType)
+  },
   methods: {
-    openDialogSubscrition () {
-      this.dialogVisible = true
+    openDialogGoods () {
+      this.dialogTableVisible = true
     },
+    // 获取商品数列表
     getList () {
       let themeId = this.$route.params.id
       this.$http.get('/goods/number/list', {params: {themeId}}).then(res => {
@@ -154,22 +184,40 @@ export default {
         }
       })
     },
-    boundRelation () {
-      if (this.adSubscriptionsForm.loadPageIds.length) {
-        let _params = Object.assign({}, this.adSubscriptionsForm)
-        _params.loadPageIds = _params.loadPageIds.toString()
-        _params.themeId = this.themeId
-        this.$http.get('/subscriptionTheme/boundRelation', {params: _params}).then(res => {
-          if (res.data.success) {
-            this.$message.success('保存成功')
-            this.dialogVisible = false
-            window.location.reload()
-          } else {
-            this.$message.error('保存失败')
-          }
-        })
-      }
+    // 选中
+    handleSelectionChange(val) {
+      this.multipleSelection = val
+      console.log(val)
     },
+    // 切换tab
+    handleClick(tab, event) {
+      if(this.tabList[tab.index].name == this.activeName){
+        return
+      }
+      this.activeName = this.tabList[tab.index].name
+      this.getContentList(this.activeName)
+    },
+    // 获取全部内容列表
+    getContentList (activeType) {
+      let params = {
+        activeType: activeType,
+        pageNum: 1,
+        pageSize:10
+      }
+      this.$http.get('/associate/goods', {params:params}).then(res => {
+        let resp = res.data
+        if (resp.success) {
+          this.goodsList = resp.data.content
+          // 算出有多少条数据
+          this.totalSize = resp.data.totalElements
+          this.pageOption.pageNum = 1
+        } else {
+          let msg = resp.desc || '请求失败'
+          this.$message.error(msg)
+        }
+      })
+    },
+    // 取消移除关系
     cancelRelation (row) {
       this.$confirm('确定移除吗?', '提示', {
         confirmButtonText: '确定',
@@ -207,6 +255,23 @@ export default {
         })
       })
     },
+    // 分页请求
+    pageChange () {
+      let params = {
+      }
+      this.$http.get('/associate/goods', {}).then(res => {
+        let resp = res.data
+        if (resp.success) {
+          this.goodsList = resp.data.content
+          // 算出有多少条数据
+          this.totalSize = resp.data.totalElements
+        } else {
+          let msg = resp.desc || '请求失败'
+          this.$message.error(msg)
+        }
+      })
+    },
+    // 拖拽
     datadragEnd (e) {
       let id = +this.tableData[e.newIndex].id
       let themeId = +this.themeId

@@ -78,7 +78,6 @@
       }
     },
     created() {
-      console.log(this.$route.path)
       let pathIndex;
       let path = this.$route.path;
       if (path.indexOf("/manager/miniApp/editContent") != -1) {

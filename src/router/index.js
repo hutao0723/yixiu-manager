@@ -194,6 +194,12 @@ export const constantRouterMap = [
             }
           },
           {
+            path: 'miniType',
+            component: function (resolve) {
+              require(['../views/miniApp/pages/miniType'], resolve)
+            }
+          },
+          {
             path: 'contentType/:id/:appId',
             component: function (resolve) {
               require(['../views/miniApp/pages/contentType'], resolve)

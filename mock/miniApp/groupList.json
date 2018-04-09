@@ -1,0 +1,25 @@
+{
+	"success": true,
+	"data": {
+		"totalElements": 100,
+		"content": [{
+			"id": 3,
+			"number": 2,
+			"titleName": "人气推荐王",
+			"createTime": "2018-04-09 11:01:20"
+		},
+		{
+			"id": 4,
+			"number": 5,
+			"titleName": "热销商品库",
+			"createTime": "2018-04-09 11:01:20"
+		},
+		{
+			"id": 8,
+			"number": 1,
+			"titleName": "爆款",
+			"createTime": "2018-04-09 11:01:20"
+		}]
+	}
+}
+

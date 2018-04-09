@@ -147,6 +147,18 @@ var setOnline = [
     name: 'export',
     type: 'post',
     url: '/content/detail/export'
+  },
+  // 小程序类型
+  {
+    name: 'miniType',
+    type: 'get',
+    url: '/content/type/typeList'
+  },
+  // 商品组列表
+  {
+    name: 'groupList',
+    type: 'get',
+    url: '/content/type/groupList'
   }
 ];
 var fs = require('fs');

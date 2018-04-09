@@ -153,12 +153,6 @@ var setOnline = [
     name: 'miniType',
     type: 'get',
     url: '/content/type/typeList'
-  },
-  // 商品组列表
-  {
-    name: 'groupList',
-    type: 'get',
-    url: '/content/type/groupList'
   }
 ];
 var fs = require('fs');

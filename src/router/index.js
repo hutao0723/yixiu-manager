@@ -238,6 +238,12 @@ export const constantRouterMap = [
             }
           },
           {
+            path: 'goodsNumber/:id',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/goodsNumber'], resolve)
+            }
+          },
+          {
             path: 'goodsGroup',
             component: function (resolve) {
               require(['../views/knowledge/pages/goodsGroup'], resolve)

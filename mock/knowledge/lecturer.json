@@ -1,0 +1,22 @@
+{
+	"success": true,
+	"data": {
+		"totalElements": 100,
+		"content": [{
+			"id": 3,
+			"brokerage": "10%",
+			"username": "张老师"
+		},
+		{
+			"id": 4,
+			"brokerage": "16%",
+			"username": "王老师"
+		},
+		{
+			"id": 8,
+			"brokerage": "30%",
+			"username": "胡老师"
+		}]
+	}
+}
+

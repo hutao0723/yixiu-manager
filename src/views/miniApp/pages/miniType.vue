@@ -18,7 +18,7 @@
         <template>
           <el-table :data="typeList" style="width: 100%" >
             <el-table-column prop="id" label="ID" ></el-table-column>
-            <el-table-column prop="parentName" label="一级类型" ></el-table-column>
+            <el-table-column prop="parentName" label="类型名称" ></el-table-column>
             <el-table-column prop="number" label="小程序数量" ></el-table-column>
             <el-table-column  label="操作" >
               <template slot-scope="scope">
@@ -40,7 +40,7 @@
     <div class="add-type-diolog">
       <el-dialog title="添加类型" :visible.sync="dialogaddTypeVisible">
         <el-form :model="typeForm" ref="typeForm" :rules="rules">
-          <el-form-item label="一级类型" :label-width="formLabelWidth"  prop="parentName">
+          <el-form-item label="类型名称" :label-width="formLabelWidth"  prop="parentName">
             <el-input v-model="typeForm.parentName" auto-complete="off"></el-input>
           </el-form-item>
         </el-form>
@@ -54,7 +54,7 @@
     <div class="add-type-diolog">
       <el-dialog title="编辑类型" :visible.sync="dialogTypeVisible">
         <el-form :model="typeForm" ref="typeForm" :rules="rules">
-          <el-form-item label="一级类型" :label-width="formLabelWidth"  prop="parentName">
+          <el-form-item label="类型名称" :label-width="formLabelWidth"  prop="parentName">
             <el-input v-model="typeForm.parentName" auto-complete="off"></el-input>
           </el-form-item>
         </el-form>

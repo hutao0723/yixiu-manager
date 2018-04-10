@@ -14,8 +14,8 @@ const checkBrokerage = (rule, value, callback) => {
     }
   }, 500)
 }
-const lecturerrules = {
-  username: [{
+const knowlwdgerules = {
+  nickName: [{
       required: true,
       message: '请输入讲师昵称',
       trigger: 'blur'
@@ -27,11 +27,23 @@ const lecturerrules = {
       trigger: 'blur'
     }
   ],
-  brokerage: [{
+  rate: [{
     required: true,
     validator: checkBrokerage,
     trigger: 'blur'
-  }]
+  }],
+  goodsGroupName: [{
+    required: true,
+    message: '请输入分组标题',
+    trigger: 'blur'
+    },
+    {
+      min: 1,
+      max: 50,
+      message: '长度在 1 到 50 个字符',
+      trigger: 'blur'
+    }
+  ]
 }
-export default lecturerrules
+export default knowlwdgerules
 

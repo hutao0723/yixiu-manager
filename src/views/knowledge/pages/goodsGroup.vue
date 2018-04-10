@@ -6,7 +6,7 @@
       </el-breadcrumb>
       <span class="add-type">
         <i class="iconfont icon-jia" style="vertical-align: middle;"></i>
-        <span class="connect-ad" @click="openaddDialogType" style="vertical-align: middle;">类型</span>
+        <span class="connect-ad" @click="openaddDialogTitle" style="vertical-align: middle;">类型</span>
       </span>
     </div>
     <div class="content">
@@ -18,13 +18,13 @@
         <template>
           <el-table :data="groupList" style="width: 100%" >
             <el-table-column prop="id" label="ID" ></el-table-column>
-            <el-table-column prop="titleName" label="分组标题" ></el-table-column>
+            <el-table-column prop="goodsGroupName" label="分组标题" ></el-table-column>
             <el-table-column label="商品数">
               <template slot-scope="scope">
-                <a :href="'/#'+scope.row.url" class="link-blue">{{scope.row.number}}</a>
+                <a :href="'/#/manager/knowledge/goodsNumber/'+scope.row.id" class="link-blue">{{scope.row.goodsNum}}</a>
               </template>
             </el-table-column>
-            <el-table-column prop="createTime" label="创建时间" ></el-table-column>
+            <el-table-column prop="gmtCreate" label="创建时间" ></el-table-column>
             <el-table-column  label="操作" >
               <template slot-scope="scope">
                 <el-button type="text" size="mini" @click="openDialogTitle(scope.row)">编辑</el-button>        
@@ -41,29 +41,29 @@
     </div>
     <!--添加类型-->
     <div class="add-type-diolog">
-      <el-dialog title="添加" :visible.sync="dialogaddTypeVisible">
-        <el-form :model="titleForm" ref="titleForm">
-          <el-form-item label="分组标题" :label-width="formLabelWidth"  prop="titleName">
-            <el-input v-model="titleForm.titleName" auto-complete="off"></el-input>
+      <el-dialog title="添加" :visible.sync="dialogaddTitleVisible">
+        <el-form :model="titleForm" ref="titleForm" :rules="rules">
+          <el-form-item label="分组标题" :label-width="formLabelWidth"  prop="goodsGroupName">
+            <el-input v-model="titleForm.goodsGroupName" auto-complete="off"></el-input>
           </el-form-item>
         </el-form>
         <div class="btn-wrap">
-          <el-button size="small" @click="dialogaddTypeVisible = false">取 消</el-button>
-          <el-button size="small" type="primary" @click="addType">保存</el-button>
+          <el-button size="small" @click="dialogaddTitleVisible = false">取 消</el-button>
+          <el-button size="small" type="primary" @click="addTitle">保存</el-button>
         </div>
       </el-dialog>
     </div>
     <!--编辑类型-->
     <div class="add-type-diolog">
-      <el-dialog title="编辑" :visible.sync="dialogTypeVisible">
-        <el-form :model="titleForm" ref="titleForm" >
-          <el-form-item label="分组标题" :label-width="formLabelWidth"  prop="titleName">
-            <el-input v-model="titleForm.titleName" auto-complete="off"></el-input>
+      <el-dialog title="编辑" :visible.sync="dialogTitleVisible">
+        <el-form :model="titleForm" ref="titleForm" :rules="rules">
+          <el-form-item label="分组标题" :label-width="formLabelWidth"  prop="goodsGroupName">
+            <el-input v-model="titleForm.goodsGroupName" auto-complete="off"></el-input>
           </el-form-item>
         </el-form>
         <div class="btn-wrap">
-          <el-button size="small" @click="dialogTypeVisible = false">取 消</el-button>
-          <el-button size="small" type="primary" @click="saveType">保存</el-button>
+          <el-button size="small" @click="dialogTitleVisible = false">取 消</el-button>
+          <el-button size="small" type="primary" @click="saveTitle">保存</el-button>
         </div>
       </el-dialog>
     </div>
@@ -73,49 +73,50 @@
 <script>
 import { formatDateNew } from '../../../utils/dateUtils'
 import qs from 'qs'
+import knowlwdgerules from '../components/knowledgeValidRules'
 export default {
   data () {
     return {
+      rules: knowlwdgerules,
       formLabelWidth: '100px',
       titleForm: {
         id: '',
-        parentId: '',
-        titleName: '',
+        goodsGroupName: '',
       },
-      dialogTypeVisible: false,
-      dialogaddTypeVisible: false,
+      dialogTitleVisible: false,
+      dialogaddTitleVisible: false,
       pageOption: {
         pageNum: 1,
         pageSize: 20
       },
       totalSize: 0,
-      groupList: []
+      groupList: [],
+      currentPage: 1
     }
   },
   created () {
-    this.getTypeList()
+    this.getGoodsGroupList()
   },
   methods: {
     // 打开添加类型弹框
     openDialogTitle (row) {
-      this.dialogTypeVisible = true
+      this.dialogTitleVisible = true
       this.titleForm.id = row.id
-      this.titleForm.parentId = row.parentId
-      this.titleForm.titleName = row.titleName
+      this.titleForm.goodsGroupName = row.goodsGroupName
     },
     // 打开添加类型弹框
-    openaddDialogType (row) {
-      this.dialogaddTypeVisible = true
-      this.titleForm.titleName = row.titleName
+    openaddDialogTitle (row) {
+      this.dialogaddTitleVisible = true
+      this.titleForm.goodsGroupName = row.goodsGroupName
     },
     // 获取类型列表
-    getTypeList () {
-      this.$http.get('/goods/group/groupList', {}).then(res => {
+    getGoodsGroupList () {
+      this.$http.get('/goodsGroup/list', {}).then(res => {
         let resp = res.data
         if (resp.success) {
-          this.groupList = resp.data.content
+          this.groupList = resp.data.lists
           // 算出有多少条数据
-          this.totalSize = resp.data.totalElements
+          this.totalSize = resp.data.totalSize
         } else {
           let msg = resp.desc || '请求失败'
           this.$message.error(msg)
@@ -123,23 +124,22 @@ export default {
       })
     },
     // 保存
-    saveType () {
+    saveTitle () {
       this.$refs['titleForm'].validate((valid) => {
         if (valid) {
           let params = {
-            titleName: this.titleForm.titleName,
-            parentId: this.titleForm.parentId,
+            goodsGroupName: this.titleForm.goodsGroupName,
             id: this.titleForm.id
           }
-          this.$http.post('/goods/group/update', qs.stringify(params)).then(res => {
+          this.$http.post('/goodsGroup/insert', qs.stringify(params)).then(res => {
             if (res.data.data) {
-              this.dialogTypeVisible = false
+              this.dialogTitleVisible = false
               this.$message.success('保存成功')
-              this.getTypeList()
+              this.getGoodsGroupList()
             } else {
               let msg =res.data.desc || "保存失败"
               this.$message.error(msg)
-              this.dialogTypeVisible = false
+              this.dialogTitleVisible = false
              
             }
           })
@@ -149,22 +149,22 @@ export default {
         }
       })
     },
-    // 新增类型
-    addType () {
+    // 新增
+    addTitle () {
       this.$refs['titleForm'].validate((valid) => {
         if (valid) {
           let params = {
-            titleName: this.titleForm.titleName
+            goodsGroupName: this.titleForm.goodsGroupName
           }
-          this.$http.post('/goods/group/add', qs.stringify(params)).then(res => {
+          this.$http.post('/goodsGroup/insert', qs.stringify(params)).then(res => {
             if (res.data.data) {
-              this.dialogaddTypeVisible = false
+              this.dialogaddTitleVisible = false
               this.$message.success('保存成功')
-              this.getTypeList()
+              this.getGoodsGroupList()
             } else {
               let msg =res.data.desc || "保存失败"
               this.$message.error(msg)
-              this.dialogaddTypeVisible = false
+              this.dialogaddTitleVisible = false
              
             }
           })
@@ -175,17 +175,18 @@ export default {
       })
     },
     // 分页请求
-    pageChange () {
+    pageChange (currentPage) {
+      this.currentPage = currentPage
       let params = {
-        pageNum: this.pageOption.pageNum,
+        pageNum: this.currentPage,
         pageSize:20
       }
-      this.$http.get('/goods/group/groupList', {params: params}).then(res => {
+      this.$http.get('/goodsGroup/list', {params: params}).then(res => {
         let resp = res.data
         if (resp.success) {
-          this.groupList = resp.data.content
+          this.groupList = resp.data.lists
           // 算出有多少条数据
-          this.totalSize = resp.data.totalElements
+          this.totalSize = resp.data.totalSize
         } else {
           let msg = resp.desc || '请求失败'
           this.$message.error(msg)
@@ -202,12 +203,12 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$http.post('/goods/group/delete', qs.stringify(params)).then(res => {
+        this.$http.post('/goodsGroup/delete', qs.stringify(params)).then(res => {
           let msg = res.data.success
           if (msg) {
             if (res.data.data) {
               this.$message.success('删除成功')
-              this.getTypeList()
+              this.getGoodsGroupList()
             } else {
               let msg = res.data.desc || '删除失败'
               this.$message.error(msg)
@@ -239,7 +240,7 @@ export default {
           if (msg) {
             if (res.data.data) {
               this.$message.success('复制成功')
-              this.getTypeList()
+              this.getGoodsGroupList()
             } else {
               let msg = res.data.desc || '复制成功'
               this.$message.error(msg)

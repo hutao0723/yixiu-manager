@@ -9,25 +9,25 @@ var setOnline = [
   {
     name: 'groupList',
     type: 'get',
-    url: '/goods/group/groupList'
+    url: '/goodsGroup/list'
   },
   // 商品组删除
   {
     name: 'delete',
     type: 'post',
-    url: '/goods/group/delete'
+    url: '/goodsGroup/delete'
   },
   // 商品组添加
   {
     name: 'save',
     type: 'post',
-    url: '/goods/group/add'
+    url: '/goodsGroup/insert'
   },
   // 商品组修改
   {
     name: 'save',
     type: 'post',
-    url: '/goods/group/update'
+    url: '/goodsGroup/insert'
   },
   // 商品组复制
   {
@@ -57,7 +57,7 @@ var setOnline = [
   {
     name: 'lecturer',
     type: 'get',
-    url: '/lecturer/get'
+    url: '/lecturer/pageList'
   },
   // 讲师添加
   {
@@ -88,8 +88,13 @@ var setOnline = [
     name: 'goodsList',
     type: 'get',
     url: '/associate/goods'
+  },
+  // 关联商品/associate/goods
+  {
+    name: 'save',
+    type: 'post',
+    url: '/associate/goods'
   }
-
 ];
 var fs = require('fs');
 

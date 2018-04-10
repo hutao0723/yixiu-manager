@@ -6,7 +6,7 @@
         <el-breadcrumb-item>商品数</el-breadcrumb-item>
       </el-breadcrumb>
       <span class="link-theme">
-        <i class="iconfont icon-jia"></i>
+        <i class="iconfont icon-guanlian"></i>
         <span class="connect-ad" @click="openDialogGoods">商品</span>
       </span>
     </div>
@@ -67,31 +67,43 @@
                     <el-input v-model="searchForm.goodsTitle" placeholder="商品标题"></el-input>
                   </el-form-item>
                   <el-form-item>
-                    <el-button type="primary" @click="">查询</el-button>
+                    <el-button type="primary" @click="onSearch">查询</el-button>
                   </el-form-item>
                 </el-form>
               </template>
             </div>
             <div class="tabel-wrap">
               <template>
-                <el-table :data="goodsList" ref="multipleTable" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange" >
+                <el-table :data="goodsList" >
                   <el-table-column property="id" label="ID" width="150"></el-table-column>
-                  <el-table-column property="goodsInfo" label="商品信息" width="280"></el-table-column>
+                  <el-table-column label="商品信息" width="280">
+                    <template slot-scope="scope">
+                      <img :src="scope.row.imgUrl" alt="" class="goods-list-img">
+                      <span v-text="scope.row.goodsInfo"></span>
+                    </template>
+                  </el-table-column>
                   <el-table-column property="goodsType" label="商品类型"></el-table-column>
-                  <el-table-column type="selection" width="205" label="选择"></el-table-column>
+                  <el-table-column  label="选择">
+                    <template slot-scope="scope">
+                      <el-button type="text" size="mini" @click="deletePageModel(scope.row)">删除</el-button>  
+                    </template>
+                     <template slot-scope="scope">
+                        <el-checkbox @change="handleCheckedChange($event, scope.row, activeName)" :checked="arrClassStatus[scope.row.id]"></el-checkbox>
+                    </template> 
+                  </el-table-column>
                 </el-table>
               </template>        
             </div>    
           </div>
         </el-tabs>
-      <div class="page-control">
-        <el-pagination background  :page-size="10" :current-page.sync="pageOption.pageNum" @current-change="pageChange" layout="total, prev, pager, next" :total="totalSize">
-        </el-pagination>
-      </div>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogTableVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogTableVisible = false">确 定</el-button>
-      </div>
+        <div class="page-control">
+          <el-pagination background  :page-size="10" :current-page.sync="pageOption.pageNum" @current-change="pageChange" layout="total, prev, pager, next" :total="totalSize">
+          </el-pagination>
+        </div>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogTableVisible = false">取 消</el-button>
+          <el-button type="primary" @click="saveGoods">确 定</el-button>
+        </div>
       </el-dialog>
       
     </div>
@@ -101,6 +113,7 @@
 <script>
 import { mapState } from 'vuex'
 import draggable from 'vuedraggable'
+import qs from 'qs'
 const columns = [
   {
     title: '排序',
@@ -146,12 +159,14 @@ export default {
       dialogFormVisible: false,
 
       activeType: '课程',
-      activeName: '',
+      activeName: '课程',
       tabList: [{
         name: '课程'
       },{
         name: '专栏'
       }],
+      classs: '课程',
+      column: '专栏',
       searchForm:{
         goodsTitle: ''
       },
@@ -159,8 +174,14 @@ export default {
         pageNum: 1,
         pageSize: 10
       },
+      currentPage: 1,
       multipleSelection:[],
-      totalSize: 0
+      addArray:[],
+      totalSize: 0,
+      classIds: [],
+      columnIds: [],
+      arrClassStatus: [],
+      arrColumnStatus: []
     }
   },
 
@@ -168,11 +189,9 @@ export default {
     this.getList()
     this.themeId = this.$route.params.id
   },
-  mounted(){
-    this.getContentList(this.activeType)
-  },
   methods: {
     openDialogGoods () {
+      this.getContentList(this.activeType)
       this.dialogTableVisible = true
     },
     // 获取商品数列表
@@ -185,9 +204,49 @@ export default {
       })
     },
     // 选中
-    handleSelectionChange(val) {
-      this.multipleSelection = val
-      console.log(val)
+    handleCheckedChange(event,row,activeName){
+      if(activeName == "课程"){
+        this.arrClassStatus[row.id] = event
+      }
+      if(activeName == "专栏"){
+        this.arrColumnStatus[row.id] = event
+      }
+    },
+    
+    saveGoods () {
+      for(let i = 0;i < this.arrClassStatus.length;i++){
+        if(this.arrClassStatus[i] == true){
+          this.classIds.push(i)
+        }
+      }
+      for(let i = 0;i < this.arrColumnStatus.length;i++){
+        if(this.arrColumnStatus[i] == true){
+          this.columnIds.push(i)
+        }
+      }
+      if (this.classIds.length > 0 || this.classIds.length > 0) {
+        let params = {
+          columnIds : this.columnIds.join(','),
+          classIds : this.classIds.join(','),
+          classs : this.classs,
+          column : this.column,
+        }
+        this.$http.post('/associate/goods', qs.stringify(params)).then(res => {
+          let data = res.data
+          if (data.success) {
+            this.dialogTableVisible = false
+            this.$message.success('关联成功')
+            this.getList()
+          } else {
+            this.dialogTableVisible = false
+            let msg = data.desc || '关联失败'
+            this.$message.error(msg)
+          }
+        })
+      } else {
+        console.log('error submit!!')
+        return false
+      }
     },
     // 切换tab
     handleClick(tab, event) {
@@ -200,6 +259,7 @@ export default {
     // 获取全部内容列表
     getContentList (activeType) {
       let params = {
+        goodsTitle: this.searchForm.goodsTitle,
         activeType: activeType,
         pageNum: 1,
         pageSize:10
@@ -256,10 +316,34 @@ export default {
       })
     },
     // 分页请求
-    pageChange () {
+    pageChange (currentPage) {
+      this.currentPage = currentPage
       let params = {
+        activeType: this.activeName,
+        goodsTitle: this.searchForm.goodsTitle,
+        pageNum: this.currentPage,
+        pageSize:10
       }
-      this.$http.get('/associate/goods', {}).then(res => {
+      this.$http.get('/associate/goods', {params:params}).then(res => {
+        let resp = res.data
+        if (resp.success) {
+          this.goodsList = resp.data.content
+          // 算出有多少条数据
+          this.totalSize = resp.data.totalElements
+        } else {
+          let msg = resp.desc || '请求失败'
+          this.$message.error(msg)
+        }
+      })
+    },
+    onSearch () {
+      let params = {
+        activeType: this.activeName,
+        goodsTitle: this.searchForm.goodsTitle,
+        pageNum: this.pageOption.pageNum,
+        pageSize:10
+      }
+      this.$http.get('/associate/goods', {params:params}).then(res => {
         let resp = res.data
         if (resp.success) {
           this.goodsList = resp.data.content

@@ -88,7 +88,8 @@ export default {
         pageSize: 20
       },
       totalSize: 0,
-      typeList: []
+      typeList: [],
+      currentPage: 1
     }
   },
   created () {
@@ -174,9 +175,10 @@ export default {
       })
     },
     // 分页请求
-    pageChange () {
+    pageChange (currentPage) {
+      this.currentPage = currentPage
       let params = {
-        pageNum: this.pageOption.pageNum,
+        pageNum: this.currentPage,
         pageSize:20
       }
       this.$http.get('/content/type/typeList', {params: params}).then(res => {

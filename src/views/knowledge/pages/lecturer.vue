@@ -31,8 +31,12 @@
         <template>
           <el-table :data="typeList" style="width: 100%" >
             <el-table-column prop="id" label="讲师ID" ></el-table-column>
-            <el-table-column prop="username" label="讲师昵称" ></el-table-column>
-            <el-table-column prop="brokerage" label="讲师抽成" ></el-table-column>
+            <el-table-column prop="nickName" label="讲师昵称" ></el-table-column>
+            <el-table-column label="讲师抽成" >
+              <template slot-scope="scope">
+                <span>{{scope.row.rate}}%</span>
+              </template>
+            </el-table-column>
             <el-table-column  label="操作" >
               <template slot-scope="scope">
                 <el-button type="text" size="mini" @click="openDialogLecturer(scope.row)">编辑</el-button>        
@@ -50,13 +54,13 @@
     <div class="add-type-diolog">
       <el-dialog title="添加讲师" :visible.sync="dialogaddLecturerVisible">
         <el-form :model="typeForm" ref="typeForm" :rules="rules">
-          <el-form-item label="讲师昵称" :label-width="formLabelWidth"  prop="username">
-            <el-input v-model="typeForm.username" auto-complete="off"></el-input>
+          <el-form-item label="讲师昵称" :label-width="formLabelWidth"  prop="nickName">
+            <el-input v-model="typeForm.nickName" auto-complete="off"></el-input>
           </el-form-item>
-          <el-form-item label="讲师抽成" :label-width="formLabelWidth"  prop="brokerage">
+          <el-form-item label="讲师抽成" :label-width="formLabelWidth"  prop="rate">
             <template slot-scope="scope">
               <div class="character">
-                <el-input v-model="typeForm.brokerage" auto-complete="off"></el-input>
+                <el-input v-model="typeForm.rate" auto-complete="off"></el-input>
                 <el-input v-model="character" auto-complete="off" :disabled="true"></el-input>
               </div>
           </template>
@@ -72,13 +76,13 @@
     <div class="add-type-diolog">
       <el-dialog title="编辑讲师" :visible.sync="dialogLecturerVisible">
         <el-form :model="typeForm" ref="typeForm" :rules="rules">
-          <el-form-item label="讲师昵称" :label-width="formLabelWidth"  prop="username">
-            <el-input v-model="typeForm.username" auto-complete="off"></el-input>
+          <el-form-item label="讲师昵称" :label-width="formLabelWidth"  prop="nickName">
+            <el-input v-model="typeForm.nickName" auto-complete="off"></el-input>
           </el-form-item>
-          <el-form-item label="讲师抽成" :label-width="formLabelWidth"  prop="brokerage">
+          <el-form-item label="讲师抽成" :label-width="formLabelWidth"  prop="rate">
             <template slot-scope="scope">
               <div class="character">
-                <el-input v-model="typeForm.brokerage" auto-complete="off"></el-input>
+                <el-input v-model="typeForm.rate" auto-complete="off"></el-input>
                 <el-input v-model="character" auto-complete="off" :disabled="true"></el-input>
               </div>
             </template>
@@ -95,28 +99,27 @@
 
 <script>
 import { formatDateNew } from '../../../utils/dateUtils'
-import lecturerrules from '../components/knowledgeValidRules'
+import knowlwdgerules from '../components/knowledgeValidRules'
 import qs from 'qs'
 export default {
   data () {
     return {
-      rules: lecturerrules,
+      rules: knowlwdgerules,
       formLabelWidth: '100px',
       typeForm: {
         id: '',
-        parentId: '',
-        username: '',
-        brokerage: ''
+        nickName: '',
+        rate: null
       },
       character: '%',
       searchForm: {
-        name: 'username',
+        name: 'nickName',
         value: ''
       },
       teacher: '',
       selectOptions: [
         {
-          value: 'username',
+          value: 'nickName',
           label: '讲师昵称'
         },
         {
@@ -130,6 +133,7 @@ export default {
         pageNum: 1,
         pageSize: 20
       },
+      currentPage: 1,
       totalSize: 0,
       typeList: []
     }
@@ -143,18 +147,18 @@ export default {
     openDialogLecturer (row) {
       this.dialogLecturerVisible = true
       this.typeForm.id = row.id
-      this.typeForm.username = row.username
-      this.typeForm.brokerage = row.brokerage.split("%")[0]
+      this.typeForm.nickName = row.nickName
+      this.typeForm.rate = row.rate
     },
     // 添加讲师弹框
     openaddDialogLecturer (row) {
       this.dialogaddLecturerVisible = true
-      this.typeForm.username = row.username
-      this.typeForm.brokerage = row.brokerage
+      this.typeForm.nickName = row.nickName
+      this.typeForm.rate = row.rate
     },
     // 获取讲师列表
     getLecturerList () {
-      this.$http.get('/lecturer/get', {}).then(res => {
+      this.$http.get('/lecturer/pageList', {}).then(res => {
         let resp = res.data
         if (resp.success) {
           this.typeList = resp.data.content
@@ -171,9 +175,8 @@ export default {
       this.$refs['typeForm'].validate((valid) => {
         if (valid) {
           let params = {
-            username: this.typeForm.username,
-            brokerage: this.typeForm.brokerage,
-            parentId: this.typeForm.parentId,
+            nickName: this.typeForm.nickName,
+            rate: parseFloat(this.typeForm.rate),
             id: this.typeForm.id
           }
           this.$http.post('/lecturer/update', qs.stringify(params)).then(res => {
@@ -197,16 +200,18 @@ export default {
     onSearch () {
       let valueArr = Object.values(this.searchForm)
       let params = {
-        pageNum: this.pageOption.pageNum,
-        pageSize:20,
+        pageNum: 1,
+        pageSize: 20,
         [valueArr[0]]: valueArr[1]
       }
-      this.$http.get('/lecturer/get', {params: params}).then(res => {
+      this.$http.get('/lecturer/pageList', {params: params}).then(res => {
         let resp = res.data
         if (resp.success) {
           this.typeList = resp.data.content
           // 算出有多少条数据
           this.totalSize = resp.data.totalElements
+          this.pageOption.pageNum = 1
+          this.currentPage = 1
         } else {
           let msg = resp.desc || '请求失败'
           this.$message.error(msg)
@@ -220,8 +225,8 @@ export default {
       this.$refs['typeForm'].validate((valid) => {
         if (valid) {
           let params = {
-            username: this.typeForm.username,
-            brokerage: this.typeForm.brokerage
+            nickName: this.typeForm.nickName,
+            rate: parseFloat(this.typeForm.rate)
           }
           this.$http.post('/lecturer/add', qs.stringify(params)).then(res => {
             if (res.data.data) {
@@ -242,14 +247,15 @@ export default {
       })
     },
     // 分页请求
-    pageChange () {
+    pageChange (currentPage) {
       let valueArr = Object.values(this.searchForm)
+      this.currentPage = currentPage
       let params = {
-        pageNum: this.pageOption.pageNum,
+        pageNum: this.currentPage,
         pageSize:20,
         [valueArr[0]]: valueArr[1]
       }
-      this.$http.get('/lecturer/get', {params: params}).then(res => {
+      this.$http.get('/lecturer/pageList', {params: params}).then(res => {
         let resp = res.data
         if (resp.success) {
           this.typeList = resp.data.content
@@ -331,7 +337,7 @@ export default {
         }
       }
     }
-    .link-brokerage{
+    .link-rate{
       display: inline-block;
       position: absolute;
       right: 0;

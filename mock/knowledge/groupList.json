@@ -1,27 +1,24 @@
 {
 	"success": true,
 	"data": {
-		"totalElements": 100,
-		"content": [{
+		"totalSize": 100,
+		"lists": [{
 			"id": 3,
-			"number": 2,
-			"titleName": "人气推荐王",
-			"url": "/manager/knowledge/goodsNumber/3",
-			"createTime": "2018-04-09 11:01:20"
+			"goodsNum": 2,
+			"goodsGroupName": "人气推荐王",
+			"gmtCreate": "2018-04-09 11:01:20"
 		},
 		{
 			"id": 4,
-			"number": 5,
-			"titleName": "热销商品库",
-			"url": "/manager/knowledge/goodsNumber/4",
-			"createTime": "2018-04-09 11:50:20"
+			"goodsNum": 5,
+			"goodsGroupName": "热销商品库",
+			"gmtCreate": "2018-04-09 11:50:20"
 		},
 		{
 			"id": 8,
-			"number": 1,
-			"titleName": "爆款",
-			"url": "/manager/knowledge/goodsNumber/8",
-			"createTime": "2018-04-09 11:01:50"
+			"goodsNum": 1,
+			"goodsGroupName": "爆款",
+			"gmtCreate": "2018-04-09 11:01:50"
 		}]
 	}
 }

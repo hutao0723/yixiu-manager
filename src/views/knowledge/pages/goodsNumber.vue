@@ -85,11 +85,13 @@
                   <el-table-column property="goodsType" label="商品类型"></el-table-column>
                   <el-table-column  label="选择">
                     <template slot-scope="scope">
-                      <el-button type="text" size="mini" @click="deletePageModel(scope.row)">删除</el-button>  
+                      <div v-if="activeName == '课程'">
+                        <el-checkbox @change="handleCheckedChange($event, scope.row, activeName)"  :checked="arrClassStatus[scope.row.id]"></el-checkbox>
+                      </div>
+                      <div v-if="activeName == '专栏'">
+                        <el-checkbox @change="handleCheckedChange($event, scope.row, activeName)"  :checked="arrColumnStatus[scope.row.id]"></el-checkbox>
+                      </div>
                     </template>
-                     <template slot-scope="scope">
-                        <el-checkbox @change="handleCheckedChange($event, scope.row, activeName)" :checked="arrClassStatus[scope.row.id]"></el-checkbox>
-                    </template> 
                   </el-table-column>
                 </el-table>
               </template>        
@@ -180,8 +182,8 @@ export default {
       totalSize: 0,
       classIds: [],
       columnIds: [],
-      arrClassStatus: [],
-      arrColumnStatus: []
+      arrClassStatus: [,true,true,false,false,true],
+      arrColumnStatus: [,true,false,false,true,false]
     }
   },
 
@@ -212,7 +214,6 @@ export default {
         this.arrColumnStatus[row.id] = event
       }
     },
-    
     saveGoods () {
       for(let i = 0;i < this.arrClassStatus.length;i++){
         if(this.arrClassStatus[i] == true){
@@ -224,7 +225,7 @@ export default {
           this.columnIds.push(i)
         }
       }
-      if (this.classIds.length > 0 || this.classIds.length > 0) {
+      if (this.classIds.length > 0 || this.columnIds.length > 0) {
         let params = {
           columnIds : this.columnIds.join(','),
           classIds : this.classIds.join(','),
@@ -242,6 +243,10 @@ export default {
             let msg = data.desc || '关联失败'
             this.$message.error(msg)
           }
+          this.classIds = []
+          this.columnIds = []
+          this.arrClassStatus = []
+          this.arrColumnStatus = []
         })
       } else {
         console.log('error submit!!')

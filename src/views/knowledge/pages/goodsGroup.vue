@@ -6,7 +6,7 @@
       </el-breadcrumb>
       <span class="add-type">
         <i class="iconfont icon-jia" style="vertical-align: middle;"></i>
-        <span class="connect-ad" @click="openaddDialogTitle" style="vertical-align: middle;">类型</span>
+        <span class="connect-ad" @click="openaddDialogTitle" style="vertical-align: middle;">商品组</span>
       </span>
     </div>
     <div class="content">

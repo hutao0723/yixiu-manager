@@ -154,7 +154,7 @@
                     </el-table-column>
                     <el-table-column  label="选择">
                       <template slot-scope="scope">
-                          <el-checkbox @change="handleCheckedChange($event, scope.row, activeName)"  :checked="arrColumnStatus[scope.row.id]" v-model="scope.row.checked"></el-checkbox>
+                          <el-checkbox @change="handleCheckedChange($event, scope.row, activeName)"  v-model="scope.row.checked"></el-checkbox>
                       </template>
                     </el-table-column>
                   </el-table>
@@ -323,7 +323,13 @@ export default {
       this.$http.get(url, {params:params}).then(res => {
         let resp = res.data
         if (resp.success) {
-          this.goodsList = resp.data.lists
+          let arr = resp.data.lists
+          arr.forEach(item=>{
+            if(this.arrClassStatus[item.id]){
+              item['checked'] = true;
+            }
+          })
+          this.goodsList = arr;
           // 算出有多少条数据
           this.totalSize = resp.data.totalSize
         } else {
@@ -358,9 +364,40 @@ export default {
         }
       })
     },
+    // // 判断数据是否被选中
+    // checkDataTrue(goodsList){
+    //   if(goodsList.length > 0){
+    //     if(this.activeName == "课程"){
+    //       for(let i = 0;i < this.arrClassStatus.length;i++){
+    //         if(this.arrClassStatus[i] == true){
+    //           for(let j = 0;j < this.goodsList.length;j++){
+    //               if(this.goodsList[j].id == i){
+    //                 this.goodsList[j].checked = true
+    //               }else{
+    //                 this.goodsList[j].checked = false
+    //               }
+    //           }
+    //         }
+    //       }
+    //     }
+    //     if(this.activeName == "专栏"){
+    //       for(let i = 0;i < this.arrColumnStatus.length;i++){
+    //         if(this.arrColumnStatus[i] == true){
+    //           for(let j = 0;j < this.goodsList.length;j++){
+    //               if(this.goodsList[j].id == i){
+    //                 this.goodsList[j].checked = true
+    //               }else{
+    //                 this.goodsList[j].checked = false
+    //               }
+    //           }
+    //         }
+    //       }
+    //     }
+        
+    //   }
+    // },
     // 选中
     handleCheckedChange(event,row,activeName){
-      console.log(event)
       if(activeName == "课程"){
         this.arrClassStatus[row.id] = event
       }

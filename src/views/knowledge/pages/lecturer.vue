@@ -32,11 +32,6 @@
           <el-table :data="typeList" style="width: 100%" >
             <el-table-column prop="id" label="讲师ID" ></el-table-column>
             <el-table-column prop="nickName" label="讲师昵称" ></el-table-column>
-            <el-table-column label="讲师抽成" >
-              <template slot-scope="scope">
-                <span>{{scope.row.rate}}%</span>
-              </template>
-            </el-table-column>
             <el-table-column  label="操作" >
               <template slot-scope="scope">
                 <el-button type="text" size="mini" @click="openDialogLecturer(scope.row)">编辑</el-button>        
@@ -57,14 +52,6 @@
           <el-form-item label="讲师昵称" :label-width="formLabelWidth"  prop="nickName">
             <el-input v-model="typeForm.nickName" auto-complete="off"></el-input>
           </el-form-item>
-          <el-form-item label="讲师抽成" :label-width="formLabelWidth"  prop="rate">
-            <template slot-scope="scope">
-              <div class="character">
-                <el-input v-model="typeForm.rate" auto-complete="off"></el-input>
-                <el-input v-model="character" auto-complete="off" :disabled="true"></el-input>
-              </div>
-          </template>
-          </el-form-item>           
         </el-form>
         <div class="btn-wrap">
           <el-button size="small" @click="dialogaddLecturerVisible = false">取 消</el-button>
@@ -79,14 +66,6 @@
           <el-form-item label="讲师昵称" :label-width="formLabelWidth"  prop="nickName">
             <el-input v-model="typeForm.nickName" auto-complete="off"></el-input>
           </el-form-item>
-          <el-form-item label="讲师抽成" :label-width="formLabelWidth"  prop="rate">
-            <template slot-scope="scope">
-              <div class="character">
-                <el-input v-model="typeForm.rate" auto-complete="off"></el-input>
-                <el-input v-model="character" auto-complete="off" :disabled="true"></el-input>
-              </div>
-            </template>
-          </el-form-item>           
         </el-form>
         <div class="btn-wrap">
           <el-button size="small" @click="dialogLecturerVisible = false">取 消</el-button>
@@ -108,8 +87,7 @@ export default {
       formLabelWidth: '100px',
       typeForm: {
         id: '',
-        nickName: '',
-        rate: null
+        nickName: ''
       },
       character: '%',
       searchForm: {
@@ -148,17 +126,15 @@ export default {
       this.dialogLecturerVisible = true
       this.typeForm.id = row.id
       this.typeForm.nickName = row.nickName
-      this.typeForm.rate = row.rate
     },
     // 添加讲师弹框
     openaddDialogLecturer (row) {
       this.dialogaddLecturerVisible = true
       this.typeForm.nickName = row.nickName
-      this.typeForm.rate = row.rate
     },
     // 获取讲师列表
     getLecturerList () {
-      this.$http.get('/lecturer/pageList', {}).then(res => {
+      this.$http.get('http://172.31.20.47:9101/lecturer/pageList', {}).then(res => {
         let resp = res.data
         if (resp.success) {
           this.typeList = resp.data.content
@@ -176,10 +152,9 @@ export default {
         if (valid) {
           let params = {
             nickName: this.typeForm.nickName,
-            rate: parseFloat(this.typeForm.rate),
             id: this.typeForm.id
           }
-          this.$http.post('/lecturer/update', qs.stringify(params)).then(res => {
+          this.$http.post('http://172.31.20.47:9101/lecturer/update', qs.stringify(params)).then(res => {
             if (res.data.data) {
               this.dialogLecturerVisible = false
               this.$message.success('保存成功')
@@ -204,7 +179,7 @@ export default {
         pageSize: 20,
         [valueArr[0]]: valueArr[1]
       }
-      this.$http.get('/lecturer/pageList', {params: params}).then(res => {
+      this.$http.get('http://172.31.20.47:9101/lecturer/pageList', {params: params}).then(res => {
         let resp = res.data
         if (resp.success) {
           this.typeList = resp.data.content
@@ -225,10 +200,9 @@ export default {
       this.$refs['typeForm'].validate((valid) => {
         if (valid) {
           let params = {
-            nickName: this.typeForm.nickName,
-            rate: parseFloat(this.typeForm.rate)
+            nickName: this.typeForm.nickName
           }
-          this.$http.post('/lecturer/add', qs.stringify(params)).then(res => {
+          this.$http.post('http://172.31.20.47:9101/lecturer/add', qs.stringify(params)).then(res => {
             if (res.data.data) {
               this.dialogaddLecturerVisible = false
               this.$message.success('保存成功')
@@ -255,7 +229,7 @@ export default {
         pageSize:20,
         [valueArr[0]]: valueArr[1]
       }
-      this.$http.get('/lecturer/pageList', {params: params}).then(res => {
+      this.$http.get('http://172.31.20.47:9101/lecturer/pageList', {params: params}).then(res => {
         let resp = res.data
         if (resp.success) {
           this.typeList = resp.data.content
@@ -277,7 +251,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$http.post('/lecturer/delete', qs.stringify(params)).then(res => {
+        this.$http.post('http://172.31.20.47:9101/lecturer/delete', qs.stringify(params)).then(res => {
           let msg = res.data.success
           if (msg) {
             if (res.data.data) {

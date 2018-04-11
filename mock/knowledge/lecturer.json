@@ -4,17 +4,14 @@
 		"totalElements": 100,
 		"content": [{
 			"id": 3,
-			"rate": "10.00",
 			"nickName": "张老师"
 		},
 		{
 			"id": 4,
-			"rate": "16.00",
 			"nickName": "王老师"
 		},
 		{
 			"id": 8,
-			"rate": "30",
 			"nickName": "胡老师"
 		}]
 	}

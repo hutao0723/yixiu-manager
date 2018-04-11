@@ -21,7 +21,9 @@
             <el-table-column prop="goodsGroupName" label="分组标题" ></el-table-column>
             <el-table-column label="商品数">
               <template slot-scope="scope">
-                <a :href="'/#/manager/knowledge/goodsNumber/'+scope.row.id" class="link-blue">{{scope.row.goodsNum}}</a>
+                <router-link :to="{ path: '/manager/knowledge/goodsNumber/' + scope.row.id }">          
+                  <el-button type="text">{{scope.row.goodsNum}}</el-button>
+                </router-link>
               </template>
             </el-table-column>
             <el-table-column prop="gmtCreate" label="创建时间" ></el-table-column>
@@ -235,7 +237,7 @@ export default {
         cancelButtonText: '取消',
         type: 'info'
       }).then(() => {
-        this.$http.post('/goods/group/copy', qs.stringify(params)).then(res => {
+        this.$http.post('/goodsGroup/copy', qs.stringify(params)).then(res => {
           let msg = res.data.success
           if (msg) {
             if (res.data.data) {

@@ -33,19 +33,19 @@ var setOnline = [
   {
     name: 'save',
     type: 'post',
-    url: '/goods/group/copy'
+    url: '/goodsGroup/copy'
   },
   // 商品数列表
   {
     name: 'goodsNumber',
     type: 'get',
-    url: '/goods/number/list'
+    url: '/goodsGroup/goods/list'
   },
-  // 商品数列表
+  // 移除
   {
     name: 'remove',
     type: 'get',
-    url: '/goods/number/remove'
+    url: '/goodsGroup/goods/delete'
   },
   // 商品数排序
   {
@@ -77,23 +77,23 @@ var setOnline = [
     type: 'post',
     url: '/lecturer/delete'
   },
-  // 讲师删除
+  // 讲师列表
   {
     name: 'teacherList',
     type: 'get',
     url: '/lecturer/list'
   },
-  // 讲师删除
+  // 关联商品列表
   {
     name: 'goodsList',
     type: 'get',
     url: '/associate/goods'
   },
-  // 关联商品/associate/goods
+  // 添加关联成功
   {
     name: 'save',
     type: 'post',
-    url: '/associate/goods'
+    url: '/goodsGroup/goods/add'
   }
 ];
 var fs = require('fs');

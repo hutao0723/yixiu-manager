@@ -33,8 +33,16 @@
                     </template>
                     <template v-else-if="column.hasUrl">
                       <td> 
-                        <img :src="item[column.imgUrl]" alt="" class="goods-list-img">
+                        <img :src="item[column.itemPicture]" alt="" class="goods-list-img">
                         <span v-text="item[column.dataIndex]"></span>
+                      </td>
+                    </template>
+                    <template v-else-if="column.type">
+                      <td v-if="item[column.dataIndex] == '1'"> 
+                        <span>课程—音频</span>
+                      </td>
+                      <td v-else> 
+                        <span>专栏</span>
                       </td>
                     </template>
                     <template v-else>
@@ -78,7 +86,7 @@
                   <el-table-column property="id" label="ID" width="150"></el-table-column>
                   <el-table-column label="商品信息" width="280">
                     <template slot-scope="scope">
-                      <img :src="scope.row.imgUrl" alt="" class="goods-list-img">
+                      <img :src="scope.row.itemPicture" alt="" class="goods-list-img">
                       <span v-text="scope.row.goodsInfo"></span>
                     </template>
                   </el-table-column>
@@ -126,13 +134,14 @@ const columns = [
     title: '商品标题',
     dataIndex: 'title',
     width: 30,
-    imgUrl: 'imgUrl',
+    itemPicture: 'itemPicture',
     hasUrl: true
   },
   {
     title: '商品类型',
-    dataIndex: 'goodsType',
-    width: 20
+    dataIndex: 'itemType',
+    width: 20,
+    type: true
   },
   {
     title: '商品价格',
@@ -154,7 +163,7 @@ export default {
   data () {
     return {
       columns: columns,
-      themeId: null,
+      goodsGroupId: null,
       tableData: [],
       goodsList: [],
       dialogTableVisible: false,
@@ -167,8 +176,6 @@ export default {
       },{
         name: '专栏'
       }],
-      classs: '课程',
-      column: '专栏',
       searchForm:{
         goodsTitle: ''
       },
@@ -180,16 +187,16 @@ export default {
       multipleSelection:[],
       addArray:[],
       totalSize: 0,
-      classIds: [],
+      courseIds: [],
       columnIds: [],
-      arrClassStatus: [,true,true,false,false,true],
-      arrColumnStatus: [,true,false,false,true,false]
+      arrClassStatus: [],
+      arrColumnStatus: []
     }
   },
 
   created () {
     this.getList()
-    this.themeId = this.$route.params.id
+    this.goodsGroupId = this.$route.params.id
   },
   methods: {
     openDialogGoods () {
@@ -198,8 +205,8 @@ export default {
     },
     // 获取商品数列表
     getList () {
-      let themeId = this.$route.params.id
-      this.$http.get('/goods/number/list', {params: {themeId}}).then(res => {
+      let id = this.$route.params.id
+      this.$http.get('/goodsGroup/goods/list', {params: {id}}).then(res => {
         if (res.data.success) {
           this.tableData = res.data.data
         }
@@ -217,7 +224,7 @@ export default {
     saveGoods () {
       for(let i = 0;i < this.arrClassStatus.length;i++){
         if(this.arrClassStatus[i] == true){
-          this.classIds.push(i)
+          this.courseIds.push(i)
         }
       }
       for(let i = 0;i < this.arrColumnStatus.length;i++){
@@ -225,14 +232,13 @@ export default {
           this.columnIds.push(i)
         }
       }
-      if (this.classIds.length > 0 || this.columnIds.length > 0) {
+      if (this.courseIds.length > 0 || this.columnIds.length > 0) {
         let params = {
           columnIds : this.columnIds.join(','),
-          classIds : this.classIds.join(','),
-          classs : this.classs,
-          column : this.column,
+          courseIds : this.courseIds.join(','),
+          id : this.$route.params.id
         }
-        this.$http.post('/associate/goods', qs.stringify(params)).then(res => {
+        this.$http.post('/goodsGroup/goods/add', qs.stringify(params)).then(res => {
           let data = res.data
           if (data.success) {
             this.dialogTableVisible = false
@@ -243,7 +249,7 @@ export default {
             let msg = data.desc || '关联失败'
             this.$message.error(msg)
           }
-          this.classIds = []
+          this.courseIds = []
           this.columnIds = []
           this.arrClassStatus = []
           this.arrColumnStatus = []
@@ -289,12 +295,12 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        let loadPageId = row.id
-        let themeId = this.themeId
-        this.$http.get('/goods/number/remove', {
+        let id = row.id
+        let goodsGroupId = this.goodsGroupId
+        this.$http.get('/goodsGroup/goods/delete', {
           params: {
-            themeId,
-            loadPageId
+            goodsGroupId,
+            id
           }
         }).then(res => {
           let msg = res.data.success
@@ -363,10 +369,10 @@ export default {
     // 拖拽
     datadragEnd (e) {
       let id = +this.tableData[e.newIndex].id
-      let themeId = +this.themeId
-      let start = +this.tableData[e.newIndex].sort
-      let end = e.newIndex > e.oldIndex ? +(this.tableData[e.newIndex - 1].sort) : +(this.tableData[e.newIndex + 1].sort)
-      this.$http.post('/goods/number/sort', {start, end, id, themeId}).then(res => {
+      let goodsGroupId = +this.goodsGroupId
+      let start = +this.tableData[e.newIndex].relationSort
+      let end = e.newIndex > e.oldIndex ? +(this.tableData[e.newIndex - 1].relationSort) : +(this.tableData[e.newIndex + 1].relationSort)
+      this.$http.post('/goods/number/sort', {start, end, id, goodsGroupId}).then(res => {
         let resp = res.data
         if (resp.success) {
           this.$message.success('排序成功')

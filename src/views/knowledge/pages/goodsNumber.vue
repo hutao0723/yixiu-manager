@@ -13,7 +13,7 @@
     <div class="conbtent">
       <div class="tabel-content">
         <template>
-           <table class="" v-if="tableData" >
+          <table class="" v-if="tableData" >
               <thead>
                 <tr class="tr-header">
                   <template v-for="column in columns">
@@ -56,7 +56,17 @@
                   </template>
                 </tr>
               </draggable>
-            </table>
+          </table>
+          <table  v-else>
+            <tr class="tr-header">
+              <template v-for="column in columns">
+                <th v-bind:class="column.className" v-bind:style="{width: column.width + '%'}">
+                  {{column.title}}
+                </th>
+              </template>
+            </tr>
+            <tr class="tr-header"><td colspan="5" style="text-align:center">暂无数据</td></tr>
+          </table>
         </template>
       </div>
     </div>

@@ -186,7 +186,7 @@ const columns = [
   {
     title: '排序',
     width: 10,
-    dataIndex: 'id',
+    dataIndex: 'relationSort',
   },
   {
     title: '商品标题',
@@ -326,6 +326,9 @@ export default {
           arr.forEach(item=>{
             if(this.arrClassStatus[item.id]){
               item['checked'] = true;
+            }else{
+              item['checked'] = false;
+
             }
           })
           this.goodsList = resp.data.lists

@@ -322,6 +322,7 @@ export default {
       this.$http.get(url, {params:params}).then(res => {
         let resp = res.data
         if (resp.success) {
+          let arr = resp.data.lists
           arr.forEach(item=>{
             if(this.arrClassStatus[item.id]){
               item['checked'] = true;

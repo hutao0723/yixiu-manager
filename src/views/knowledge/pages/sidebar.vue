@@ -94,8 +94,8 @@
         case '/manager/miniApp/editContent':
           pathIndex = "2";
           break;
-        case '/manager/miniApp/typeManage':
-          pathIndex = "2";
+        case '/manager/knowledge/lecturer':
+          pathIndex = "6";
           break;
         default:
           pathIndex = "1";

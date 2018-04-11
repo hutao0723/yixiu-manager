@@ -134,7 +134,7 @@ export default {
     },
     // 获取讲师列表
     getLecturerList () {
-      this.$http.get('http://172.31.20.47:9101/lecturer/pageList', {}).then(res => {
+      this.$http.get('/lecturer/pageList', {}).then(res => {
         let resp = res.data
         if (resp.success) {
           this.typeList = resp.data.content
@@ -154,7 +154,7 @@ export default {
             nickName: this.typeForm.nickName,
             id: this.typeForm.id
           }
-          this.$http.post('http://172.31.20.47:9101/lecturer/update', qs.stringify(params)).then(res => {
+          this.$http.post('/lecturer/update', qs.stringify(params)).then(res => {
             if (res.data.data) {
               this.dialogLecturerVisible = false
               this.$message.success('保存成功')
@@ -179,7 +179,7 @@ export default {
         pageSize: 20,
         [valueArr[0]]: valueArr[1]
       }
-      this.$http.get('http://172.31.20.47:9101/lecturer/pageList', {params: params}).then(res => {
+      this.$http.get('/lecturer/pageList', {params: params}).then(res => {
         let resp = res.data
         if (resp.success) {
           this.typeList = resp.data.content
@@ -202,7 +202,7 @@ export default {
           let params = {
             nickName: this.typeForm.nickName
           }
-          this.$http.post('http://172.31.20.47:9101/lecturer/add', qs.stringify(params)).then(res => {
+          this.$http.post('/lecturer/add', qs.stringify(params)).then(res => {
             if (res.data.data) {
               this.dialogaddLecturerVisible = false
               this.$message.success('保存成功')
@@ -229,7 +229,7 @@ export default {
         pageSize:20,
         [valueArr[0]]: valueArr[1]
       }
-      this.$http.get('http://172.31.20.47:9101/lecturer/pageList', {params: params}).then(res => {
+      this.$http.get('/lecturer/pageList', {params: params}).then(res => {
         let resp = res.data
         if (resp.success) {
           this.typeList = resp.data.content
@@ -251,7 +251,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$http.post('http://172.31.20.47:9101/lecturer/delete', qs.stringify(params)).then(res => {
+        this.$http.post('/lecturer/delete', qs.stringify(params)).then(res => {
           let msg = res.data.success
           if (msg) {
             if (res.data.data) {

@@ -24,7 +24,7 @@
                 </tr>
               </thead>
               <draggable v-model="tableData" :element="'tbody'" @update="datadragEnd">
-                <tr class="tr-items" v-for="(item, index) in tableData" :key="item.id">
+                <tr class="tr-items" v-for="(item, index) in tableData" :key="item.relationSort">
                   <template v-for="column in columns">
                     <template v-if="column.action">
                       <td>

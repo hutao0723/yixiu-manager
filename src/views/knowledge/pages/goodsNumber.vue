@@ -62,54 +62,102 @@
     </div>
 
     <div class="connect-loadPage-diolog">
-      <el-dialog title="收货地址" :visible.sync="dialogTableVisible">
-        <el-tabs v-model="activeType" type="card" @tab-click="handleClick" class="pad-length">
-          <el-tab-pane :label="item.name" :name="item.name" v-for="(item,index) in tabList" :key="item.id"  :value="index">
+      <el-dialog title="关联商品" :visible.sync="dialogTableVisible">
+        <el-tabs v-model="activeName" type="card" @tab-click="handleClick" class="pad-length">
+          <el-tab-pane :label="course" name="课程">
             <!--上传弹框-->
-          </el-tab-pane>
-          <div class="content">
-            <div class="search-bar">
-              <template>
-                <el-form :inline="true" :model="searchForm" class="demo-form-inline fl" size="mini">
-                  <el-form-item>
-                    <el-input v-model="searchForm.goodsTitle" placeholder="商品标题"></el-input>
-                  </el-form-item>
-                  <el-form-item>
-                    <el-button type="primary" @click="onSearch">查询</el-button>
-                  </el-form-item>
-                </el-form>
-              </template>
+            <div class="content">
+              <div class="search-bar">
+                <template>
+                  <el-form :inline="true" :model="searchForm" class="demo-form-inline fl" size="mini">
+                    <el-form-item>
+                      <el-input v-model="searchForm.title" placeholder="商品标题"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                      <el-button type="primary" @click="onSearch(activeName)">查询</el-button>
+                    </el-form-item>
+                  </el-form>
+                </template>
+              </div>
+              <div class="tabel-wrap">
+                <template>
+                  <el-table :data="goodsList" >
+                    <el-table-column property="id" label="ID" width="100"></el-table-column>
+                    <el-table-column label="商品信息" width="260">
+                      <template slot-scope="scope">
+                        <img :src="scope.row.frontCover" alt="" class="goods-list-img">
+                        <span v-text="scope.row.title"></span>
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="商品类型" width="200">
+                      <template slot-scope="scope" >
+                        <div> 
+                          课程—音频
+                        </div>
+                      </template>
+                    </el-table-column>
+                    <el-table-column  label="选择">
+                      <template slot-scope="scope">
+                          <el-checkbox @change="handleCheckedChange($event, scope.row, activeName)"  :checked="arrColumnStatus[scope.row.id]" v-model="scope.row.checked"></el-checkbox>
+                      </template>
+                    </el-table-column>
+                  </el-table>
+                </template>        
+              </div>    
             </div>
-            <div class="tabel-wrap">
-              <template>
-                <el-table :data="goodsList" >
-                  <el-table-column property="id" label="ID" width="150"></el-table-column>
-                  <el-table-column label="商品信息" width="280">
-                    <template slot-scope="scope">
-                      <img :src="scope.row.itemPicture" alt="" class="goods-list-img">
-                      <span v-text="scope.row.goodsInfo"></span>
-                    </template>
-                  </el-table-column>
-                  <el-table-column property="goodsType" label="商品类型"></el-table-column>
-                  <el-table-column  label="选择">
-                    <template slot-scope="scope">
-                      <div v-if="activeName == '课程'">
-                        <el-checkbox @change="handleCheckedChange($event, scope.row, activeName)"  :checked="arrClassStatus[scope.row.id]"></el-checkbox>
-                      </div>
-                      <div v-if="activeName == '专栏'">
-                        <el-checkbox @change="handleCheckedChange($event, scope.row, activeName)"  :checked="arrColumnStatus[scope.row.id]"></el-checkbox>
-                      </div>
-                    </template>
-                  </el-table-column>
-                </el-table>
-              </template>        
-            </div>    
-          </div>
+            <div class="page-control">
+              <el-pagination background  :page-size="10" :current-page.sync="pageOption.pageNum" @current-change="pageChange($event,activeName)" layout="total, prev, pager, next" :total="totalSize">
+              </el-pagination>
+            </div>
+          </el-tab-pane>
+          <el-tab-pane :label="column" name="专栏">
+            <!--上传弹框-->
+            <div class="content">
+              <div class="search-bar">
+                <template>
+                  <el-form :inline="true" :model="searchForm" class="demo-form-inline fl" size="mini">
+                    <el-form-item>
+                      <el-input v-model="searchForm.title" placeholder="商品标题"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                      <el-button type="primary" @click="onSearch(activeName)">查询</el-button>
+                    </el-form-item>
+                  </el-form>
+                </template>
+              </div>
+              <div class="tabel-wrap">
+                <template>
+                  <el-table :data="goodsList" >
+                    <el-table-column property="id" label="ID" width="100"></el-table-column>
+                    <el-table-column label="商品信息" width="260">
+                      <template slot-scope="scope" >
+                        <img :src="scope.row.frontCover" alt="" class="goods-list-img">
+                        <span v-text="scope.row.title"></span>
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="商品类型" width="200">
+                      <template slot-scope="scope">
+                        <div> 
+                          专栏
+                        </div>
+                      </template>
+                    </el-table-column>
+                    <el-table-column  label="选择">
+                      <template slot-scope="scope">
+                          <el-checkbox @change="handleCheckedChange($event, scope.row, activeName)"  :checked="arrColumnStatus[scope.row.id]" v-model="scope.row.checked"></el-checkbox>
+                      </template>
+                    </el-table-column>
+                  </el-table>
+                </template>        
+              </div>    
+            </div>
+            <div class="page-control">
+              <el-pagination background  :page-size="10" :current-page.sync="pageOption.pageNum" @current-change="pageChange($event,activeName)" layout="total, prev, pager, next" :total="totalSize">
+              </el-pagination>
+            </div>
+          </el-tab-pane>
         </el-tabs>
-        <div class="page-control">
-          <el-pagination background  :page-size="10" :current-page.sync="pageOption.pageNum" @current-change="pageChange" layout="total, prev, pager, next" :total="totalSize">
-          </el-pagination>
-        </div>
+        
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogTableVisible = false">取 消</el-button>
           <el-button type="primary" @click="saveGoods">确 定</el-button>
@@ -169,15 +217,12 @@ export default {
       dialogTableVisible: false,
       dialogFormVisible: false,
 
-      activeType: '课程',
+      course: '课程',
+      column: '专栏',
       activeName: '课程',
-      tabList: [{
-        name: '课程'
-      },{
-        name: '专栏'
-      }],
+      checkedTab: '课程',
       searchForm:{
-        goodsTitle: ''
+        title: ''
       },
       pageOption: {
         pageNum: 1,
@@ -193,14 +238,13 @@ export default {
       arrColumnStatus: []
     }
   },
-
   created () {
     this.getList()
     this.goodsGroupId = this.$route.params.id
   },
   methods: {
     openDialogGoods () {
-      this.getContentList(this.activeType)
+      this.getContentList(this.activeName)
       this.dialogTableVisible = true
     },
     // 获取商品数列表
@@ -211,14 +255,108 @@ export default {
           this.tableData = res.data.data
         }
       })
+    }, 
+    // 切换tab
+    handleClick(tab, event) {
+      // console.log(tab)
+      if(this.activeName == this.checkedTab){
+        return
+      }
+      this.searchForm.title = ''
+      this.checkedTab = this.activeName
+      this.getContentList(this.activeName)
+    },
+    // 获取全部内容列表
+    getContentList (activeName) {
+      let url
+      if(activeName == "课程"){
+        url = '/goodsGroup/course/list'
+      }
+      if(activeName == "专栏"){
+        url = '/goodsGroup/column/list'
+      }
+      let params = {
+        goodsGroupId: this.goodsGroupId,
+        title: this.searchForm.title,
+        pageNum: 1,
+        pageSize:10
+      }
+      this.$http.get(url, {params:params}).then(res => {
+        let resp = res.data
+        if (resp.success) {
+          this.goodsList = resp.data.lists
+          // 算出有多少条数据
+          this.totalSize = resp.data.totalSize
+          this.pageOption.pageNum = 1
+        } else {
+          let msg = resp.desc || '请求失败'
+          this.$message.error(msg)
+        }
+      })
+    },
+    // 分页请求
+    pageChange (currentPage,activeName) {
+      let url
+      if(activeName == "课程"){
+        url = '/goodsGroup/course/list'
+      }
+      if(activeName == "专栏"){
+        url = '/goodsGroup/column/list'
+      }
+      this.currentPage = currentPage
+      let params = {
+        goodsGroupId: this.goodsGroupId,
+        title: this.searchForm.title,
+        pageNum: this.currentPage,
+        pageSize:10
+      }
+      this.$http.get(url, {params:params}).then(res => {
+        let resp = res.data
+        if (resp.success) {
+          this.goodsList = resp.data.lists
+          // 算出有多少条数据
+          this.totalSize = resp.data.totalSize
+        } else {
+          let msg = resp.desc || '请求失败'
+          this.$message.error(msg)
+        }
+      })
+    },
+    onSearch (activeName) {
+      let url
+      if(activeName == "课程"){
+        url = '/goodsGroup/course/list'
+      }
+      if(activeName == "专栏"){
+        url = '/goodsGroup/column/list'
+      }
+      let params = {
+        goodsGroupId: this.goodsGroupId,
+        title: this.searchForm.title,
+        pageNum: this.pageOption.pageNum,
+        pageSize:10
+      }
+      this.$http.get(url, {params:params}).then(res => {
+        let resp = res.data
+        if (resp.success) {
+          this.goodsList = resp.data.lists
+          // 算出有多少条数据
+          this.totalSize = resp.data.totalSize
+        } else {
+          let msg = resp.desc || '请求失败'
+          this.$message.error(msg)
+        }
+      })
     },
     // 选中
     handleCheckedChange(event,row,activeName){
+      console.log(event)
       if(activeName == "课程"){
         this.arrClassStatus[row.id] = event
       }
       if(activeName == "专栏"){
         this.arrColumnStatus[row.id] = event
+
       }
     },
     saveGoods () {
@@ -255,39 +393,11 @@ export default {
           this.arrColumnStatus = []
         })
       } else {
-        console.log('error submit!!')
+        this.$message.error("请选择关联商品")
         return false
       }
     },
-    // 切换tab
-    handleClick(tab, event) {
-      if(this.tabList[tab.index].name == this.activeName){
-        return
-      }
-      this.activeName = this.tabList[tab.index].name
-      this.getContentList(this.activeName)
-    },
-    // 获取全部内容列表
-    getContentList (activeType) {
-      let params = {
-        goodsTitle: this.searchForm.goodsTitle,
-        activeType: activeType,
-        pageNum: 1,
-        pageSize:10
-      }
-      this.$http.get('/associate/goods', {params:params}).then(res => {
-        let resp = res.data
-        if (resp.success) {
-          this.goodsList = resp.data.content
-          // 算出有多少条数据
-          this.totalSize = resp.data.totalElements
-          this.pageOption.pageNum = 1
-        } else {
-          let msg = resp.desc || '请求失败'
-          this.$message.error(msg)
-        }
-      })
-    },
+
     // 取消移除关系
     cancelRelation (row) {
       this.$confirm('确定移除吗?', '提示', {
@@ -297,12 +407,8 @@ export default {
       }).then(() => {
         let id = row.id
         let goodsGroupId = this.goodsGroupId
-        this.$http.get('/goodsGroup/goods/delete', {
-          params: {
-            goodsGroupId,
-            id
-          }
-        }).then(res => {
+        let params = {goodsGroupId,id}
+        this.$http.post('/goodsGroup/goods/delete', qs.stringify(params)).then(res => {
           let msg = res.data.success
           if (msg) {
             if (res.data.data) {
@@ -326,53 +432,13 @@ export default {
         })
       })
     },
-    // 分页请求
-    pageChange (currentPage) {
-      this.currentPage = currentPage
-      let params = {
-        activeType: this.activeName,
-        goodsTitle: this.searchForm.goodsTitle,
-        pageNum: this.currentPage,
-        pageSize:10
-      }
-      this.$http.get('/associate/goods', {params:params}).then(res => {
-        let resp = res.data
-        if (resp.success) {
-          this.goodsList = resp.data.content
-          // 算出有多少条数据
-          this.totalSize = resp.data.totalElements
-        } else {
-          let msg = resp.desc || '请求失败'
-          this.$message.error(msg)
-        }
-      })
-    },
-    onSearch () {
-      let params = {
-        activeType: this.activeName,
-        goodsTitle: this.searchForm.goodsTitle,
-        pageNum: this.pageOption.pageNum,
-        pageSize:10
-      }
-      this.$http.get('/associate/goods', {params:params}).then(res => {
-        let resp = res.data
-        if (resp.success) {
-          this.goodsList = resp.data.content
-          // 算出有多少条数据
-          this.totalSize = resp.data.totalElements
-        } else {
-          let msg = resp.desc || '请求失败'
-          this.$message.error(msg)
-        }
-      })
-    },
     // 拖拽
     datadragEnd (e) {
       let id = +this.tableData[e.newIndex].id
-      let goodsGroupId = +this.goodsGroupId
       let start = +this.tableData[e.newIndex].relationSort
       let end = e.newIndex > e.oldIndex ? +(this.tableData[e.newIndex - 1].relationSort) : +(this.tableData[e.newIndex + 1].relationSort)
-      this.$http.post('/goods/number/sort', {start, end, id, goodsGroupId}).then(res => {
+      let params = {start, end, id}
+      this.$http.post('/goodsGroup/goods/sort', qs.stringify(params)).then(res => {
         let resp = res.data
         if (resp.success) {
           this.$message.success('排序成功')

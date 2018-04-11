@@ -44,14 +44,14 @@ var setOnline = [
   // 移除
   {
     name: 'remove',
-    type: 'get',
+    type: 'post',
     url: '/goodsGroup/goods/delete'
   },
   // 商品数排序
   {
     name: 'save',
     type: 'post',
-    url: '/goods/number/sort'
+    url: '/goodsGroup/goods/sort'
   },
   // 讲师列表
   {
@@ -83,17 +83,29 @@ var setOnline = [
     type: 'get',
     url: '/lecturer/list'
   },
-  // 关联商品列表
+  // 关联课程列表
   {
-    name: 'goodsList',
+    name: 'courseList',
     type: 'get',
-    url: '/associate/goods'
+    url: '/goodsGroup/course/list'
+  },
+  // 关联专栏列表
+  {
+    name: 'columnList',
+    type: 'get',
+    url: '/goodsGroup/column/list'
   },
   // 添加关联成功
   {
     name: 'save',
     type: 'post',
     url: '/goodsGroup/goods/add'
+  },
+  //订单详情
+  {
+    name: 'ordersDetail',
+    type: 'post',
+    url: '/order/detail'
   }
 ];
 var fs = require('fs');

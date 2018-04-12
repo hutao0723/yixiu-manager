@@ -17,12 +17,16 @@
             <el-form-item>
               <el-input v-model="searchForm.value" placeholder="请输入"></el-input>              
             </el-form-item>
+            <el-form-item label="皮肤名称">
+              <el-input v-model="searchForm.searchTwo" placeholder="请输入名称"></el-input>
+            </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="onSearch">查询</el-button>
             </el-form-item>
           </el-form>
         </template>
       </div>
+
       <div class="tabel-wrap">
         <template>
           <el-table :data="orderList" style="width: 100%" >
@@ -58,18 +62,27 @@ export default {
         nickName: ''
       },
       searchForm: {
-        name: 'nickName',
-        value: ''
+        name: 'title',
+        searchOne: '',
+        searchTwo: ''
       },
       teacher: '',
       selectOptions: [
         {
-          value: 'nickName',
+          value: 'title',
           label: '商品标题'
         },
         {
-          value: 'id',
+          value: 'nickName',
           label: '卖家昵称'
+        },
+        {
+          value: 'courseId',
+          label: '课程ID'
+        },
+        {
+          value: 'culumnId',
+          label: '课程ID'
         }
       ],
       pageOption: {

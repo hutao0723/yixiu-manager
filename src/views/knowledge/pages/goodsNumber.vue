@@ -75,7 +75,6 @@
       <el-dialog title="关联商品" :visible.sync="dialogTableVisible">
         <el-tabs v-model="activeName" type="card" @tab-click="handleClick" class="pad-length">
           <el-tab-pane :label="course" name="课程">
-            <!--上传弹框-->
             <div class="content">
               <div class="search-bar">
                 <template>
@@ -100,7 +99,7 @@
                       </template>
                     </el-table-column>
                     <el-table-column label="商品类型" width="200">
-                      <template slot-scope="scope" >
+                      <template slot-scope="scope">
                         <div> 
                           课程—音频
                         </div>
@@ -121,7 +120,6 @@
             </div>
           </el-tab-pane>
           <el-tab-pane :label="column" name="专栏">
-            <!--上传弹框-->
             <div class="content">
               <div class="search-bar">
                 <template>
@@ -254,6 +252,7 @@ export default {
   },
   methods: {
     openDialogGoods () {
+      this.searchForm.title = ''
       this.getContentList(this.activeName)
       this.dialogTableVisible = true
     },
@@ -418,10 +417,11 @@ export default {
     handleCheckedChange(event,row,activeName){
       if(activeName == "课程"){
         this.arrClassStatus[row.id] = event
+        console.log(this.arrClassStatus)
       }
       if(activeName == "专栏"){
         this.arrColumnStatus[row.id] = event
-
+        console.log(this.arrColumnStatus)
       }
     },
     saveGoods () {

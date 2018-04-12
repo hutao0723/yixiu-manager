@@ -216,7 +216,7 @@ export const constantRouterMap = [
           {
             path: '/',
             component: function (resolve) {
-              require(['../views/knowledge/pages/page'], resolve)
+              require(['../views/knowledge/pages/addpage'], resolve)
             }
           },
           {

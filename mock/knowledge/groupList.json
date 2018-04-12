@@ -1,0 +1,25 @@
+{
+	"success": true,
+	"data": {
+		"totalSize": 100,
+		"lists": [{
+			"id": 3,
+			"goodsNum": 2,
+			"goodsGroupName": "人气推荐王",
+			"gmtCreate": "2018-04-09 11:01:20"
+		},
+		{
+			"id": 4,
+			"goodsNum": 5,
+			"goodsGroupName": "热销商品库",
+			"gmtCreate": "2018-04-09 11:50:20"
+		},
+		{
+			"id": 8,
+			"goodsNum": 1,
+			"goodsGroupName": "爆款",
+			"gmtCreate": "2018-04-09 11:01:50"
+		}]
+	}
+}
+

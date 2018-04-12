@@ -17,7 +17,12 @@
               <span slot="title">内容管理</span>
             </el-menu-item>
           </router-link> 
-
+          <router-link :to="{ path: '/manager/miniApp/miniType' }">   
+            <el-menu-item index="3">
+              <i class="iconfont el-icon-menu"></i>
+              <span slot="title">小程序类型</span>
+            </el-menu-item>
+          </router-link>
         </el-menu>                
       </div>
     </el-aside>
@@ -58,7 +63,6 @@ export default {
     if(path.indexOf("/manager/miniApp/editContent") != -1){
       path = '/manager/miniApp/editContent'
     }
-    console.log(path)
     switch (path) {
       case '/manager/miniApp':
         pathIndex = "1";
@@ -71,6 +75,9 @@ export default {
         break;
       case '/manager/miniApp/typeManage':
         pathIndex = "2";
+        break;
+      case '/manager/miniApp/miniType':
+        pathIndex = "3";
         break;
       default: 
         pathIndex = "1";

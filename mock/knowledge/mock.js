@@ -5,148 +5,107 @@
  *         url   线上接口地址
  */
 var setOnline = [
-  //小程序列表
+  // 商品组列表
   {
-    name: 'miniapplist',
+    name: 'groupList',
     type: 'get',
-    url: '/miniapp/list'
+    url: '/goodsGroup/list'
   },
-  //小程序详情
-  {
-    name: 'appdetail',
-    type: 'get',
-    url: '/miniapp/detail'
-  },
-  //小程序删除
-  {
-    name: 'delete',
-    type: 'get',
-    url: '/miniapp/delete'
-  },
-  //查询域名配置
-  {
-    name: 'getDomain',
-    type: 'get',
-    url: '/miniapp/getDomain'
-  },
-  //代码管理
-  {
-    name: 'codemng',
-    type: 'get',
-    url: '/miniapp/codemng'
-  },
-  //小程序代码模版列表
-  {
-    name: 'getAllTemplate',
-    type: 'get',
-    url: '/miniapp/getAllTemplate'
-  },
-  {
-    name: 'appdetail',
-    type: 'get',
-    url: '/miniapp/detail'
-  },
-  {
-    name: '/templatePushList',
-    type: 'get',
-    url: '/miniapp/templatePushList'
-  },
-  {
-    name: 'templatePushDetail',
-    type: 'get',
-    url: '/miniapp/templatePushGet'
-  },
-  {
-    name: 'msgTemplateList',
-    type: 'get',
-    url: '/miniapp/msgTemplateList'
-  },
-  {
-    name: 'msgTemplateDetail',
-    type: 'get',
-    url: '/miniapp/msgTemplateDetail'
-  },
-  {
-    name: 'findMsgTemplate',
-    type: 'get',
-    url: '/miniapp/templateLibraryGet' 
-  },
-  {
-    name: 'tplmsgPage',
-    type: 'get',
-    url: '/miniapp/tplmsg/page'
-  },
-  // 3.获取类型列表
-  {
-    name: 'typeList',
-    type: 'get',
-    url: '/content/type/pageList'
-  },
-  // 4.编辑小程序类型
-  {
-    name: 'save',
-    type: 'post',
-    url: '/content/type/update'
-  },
-  // 5.新增小程序类型
-  {
-    name: 'save',
-    type: 'post',
-    url: '/content/type/add'
-  },
-  // 6.删除类型
+  // 商品组删除
   {
     name: 'delete',
     type: 'post',
-    url: '/content/type/delete'
+    url: '/goodsGroup/delete'
   },
-  // 11.选择小程序设置内容类型
+  // 商品组添加
   {
     name: 'save',
     type: 'post',
-    url: '/wxAuthorizerExt/addOrUpdate'
+    url: '/goodsGroup/insert'
   },
-  // 1.获取Tab标签
+  // 商品组修改
   {
-    name: 'tabList',
-    type: 'get',
-    url: '/content/type/getList'
+    name: 'save',
+    type: 'post',
+    url: '/goodsGroup/insert'
   },
-  // 7.获取内容管理数据
+  // 商品组复制
   {
-    name: 'contentList',
-    type: 'get',
-    url: '/content/detail/pageList'
+    name: 'save',
+    type: 'post',
+    url: '/goodsGroup/copy'
   },
-  // 9.删除内容管理数据
+  // 商品数列表
+  {
+    name: 'goodsNumber',
+    type: 'get',
+    url: '/goodsGroup/goods/list'
+  },
+  // 移除
+  {
+    name: 'remove',
+    type: 'post',
+    url: '/goodsGroup/goods/delete'
+  },
+  // 商品数排序
+  {
+    name: 'save',
+    type: 'post',
+    url: '/goodsGroup/goods/sort'
+  },
+  // 讲师列表
+  {
+    name: 'lecturer',
+    type: 'get',
+    url: '/lecturer/pageList'
+  },
+  // 讲师添加
+  {
+    name: 'save',
+    type: 'post',
+    url: '/lecturer/add'
+  },
+  // 讲师修改
+  {
+    name: 'save',
+    type: 'post',
+    url: '/lecturer/update'
+  },
+  // 讲师删除
   {
     name: 'delete',
     type: 'post',
-    url: '/content/detail/delete'
+    url: '/lecturer/delete'
   },
-  // 10.获取内容详情
+  // 讲师列表
   {
-    name: 'contentDetail',
+    name: 'teacherList',
     type: 'get',
-    url: '/content/detail/get'
+    url: '/lecturer/list'
   },
-  // 8.获取内容详情
+  // 关联课程列表
+  {
+    name: 'courseList',
+    type: 'get',
+    url: '/goodsGroup/course/list'
+  },
+  // 关联专栏列表
+  {
+    name: 'columnList',
+    type: 'get',
+    url: '/goodsGroup/column/list'
+  },
+  // 添加关联成功
   {
     name: 'save',
     type: 'post',
-    url: '/content/detail/update'
+    url: '/goodsGroup/goods/add'
   },
-  // 12.获取小程序关联的类型的选择
+  //订单详情
   {
-    name: 'chooseType',
-    type: 'get',
-    url: '/wxAuthorizerExt/getByAuthorizerId'
-  },
-  // 13.导入文件
-  {
-    name: 'export',
+    name: 'ordersDetail',
     type: 'post',
-    url: '/content/detail/export'
+    url: '/order/detail'
   }
 ];
 var fs = require('fs');
@@ -160,7 +119,7 @@ for (var i = 0, len = setOnline.length; i < len; i++) {
     var name = setOnline[i].name;
 
     exports[name] = function(req, res) {
-      fs.readFile('./mock/miniApp/' + name + '.json', function(err, data) {
+      fs.readFile('./mock/knowledge/' + name + '.json', function(err, data) {
         if (err) throw err;
 
         res.json(JSON.parse(data));

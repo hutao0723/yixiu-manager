@@ -51,7 +51,7 @@
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="onSearch">查询</el-button>
-              <el-button type="primary" >订单导出</el-button>
+              <el-button type="primary" @click="exportOrders">订单导出</el-button>
             </el-form-item>
           </el-form>
         </template>
@@ -63,8 +63,13 @@
             <el-table-column prop="goodsId" label="商品ID" width="80"></el-table-column>
             <el-table-column label="商品信息" width="300">
               <template slot-scope="scope">
-                <img :src="scope.row.frontCover" alt="" class="goods-list-img">
-                <span v-text="scope.row.title" class="two-ellipsis"></span>
+                <div class="img-container">
+                  <img :src="scope.row.frontCover" alt="" class="goods-list-img">
+                  <div v-if="scope.row.courseType == '1'" class="goods-mask">课程</div>
+                  <div v-else class="goods-mask">专栏</div>
+                </div>
+                <span v-if="scope.row.title.length > 15" v-text="scope.row.title" class="two-ellipsis"></span>
+                <span v-else v-text="scope.row.title" class="goods-word"></span>
               </template>
             </el-table-column>
             <el-table-column prop="price" label="单价(元)" ></el-table-column>
@@ -77,7 +82,7 @@
                 <div v-else>待支付</div>
               </template>
             </el-table-column>
-            <el-table-column prop="endTime" label="交易完成时间" ></el-table-column>
+            <el-table-column prop="endTime" label="交易完成时间" width="180"></el-table-column>
             <el-table-column prop="nickName" label="买家昵称" ></el-table-column>
             <el-table-column  label="操作" >
               <template slot-scope="scope">
@@ -91,7 +96,14 @@
       </div>
       <div class="page-control">
         <el-pagination background  :page-size="20" :current-page.sync="pageOption.pageNum" @current-change="pageChange" layout="total, prev, pager, next" :total="totalSize"></el-pagination>
-      </div>    
+      </div>
+      <el-dialog title="订单导出" :visible.sync="dialogVisible" width="30%" >
+        <span>正在生成导出文件，请稍后<span class="beat-ellipsis"></span></span>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="dialogVisible = false" disabled>确 定</el-button>
+        </span>
+      </el-dialog> 
     </div>
   </section>
 </template>
@@ -165,7 +177,8 @@ export default {
       },
       currentPage: 1,
       totalSize: 0,
-      orderList: []
+      orderList: [],
+      dialogVisible: false
     }
   },
   created () {
@@ -208,6 +221,31 @@ export default {
           this.totalSize = resp.data.totalSize
           this.pageOption.pageNum = 1
           this.currentPage = 1
+        } else {
+          let msg = resp.desc || '请求失败'
+          this.$message.error(msg)
+        } 
+      }, () => {
+        this.$message.error('网络错误')
+      })
+    },
+    // 导出
+    exportOrders () {
+      let valueArr = Object.values(this.searchForm)
+      console.log(valueArr)
+      let params = {
+        [valueArr[0]]: valueArr[1],
+        [valueArr[2]]: valueArr[3],
+        [valueArr[4]]: valueArr[5],
+        time1: formatDateNew(this.searchForm.time[0]),
+        time2: formatDateNew(this.searchForm.time[1]),
+        status: this.searchForm.status,
+        orderType: this.searchForm.orderType
+      }
+      this.$http.get('/order/export', {params}).then(res => {
+        let resp = res.data
+        if (resp.success) {
+          
         } else {
           let msg = resp.desc || '请求失败'
           this.$message.error(msg)
@@ -271,12 +309,28 @@ export default {
       clear: both;
     }
   }
-  .goods-list-img{
+  .img-container{
     height: 50px;
     width: 50px;
+    position:relative;
     display: inline-block;
-    vertical-align: middle;
     float: left;
+    .goods-list-img{
+      height: 50px;
+      width: 50px;
+    }
+    .goods-mask{
+      right: 0;
+      bottom: 0;
+      width: 30px;
+      height: 20px;
+      line-height: 20px;
+      text-align: center;
+      background-color: #000;
+      opacity: 0.6;
+      color: #FFF;
+      position:absolute;
+    }
   }
   .two-ellipsis{
     overflow: hidden;
@@ -288,5 +342,24 @@ export default {
     float: left;
     margin-left: 10px;
   }
+  .goods-word{
+    margin-left: 10px;
+    line-height: 50px;
+  }
+  .beat-ellipsis:after {
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: bottom;
+    animation: ellipsis 2s infinite;
+    content: "\2026"; 
+  }
+  @keyframes ellipsis {
+      from {
+          width: 2px;
+      }
+      to {
+          width: 15px;
+      }
+  }       
 }
 </style>

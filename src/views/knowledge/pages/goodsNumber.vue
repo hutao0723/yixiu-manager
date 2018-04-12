@@ -293,23 +293,25 @@ export default {
         let resp = res.data
         if (resp.success) {
           let arr = resp.data.lists
-          if(activeName == "课程"){
-            arr.forEach(item=>{
-              if(this.arrClassStatus[item.id]){
-                item['checked'] = true;
-              }else{
-                item['checked'] = false;
-              }
-            })
-          }
-          if(activeName == "专栏"){
-            arr.forEach(item=>{
-              if(this.arrColumnStatus[item.id]){
-                item['checked'] = true;
-              }else{
-                item['checked'] = false;
-              }
-            })
+          if(arr != undefined){
+            if(activeName == "课程"){
+              arr.forEach(item=>{
+                if(this.arrClassStatus[item.id]){
+                  item['checked'] = true;
+                }else{
+                  item['checked'] = false;
+                }
+              })
+            }
+            if(activeName == "专栏"){
+              arr.forEach(item=>{
+                if(this.arrColumnStatus[item.id]){
+                  item['checked'] = true;
+                }else{
+                  item['checked'] = false;
+                }
+              })
+            }
           }
           this.goodsList = resp.data.lists
           // 算出有多少条数据
@@ -341,23 +343,25 @@ export default {
         let resp = res.data
         if (resp.success) {
           let arr = resp.data.lists
-          if(activeName == "课程"){
-            arr.forEach(item=>{
-              if(this.arrClassStatus[item.id]){
-                item['checked'] = true;
-              }else{
-                item['checked'] = false;
-              }
-            })
-          }
-          if(activeName == "专栏"){
-            arr.forEach(item=>{
-              if(this.arrColumnStatus[item.id]){
-                item['checked'] = true;
-              }else{
-                item['checked'] = false;
-              }
-            })
+          if(arr != undefined){
+            if(activeName == "课程"){
+              arr.forEach(item=>{
+                if(this.arrClassStatus[item.id]){
+                  item['checked'] = true;
+                }else{
+                  item['checked'] = false;
+                }
+              })
+            }
+            if(activeName == "专栏"){
+              arr.forEach(item=>{
+                if(this.arrColumnStatus[item.id]){
+                  item['checked'] = true;
+                }else{
+                  item['checked'] = false;
+                }
+              })
+            }
           }
           this.goodsList = resp.data.lists
           // 算出有多少条数据
@@ -386,23 +390,25 @@ export default {
         let resp = res.data
         if (resp.success) {
           let arr = resp.data.lists
-          if(activeName == "课程"){
-            arr.forEach(item=>{
-              if(this.arrClassStatus[item.id]){
-                item['checked'] = true;
-              }else{
-                item['checked'] = false;
-              }
-            })
-          }
-          if(activeName == "专栏"){
-            arr.forEach(item=>{
-              if(this.arrColumnStatus[item.id]){
-                item['checked'] = true;
-              }else{
-                item['checked'] = false;
-              }
-            })
+          if(arr != undefined){
+            if(activeName == "课程"){
+              arr.forEach(item=>{
+                if(this.arrClassStatus[item.id]){
+                  item['checked'] = true;
+                }else{
+                  item['checked'] = false;
+                }
+              })
+            }
+            if(activeName == "专栏"){
+              arr.forEach(item=>{
+                if(this.arrColumnStatus[item.id]){
+                  item['checked'] = true;
+                }else{
+                  item['checked'] = false;
+                }
+              })
+            }
           }
           this.goodsList = resp.data.lists
           // 算出有多少条数据

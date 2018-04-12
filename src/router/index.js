@@ -194,6 +194,12 @@ export const constantRouterMap = [
             }
           },
           {
+            path: 'miniType',
+            component: function (resolve) {
+              require(['../views/miniApp/pages/miniType'], resolve)
+            }
+          },
+          {
             path: 'contentType/:id/:appId',
             component: function (resolve) {
               require(['../views/miniApp/pages/contentType'], resolve)
@@ -205,6 +211,62 @@ export const constantRouterMap = [
               require(['../views/miniApp/pages/editContent'], resolve)
             }
           }
+        ]
+      },
+      {
+        path: 'knowledge',
+        component: function (resolve) {
+          require(['../views/knowledge/pages/sidebar'], resolve)
+        },
+        children: [
+          {
+            path: '/',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/addpage'], resolve)
+            }
+          },
+          {
+            path: 'curriculum',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/curriculum'], resolve)
+            }
+          },
+          {
+            path: 'specialColumn',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/specialColumn'], resolve)
+            }
+          },
+          {
+            path: 'goodsNumber/:id',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/goodsNumber'], resolve)
+            }
+          },
+          {
+            path: 'goodsGroup',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/goodsGroup'], resolve)
+            }
+          },
+          {
+            path: 'order',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/order'], resolve)
+            }
+          },
+          {
+            path: 'ordersDetail/:id',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/ordersDetail'], resolve)
+            }
+          },
+          {
+            path: 'lecturer',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/lecturer'], resolve)
+            }
+          },
         ]
       }
     ]

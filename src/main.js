@@ -16,6 +16,10 @@ Vue.use(ElementUI)
 
 Vue.config.productionTip = false
 
+import VueDND from 'awe-dnd'
+
+Vue.use(VueDND)
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

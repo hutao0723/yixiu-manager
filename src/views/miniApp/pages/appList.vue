@@ -106,7 +106,7 @@
     <!--选择类型-->
     <div class="edit-threshold-diolog">
       <el-dialog title="类型" :visible.sync="dialogTypeVisible">
-        <el-form ref="typeName" :model="changeForm" :rules="rules">
+        <el-form ref="typeName" :model="changeForm" >
           <el-form-item label="类型名称" :label-width="formLabelWidth" prop="typeNameId">
             <el-select v-model="showTypeName" value-key="id" filterable placeholder="请选择" style="width:100%">
               <el-option v-for="(item, index)  in typeList" :key="item.id" :label="item.typeName" :value="index"></el-option>
@@ -124,12 +124,10 @@
 
 <script>
 import { formatToMs } from '../../../utils/dateUtils'
-import minirules from '../components/miniValidRules'
 import qs from 'qs'
 export default {
   data () {
     return {
-      rules: minirules,
       appId: '',
       appdetailDialog: {
         show: false,
@@ -309,6 +307,8 @@ export default {
         if (resp.success) {
           if(resp.data){
             this.typeList  = resp.data
+            let checkObj = {id: '', typeName: "请选择"}
+            this.typeList.unshift(checkObj)
           }
         } else {
           let msg = resp.desc || '请求失败'

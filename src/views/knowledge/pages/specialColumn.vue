@@ -1,5 +1,5 @@
 <template>
-  <section class="ofa-main-wrap">
+  <section class="ofa-main-wrap" v-loading="loading">
     <div class="title-wrap">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item :to="{ path: '/manager/knowledge/specialColumn' }"><span @click="pageType = 0">专栏</span>
@@ -89,29 +89,41 @@
     <div class="content" v-else-if="pageType == 3">
       <div class="tabel-wrap">
         <template>
-          <el-button type="primary" @click="getLinkCourseData" class="link-columm">关联课程</el-button>
-          <el-table :data="columnManageList" style="width: 100%">
-            <el-table-column prop="id" label="序号">
-            </el-table-column>
-            <el-table-column prop="courseId" label="课程ID">
-            </el-table-column>
-            <el-table-column prop="courseType" label="课程类型" :formatter="getCourseType">
-            </el-table-column>
-            <el-table-column prop="courseTitle" label="课程标题">
-            </el-table-column>
-            <el-table-column prop="courseStatus" label="课程状态" :formatter="getStatus">
-            </el-table-column>
-            <el-table-column label="操作" width="300">
-              <template slot-scope="scope">
-                <!--openDialogAdmin(scope.row.managerName,scope.row.id）-->
-                <el-button type="text" size="mini"
-                           @click="changeWatchableStatus(scope.row.columnId,scope.row.watchable)">
-                  {{scope.row.watchable == 0 ? '设为试看' : '取消试看'}}
-                </el-button>
-                <el-button type="text" size="mini" @click="removeCulum(scope.row.id)" :disabled="false">移除</el-button>
+          <el-button type="primary" @click="getLinkCourseData" class="link-columm" size="mini">关联课程</el-button>
+          <table class="" v-if="columnManageList" >
+            <thead>
+            <tr class="tr-header">
+              <template v-for="column in columns">
+                <th v-bind:class="column.className" v-bind:style="{width: column.width + '%'}">
+                  {{column.title}}
+                </th>
               </template>
-            </el-table-column>
-          </el-table>
+            </tr>
+            </thead>
+            <draggable v-model="columnManageList" :element="'tbody'" @update="datadragEnd">
+              <tr class="tr-items" v-for="(item, index) in columnManageList" :key="item.id">
+                <template v-for="column in columns">
+                  <template v-if="column.action">
+                    <td>
+                      <el-button type="text" size="mini"
+                      @click="changeWatchableStatus(item.columnId,item.watchable)">
+                      {{item.watchable == 0 ? '设为试看' : '取消试看'}}
+                      </el-button>
+                      <el-button type="text" size="mini" @click="removeCulum(item.id)" :disabled="false">移除</el-button>
+                    </td>
+                  </template>
+                  <template v-else>
+                    <td v-if="column.render" v-bind:style="{width: column.width + '%'}">
+                      {{column.render(item[column.dataIndex] || '', item, index)}}
+                    </td>
+                    <td v-else v-bind:style="{width: column.width + '%'}">
+                      {{item[column.dataIndex]}}
+                    </td>
+                  </template>
+                </template>
+              </tr>
+            </draggable>
+          </table>
         </template>
       </div>
     </div>
@@ -162,12 +174,19 @@
         </el-form-item>
         <el-form-item label="讲师" prop="lecturerId">
           <el-col :span="4">
-            <el-select v-model="columnForm.lecturerId" filterable placeholder="请选择">
+            <el-select
+              v-model="columnForm.lecturerId"
+              filterable
+              remote
+              reserve-keyword
+              placeholder="请输入关键词"
+              :remote-method="getLecturerList"
+              >
               <el-option
                 v-for="item in lecturerOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
+                :key="item.id"
+                :label="item.nickName"
+                :value="item.id">
               </el-option>
             </el-select>
           </el-col>
@@ -266,6 +285,7 @@
   import 'quill/dist/quill.core.css'
   import 'quill/dist/quill.snow.css'
   import 'quill/dist/quill.bubble.css'
+  import draggable from 'vuedraggable'
   import {quillEditor} from 'vue-quill-editor';
   import {
     getColumn,
@@ -278,15 +298,19 @@
     removeColumn,
     updateWatchStatus,
     relateCourse,
-    coursePageList
+    coursePageList,
+    lecturerList,
+    courseSort
   } from '@/api/index'
 
   export default {
     components: {
-      quillEditor
+      quillEditor,
+      draggable
     },
     data() {
       return {
+        loading:false,
         pageType: 0,
         searchOptions: [
           {
@@ -319,16 +343,7 @@
             label: '已下线'
           }
         ],
-        lecturerOptions: [
-          {
-            value: 0,
-            label: '王老师'
-          },
-          {
-            value: 1,
-            label: '张老师'
-          }
-        ],
+        lecturerOptions: [],
         searchTeacherTypeOption: [
 //          讲师昵称|讲师Id
           {
@@ -337,6 +352,52 @@
           }, {
             value: 'lecturerId',
             label: '讲师ID'
+          }
+        ],
+
+        columns :[
+          {
+            title: '序号',
+            width: 10,
+            render: (text, record, index) => {
+              return index + 1
+            }
+          },
+          {
+            title: '课程ID',
+            dataIndex: 'courseId',
+            width: 10
+          },
+          {
+            title: '课程类型',
+            dataIndex: 'subscriptionName',
+            width: 10,
+            render: (text, record, index) => {
+              if (record.courseType == 1) return '音频'
+              if (record.courseType != 1) return '视频'
+            }
+          },
+          {
+            title: '课程标题',
+            dataIndex: 'courseTitle',
+            width: 30
+          },
+          {
+            title: '课程状态',
+            dataIndex: 'courseStatus',
+            width: 10,
+            render: (text, record, index) => {
+              if (record.courseStatus === '') return '专栏状态'
+              if (record.courseStatus === 0) return '待上线'
+              if (record.courseStatus === 1) return '已上线'
+              if (record.courseStatus === 2) return '已下线'
+            }
+          },
+          {
+            title: '操作',
+            dataIndex: 'id',
+            width: 10,
+            action: true
           }
         ],
 
@@ -441,11 +502,12 @@
       }
     },
     created() {
-      this.getColumnListData()
+      this.getColumnListData();
     },
     methods: {
 
       getCourseDetail(id) {
+        this.loading = true;
         getColumn({id}).then(res => {
           if (res.success) {
             this.columnForm = Object.assign({}, res.data);
@@ -454,12 +516,16 @@
             let msg = res.desc || '获取课程内容失败'
             this.$message.error(msg)
           }
+          this.loading = false;
+        }).catch(()=>{
+          this.loading = false;
         })
       },
 
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
+            this.loading = true;
             updateColumn(this.columnForm).then(res => {
               if (res.success) {
                 this.$message.success('修改成功')
@@ -468,6 +534,9 @@
                 let msg = res.desc || '请求失败'
                 this.$message.error(msg);
               }
+              this.loading = false;
+            }).catch(()=>{
+              this.loading = false;
             })
           } else {
             console.log('数据未填写完整');
@@ -499,6 +568,7 @@
       },
 
       submitlinkForm(){
+        this.loading = true;
         relateCourse(this.linkForm).then(res => {
           if (res.success) {
             this.$message.success('关联成功')
@@ -507,6 +577,9 @@
             let msg = res.desc || '关联失败'
             this.$message.error(msg)
           }
+          this.loading = false;
+        }).catch(()=>{
+          this.loading = false;
         })
       },
 
@@ -525,6 +598,7 @@
         console.log(this.linkcolumnForm);
         [this.linkcolumnForm.id, this.linkcolumnForm.title] = this.linkcolumnForm.selectType == 'id' ? [this.linkcolumnForm.searchValue, ''] : ['', this.linkcolumnForm.searchValue];
         [this.linkcolumnForm.lecturerNickName, this.linkcolumnForm.lecturerId] = this.linkcolumnForm.searchTeacherType == 'lecturerId' ? ['', this.linkcolumnForm.lecturerValue] : [this.linkcolumnForm.lecturerValue, ''];
+        this.loading = true;
         coursePageList(this.linkcolumnForm).then(res => {
           if (res.success) {
             this.linkcolumnList = res.data.content;
@@ -534,11 +608,15 @@
             let msg = res.data.desc || '请求失败'
             this.$message.error(msg)
           }
+          this.loading = false;
+        }).catch(()=>{
+          this.loading = false;
         })
       },
 
       //设为试看
       changeWatchableStatus(relationId, status) {
+        this.loading = true;
         updateWatchStatus({
           relationId
         }).then(res => {
@@ -548,11 +626,15 @@
             let msg = res.desc || '请求失败'
             this.$message.error(msg)
           }
+          this.loading = false;
+        }).catch(()=>{
+          this.loading = false;
         })
       },
 
       //移除
       removeCulum(relationId) {
+        this.loading = true;
         removeColumn({
           relationId
         }).then(res => {
@@ -562,11 +644,15 @@
             let msg = res.desc || '请求失败'
             this.$message.error(msg)
           }
+          this.loading = false;
+        }).catch(()=>{
+          this.loading = false;
         })
       },
 
       //课程管理列表
       getColumnManageListData(columnId) {
+        this.loading = true;
         getLinkCourse(
           {columnId}
         ).then(res => {
@@ -578,6 +664,9 @@
             let msg = res.data.desc || '请求失败'
             this.$message.error(msg)
           }
+          this.loading = false;
+        }).catch(()=>{
+          this.loading = false;
         })
       },
 
@@ -588,6 +677,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
+          this.loading = true;
           deleteColumn({id}).then(res => {
             if (res.success) {
               this.$message.success('移除成功');
@@ -596,6 +686,9 @@
               let msg = res.desc || '移除失败'
               this.$message.error(msg)
             }
+            this.loading = false;
+          }).catch(()=>{
+            this.loading = false;
           })
         }).catch(() => {
           this.$message({
@@ -607,6 +700,7 @@
 
       //上下线
       changeStatus(id, status) {
+        this.loading = true;
         updateStatusColumn({
           id,
           status
@@ -617,6 +711,9 @@
             let msg = res.desc || '请求失败'
             this.$message.error(msg)
           }
+          this.loading = false;
+        }).catch(()=>{
+          this.loading = false;
         })
       },
 
@@ -624,6 +721,7 @@
       getColumnListData() {
         [this.columnSearchForm.id, this.columnSearchForm.title] = this.columnSearchForm.selectType == 'id' ? [this.columnSearchForm.searchValue, ''] : ['', this.columnSearchForm.searchValue];
         [this.columnSearchForm.lecturerNickName, this.columnSearchForm.lecturerId] = this.columnSearchForm.searchTeacherType == 'lecturerId' ? ['', this.columnSearchForm.lecturerValue] : [this.columnSearchForm.lecturerValue, ''];
+        this.loading = true;
         pageListColumn(this.columnSearchForm).then(res => {
           if (res.success) {
             this.columnList = res.data.content;
@@ -632,6 +730,26 @@
             let msg = res.data.desc || '请求失败'
             this.$message.error(msg)
           }
+          this.loading = false;
+        }).catch(()=>{
+          this.loading = false;
+        })
+      },
+
+      getLecturerList(nickName){
+        this.loading = true;
+        lecturerList({
+          nickName
+        }).then(res => {
+          if (res.success) {
+            this.lecturerOptions = res.data.content;
+          } else {
+            let msg = res.desc || '请求失败'
+            this.$message.error(msg)
+          }
+          this.loading = false;
+        }).catch(()=>{
+          this.loading = false;
         })
       },
 
@@ -665,9 +783,27 @@
           this.columnForm[i] = null
         }
         this.columnForm.coverList=[];
+        this.getLecturerList();
         this.pageType = 1
       },
 
+      datadragEnd (e) {
+        let columnId = this.columnManageList[0] && this.columnManageList[0].columnId;
+        let id = +this.columnManageList[e.newIndex].id
+        let initPosition = +this.columnManageList[e.newIndex].relationSort
+        let movedPosition = e.newIndex > e.oldIndex ? +(this.columnManageList[e.newIndex - 1].relationSort) : +(this.columnManageList[e.newIndex + 1].relationSort)
+        this.loading = true;
+        courseSort({ columnId,id,initPosition, movedPosition,}).then(res => {
+          if (res.success) {
+            this.getColumnManageListData();
+          } else {
+            let msg = res.desc || '排序失败'
+            this.$message.error(msg)
+          }
+        }).catch(()=>{
+          this.$message.error(网络错误)
+        })
+      }
     }
   }
 

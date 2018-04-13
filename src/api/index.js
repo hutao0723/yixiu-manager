@@ -44,6 +44,15 @@ export const updateWatchStatus = params => post('column/course/updateWatchStatus
 export const relateCourse = params => post('column/course/relate', params);
 //分页查询课程信息
 export const coursePageList = params => get('column/course/pageList', params);
+//排序
+export const courseSort = params => post('column/course/sort', params);
+
+
+/**
+ * 讲师相关接口
+ */
+//讲师列表
+export const lecturerList = params => get('lecturer/getList', params);
 
 
 

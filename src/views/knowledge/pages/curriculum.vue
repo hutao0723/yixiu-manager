@@ -1,5 +1,5 @@
 <template>
-  <section class="ofa-main-wrap">
+  <section class="ofa-main-wrap" v-loading="loading">
     <div class="title-wrap">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item><span @click="pageType = 0">课程</span></el-breadcrumb-item>
@@ -152,12 +152,19 @@
         </el-form-item>
         <el-form-item label="讲师" prop="lecturerId">
           <el-col :span="4">
-            <el-select v-model="courseForm.lecturerId" filterable placeholder="请选择">
+            <el-select
+              v-model="courseForm.lecturerId"
+              filterable
+              remote
+              reserve-keyword
+              placeholder="请输入关键词"
+              :remote-method="getLecturerList"
+            >
               <el-option
                 v-for="item in lecturerOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
+                :key="item.id"
+                :label="item.nickName"
+                :value="item.id">
               </el-option>
             </el-select>
           </el-col>
@@ -209,6 +216,7 @@
     },
     data() {
       return {
+        loading:false,
         pageType: 0,
         courseTypeOptions: [
           {
@@ -216,16 +224,7 @@
             label: '音频'
           }
         ],
-        lecturerOptions: [
-          {
-            value: 0,
-            label: '王老师'
-          },
-          {
-            value: 1,
-            label: '张老师'
-          }
-        ],
+        lecturerOptions: [],
         searchOptions: [
           {
             value: 'title',
@@ -353,6 +352,7 @@
 
       //上下线
       changeStatus(id,status) {
+        this.loading = true;
         updateStatusCourse({
             id,
             status
@@ -363,6 +363,9 @@
             let msg = res.desc || '请求失败'
             this.$message.error(msg)
           }
+          this.loading = false;
+        }).catch(()=>{
+          this.loading = false;
         })
       },
 
@@ -373,6 +376,8 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
+          this.loading = true;
+
           deleteCourse({id}).then(res => {
             if (res.success) {
               this.$message.success('删除成功');
@@ -381,6 +386,9 @@
               let msg = res.desc || '删除失败'
               this.$message.error(msg)
             }
+            this.loading = false;
+          }).catch(()=>{
+            this.loading = false;
           })
         }).catch(() => {
           this.$message({
@@ -394,6 +402,8 @@
       getData() {
         [this.courseSearchForm.id,this.courseSearchForm.title] = this.courseSearchForm.selectType == 'id'?[this.courseSearchForm.searchValue,'']:['',this.courseSearchForm.searchValue];
         [this.courseSearchForm.lecturerNickName,this.courseSearchForm.lecturerId]=this.courseSearchForm.searchTeacherType == 'lecturerId'?['',this.courseSearchForm.lecturerValue]:[this.courseSearchForm.lecturerValue,''];
+        this.loading = true;
+
         pageListCourse(this.courseSearchForm).then(res => {
           if (res.success) {
             this.courseList = res.data.content;
@@ -402,10 +412,34 @@
             let msg = res.data.desc || '请求失败'
             this.$message.error(msg)
           }
+          this.loading = false;
+        }).catch(()=>{
+          this.loading = false;
         })
       },
 
+      getLecturerList(nickName){
+        this.loading = true;
+
+        lecturerList({
+          nickName
+        }).then(res => {
+          if (res.success) {
+            this.lecturerOptions = res.data.content;
+          } else {
+            let msg = res.desc || '请求失败'
+            this.$message.error(msg)
+          }
+          this.loading = false;
+        }).catch(()=>{
+          this.loading = false;
+        })
+      },
+
+
       getCourseDetail(id) {
+        this.loading = true;
+
         getCourse({id}).then(res => {
           if (res.success) {
             this.courseForm = Object.assign({},res.data);
@@ -414,6 +448,9 @@
             let msg = res.desc || '获取课程内容失败'
             this.$message.error(msg)
           }
+          this.loading = false;
+        }).catch(()=>{
+          this.loading = false;
         })
       },
 
@@ -431,6 +468,8 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
+            this.loading = true;
+
             updateCourse(this.courseForm).then(res => {
               if (res.success) {
                 this.$message.success('修改成功')
@@ -439,6 +478,9 @@
                 let msg = res.desc || '请求失败'
                 this.$message.error(msg);
               }
+              this.loading = false;
+            }).catch(()=>{
+              this.loading = false;
             })
           } else {
             console.log('数据未填写完整');
@@ -458,7 +500,7 @@
         }
         this.courseForm.frontCover=[];
         this.courseForm.address = [];
-        console.log(this.courseForm)
+        this.getLecturerList();
         this.pageType = 1
       },
 
@@ -503,7 +545,6 @@
           }
         };
       },
-
     }
   }
 

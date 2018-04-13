@@ -1,0 +1,17 @@
+{
+	"success": true,
+	"data": [{
+			"id": 3,
+			"typeName": "测试类"
+		},
+		{
+			"id": 4,
+			"typeName": "印象类"
+		},
+		{
+			"id": 8,
+			"typeName": "星座类"
+		}
+	]
+}
+

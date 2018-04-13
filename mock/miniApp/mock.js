@@ -153,6 +153,12 @@ var setOnline = [
     name: 'miniType',
     type: 'get',
     url: '/content/type/typeList'
+  },
+  //选择小程序类型
+  {
+    name: 'selectType',
+    type: 'get',
+    url: '/content/type/select'
   }
 ];
 var fs = require('fs');

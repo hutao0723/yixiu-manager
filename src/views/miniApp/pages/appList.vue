@@ -32,6 +32,7 @@
             </el-table-column>
             <el-table-column  label="操作" width="500">
               <template slot-scope="scope">
+                <el-button type="text" size="mini" @click="openTypeDilog(scope.row)">类型</el-button>
                 <router-link :to="{ path: '/manager/miniApp/contentType/' + scope.row.id +'/' + scope.row.appId}">
                   <el-button type="text" size="mini">内容</el-button>
                 </router-link>
@@ -102,23 +103,50 @@
         </el-form>
       </el-dialog>
     </div>
+    <!--选择类型-->
+    <div class="edit-threshold-diolog">
+      <el-dialog title="类型" :visible.sync="dialogTypeVisible">
+        <el-form ref="typeName" :model="changeForm" :rules="rules">
+          <el-form-item label="类型名称" :label-width="formLabelWidth" prop="typeNameId">
+            <el-select v-model="showTypeName" value-key="id" filterable placeholder="请选择" style="width:100%">
+              <el-option v-for="(item, index)  in typeList" :key="item.id" :label="item.typeName" :value="index"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+        <div class="btn-wrap">
+          <el-button size="small" @click="dialogTypeVisible = false">取 消</el-button>
+          <el-button size="small" type="primary" @click="selectType">保存</el-button>
+        </div>
+      </el-dialog>
+    </div>
   </section>
 </template>
 
 <script>
 import { formatToMs } from '../../../utils/dateUtils'
+import minirules from '../components/miniValidRules'
+import qs from 'qs'
 export default {
   data () {
     return {
+      rules: minirules,
       appId: '',
       appdetailDialog: {
         show: false,
         formLabelWidth: '100px'
       },
+      changeForm:{
+        id:'',
+        typeNameId: '',
+        typeName: ''
+      },
+      showTypeName:'',
       domainDialog: {
         show: false,
         formLabelWidth: '160px'
       },
+      formLabelWidth: '100px',
+      dialogTypeVisible: false,
       appDetail: {},
       appDomain: {},
       pageOption: {
@@ -126,7 +154,8 @@ export default {
         size: 20
       },
       totalSize: 40,
-      appList: []
+      appList: [],
+      typeList: []
     }
   },
   filters: {
@@ -134,6 +163,14 @@ export default {
   },
   created () {
     this.getAppList()
+    this.getTypeList()
+  },
+  watch: {
+    'showTypeName': function (newVal) {
+      if (this.typeList[newVal] !== undefined) {
+        this.changeForm.typeNameId = this.typeList[newVal].id
+      }
+    }
   },
   methods: {
     getAppList () {
@@ -243,6 +280,62 @@ export default {
         if (res.data.success) {
           let redirectUrl = res.data.data
           window.location.href = redirectUrl
+        }
+      })
+    },
+    // 打开获取单个小程序类型
+    openTypeDilog(row) {
+      this.changeForm.id = row.id
+      let id = this.changeForm.id
+      this.$http.get('/wxAuthorizerExt/getByAuthorizerId', {id}).then(res => {
+        let resp = res.data
+        if (resp.success) {
+          if(resp.data){
+            this.changeForm.typeNameId = resp.data.id
+            this.changeForm.typeName = resp.data.parentName
+            this.showTypeName = resp.data.parentName
+          }
+        } else {
+          let msg = resp.desc || '请求失败'
+          this.$message.error(msg)
+        }
+      })
+      this.dialogTypeVisible = true
+    },
+    // 获取全部小程序的类型
+    getTypeList(){
+      this.$http.get('/content/type/select', {}).then(res => {
+        let resp = res.data
+        if (resp.success) {
+          if(resp.data){
+            this.typeList  = resp.data
+          }
+        } else {
+          let msg = resp.desc || '请求失败'
+          this.$message.error(msg)
+        }
+      })
+    },
+    // 选择小程序类型
+    selectType() {
+      this.$refs['typeName'].validate((valid) => {
+        if (valid) {
+          let params = {
+            id : this.changeForm.id,
+            typeNameId : this.changeForm.typeNameId
+          }
+          this.$http.post('/content/detail/update', qs.stringify(params)).then(res => {
+            if (res.data.data) {
+              this.dialogTypeVisible = false
+              this.$message.success('保存成功')
+            } else {
+              this.dialogTypeVisible = false
+              this.$message.error('保存失败')
+            }
+          })
+        } else {
+          console.log('error submit!!')
+          return false
         }
       })
     }

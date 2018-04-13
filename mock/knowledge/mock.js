@@ -101,6 +101,12 @@ var setOnline = [
     type: 'post',
     url: '/goodsGroup/goods/add'
   },
+  // 订单列表
+  {
+    name: 'ordersList',
+    type: 'get',
+    url: '/order/List'
+  },
   //订单详情
   {
     name: 'ordersDetail',

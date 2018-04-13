@@ -32,9 +32,13 @@
                       </td>
                     </template>
                     <template v-else-if="column.hasUrl">
-                      <td> 
+                      <td  v-if="item[column.dataIndex].length > 30"> 
+                        <img :src="item[column.itemPicture]" alt="" class="goods-list-img fl">
+                        <span v-text="item[column.dataIndex]" class="two-ellipsis-list"></span>
+                      </td>
+                      <td  v-else> 
                         <img :src="item[column.itemPicture]" alt="" class="goods-list-img">
-                        <span v-text="item[column.dataIndex]"></span>
+                        <span v-text="item[column.dataIndex]" class="ml10"></span>
                       </td>
                     </template>
                     <template v-else-if="column.type">
@@ -94,8 +98,8 @@
                     <el-table-column property="id" label="ID" width="100"></el-table-column>
                     <el-table-column label="商品信息" width="260">
                       <template slot-scope="scope">
-                        <img :src="scope.row.frontCover" alt="" class="goods-list-img">
-                        <span v-text="scope.row.title"></span>
+                        <img :src="scope.row.frontCover" alt="" class="goods-list-img fl">
+                        <span v-text="scope.row.title" class="two-ellipsis"></span>
                       </template>
                     </el-table-column>
                     <el-table-column label="商品类型" width="200">
@@ -139,8 +143,8 @@
                     <el-table-column property="id" label="ID" width="100"></el-table-column>
                     <el-table-column label="商品信息" width="260">
                       <template slot-scope="scope" >
-                        <img :src="scope.row.frontCover" alt="" class="goods-list-img">
-                        <span v-text="scope.row.title"></span>
+                        <img :src="scope.row.frontCover" alt="" class="goods-list-img fl">
+                        <span v-text="scope.row.title" class="two-ellipsis"></span>
                       </template>
                     </el-table-column>
                     <el-table-column label="商品类型" width="200">
@@ -196,7 +200,7 @@ const columns = [
   {
     title: '商品类型',
     dataIndex: 'itemType',
-    width: 20,
+    width: 15,
     type: true
   },
   {
@@ -207,7 +211,7 @@ const columns = [
   {
     title: '操作',
     dataIndex: 'id',
-    width: 20,
+    width: 10,
     action: true
   }
 ]
@@ -579,6 +583,30 @@ export default {
     width: 50px;
     display: inline-block;
     vertical-align: middle;
+  }
+  .two-ellipsis{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    width: 180px;
+    float: left;
+    margin-left: 10px;
+  }
+  .two-ellipsis-list{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    width: 300px;
+    float: left;
+    margin-left: 10px;
+    line-height:23px;
+  }
+  .ml10{
+    margin-left:10px;
   }
 }
 

@@ -2,7 +2,7 @@
   <section class="dlv-main">
     <div class="title-wrap">
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item :to="{ path: '/manager/knowledge/goodsGroup' }">订单</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/manager/knowledge/order' }">订单</el-breadcrumb-item>
         <el-breadcrumb-item>订单详情</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
@@ -12,159 +12,170 @@
           <div class="order-detail-table">
             <div class="page-content">
               <div class="page-table">
-                <div class="order-detail-title mt40">订单</div>
-                <table>
-                  <thead>
-                    <tr class="tr-header">
-                      <th>订单ID</th>
-                      <th class="w330">创建时间</th>
-                      <th class="w255">订单金额(元)</th>
-                      <th class="w320">订单状态</th>
-                      <th>更新时间</th>
-                      <th>备注</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>{{order.orderId}}</td>
-                      <td>{{order.gmtCreate}}</td>
-                      <td>{{order.orderAmt !== 0 && order.orderAmt !== undefined ? (order.orderAmt / 100).toFixed(2) : (order.orderAmt === 0 ? '0' : '')}}</td>
-                      <td>{{order.orderStatus}}</td>
-                      <td>{{order.gmtModified}}</td>
-                      <td>{{order.remark}}</td>
-                    </tr>
-                  </tbody>
-                </table>
-                <div class="order-detail-title">商品</div>
-                <table>
-                  <thead>
-                    <tr class="tr-header">
-                      <th>商品ID</th>
-                      <th class="w155">货号</th>
-                      <th class="w175">商品标题</th>
-                      <th class="w255">商品规格</th>
-                      <th class="w175">商品编码</th>
-                      <th class="w145">商品价格(元)</th>
-                      <th>商品成本(元)</th>
-                      <th>件数(件)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>{{orderItem.itemId}}</td>
-                      <td>{{orderItem.itemNo}}</td>
-                      <td>{{orderItem.itemShortName}}</td>
-                      <td>{{orderItem.skuName}}</td>
-                      <td>{{orderItem.skuNo}}</td>
-                      <td>{{orderItem.sellingPrice !== 0 && order.orderAmt !== undefined ? (orderItem.sellingPrice / 100).toFixed(2) : (orderItem.sellingPrice === 0 ? '0' : '')}}</td>
-                      <td>{{orderItem.costPrice ? (orderItem.costPrice / 100).toFixed(2) : ''}}</td>
-                      <td>{{orderItem.quantity}}</td>
-                    </tr>
-                  </tbody>
-                </table>
                 <div class="order-detail-title">买家</div>
-                <table>
+<!--                 <table>
                   <thead>
                     <tr class="tr-header">
-                      <th>姓名</th>
-                      <th class="w155">手机号</th>
-                      <th class="w175">地区</th>
-                      <th>地址</th>
+                      <th>买家信息</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td>{{bullPosition.consumerName}}</td>
-                      <td>{{bullPosition.mobile}}</td>
-                      <td>{{bullPosition.areaNum}},{{bullPosition.province}}{{bullPosition.city}}{{bullPosition.district}}</td>
-                      <td>{{bullPosition.address}}</td>
+                      <td>{{order.ordersInfo}}</td>
                     </tr>
                   </tbody>
-                </table>
-                <div class="order-detail-title">物流</div>
-                <table>
+                </table> -->
+                <el-table :data="bull" style="width: 100%" border>
+                  <el-table-column prop="ordersInfo" label="买家信息">
+                    <template slot-scope="scope">
+                        <img :src="scope.row.frontCover" alt="" class="goods-list-img fl">
+                        <span v-text="scope.row.title" class="two-ellipsis"></span>
+                      </template>
+                  </el-table-column>
+                </el-table>
+
+                <div class="order-detail-title">商品</div>
+                <!-- <table>
                   <thead>
                     <tr class="tr-header">
-                      <th>物流订单ID</th>
-                      <th class="w155">创建时间</th>
-                      <th class="">物流公司</th>
-                      <th class="w155">物流单号</th>
-                      <th class="w100">物流状态</th>
-                      <th class="w175">更新时间</th>
-                      <th class="w145">物流子订单状态</th>
-                      <th>订单状态更新时间</th>
-                      <th>待发货订单ID</th>
+                      <th class="w255">商品信息</th>
+                      <th class="w155">单价</th>
+                      <th class="w175">数量</th>
+                      <th class="w255">总价(元)</th>
+                      <th class="w175">讲师抽成比例(%)</th>
+                      <th>商品类型</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>{{goodsList.goodsInfo}}</td>
+                      <td>{{goodsList.price}}</td>
+                      <td>{{goodsList.number}}</td>
+                      <td>{{goodsList.total}}</td>
+                      <td>{{goodsList.rate}}</td>
+                      <td>{{goodsList.goodsType}}</td>
+                    </tr>
+                  </tbody>
+                </table> -->
+                <el-table :data="goodsList" style="width: 100%" border>
+                  <el-table-column prop="goodsInfo" label="商品信息"></el-table-column>
+                  <el-table-column prop="price" label="单价"></el-table-column>
+                  <el-table-column prop="number" label="数量"></el-table-column>
+                  <el-table-column prop="total" label="总价(元)" ></el-table-column>
+                  <el-table-column prop="rate" label="讲师抽成比例(%)" ></el-table-column>
+                  <el-table-column prop="goodsType" label="商品类型" ></el-table-column>
+                </el-table>
+
+                <div class="order-detail-title">订单</div>
+<!--                 <table>
+                  <thead>
+                    <tr class="tr-header">
+                      <th>订单号</th>
+                      <th class="w255">订单创建时间</th>
+                      <th class="w155">订单金额</th>
+                      <th class="w155">订单状态</th>
+                      <th class="w155">订单类型</th>
+                      <th>支付完成时间</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>{{orderList.bullId}}</td>
+                      <td>{{orderList.bullStartTime}}</td>
+                      <td>{{orderList.bullPrice}}</td>
+                      <td>{{orderList.bullStatus}}</td>
+                      <td>{{orderList.bullType}}</td>
+                      <td>{{orderList.bullEndTime}}</td>
+                    </tr>
+                  </tbody>
+                </table> -->
+                <el-table :data="orderList" style="width: 100%"  border>
+                  <el-table-column prop="bullId" label="订单号"></el-table-column>
+                  <el-table-column prop="bullStartTime" label="订单创建时间"></el-table-column>
+                  <el-table-column prop="bullPrice" label="订单金额" ></el-table-column>
+                  <el-table-column prop="bullStatus" label="订单状态" ></el-table-column>
+                  <el-table-column prop="bullType" label="订单类型" ></el-table-column>
+                  <el-table-column prop="bullEndTime" label="支付完成时间" ></el-table-column>
+                </el-table>
+
+                <div class="order-detail-title">资金</div>
+<!--                 <table>
+                  <thead>
+                    <tr class="tr-header">
+                      <th>资金单号</th>
+                      <th class="w255">订单创建时间</th>
+                      <th class="w155">资金类型</th>
+                      <th class="">付款方式</th>
+                      <th class="w155">付款金额</th>
+                      <th class="w255">付款完成时间</th>
+                      <th>交易单号</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
                       <td>
-                        <span v-if="logisticsList && logisticsList.postId"  @click="getExpressDetail()">
-                          <i class="bicon icon-fold" v-show="isFold">&#xe608;</i>
-                          <i class="bicon icon-fold" v-show="!isFold">&#xe613;</i>
-                        </span>
-                        {{logisticsList.logisticsId}}</td>
-                      <td>{{logisticsList.gmtCreate}}</td>
-                      <td>{{logisticsList.logisticsName}}</td>
-                      <td>{{logisticsList.postId}}</td>
-                      <td>{{logisticsList.logisticsStatus}}</td>
-                      <td>{{logisticsList.gmtModified}}</td>
-                      <td>{{logisticsList.orderStatus}}</td>
-                      <td>{{logisticsList.orderStatusModified}}</td>
-                      <td>{{logisticsList.erpId}}</td>
-                    </tr>
-                    <tr v-if="!isFold" >
-                      <td colspan="9">
-                        <ul>
-                          <li v-for="(item, index) in logisticsInfo" class="logistics-info">
-                            <p class="upload-time">{{item.uploadTime}}</p>
-                            <p>{{item.processInfo}}</p>
-                          </li>
-                        </ul>
-                      </td>
+                      <td>{{fundList.fundId}}</td>
+                      <td>{{fundList.fundStartTime}}</td>
+                      <td>{{fundList.fundType}}</td>
+                      <td>{{fundList.fundPay}}</td>
+                      <td>{{fundList.fundPayPrice}}</td>
+                      <td>{{fundList.fundEndTime}}</td>
+                      <td>{{fundList.fundTradeId}}</td>
                     </tr>
                   </tbody>
-                </table>
-                <div class="order-detail-title">售后</div>
-                <table>
+                </table> -->
+                <el-table :data="fundList" style="width: 100%" border>
+                  <el-table-column prop="fundId" label="资金单号"></el-table-column>
+                  <el-table-column prop="fundStartTime" label="订单创建时间"></el-table-column>
+                  <el-table-column prop="fundType" label="资金类型" ></el-table-column>
+                  <el-table-column prop="fundPay" label="付款方式" ></el-table-column>
+                  <el-table-column prop="fundPayPrice" label="付款金额" ></el-table-column>
+                  <el-table-column prop="fundEndTime" label="付款完成时间" ></el-table-column>
+                  <el-table-column prop="fundTradeId" label="交易单号" ></el-table-column>
+                </el-table>
+
+                <div class="order-detail-title">渠道</div>
+<!--                 <table>
                   <thead>
                     <tr class="tr-header">
-                      <th>售后子订单ID</th>
-                      <th class="w330">创建时间</th>
-                      <th class="w255">售后类型</th>
-                      <th class="w175">售后原因</th>
-                      <th class="w145">退款金额(元)</th>
-                      <th>退款账号</th>
-                      <th>状态</th>
-                      <th>更新时间</th>
+                      <th class="w145">渠道ID</th>
+                      <th class="w145">推广位ID</th>
+                      <th class="w255">渠道抽成比例(%)</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td>{{afterSaleList.afterSaleId}}</td>
-                      <td>{{afterSaleList.gmtCreate}}</td>
-                      <td>{{afterSaleList.afterSaleType}}</td>
-                      <td>{{afterSaleList.afterSaleReason}}</td>
-                      <td>{{afterSaleList.refundAmt !== 0 && afterSaleList.refundAmt !== undefined ? (afterSaleList.refundAmt / 100).toFixed(2) : (afterSaleList.refundAmt === 0 ? '0' : '')}}</td>
-                      <td>{{afterSaleList.account}}</td>
-                      <td>{{afterSaleList.afterSaleStatus}}</td>
-                      <td>{{afterSaleList.gmtModified}}</td>
+                      <td>{{channelList.channelId}}</td>
+                      <td>{{channelList.spreadId}}</td>
+                      <td>{{channelList.rate}}</td>
                     </tr>
                   </tbody>
-                </table>
-                <div class="order-detail-title">防作弊</div>
-                <table>
+                </table> -->
+                <el-table :data="channelList" style="width: 100%" border>
+                  <el-table-column prop="channelId" label="渠道ID" ></el-table-column>
+                  <el-table-column prop="spreadId" label="推广位ID" ></el-table-column>
+                  <el-table-column prop="rate" label="渠道抽成比例(%)" ></el-table-column>
+                </el-table>
+
+                <div class="order-detail-title">讲师</div>
+<!--                 <table>
                   <thead>
                     <tr class="tr-header">
-                      <th>命中规则</th>
+                      <th class="w145">讲师ID</th>
+                      <th>讲师昵称</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td>{{anticheateList}}</td>
+                      <td>{{lecturerList}}</td>
+                      <td>{{lecturerList}}</td>
                     </tr>
                   </tbody>
-                </table>
+                </table> -->
+                <el-table :data="lecturerList" style="width: 100%" border>
+                  <el-table-column prop="lectuerId" label="讲师ID" ></el-table-column>
+                  <el-table-column prop="lectuerName" label="讲师昵称(元)" ></el-table-column>
+                </el-table>
               </div>
             </div>
           </div>
@@ -181,13 +192,12 @@
         params: {
           orderId: ''
         },
-        order: {}, // 订单
-        orderItem: {}, // 商品
-        bullPosition: {}, // 买家
-        erpOrderList: {}, // 待发货
-        logisticsList: {}, // 物流
-        afterSaleList: {}, // 售后
-        anticheateList: [], // 防作弊
+        bull: [], // 买家
+        goodsList: [], // 商品
+        orderList: [], // 订单
+        fundList: [], // 资金
+        channelList: [], // 渠道
+        lecturerList: [], // 讲师
         isFold: true,
         logisticsInfo: []
       }
@@ -206,13 +216,13 @@
           res = res.body;
           if (res.success) {
             let data = res.data;
-            this.order = data.order || {};
-            this.orderItem = data.orderItem || {};
-            this.bullPosition = data.bullPosition || {};
-            this.erpOrderList = data.erpOrderList[0] || {};
-            this.logisticsList = data.logisticsList[0] || {};
-            this.afterSaleList = data.afterSaleList[0] || {};
-            this.anticheateList = data.anticheateList.length && data.anticheateList.join(',') || '';
+            this.bull = data.bull || {};
+            this.goodsList = data.goodsList || {};
+            this.orderList = data.orderList || {};
+            this.erpOrderList = data.erpOrderList || {};
+            this.fundList = data.fundList || {};
+            this.channelList = data.channelList || {};
+            this.lecturerList = data.lecturerList || {};
           }
         }, e => {
           console.log(e)
@@ -222,8 +232,8 @@
         this.isFold = !this.isFold;
         if (!this.isFold) {
           let params = {
-            logisticsCode: this.logisticsList.logisticsCode,
-            postId: this.logisticsList.postId
+            logisticsCode: this.fundList.logisticsCode,
+            postId: this.fundList.postId
           }
           this.$http.post('/logistics/query/processInfo', params, {emulateJSON: false}).then(res => {
             res = res.body;
@@ -244,6 +254,18 @@
   }
 </script>
 <style lang="less">
+  .title-wrap {
+    width: 100%;
+    height: 30px;
+    border-bottom: 1px dotted #ccc;
+    position: relative;
+    .el-breadcrumb {
+      position: absolute;
+      left: 0;
+      bottom: 10px;
+      font-size: 16px;
+    }
+  }
   .order-detail-table {
     table {
       min-width: 1450px;
@@ -258,7 +280,7 @@
       }
     }
     .tr-header {
-      height: 40px;
+    /* height: 40px;
       line-height: 40px;
       background-color: #ededed;
       th {
@@ -268,7 +290,7 @@
           padding-left: 40px;
           width: 260px;
         }
-      }
+      } */
       .w330 {
         width: 330px;
       }
@@ -300,10 +322,10 @@
     .order-detail-title {
       height: 21px;
       line-height: 21px;
-      font-size: 14px;
+      font-size: 18px;
       text-align: left;
-      color: #666666;
-      margin: 6px  0 5px 0 ;
+      color: #303133;
+      margin: 20px 0  5px 10px;
     }
     .mt40 {
       margin-top: 40px;

@@ -66,7 +66,9 @@
               <template slot-scope="scope">
                 <!--openDialogAdmin(scope.row.managerName,scope.row.id）-->
                 <el-button type="text" size="mini" @click="getCourseDetail(scope.row.id)">编辑</el-button>
-                <el-button type="text" size="mini" @click="changeStatus(scope.row.id,scope.row.status)">{{scope.row.status==1?'上线':'下线'}}</el-button>
+                <el-button type="text" size="mini" @click="changeStatus(scope.row.id,scope.row.status)">
+                  {{scope.row.status == 1 ? '上线' : '下线'}}
+                </el-button>
                 <el-button type="text" size="mini" @click="deleteItem(scope.row.id)" :disabled="false">删除</el-button>
               </template>
             </el-table-column>
@@ -114,7 +116,7 @@
         <el-form-item label="课程副标题" prop="subTitle">
           <el-input v-model="courseForm.subTitle" placeholder="1-45个字"></el-input>
         </el-form-item>
-        <el-form-item label="课程封面" required>
+        <el-form-item label="课程封面">
           <el-upload
             class="avatar-uploader"
             action="https://jsonplaceholder.typicode.com/posts/"
@@ -208,7 +210,15 @@
   import 'quill/dist/quill.snow.css'
   import 'quill/dist/quill.bubble.css'
   import {quillEditor} from 'vue-quill-editor'
-  import {addCourse, deleteCourse, updateCourse, getCourse, pageListCourse, updateStatusCourse} from '@/api/index'
+  import {
+    addCourse,
+    deleteCourse,
+    updateCourse,
+    getCourse,
+    pageListCourse,
+    updateStatusCourse,
+    lecturerList
+  } from '@/api/index'
 
   export default {
     components: {
@@ -216,7 +226,7 @@
     },
     data() {
       return {
-        loading:false,
+        loading: false,
         pageType: 0,
         courseTypeOptions: [
           {
@@ -271,8 +281,8 @@
         courseSearchForm: {
           selectType: 'title',
           searchValue: null,
-          specialState:'',
-          searchTeacherType:'lecturerNickName',
+          specialState: '',
+          searchTeacherType: 'lecturerNickName',
           id: null,
           title: null,
           status: null,
@@ -294,11 +304,8 @@
             {required: true, message: '请输入课程标题', trigger: 'blur'},
             {min: 1, max: 45, message: '长度在 1 到 45 个字', trigger: 'blur'}
           ],
-          frontCover: [
-            {required: true, message: '请选择课程封面', trigger: 'change'}
-          ],
-          detail: [
-            {required: true, message: '请输入课程详情', trigger: 'blur'}
+          freeTime: [
+            {required: true, message: '请输入试听时长', trigger: 'blur'}
           ],
           lecturerId: [
             {required: true, message: '请选择讲师', trigger: 'change'}
@@ -309,23 +316,20 @@
           price: [
             {required: true, message: '请输入课程价格', trigger: 'blur'}
           ],
-          desc: [
-            {required: true, message: '请填写活动形式', trigger: 'blur'}
-          ],
           rate: [
-            {required: true, message: '请填写抽成比例', trigger: 'blur'}
+            {required: true, message: '请输入抽成比例', trigger: 'blur'}
           ]
         },
         //新增编辑课程form表单
         courseForm: {
           id: null,
           title: null,
-          subTitle:null,
+          subTitle: null,
           courseType: null,
           frontCover: [],
           detail: null,
-          freeTime:null,
-          timeLength:null,
+          freeTime: null,
+          timeLength: null,
           price: null,
           address: [],
           lecturerId: null,
@@ -335,14 +339,14 @@
       }
     },
 
-    computed:{
-      audioTimeLength:function (){
+    computed: {
+      audioTimeLength: function () {
         let s = this.courseForm.timeLength;
         if (!s) return '-';
-        let hour = Math.floor(s/3600);
-        let min = Math.floor(s/60) % 60;
+        let hour = Math.floor(s / 3600);
+        let min = Math.floor(s / 60) % 60;
         let sec = s % 60;
-        return  `${hour}时${min}分${sec}秒`
+        return `${hour}时${min}分${sec}秒`
       }
     },
     created() {
@@ -351,11 +355,11 @@
     methods: {
 
       //上下线
-      changeStatus(id,status) {
+      changeStatus(id, status) {
         this.loading = true;
         updateStatusCourse({
-            id,
-            status
+          id,
+          status
         }).then(res => {
           if (res.success) {
             this.$message.success('切换成功')
@@ -364,7 +368,7 @@
             this.$message.error(msg)
           }
           this.loading = false;
-        }).catch(()=>{
+        }).catch(() => {
           this.loading = false;
         })
       },
@@ -387,7 +391,7 @@
               this.$message.error(msg)
             }
             this.loading = false;
-          }).catch(()=>{
+          }).catch(() => {
             this.loading = false;
           })
         }).catch(() => {
@@ -400,8 +404,8 @@
 
       //获取列表数据
       getData() {
-        [this.courseSearchForm.id,this.courseSearchForm.title] = this.courseSearchForm.selectType == 'id'?[this.courseSearchForm.searchValue,'']:['',this.courseSearchForm.searchValue];
-        [this.courseSearchForm.lecturerNickName,this.courseSearchForm.lecturerId]=this.courseSearchForm.searchTeacherType == 'lecturerId'?['',this.courseSearchForm.lecturerValue]:[this.courseSearchForm.lecturerValue,''];
+        [this.courseSearchForm.id, this.courseSearchForm.title] = this.courseSearchForm.selectType == 'id' ? [this.courseSearchForm.searchValue, ''] : ['', this.courseSearchForm.searchValue];
+        [this.courseSearchForm.lecturerNickName, this.courseSearchForm.lecturerId] = this.courseSearchForm.searchTeacherType == 'lecturerId' ? ['', this.courseSearchForm.lecturerValue] : [this.courseSearchForm.lecturerValue, ''];
         this.loading = true;
 
         pageListCourse(this.courseSearchForm).then(res => {
@@ -413,12 +417,12 @@
             this.$message.error(msg)
           }
           this.loading = false;
-        }).catch(()=>{
+        }).catch(() => {
           this.loading = false;
         })
       },
 
-      getLecturerList(nickName){
+      getLecturerList(nickName) {
         this.loading = true;
 
         lecturerList({
@@ -431,7 +435,7 @@
             this.$message.error(msg)
           }
           this.loading = false;
-        }).catch(()=>{
+        }).catch(() => {
           this.loading = false;
         })
       },
@@ -442,26 +446,26 @@
 
         getCourse({id}).then(res => {
           if (res.success) {
-            this.courseForm = Object.assign({},res.data);
+            this.courseForm = Object.assign({}, res.data);
             this.pageType = 2; //1 新增 2 编辑
           } else {
             let msg = res.desc || '获取课程内容失败'
             this.$message.error(msg)
           }
           this.loading = false;
-        }).catch(()=>{
+        }).catch(() => {
           this.loading = false;
         })
       },
 
-      audioRemove(){
+      audioRemove() {
         this.courseForm.address.shift();
       },
 
-      audioSuccess(event, file, fileList){
+      audioSuccess(event, file, fileList) {
         this.courseForm.address.push({
-          'name':file.name,
-          'url':file.url
+          'name': file.name,
+          'url': file.url
         })
       },
 
@@ -479,7 +483,7 @@
                 this.$message.error(msg);
               }
               this.loading = false;
-            }).catch(()=>{
+            }).catch(() => {
               this.loading = false;
             })
           } else {
@@ -494,18 +498,18 @@
         this.pageType = 0;
       },
 
-      newcourseForm(){
-        for(let i in this.courseForm){
+      newcourseForm() {
+        for (let i in this.courseForm) {
           this.courseForm[i] = null
         }
-        this.courseForm.frontCover=[];
+        this.courseForm.frontCover = [];
         this.courseForm.address = [];
         this.getLecturerList();
         this.pageType = 1
       },
 
-      getStatus(row, column){
-        switch (row.status){
+      getStatus(row, column) {
+        switch (row.status) {
           case '':
             return '课程状态';
           case 0:
@@ -517,8 +521,8 @@
         }
       },
 
-      getCourseType(row,column){
-        return row.courseType == 1?'音频':'视频'
+      getCourseType(row, column) {
+        return row.courseType == 1 ? '音频' : '视频'
       },
 
       beforeAvatarUpload(file) {
@@ -552,17 +556,18 @@
 <style lang="less" scoped>
   .ofa-main-wrap {
     width: 100%;
-    .totle-time{
+    .totle-time {
       position: absolute;
-      top: 0;
+      top: 10px;
       left: 235px;
       color: #333;
     }
-    .audio-list{
-      .el-upload-list__item,.el-upload-list__item:first-child{
-        line-height:40px;
-        margin-top:0}
-      .el-upload-list{
+    .audio-list {
+      .el-upload-list__item, .el-upload-list__item:first-child {
+        line-height: 40px;
+        margin-top: 0
+      }
+      .el-upload-list {
         width: 300px;
         height: 40px;
         border: 1px solid #ccc;
@@ -648,13 +653,13 @@
         height: 178px;
         display: block;
       }
-      .el-upload__tip,.el-button{
+      .el-upload__tip, .el-button {
         position: absolute;
         left: 200px;
         top: 0;
       }
-      .el-upload__tip{
-        top:30px;
+      .el-upload__tip {
+        top: 30px;
       }
     }
   }

@@ -1,256 +1,283 @@
 <template>
   <section class="app-main-wrap">
     <div class="title-wrap">
-      <el-breadcrumb separator="/">
-        <el-breadcrumb-item>页面</el-breadcrumb-item>
-      </el-breadcrumb>
       <span class="add-ofa">
-        <i class="iconfont icon-jia"></i>
-        <span class="offical-acount" @click="getMiniApp">页面</span>
+        <el-button type="primary" icon="el-icon-circle-plus" @click="getMiniApp" size="small">页面</el-button>
       </span>
     </div>
     <div class="content">
       <div class="tabel-wrap">
         <template>
-          <el-table :data="appList"  style="width: 100%" >
+          <el-table :data="appList" style="width: 100%">
             <el-table-column prop="ID" label="ID" width="80"></el-table-column>
-            <el-table-column label="页面标题" >
-              <template slot-scope="scope">
-                <img :src="scope.row.headImg" class="app-avatar">
-                <span class="app-name">{{scope.row.name}}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="创建时间" >
+            <el-table-column prop="pageTitle" label="页面标题"></el-table-column>
+            <el-table-column label="创建时间">
               <template slot-scope="scope">
                 {{scope.row.gmtCreate | formatToMs}}
               </template>
             </el-table-column>
-            <el-table-column  label="操作" width="500">
+            <el-table-column label="操作" width="300">
               <template slot-scope="scope">
                 <el-button type="text" size="mini" @click="showAppDetail(scope.row.id)">编辑</el-button>
-                <el-button type="text" size="mini" @click="showAppDetail(scope.row.id)">删除</el-button>
-                <el-button type="text" size="mini" @click="showAppDetail(scope.row.id)">复制</el-button>
-                <el-button type="text" size="mini" @click="showAppDetail(scope.row.id)">预览</el-button>
-                <el-button type="text" size="mini" @click="showAppDetail(scope.row.id)">设为主页</el-button>
+                <el-button type="text" size="mini" @click="delApp(scope.row.id)">删除</el-button>
+                <el-button type="text" size="mini" @click="copyApp(scope.row.id)">复制</el-button>
+                <!-- <el-button type="text" size="mini" @click="showAppDetail(scope.row.id)">预览</el-button> -->
+                <el-button type="text" size="mini" @click="indexApp(scope.row.id)">设为主页</el-button>
               </template>
             </el-table-column>
           </el-table>
-        </template>        
+        </template>
       </div>
       <div class="page-control">
-        <el-pagination background  :page-size="20" :current-page.sync="pageOption.pageNum" @current-change="pageChange" layout="total, prev, pager, next" :total="totalSize"></el-pagination>
-      </div>    
+        <el-pagination background :page-size="20" :current-page.sync="pageOption.pageNum" @current-change="changePageAppList" layout="total, prev, pager, next"
+          :total="totalSize"></el-pagination>
+      </div>
     </div>
   </section>
 </template>
 
 <script>
-import { formatToMs } from '../../../utils/dateUtils'
+  import { formatToMs } from '../../../utils/dateUtils'
 
-const api = {
-
-}
-export default {
-  data () {
-    return {
-      pageOption: {
-        pageNum: 1,
-        pageSize: 20
-      },
-      totalSize: 10,
-      appList: []
-    }
-  },
-  filters: {
-    formatToMs: formatToMs
-  },
-  created () {
-    this.getAppList()
-  },
-  methods: {
-    getAppList () {
-      this.$http.get('/miniapp/list').then(res => {
-        let resp = res.data
-        if (resp.success) {
-          this.appList = resp.data.lists
-          // 算出有多少条数据
-          this.totalSize = resp.data.totalSize
-        } else {
-          let msg = resp.desc || '请求失败'
-          this.$message.error(msg)
-        }
-      })
+  const url = 'https://www.easy-mock.com/mock/5ab0db192f746420c10e810e/test';
+  const api = {
+    list: url + '/knowledgepage/list',
+    delete: url + '/knowledgepage/delete',
+    sethomepage: url + '/knowledgepage/sethomepage',
+    insert: url + '/knowledgepage/insert',
+    update: url + '/knowledgepage/update',
+    copy: url + '/knowledgepage/copy',
+  }
+  export default {
+    data() {
+      return {
+        pageOption: {
+          pageNum: 1,
+          pageSize: 20
+        },
+        totalSize: 0,
+        appList: [],
+        authorizerId: '',
+      }
     },
-    pageChange () {
-      this.$http.get('/miniapp/list', {params: this.pageOption}).then(res => {
-        let resp = res.data
-        if (resp.success) {
-          this.appList = resp.data.lists
-          // 算出有多少条数据
-          this.totalSize = resp.data.totalSize
-        } else {
-          let msg = resp.desc || '请求失败'
-          this.$message.error(msg)
-        }
-      })
+    filters: {
+      formatToMs: formatToMs
     },
-    delApp (id) {
-      this.$confirm('删除后会影响相关授权功能的使用，确认删除？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.$http.get('/miniapp/delete', {params: {id}}).then(res => {
+    created() {
+      this.getAppList()
+    },
+    methods: {
+      getAppList() {
+        let params = {
+          pageTitle: '',
+          authorizerId: this.authorizerId ? this.authorizerId : '',
+          pageNum: this.pageOption.pageNum,
+          pageSize: this.pageOption.pageSize,
+        }
+        this.$http.get(api.list, { params: params }).then(res => {
           let resp = res.data
           if (resp.success) {
-            if (resp.data) {
+            this.appList = resp.data.lists
+            this.totalSize = resp.data.totalSize
+          } else {
+            let msg = resp.desc || '请求失败'
+            this.$message.error(msg)
+          }
+        })
+      },
+
+      changePageAppList(page) {
+        this.pageOption.pageNum = page;
+        this.getAppList();
+      },
+
+      delApp(id) {
+        this.$confirm('确定删除该页面？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$http.get(api.delete, { params: { id } }).then(res => {
+            let resp = res.data
+            if (resp.success) {
               this.$message({
                 type: 'success',
                 message: '删除成功!'
               })
               this.getAppList()
-            } else {
+            }
+          })
+        }).catch(() => {
+
+        })
+      },
+      indexApp(id) {
+        this.$confirm('确定设置为主页？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$http.get(api.sethomepage, { params: { id } }).then(res => {
+            let resp = res.data
+            if (resp.success) {
               this.$message({
                 type: 'success',
-                message: '删除失败!'
+                message: '设置主页成功!'
               })
+              this.getAppList()
             }
+          })
+        }).catch(() => {
+        })
+      },
+      copyApp(id) {
+        this.$confirm('确定复制该页面？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$http.get(api.copy, { params: { id } }).then(res => {
+            let resp = res.data
+            if (resp.success) {
+              this.$message({
+                type: 'success',
+                message: '复制成功!'
+              })
+              this.getAppList()
+            }
+          })
+        }).catch(() => {
+
+        })
+      },
+
+
+
+
+
+
+      showAppDetail(id) {
+        this.appdetailDialog.show = true
+        this.$http.get('/miniapp/detail', { params: { id } }).then(res => {
+          let resp = res.data
+          if (resp.success) {
+            this.appDetail = resp.data
           } else {
-            this.$message({
-              type: 'error',
-              message: '删除失败!'
-            })
+            let msg = resp.desc || '请求失败'
+            this.$message.error(msg)
           }
         })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
+      },
+      showDomain(appId) {
+        this.domainDialog.show = true
+        this.appId = appId
+        this.$http.get('/miniapp/getDomain', { params: { appId } }).then(res => {
+          let resp = res.data
+          if (resp.success) {
+            this.appDomain = resp.data
+          } else {
+            let msg = resp.desc || '请求失败'
+            this.$message.error(msg)
+          }
         })
-      })
-    },
-    showAppDetail (id) {
-      this.appdetailDialog.show = true
-      this.$http.get('/miniapp/detail', {params: {id}}).then(res => {
-        let resp = res.data
-        if (resp.success) {
-          this.appDetail = resp.data
-        } else {
-          let msg = resp.desc || '请求失败'
-          this.$message.error(msg)
-        }
-      })
-    },
-    showDomain (appId) {
-      this.domainDialog.show = true
-      this.appId = appId
-      this.$http.get('/miniapp/getDomain', {params: {appId}}).then(res => {
-        let resp = res.data
-        if (resp.success) {
-          this.appDomain = resp.data
-        } else {
-          let msg = resp.desc || '请求失败'
-          this.$message.error(msg)
-        }
-      })
-    },
-    setDomain (appId) {
-      this.$http.get('/miniapp/setDomain', {params: {appId}}).then(res => {
-        let resp = res.data
-        if (resp.success && resp.data) {
-          this.$message({
-            type: 'success',
-            message: '刷新成功!'
-          })
-          this.showDomain(appId)
-        } else {
-          let msg = resp.desc || '请求失败'
-          this.$message.error(msg)
-        }
-      })
-    },
-    getMiniApp () {
-      this.$http.get('/wechat/getAuthorization').then(res => {
-        console.log(res)
-        if (res.data.success) {
-          let redirectUrl = res.data.data
-          window.location.href = redirectUrl
-        }
-      })
-    }
-  }
-}
-</script>
-<style lang="less" scoped>
-.app-main-wrap {
-  width: 100%;
-  .title-wrap {
-    width: 100%;
-    height: 30px;
-    border-bottom: 1px dotted #ccc;
-    position: relative;
-    .el-breadcrumb {
-      position: absolute;
-      left: 0;
-      bottom: 10px;
-      font-size: 16px;
-    }
-    .add-ofa {
-      display: inline-block;
-      position: absolute;
-      right: 0;
-      bottom: 10px;
-      font-size: 12px;
-    }
-    .offical-acount {
-      cursor: pointer;
-      color: #909399;
-      font-weight: 400;
-      &:hover {
-        color: #333;
+      },
+      setDomain(appId) {
+        this.$http.get('/miniapp/setDomain', { params: { appId } }).then(res => {
+          let resp = res.data
+          if (resp.success && resp.data) {
+            this.$message({
+              type: 'success',
+              message: '刷新成功!'
+            })
+            this.showDomain(appId)
+          } else {
+            let msg = resp.desc || '请求失败'
+            this.$message.error(msg)
+          }
+        })
+      },
+      getMiniApp() {
+        this.$http.get('/wechat/getAuthorization').then(res => {
+          console.log(res)
+          if (res.data.success) {
+            let redirectUrl = res.data.data
+            window.location.href = redirectUrl
+          }
+        })
       }
     }
   }
-  .search-bar {
-    margin-top: 20px;
-  }
-  .tabel-wrap {
-    .app-avatar{
-      width: 40px;
-      height: 40px;
-      line-height: 40px;
-      display: inline-block;
-      float: left;
+</script>
+<style lang="less" scoped>
+  .app-main-wrap {
+    width: 100%;
+    .title-wrap {
+      width: 100%;
+      height: 50px;
+      position: relative;
+      .el-breadcrumb {
+        position: absolute;
+        left: 0;
+        bottom: 10px;
+        font-size: 16px;
+      }
+      .add-ofa {
+        display: inline-block;
+        position: absolute;
+        right: 0;
+        bottom: 10px;
+        font-size: 12px;
+      }
+      .offical-acount {
+        cursor: pointer;
+        color: #909399;
+        font-weight: 400;
+        &:hover {
+          color: #333;
+        }
+      }
     }
-    .app-name{
-      display: inline-block;
-      height: 40px;
-      line-height: 40px;
-      padding-left: 10px;
+    .search-bar {
+      margin-top: 20px;
     }
+    .tabel-wrap {
+      .app-avatar {
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        display: inline-block;
+        float: left;
+      }
+      .app-name {
+        display: inline-block;
+        height: 40px;
+        line-height: 40px;
+        padding-left: 10px;
+      }
 
-  }
-  .page-control {
-    float: right;
-    margin-top: 20px;
-    &:after {
-      clear: both;
     }
-  }
-  .appdetail-diolog, .domain-diolog{
-    .el-dialog__body{
-      overflow: hidden;
-      span {
-        display: block;
-      }       
+    .page-control {
+      float: right;
+      margin-top: 20px;
+      &:after {
+        clear: both;
+      }
     }
-  }
-   .app-avatar{
+    .appdetail-diolog,
+    .domain-diolog {
+      .el-dialog__body {
+        overflow: hidden;
+        span {
+          display: block;
+        }
+      }
+    }
+    .app-avatar {
       width: 40px;
       height: 40px;
       line-height: 40px;
       display: inline-block;
       float: left;
     }
-}
+  }
 </style>

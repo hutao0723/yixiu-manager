@@ -733,6 +733,7 @@
         [this.columnSearchForm.lecturerNickName, this.columnSearchForm.lecturerId] = this.columnSearchForm.searchTeacherType == 'lecturerId' ? ['', this.columnSearchForm.lecturerValue] : [this.columnSearchForm.lecturerValue, ''];
         this.loading = true;
         pageListColumn(this.columnSearchForm).then(res => {
+          debugger
           if (res.success) {
             this.columnList = res.data.content;
             this.totalSize = res.data.totalElements;

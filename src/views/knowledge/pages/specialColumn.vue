@@ -141,7 +141,8 @@
         <el-form-item label="课程封面">
           <el-upload
             class="avatar-uploader"
-            action="https://jsonplaceholder.typicode.com/posts/"
+            action="http://oss-cn-hangzhou.aliyuncs.com/"
+            :data="directTransmissionSign"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload">
@@ -152,7 +153,7 @@
           </el-upload>
           <el-upload
             class="avatar-uploader"
-            action="https://jsonplaceholder.typicode.com/posts/"
+            action="http://oss-cn-hangzhou.aliyuncs.com/"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload">
@@ -249,7 +250,7 @@
           @selection-change="handleSelectionChange">
           <el-table-column
             type="selection"
-            width="55">
+            width="100">
           </el-table-column>
           <el-table-column
             label="课程ID"
@@ -259,7 +260,7 @@
           <el-table-column
             prop="courseType"
             label="课程类型"
-            width="120"
+            width="150"
             :formatter="getCourseType">
           </el-table-column>
           <el-table-column
@@ -300,7 +301,8 @@
     relateCourse,
     coursePageList,
     lecturerList,
-    courseSort
+    courseSort,
+    getDirectTransmissionSign
   } from '@/api/index'
 
   export default {
@@ -311,6 +313,7 @@
     data() {
       return {
         loading:false,
+        directTransmissionSign:null, //上传签名
         pageType: 0,
         searchOptions: [
           {
@@ -513,6 +516,7 @@
         getColumn({id}).then(res => {
           if (res.success) {
             this.columnForm = Object.assign({}, res.data);
+            this.getDirectTransmissionSign();
             this.pageType = 2; //1 新增 2 编辑
           } else {
             let msg = res.desc || '获取课程内容失败'
@@ -786,7 +790,8 @@
         }
         this.columnForm.coverList=[];
         this.getLecturerList();
-        this.pageType = 1
+        this.getDirectTransmissionSign();
+        this.pageType = 1;
       },
 
       datadragEnd (e) {
@@ -803,7 +808,20 @@
             this.$message.error(msg)
           }
         }).catch(()=>{
-          this.$message.error(网络错误)
+          this.$message.error('网络错误')
+        })
+      },
+
+      getDirectTransmissionSign() {
+        getDirectTransmissionSign().then(res => {
+          if (res.success) {
+            this.directTransmissionSign = res.data;
+          } else {
+            let msg = res.desc || '获取上传路径失败'
+            this.$message.error(msg)
+          }
+        }).catch(()=>{
+          this.$message.error('网络错误')
         })
       }
     }

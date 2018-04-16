@@ -54,5 +54,9 @@ export const courseSort = params => post('column/course/sort', params);
 //讲师列表
 export const lecturerList = params => get('lecturer/getList', params);
 
-
+/**
+ * 公共接口
+ */
+//获取文件上传的签名信息
+export const getDirectTransmissionSign = params => get('upload/getDirectTransmissionSign', params);
 

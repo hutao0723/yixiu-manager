@@ -711,10 +711,10 @@
       //上下线
       changeStatus(id, status) {
         this.loading = true;
-        updateStatusColumn(
+        updateStatusColumn({
           id,
           status
-        ).then(res => {
+        }).then(res => {
           if (res.success) {
             this.$message.success('切换成功')
           } else {

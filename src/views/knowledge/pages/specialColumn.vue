@@ -211,6 +211,9 @@
           <el-button @click="cancelForm('columnForm')">取消</el-button>
         </el-form-item>
       </el-form>
+        <div id="container"></div>
+      <el-button id="selectfiles">选择文件</el-button>
+      <el-button id="start_upload">文件开始上传</el-button>
     </div>
     <el-dialog title="关联课程" :visible.sync="linkVisable">
       <el-form :inline="true" :model="linkcolumnForm" class="demo-form-inline" size="medium">
@@ -287,7 +290,8 @@
   import 'quill/dist/quill.snow.css'
   import 'quill/dist/quill.bubble.css'
   import draggable from 'vuedraggable'
-  import {quillEditor} from 'vue-quill-editor';
+  import {quillEditor} from 'vue-quill-editor'
+  import plupload from 'plupload';
   import {
     getColumn,
     updateStatusColumn,
@@ -729,6 +733,7 @@
         [this.columnSearchForm.lecturerNickName, this.columnSearchForm.lecturerId] = this.columnSearchForm.searchTeacherType == 'lecturerId' ? ['', this.columnSearchForm.lecturerValue] : [this.columnSearchForm.lecturerValue, ''];
         this.loading = true;
         pageListColumn(this.columnSearchForm).then(res => {
+          debugger
           if (res.success) {
             this.columnList = res.data.content;
             this.totalSize = res.data.totalElements;
@@ -813,9 +818,55 @@
       },
 
       getDirectTransmissionSign() {
+
         getDirectTransmissionSign().then(res => {
           if (res.success) {
             this.directTransmissionSign = res.data;
+
+
+
+
+            //        实例化一个plupload上传对象
+            var multipart_params = this.directTransmissionSign;
+            console.log(multipart_params);
+
+            var uploader = new plupload.Uploader({
+              runtimes : 'html5,flash,silverlight,html4',
+              browse_button : 'selectfiles',
+              //runtimes : 'flash',
+              container: 'container',
+              flash_swf_url : multipart_params.dir,
+              silverlight_xap_url : multipart_params.dir,
+              url : 'http://daily-duiba.oss-cn-hangzhou.aliyuncs.com',
+              multipart_params: {
+                'Filename': 'test',
+                'key' : 'test',
+                'policy': multipart_params.policy,
+                'OSSAccessKeyId': multipart_params.accessid,
+                'success_action_status' : '200', //让服务端返回200,不然，默认会返回204
+                'signature': multipart_params.signature,
+              },
+            })
+
+            //在实例对象上调用init()方法进行初始化
+            uploader.init();
+
+            //绑定各种事件，并在事件监听函数中做你想做的事
+            uploader.bind('FilesAdded',function(uploader,files){
+              //每个事件监听函数都会传入一些很有用的参数，
+              //我们可以利用这些参数提供的信息来做比如更新UI，提示上传进度等操作
+            });
+            uploader.bind('UploadProgress',function(uploader,file){
+              //每个事件监听函数都会传入一些很有用的参数，
+              //我们可以利用这些参数提供的信息来做比如更新UI，提示上传进度等操作
+            });
+            //......
+            //......
+
+            //最后给"开始上传"按钮注册事件
+            document.getElementById('start_upload').onclick = function(){
+              uploader.start(); //调用实例对象的start()方法开始上传文件，当然你也可以在其他地方调用该方法
+            }
           } else {
             let msg = res.desc || '获取上传路径失败'
             this.$message.error(msg)

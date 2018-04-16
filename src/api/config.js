@@ -1,7 +1,6 @@
 import axios from 'axios'
 import getUrl from '../utils/get-url';
 axios.defaults.withCredentials = true;
-import qs from 'qs'
 
 /**
  * get请求
@@ -21,7 +20,7 @@ export function get(url, params) {
  * @param {*} params 请求参数
  */
 export function post(url, params) {
-    return axios.post(getUrl(url), qs.stringify(params)).then((response) => {
+    return axios.post(getUrl(url), params).then((response) => {
         return response.data;
     });
 }

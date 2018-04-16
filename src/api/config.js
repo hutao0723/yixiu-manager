@@ -1,5 +1,6 @@
 import axios from 'axios'
 import getUrl from '../utils/get-url';
+axios.defaults.withCredentials = true;
 
 /**
  * get请求

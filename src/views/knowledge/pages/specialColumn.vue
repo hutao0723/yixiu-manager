@@ -141,7 +141,7 @@
         <el-form-item label="课程封面">
           <el-upload
             class="avatar-uploader"
-            action="http://oss-cn-hangzhou.aliyuncs.com/"
+            action="http://youfen.oss-cn-hangzhou.aliyuncs.com/"
             :data="directTransmissionSign"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
@@ -153,7 +153,7 @@
           </el-upload>
           <el-upload
             class="avatar-uploader"
-            action="http://oss-cn-hangzhou.aliyuncs.com/"
+            action="http://youfen.oss-cn-hangzhou.aliyuncs.com/"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload">
@@ -711,10 +711,10 @@
       //上下线
       changeStatus(id, status) {
         this.loading = true;
-        updateStatusColumn({
+        updateStatusColumn(
           id,
           status
-        }).then(res => {
+        ).then(res => {
           if (res.success) {
             this.$message.success('切换成功')
           } else {
@@ -733,7 +733,6 @@
         [this.columnSearchForm.lecturerNickName, this.columnSearchForm.lecturerId] = this.columnSearchForm.searchTeacherType == 'lecturerId' ? ['', this.columnSearchForm.lecturerValue] : [this.columnSearchForm.lecturerValue, ''];
         this.loading = true;
         pageListColumn(this.columnSearchForm).then(res => {
-          debugger
           if (res.success) {
             this.columnList = res.data.content;
             this.totalSize = res.data.totalElements;
@@ -823,9 +822,6 @@
           if (res.success) {
             this.directTransmissionSign = res.data;
 
-
-
-
             //        实例化一个plupload上传对象
             var multipart_params = this.directTransmissionSign;
             console.log(multipart_params);
@@ -837,7 +833,8 @@
               container: 'container',
               flash_swf_url : multipart_params.dir,
               silverlight_xap_url : multipart_params.dir,
-              url : 'http://daily-duiba.oss-cn-hangzhou.aliyuncs.com',
+              url : 'http://youfen.oss-cn-hangzhou.aliyuncs.com/',
+
               multipart_params: {
                 'Filename': 'test',
                 'key' : 'test',

@@ -1,0 +1,11 @@
+{
+    "success": true,
+    "data": {
+        "id": 74,
+        "gmtCreate": "2018-04-17 14:33:39",
+        "gmtModified": "2018-04-17 17:35:06",
+        "parentId": 0,
+        "name": "测试类",
+        "modelType": 1
+    }
+}

@@ -144,7 +144,8 @@
           rate: this.addForm.rate,
           validPeriod: this.addForm.validPeriod,
         }
-        this.$http.post(api.add, qs.stringify(params)).then(res => {
+				let _params = Object.assign(params)
+        this.$http.post(api.add, qs.stringify(_params)).then(res => {
           if (res.data.success) {
             this.getAppList();
           }
@@ -158,7 +159,8 @@
           validPeriod: this.addForm.validPeriod,
           id: this.editId,
         }
-        this.$http.post(api.update, qs.stringify(params)).then(res => {
+				let _params = Object.assign(params)
+        this.$http.post(api.update, qs.stringify(_params)).then(res => {
           if (res.data.success) {
             this.getAppList();
           }

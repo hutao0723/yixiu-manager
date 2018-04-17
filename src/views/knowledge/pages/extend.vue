@@ -151,7 +151,8 @@
           name: this.addForm.name,
           channelId: this.addForm.channelId,
         }
-        this.$http.post(api.add, qs.stringify(params)).then(res => {
+				let _params = Object.assign(params)
+        this.$http.post(api.add, qs.stringify(_params)).then(res => {
           if (res.data.success) {
             this.getAppList();
           }
@@ -163,7 +164,8 @@
           name: this.addForm.name,
           id: this.editId,
         }
-        this.$http.post(api.update, qs.stringify(params)).then(res => {
+				let _params = Object.assign(params)
+        this.$http.post(api.update, qs.stringify(_params)).then(res => {
           if (res.data.success) {
             this.getAppList();
           }

@@ -23,7 +23,7 @@
                   <tbody>
                     <tr>
                       <td>
-                        {{detailList.nickname}}
+                        {{detailList.consumerId}}
                       </td>
                       <td>
                         <div class="clearfix">
@@ -58,7 +58,7 @@
                           <span class="goods-word info-ellipis">{{orderItems.itemName}}</span>
                         </div>
                       </td>
-                      <td>{{orderItems.itemPrice ? (orderItems.itemPrice / 100).toFixed(2) : ''}}</td>
+                      <td>{{singlePrice ? singlePrice: ''}}</td>
                       <td>{{orderItems.itemNum ? orderItems.itemNum: ''}}</td>
                       <td>{{totalPrice ? totalPrice: ''}}</td>
                       <td>{{orderItems.lecturerRate ? (orderItems.lecturerRate / 100).toFixed(2) : ''}}</td>
@@ -162,7 +162,8 @@
         detailList: {},
         orderItems: {},
         orderFunds: {},
-        totalPrice: null
+        totalPrice: null,
+        singlePrice: null
       }
     },
     mounted() {
@@ -181,9 +182,9 @@
             }
             if(resp.data.orderItems != undefined){
               this.orderItems = resp.data.orderItems[0] || {}
-              this.orderItems.itemNum = this.orderItems.itemNum ? (this.orderItems.itemPrice / 100).toFixed(2) : 0
-              this.orderItems.itemPrice = this.orderItems.itemPrice ? (this.orderItems.itemPrice / 100).toFixed(2) : 0
-              this.totalPrice = this.orderItems.itemNum  * this.orderItems.itemPrice
+              this.orderItems.itemNum = this.orderItems.itemNum ? this.orderItems.itemNum: 0
+              this.singlePrice = this.orderItems.itemPrice ? ((this.orderItems.itemPrice / 100).toFixed(2)) : 0
+              this.totalPrice = (this.orderItems.itemNum  * this.singlePrice).toFixed(2)
             }
             if(resp.data.orderItems != undefined){
               this.orderFunds = resp.data.orderFunds[0] || {}

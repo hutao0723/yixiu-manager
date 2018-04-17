@@ -73,12 +73,12 @@
             </el-table-column>
             <el-table-column label="单价(元)" >
               <template slot-scope="scope">
-                <div>{{scope.row.itemPrice/100}}</div>
+                <div>{{scope.row.itemPrice ? (scope.row.itemPrice / 100).toFixed(2) : ''}}</div>
               </template>
             </el-table-column>
             <el-table-column prop="orderAmt" label="订单金额(元)" >
               <template slot-scope="scope">
-                <div>{{scope.row.orderAmt/100}}</div>
+                <div>{{scope.row.orderAmt ? (scope.row.orderAmt / 100).toFixed(2) : ''}}</div>
               </template>
             </el-table-column>
             <el-table-column prop="orderStatus" label="订单状态" >

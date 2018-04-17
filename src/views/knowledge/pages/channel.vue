@@ -24,44 +24,43 @@
           :total="totalSize"></el-pagination>
       </div>
     </div>
-    <el-dialog :title="titleDialog" :visible.sync="addDialog">
-      <el-form :model="addForm">
-        <el-form-item label="渠道名称" label-width="100px">
+    <el-dialog :title="titleDialog" :visible.sync="addDialog" @close="closeDialog('addForm')">
+      <el-form :model="addForm" :rules="addRules" ref="addForm">
+        <el-form-item label="渠道名称" label-width="100px" prop="name">
           <el-input v-model="addForm.name" class="w200"></el-input>
         </el-form-item>
-        <el-form-item label="分成比例" label-width="100px">
+        <el-form-item label="分成比例" label-width="100px" prop="rate">
           <el-input v-model="addForm.rate" class="w200">
             <template slot="append">%</template>
           </el-input>
         </el-form-item>
-        <el-form-item label="用户有效期" label-width="100px">
+        <el-form-item label="用户有效期" label-width="100px" prop="validPeriod">
           <el-input v-model="addForm.validPeriod" class="w200 mr20">
             <template slot="append">天</template>
           </el-input>
           <el-button type="text" @click="changeValidPeriod(30)">1个月</el-button>
           <el-button type="text" @click="changeValidPeriod(90)">3个月</el-button>
           <el-button type="text" @click="changeValidPeriod(365)">12个月</el-button>
-          
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="addDialog = false">取 消</el-button>
-        <el-button type="primary" @click="getAppAdd" v-show="!editId">确 定</el-button>
-        <el-button type="primary" @click="getAppEdit" v-show="editId">确 定</el-button>
+        <el-button type="primary" @click="getAppAdd('addForm')" v-show="!editId">确 定</el-button>
+        <el-button type="primary" @click="getAppEdit('addForm')" v-show="editId">确 定</el-button>
       </div>
     </el-dialog>
   </section>
 </template>
 
 <script>
-	import qs from 'qs'
+  import qs from 'qs'
 
   const url = '';
   const api = {
     pageList: url + '/channel/pageList',
     update: url + '/channel/update',
     add: url + '/channel/add',
-    
+
   }
   export default {
     data() {
@@ -80,6 +79,21 @@
         },
         titleDialog: '',
         editId: '',
+
+        addRules: {
+          rate: [
+            { required: true, message: '请输入分成比例', trigger: 'change' },
+            { pattern: /^[1-9][0-9]{0,1}[0]{0,1}$/, message: '数值为 1 到 100', trigger: 'change' }
+          ],
+          validPeriod: [
+            { required: true, message: '请输入用户有效期', trigger: 'change' },
+            { pattern: /^[1-9][0-9]{0,4}$/, message: '数值为 1 到 99999', trigger: 'change' }
+          ],
+          name: [
+            { required: true, message: '请输入渠道名称', trigger: 'change' },
+            { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'change' }
+          ],
+        }
       }
     },
     filters: {
@@ -88,8 +102,11 @@
       this.getAppList()
     },
     methods: {
-      changeValidPeriod(days){
-        if(days){
+      closeDialog(formName) {
+        this.$refs[formName].resetFields();
+      },
+      changeValidPeriod(days) {
+        if (days) {
           this.addForm.validPeriod = days;
         }
       },
@@ -137,38 +154,44 @@
         };
         this.addDialog = true;
       },
-      getAppAdd() {
-        this.addDialog = false;
-        let params = {
-          name: this.addForm.name,
-          rate: this.addForm.rate,
-          validPeriod: this.addForm.validPeriod,
-        }
-				let _params = Object.assign(params)
-        this.$http.post(api.add, qs.stringify(_params)).then(res => {
-          if (res.data.success) {
-            this.getAppList();
+      getAppAdd(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.addDialog = false;
+            let params = {
+              name: this.addForm.name,
+              rate: this.addForm.rate,
+              validPeriod: this.addForm.validPeriod,
+            }
+            let _params = Object.assign(params)
+            this.$http.post(api.add, qs.stringify(_params)).then(res => {
+              if (res.data.success) {
+                this.getAppList();
+              }
+            })
           }
         })
       },
-      getAppEdit() {
-        this.addDialog = false;
-        let params = {
-          name: this.addForm.name,
-          rate: this.addForm.rate,
-          validPeriod: this.addForm.validPeriod,
-          id: this.editId,
-        }
-				let _params = Object.assign(params)
-        this.$http.post(api.update, qs.stringify(_params)).then(res => {
-          if (res.data.success) {
-            this.getAppList();
+      getAppEdit(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.addDialog = false;
+            let params = {
+              name: this.addForm.name,
+              rate: this.addForm.rate,
+              validPeriod: this.addForm.validPeriod,
+              id: this.editId,
+            }
+            let _params = Object.assign(params)
+            this.$http.post(api.update, qs.stringify(_params)).then(res => {
+              if (res.data.success) {
+                this.getAppList();
+              }
+            })
           }
         })
+
       }
-      
-
-
     }
   }
 </script>

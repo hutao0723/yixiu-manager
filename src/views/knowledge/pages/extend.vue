@@ -40,28 +40,28 @@
           :total="totalSize"></el-pagination>
       </div>
     </div>
-    <el-dialog :title="titleDialog" :visible.sync="addDialog">
-      <el-form :model="addForm">
-        <el-form-item label="渠道名称" label-width="100px">
-          <el-select v-model="addForm.channelId" placeholder="请选择" :disbled="editId" class="w200">
-            <el-option label="区域一" value="shanghai"></el-option>
+    <el-dialog :title="titleDialog" :visible.sync="addDialog" @close="closeDialog('addForm')">
+      <el-form :model="addForm" :rules="addRules" ref="addForm">
+        <el-form-item label="渠道名称" label-width="100px" prop="channelId">
+          <el-select v-model="addForm.channelId" placeholder="请选择" :disabled="editId>0" class="w200">
+            <el-option :label="item.name" :value="item.id" v-for="item in channelList" :key="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="推广位名称" label-width="100px">
+        <el-form-item label="推广位名称" label-width="100px" prop="name">
           <el-input v-model="addForm.name" class="w200"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="addDialog = false">取 消</el-button>
-        <el-button type="primary" @click="getAppAdd" v-show="!editId">确 定</el-button>
-        <el-button type="primary" @click="getAppEdit" v-show="editId">确 定</el-button>
+        <el-button type="primary" @click="getAppAdd('addForm')" v-show="!editId">确 定</el-button>
+        <el-button type="primary" @click="getAppEdit('addForm')" v-show="editId">确 定</el-button>
       </div>
     </el-dialog>
   </section>
 </template>
 
 <script>
-	import qs from 'qs'
+  import qs from 'qs'
 
   const url = '';
   const api = {
@@ -93,14 +93,40 @@
         channelList: [], // 渠道列表
         titleDialog: '',
         editId: '',
+        addRules: {
+          channelId: [
+            { required: true, message: '请选择渠道', trigger: 'change' },
+          ],
+          name: [
+            { required: true, message: '请输入推广位名称', trigger: 'change' },
+            { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'change' }
+          ],
+        }
       }
     },
     filters: {
     },
     created() {
-      this.getAppList()
+      this.getAppList();
+      this.getChannelList();
     },
     methods: {
+      closeDialog(formName) {
+        this.$refs[formName].resetFields();
+      },
+      getChannelList() {
+
+
+        this.$http.get(api.getList).then(res => {
+          let resp = res.data
+          if (resp.success) {
+            this.channelList = resp.data
+          } else {
+            let msg = resp.desc || '请求失败'
+            this.$message.error(msg)
+          }
+        })
+      },
       getAppList() {
         let params = {
           channelName: this.topForm.extendType ? this.topForm.extendValue : '',
@@ -145,35 +171,41 @@
         };
         this.addDialog = true;
       },
-      getAppAdd() {
-        this.addDialog = false;
-        let params = {
-          name: this.addForm.name,
-          channelId: this.addForm.channelId,
-        }
-				let _params = Object.assign(params)
-        this.$http.post(api.add, qs.stringify(_params)).then(res => {
-          if (res.data.success) {
-            this.getAppList();
+      getAppAdd(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.addDialog = false;
+            let params = {
+              name: this.addForm.name,
+              channelId: this.addForm.channelId,
+            }
+            let _params = Object.assign(params)
+            this.$http.post(api.add, qs.stringify(_params)).then(res => {
+              if (res.data.success) {
+                this.getAppList();
+              }
+            })
           }
         })
       },
-      getAppEdit() {
-        this.addDialog = false;
-        let params = {
-          name: this.addForm.name,
-          id: this.editId,
-        }
-				let _params = Object.assign(params)
-        this.$http.post(api.update, qs.stringify(_params)).then(res => {
-          if (res.data.success) {
-            this.getAppList();
+      getAppEdit(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.addDialog = false;
+            let params = {
+              name: this.addForm.name,
+              channelId: this.addForm.channelId,
+              id: this.editId,
+            }
+            let _params = Object.assign(params)
+            this.$http.post(api.update, qs.stringify(_params)).then(res => {
+              if (res.data.success) {
+                this.getAppList();
+              }
+            })
           }
         })
       }
-      
-
-
     }
   }
 </script>

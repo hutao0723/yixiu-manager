@@ -10,7 +10,7 @@
             <el-table-column prop="id" label="渠道ID"></el-table-column>
             <el-table-column prop="name" label="渠道名称"></el-table-column>
             <el-table-column prop="rate" label="分成比例（%）"></el-table-column>
-            <el-table-column prop="validPeriod" label="用户有效期（天）"></el-table-column>
+            <el-table-column prop="validPeriod" label="用户有效期（天）" :render-header="renderHeader"></el-table-column>
             <el-table-column label="操作" width="80">
               <template slot-scope="scope">
                 <el-button type="text" size="mini" @click="showAppEdit(scope.row)">编辑</el-button>
@@ -102,6 +102,17 @@
       this.getAppList()
     },
     methods: {
+      renderHeader(h) {
+        return (
+          <div>
+            用户有效期（天）
+            <el-tooltip class="item" effect="dark" content="用户点击推广链接会和渠道绑定用户关系，在有效期内用户再次进入小程序下单，无论是再通过该渠道的推广链接还是直接进入小程序购买，都算渠道收入。且用户在有效期内不会变更绑定关系。" placement="top">
+              <i class="el-icon-question"></i>
+            </el-tooltip>
+          </div>
+
+        )
+      },
       closeDialog(formName) {
         this.$refs[formName].resetFields();
       },
@@ -148,7 +159,7 @@
         this.editId = obj.id;
         this.titleDialog = '编辑';
         this.addForm = {
-          rate: obj.rate,
+          rate: obj.rate / 100,
           validPeriod: obj.validPeriod,
           name: obj.name,
         };
@@ -160,7 +171,7 @@
             this.addDialog = false;
             let params = {
               name: this.addForm.name,
-              rate: this.addForm.rate,
+              rate: this.addForm.rate * 100,
               validPeriod: this.addForm.validPeriod,
             }
             let _params = Object.assign(params)
@@ -178,7 +189,7 @@
             this.addDialog = false;
             let params = {
               name: this.addForm.name,
-              rate: this.addForm.rate,
+              rate: this.addForm.rate * 100,
               validPeriod: this.addForm.validPeriod,
               id: this.editId,
             }

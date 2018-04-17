@@ -124,18 +124,7 @@
             time: '04:30',
             imageUrl: '',
             imageBigUrl: '',
-          }, {
-            title: '高情商根圆滑花生了等号',
-            jj: '怎么样抓只他的新？',
-            ygxqs: 10,
-            total: 20,
-            number: 120,
-            price: 99,
-            status: 1, // 1购买2试听4已购
-            time: '04:30',
-            imageUrl: '',
-            imageBigUrl: '',
-          }, {
+          },{
             title: '高情商根圆滑花生了等号',
             jj: '怎么样抓只他的新？',
             ygxqs: 10,
@@ -227,6 +216,7 @@
       .module-content-ul {
         border-bottom: 1px solid #e5e5e5;
         padding: 10px 0;
+        margin: 0;
         .module-content-item {
           line-height: 30px;
           height: 30px;

@@ -83,7 +83,25 @@ export const rules = {
   }]
 }
 
-export const loadPagerules = {
+export const externalRules = {
+  subscriptionId: [{
+    required: true,
+    message: '请选择公众号名称',
+    trigger: 'change'
+  }],
+  loadPageUrl: [{
+    required: true,
+    validator: checkloadPageUrl,
+    trigger: 'blur'
+  }],
+  thresholdNum: [{
+    required: true,
+    validator: checkthresholdNum,
+    trigger: 'blur'
+  }],
+}
+
+export const internalRules = {
   subscriptionId: [{
     required: true,
     message: '请选择公众号名称',

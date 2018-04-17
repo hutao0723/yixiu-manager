@@ -2,19 +2,19 @@
   <section class="app-main-wrap">
     <div class="title-wrap">
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item>小程序</el-breadcrumb-item>
+        <el-breadcrumb-item>页面</el-breadcrumb-item>
       </el-breadcrumb>
       <span class="add-ofa">
         <i class="iconfont icon-jia"></i>
-        <span class="offical-acount" @click="getMiniApp">小程序</span>
+        <span class="offical-acount" @click="getMiniApp">页面</span>
       </span>
     </div>
     <div class="content">
       <div class="tabel-wrap">
         <template>
           <el-table :data="appList"  style="width: 100%" >
-            <el-table-column prop="id" label="ID" width="80"></el-table-column>
-            <el-table-column label="小程序" >
+            <el-table-column prop="ID" label="ID" width="80"></el-table-column>
+            <el-table-column label="页面标题" >
               <template slot-scope="scope">
                 <img :src="scope.row.headImg" class="app-avatar">
                 <span class="app-name">{{scope.row.name}}</span>
@@ -25,107 +25,39 @@
                 {{scope.row.gmtCreate | formatToMs}}
               </template>
             </el-table-column>
-            <el-table-column prop="authorized" label="是否授权">
-              <template slot-scope="scope">
-                {{scope.row.authorized ? '是' : '否'}}
-              </template>
-            </el-table-column>
             <el-table-column  label="操作" width="500">
               <template slot-scope="scope">
-                <router-link :to="{ path: '/manager/miniApp/contentType/' + scope.row.id +'/' + scope.row.appId}">
-                  <el-button type="text" size="mini">内容</el-button>
-                </router-link>
-                <el-button type="text" size="mini" @click="showAppDetail(scope.row.id)">详情</el-button>
-                <el-button type="text" size="mini" @click="getMiniApp">授权</el-button>
-                <el-button type="text" size="mini" @click="showDomain(scope.row.appId)">域名配置</el-button>
-                <router-link :to="{ path: '/manager/miniApp/codeMng/' + scope.row.appId }">
-                  <el-button type="text" size="mini">代码管理</el-button>
-                </router-link>
-                <router-link :to="{ path: '/manager/miniApp/templateMsg/' + scope.row.appId}">
-                  <el-button type="text" size="mini">模板消息</el-button>
-                </router-link>
-                <el-button type="text" size="mini" @click="delApp(scope.row.id)">删除</el-button>               
+                <el-button type="text" size="mini" @click="showAppDetail(scope.row.id)">编辑</el-button>
+                <el-button type="text" size="mini" @click="showAppDetail(scope.row.id)">删除</el-button>
+                <el-button type="text" size="mini" @click="showAppDetail(scope.row.id)">复制</el-button>
+                <el-button type="text" size="mini" @click="showAppDetail(scope.row.id)">预览</el-button>
+                <el-button type="text" size="mini" @click="showAppDetail(scope.row.id)">设为主页</el-button>
               </template>
             </el-table-column>
           </el-table>
         </template>        
       </div>
       <div class="page-control">
-        <el-pagination background  :page-size="20" :current-page.sync="pageOption.pageNum" @current-change="pageChange" layout="prev, pager, next" :total="totalSize"></el-pagination>
+        <el-pagination background  :page-size="20" :current-page.sync="pageOption.pageNum" @current-change="pageChange" layout="total, prev, pager, next" :total="totalSize"></el-pagination>
       </div>    
-    </div>
-    <div class="appdetail-diolog">
-      <el-dialog title="小程序基本信息" :visible.sync="appdetailDialog.show" width="600px">
-        <el-form label-position="left" size="mini">
-          <el-form-item label="名称:" :label-width="appdetailDialog.formLabelWidth">
-            <span>{{appDetail.nickName}}</span>
-          </el-form-item>
-          <el-form-item label="头像:" :label-width="appdetailDialog.formLabelWidth">
-            <img :src="appDetail.headImg" class="app-avatar">
-          </el-form-item>
-          <el-form-item label="主体信息:" :label-width="appdetailDialog.formLabelWidth">
-            <span>{{appDetail.principalName}}</span>
-          </el-form-item>
-          <el-form-item label="微信认证:" :label-width="appdetailDialog.formLabelWidth">
-            <span>{{appDetail.serviceTypeInfo === 0 ? '已认证' : '未认证'}}</span>
-          </el-form-item>
-           <el-form-item label="原始Id:" :label-width="appdetailDialog.formLabelWidth">
-            <span>{{appDetail.userName}}</span>
-          </el-form-item>     
-           <el-form-item label="appId:" :label-width="appdetailDialog.formLabelWidth">
-            <span>{{appDetail.appId}}</span>
-          </el-form-item> 
-        </el-form>
-      </el-dialog>
-    </div>
-    <div class="domain-diolog">
-      <el-dialog title="域名配置" :visible.sync="domainDialog.show" width="600px">
-        <el-form label-position="left" size="mini">
-          <el-form-item label="request合法域名:" :label-width="domainDialog.formLabelWidth">
-            <span v-for="(item, index) in appDomain.requestdomain">{{item}}</span>
-          </el-form-item>
-          <el-form-item label="socket合法域名:" :label-width="domainDialog.formLabelWidth">
-            <span v-for="(item, index) in appDomain.wsrequestdomain">{{item}}</span>
-          </el-form-item>
-          <el-form-item label="uploadFile合法域名:" :label-width="domainDialog.formLabelWidth">
-            <span v-for="(item, index) in appDomain.uploaddomain">{{item}}</span>
-          </el-form-item>
-          <el-form-item label="downloadFile合法域名:" :label-width="domainDialog.formLabelWidth">
-            <span v-for="(item, index) in appDomain.downloaddomain">{{item}}</span>
-          </el-form-item>
-          <el-form-item label="业务域名:" :label-width="domainDialog.formLabelWidth">
-            <span v-for="(item, index) in appDomain.webviewdomain">{{item}}</span>
-          </el-form-item>
-          <div class="btn-wrap">
-            <el-button size="small" type="primary" @click="setDomain(appId)">更新域名</el-button>
-          </div> 
-        </el-form>
-      </el-dialog>
     </div>
   </section>
 </template>
 
 <script>
 import { formatToMs } from '../../../utils/dateUtils'
+
+const api = {
+
+}
 export default {
   data () {
     return {
-      appId: '',
-      appdetailDialog: {
-        show: false,
-        formLabelWidth: '100px'
-      },
-      domainDialog: {
-        show: false,
-        formLabelWidth: '160px'
-      },
-      appDetail: {},
-      appDomain: {},
       pageOption: {
         pageNum: 1,
-        size: 20
+        pageSize: 20
       },
-      totalSize: 40,
+      totalSize: 10,
       appList: []
     }
   },

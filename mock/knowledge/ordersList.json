@@ -1,0 +1,89 @@
+{
+	"success": true,
+	"data": {
+		"totalSize": 100,
+		"lists": [{
+			"goodsId": 1,
+			"frontCover": "http://img.taopic.com/uploads/allimg/140714/234975-140G4155Z571.jpg",
+			"title": "人气推荐王人气推荐王人气推荐王人气推荐王人",
+			"courseType": "",
+			"price": 10,
+			"number": 20,
+			"orderPrice": 10,
+			"orderStatus": "1",
+			"endTime": "2018-04-10 11:11:10",
+			"nickName": "溪语"
+		},
+		{
+			"goodsId": 2,
+			"frontCover": "http://img.taopic.com/uploads/allimg/140714/234975-140G4155Z571.jpg",
+			"title": "人气推荐王人气推荐王人气推荐王人气推荐王人气推荐王人气推荐王人气推荐王",
+			"courseType": "1",
+			"price": 10,
+			"number": 20,
+			"orderPrice": 10,
+			"orderStatus": "1",
+			"endTime": "2018-04-10 11:11:10",
+			"nickName": "溪语"
+		},
+		{
+			"goodsId": 3,
+			"frontCover": "http://img.taopic.com/uploads/allimg/140714/234975-140G4155Z571.jpg",
+			"title": "爆款推荐王",
+			"courseType": "",
+			"price": 10,
+			"number": 20,
+			"orderPrice": 10,
+			"orderStatus": "2",
+			"endTime": "2018-04-10 11:11:10",
+			"nickName": "溪语"
+		},{
+			"goodsId": 4,
+			"frontCover": "http://img.taopic.com/uploads/allimg/140714/234975-140G4155Z571.jpg",
+			"title": "人气推荐王人气",
+			"courseType": "1",
+			"price": 10,
+			"number": 20,
+			"orderPrice": 10,
+			"orderStatus": "1",
+			"endTime": "2018-04-10 11:11:10",
+			"nickName": "溪语"
+		},
+		{
+			"goodsId": 5,
+			"frontCover": "http://img.taopic.com/uploads/allimg/140714/234975-140G4155Z571.jpg",
+			"title": "热销推荐王",
+			"courseType": " ",
+			"price": 10,
+			"number": 20,
+			"orderPrice": 10,
+			"orderStatus": "2",
+			"endTime": "2018-04-10 11:11:10",
+			"nickName": "溪语"
+		},
+		{
+			"goodsId": 6,
+			"frontCover": "http://img.taopic.com/uploads/allimg/140714/234975-140G4155Z571.jpg",
+			"title": "爆款推荐王",
+			"courseType": "",
+			"price": 10,
+			"number": 20,
+			"orderPrice": 10,
+			"orderStatus": "1",
+			"endTime": "2018-04-10 11:11:10",
+			"nickName": "溪语"
+		},{
+			"goodsId": 7,
+			"frontCover": "http://img.taopic.com/uploads/allimg/140714/234975-140G4155Z571.jpg",
+			"title": "人气推荐王",
+			"courseType": "1",
+			"price": 10,
+			"number": 20,
+			"orderPrice": 10,
+			"orderStatus": "1",
+			"endTime": "2018-04-10 11:11:10",
+			"nickName": "溪语"
+		}]
+	}
+}
+

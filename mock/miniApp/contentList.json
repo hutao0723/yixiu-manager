@@ -1,0 +1,29 @@
+{
+    "success": true,
+    "data": {
+        "totalElements": 30,
+        "content": [{
+                "id": 11,
+                "name": "测试类",
+                "firstTypeId": 33,
+                "secondTypeId": 55,
+                "secondTypeName": "二级类型1",
+                "keyWord": "微笑",
+                "description": "一二三四五六七八九十  一二三四        五六七   八九十一   二三四五六七八九十一二十一二三四五六七一二三四五六七八九十一二三四五六七八九十一二三四五",
+                "gmtCreate": "2017-12-12 12:00:00",
+                "gmtModified": "2017-12-12 12:00:00"
+            },
+            {
+                "id": 22,
+                "name": "测试类",
+                "firstTypeId": 44,
+                "secondTypeId": 66,
+                "secondTypeName": "二级类型2",
+                "keyWord": "哈哈",
+                "description": "恩恩",
+                "gmtCreate": "2017-12-12 12:00:00",
+                "gmtModified": "2017-12-12 12:00:00"
+            }
+        ]
+    }
+}

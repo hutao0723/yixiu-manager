@@ -3,39 +3,47 @@
     <el-container>
       <el-aside :width="hiddenWith">
         <div class="side-wrap" v-show="isShow">
-          <p class="page-title">投放管理</p>
-          <el-menu class="menu-collapse" :default-active="pathIndex">
-            <router-link :to="{ path: '/manager/dlv' }">
+          <p class="page-title">知识付费</p>
+          <el-menu :collapse="isCollapse" class="menu-collapse" :default-active="pathIndex">
+            <router-link :to="{ path: '/manager/knowledge' }">
               <el-menu-item index="1">
-                <i class="iconfont icon-feiji"></i>
-                <span slot="title">投放管理</span>
+                <i class="iconfont icon-msnui-weixin"></i>
+                <span slot="title">页面</span>
               </el-menu-item>
             </router-link>
-            <router-link :to="{ path: '/manager/dlv/theme' }">
-              <el-menu-item index="2">
-                <i class="iconfont icon-zhuti"></i>
-                <span slot="title">公众号主题</span>
-              </el-menu-item>
-            </router-link>
-            <router-link :to="{ path: '/manager/dlv/loadpage' }">
-              <el-menu-item index="3">
-                <i class="iconfont icon-gongzhonghao"></i>
-                <span slot="title">落地页</span>
-              </el-menu-item>
-            </router-link>
-            <router-link :to="{ path: '/manager/dlv/skinMarket' }">
-            <el-menu-item index="4">
-              <i class="iconfont icon-shichangtuozhan"></i>
-              <span slot="title">皮肤市场</span>
-            </el-menu-item>
-          </router-link>
-            <router-link :to="{ path: '/manager/dlv/putcontent' }">
+            <el-submenu index>
+              <span slot="title">内容</span>
+              <router-link :to="{ path: '/manager/knowledge/curriculum' }">
+                <el-menu-item index="2">
+                  <i class="iconfont icon-msnui-weixin"></i>
+                  <span slot="title">课程</span>
+                </el-menu-item>
+              </router-link>
+              <router-link :to="{ path: '/manager/knowledge/specialColumn' }">
+                <el-menu-item index="3">
+                  <i class="iconfont icon-msnui-weixin"></i>
+                  <span slot="title">专栏</span>
+                </el-menu-item>
+              </router-link>
+              <router-link :to="{ path: '/manager/knowledge/goodsGroup' }">
+                <el-menu-item index="4">
+                  <i class="iconfont icon-msnui-weixin"></i>
+                  <span slot="title">商品组</span>
+                </el-menu-item>
+              </router-link>
+            </el-submenu>
+            <router-link :to="{ path: '/manager/knowledge/order' }">
               <el-menu-item index="5">
-                <i class="iconfont icon-gengduoneirong"></i>
-                <span slot="title">投放内容</span>
+                <i class="iconfont icon-msnui-weixin"></i>
+                <span slot="title">订单</span>
               </el-menu-item>
             </router-link>
-            
+            <router-link :to="{ path: '/manager/knowledge/lecturer' }">
+              <el-menu-item index="6">
+                <i class="iconfont icon-msnui-weixin"></i>
+                <span slot="title">讲师</span>
+              </el-menu-item>
+            </router-link>
           </el-menu>
         </div>
       </el-aside>
@@ -63,37 +71,39 @@
     },
     data() {
       return {
+        isCollapse: false,
         hiddenWith: '180px',
         isShow: true,
-        pathIndex: "1",
+        pathIndex: 1
       }
     },
     created() {
-      console.log(this.$route.path)
       let pathIndex;
       let path = this.$route.path;
+      if (path.indexOf("/manager/miniApp/editContent") != -1) {
+        path = '/manager/miniApp/editContent'
+      }
+      console.log(path)
       switch (path) {
-        case '/manager/dlv':
+        case '/manager/miniApp':
           pathIndex = "1";
           break;
-        case '/manager/dlv/theme':
+        case '/manager/miniApp/contentManage':
           pathIndex = "2";
           break;
-        case '/manager/dlv/loadpage':
-          pathIndex = "3";
+        case '/manager/miniApp/editContent':
+          pathIndex = "2";
           break;
-        case '/manager/dlv/skinMarket':
-          pathIndex = "4";
+        case '/manager/knowledge/lecturer':
+          pathIndex = "6";
           break;
-        case '/manager/dlv/putcontent':
-          pathIndex = "5";
-          break;
-      
         default:
+          pathIndex = "1";
           break;
       }
       this.pathIndex = pathIndex;
     },
+
     methods: {
       openCollapse() {
         console.log(1)
@@ -109,7 +119,6 @@
       }
     }
   }
-
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -128,7 +137,7 @@
         height: 30px !important
       }
       .el-main {
-        padding: 10px 20px;
+        padding: 10px 40px;
       }
       .page-title {
         width: 100%;
@@ -136,7 +145,11 @@
         line-height: 60px;
       }
     }
+    .el-menu {
+      border-right: none
+    }
     .menu-collapse {
+      background-color: #F7F9FA;
       .el-tooltip {
         padding: 0;
 
@@ -144,19 +157,12 @@
     }
     .menu-collapse:not(.el-menu--collapse) {
       width: 180px;
+      li {
+        display: block
+      }
     }
     .content {}
 
-  }
-
-  .menu-collapse {
-    background-color: #F7F9FA;
-    top: 0;
-    bottom: 0;
-  }
-
-  .el-menu {
-    border-right: none
   }
 
   .transition-box {
@@ -173,11 +179,9 @@
   }
 
   .side-wrap {
-    position: fixed;
+    background-color: #F7F9FA;
     top: 0;
     bottom: 0;
-    background-color: #F7F9FA
+    position: fixed;
   }
-
 </style>
-

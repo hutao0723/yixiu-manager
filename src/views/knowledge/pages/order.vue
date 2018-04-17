@@ -38,7 +38,7 @@
               </el-date-picker>
             </el-form-item>
             <el-form-item label="订单状态">
-              <el-select v-model="searchForm.status" placeholder="全部">
+              <el-select v-model="searchForm.orderStatus" placeholder="全部">
                 <el-option label="待支付" value="TO_PAY"></el-option>
                 <el-option label="交易成功" value="SUCCESS"></el-option>
                 <el-option label="交易失败" value="FAILED"></el-option>
@@ -126,7 +126,7 @@ export default {
         ids: 'channelId',
         inputThree: '',
         time: [],
-        status: '',
+        orderStatus: '',
         orderType: ''
       },
       startTime: '',
@@ -147,7 +147,7 @@ export default {
         },
         {
           value: 'columnId',
-          label: '课程ID'
+          label: '专栏ID'
         }
       ],
       ordersOptions: [
@@ -215,7 +215,7 @@ export default {
         [valueArr[4]]: valueArr[5],
         startTime: this.startTime,
         endTime: this.endTime,
-        status: this.searchForm.status,
+        orderStatus: this.searchForm.orderStatus,
         orderType: this.searchForm.orderType
       }
       this.$http.get('/knowledge/order/page', {params}).then(res => {
@@ -246,7 +246,7 @@ export default {
         [valueArr[4]]: valueArr[5],
         startTime: this.startTime,
         endTime: this.endTime,
-        status: this.searchForm.status,
+        orderStatus: this.searchForm.orderStatus,
         orderType: this.searchForm.orderType
       }
       this.$http.get('/order/export', {params}).then(res => {
@@ -275,7 +275,7 @@ export default {
         [valueArr[4]]: valueArr[5],
         startTime: this.startTime,
         endTime: this.endTime,
-        status: this.searchForm.status,
+        orderStatus: this.searchForm.orderStatus,
         orderType: this.searchForm.orderType
       }
       this.$http.get('/knowledge/order/page', {params: params}).then(res => {

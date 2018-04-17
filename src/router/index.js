@@ -226,6 +226,18 @@ export const constantRouterMap = [
             }
           },
           {
+            path: 'channel',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/channel'], resolve)
+            }
+          },
+          {
+            path: 'extend',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/extend'], resolve)
+            }
+          },
+          {
             path: 'curriculum',
             component: function (resolve) {
               require(['../views/knowledge/pages/curriculum'], resolve)

@@ -210,7 +210,7 @@ export default {
               this.$message.success('删除成功')
               this.getTypeList()
             } else {
-              let msg = res.data.desc || '删除失败'
+              let msg = res.data.desc || '删除失败，请检查是否有关联数据'
               this.$message.error(msg)
             }
           } else {

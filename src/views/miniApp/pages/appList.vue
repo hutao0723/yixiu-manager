@@ -107,7 +107,7 @@
     <div class="edit-threshold-diolog">
       <el-dialog title="类型" :visible.sync="dialogTypeVisible">
         <el-form ref="typeName" :model="changeForm" >
-          <el-form-item label="类型名称" :label-width="formLabelWidth" prop="typeNameId">
+          <el-form-item label="类型名称" :label-width="formLabelWidth" prop="typeId">
             <el-select v-model="showTypeName" value-key="id" filterable placeholder="请选择" style="width:100%">
               <el-option v-for="(item, index)  in typeList" :key="item.id" :label="item.typeName" :value="index"></el-option>
             </el-select>
@@ -135,7 +135,7 @@ export default {
       },
       changeForm:{
         id:'',
-        typeNameId: '',
+        typeId: '',
         typeName: ''
       },
       showTypeName:'',
@@ -166,7 +166,7 @@ export default {
   watch: {
     'showTypeName': function (newVal) {
       if (this.typeList[newVal] !== undefined) {
-        this.changeForm.typeNameId = this.typeList[newVal].id
+        this.changeForm.typeId = this.typeList[newVal].id
       }
     }
   },
@@ -284,14 +284,15 @@ export default {
     // 打开获取单个小程序类型
     openTypeDilog(row) {
       this.changeForm.id = row.id
+      this.appId = row.appId
       let id = this.changeForm.id
       this.$http.get('/wxAuthorizerExt/getByAuthorizerId', {id}).then(res => {
         let resp = res.data
         if (resp.success) {
           if(resp.data){
-            this.changeForm.typeNameId = resp.data.id
-            this.changeForm.typeName = resp.data.parentName
-            this.showTypeName = resp.data.parentName
+            this.changeForm.typeId = resp.data.id
+            this.changeForm.typeName = resp.data.name
+            this.showTypeName = resp.data.name
           }
         } else {
           let msg = resp.desc || '请求失败'
@@ -307,7 +308,7 @@ export default {
         if (resp.success) {
           if(resp.data){
             this.typeList  = resp.data
-            let checkObj = {id: '', typeName: "请选择"}
+            let checkObj = {id: 0, typeName: "请选择"}
             this.typeList.unshift(checkObj)
           }
         } else {
@@ -321,10 +322,11 @@ export default {
       this.$refs['typeName'].validate((valid) => {
         if (valid) {
           let params = {
-            id : this.changeForm.id,
-            typeNameId : this.changeForm.typeNameId
+            typeId : this.changeForm.typeId,
+            appId : this.appId,
+            authorizerId: this.changeForm.id
           }
-          this.$http.post('/content/detail/update', qs.stringify(params)).then(res => {
+          this.$http.post('/content/type/band', qs.stringify(params)).then(res => {
             if (res.data.data) {
               this.dialogTypeVisible = false
               this.$message.success('保存成功')

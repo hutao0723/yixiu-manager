@@ -152,13 +152,31 @@ var setOnline = [
   {
     name: 'miniType',
     type: 'get',
-    url: '/content/type/typeList'
+    url: '/content/type/appType/list'
+  },
+  // 新增小程序类型
+  {
+    name: 'save',
+    type: 'post',
+    url: '/content/type/insert'
+  },
+  // 删除小程序类型
+  {
+    name: 'delete',
+    type: 'post',
+    url: '/content/type/appType/delete'
   },
   //选择小程序类型
   {
     name: 'selectType',
     type: 'get',
     url: '/content/type/select'
+  },
+  // 绑定小程序类型
+  {
+    name: 'save',
+    type: 'post',
+    url: '/content/type/band'
   }
 ];
 var fs = require('fs');

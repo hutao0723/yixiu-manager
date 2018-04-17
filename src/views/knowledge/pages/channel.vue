@@ -54,8 +54,9 @@
 </template>
 
 <script>
+	import qs from 'qs'
 
-  const url = 'http://172.31.20.47:9101';
+  const url = '';
   const api = {
     pageList: url + '/channel/pageList',
     update: url + '/channel/update',
@@ -143,7 +144,7 @@
           rate: this.addForm.rate,
           validPeriod: this.addForm.validPeriod,
         }
-        this.$http.post(api.add, { params: params }).then(res => {
+        this.$http.post(api.add, qs.stringify(params)).then(res => {
           if (res.data.success) {
             this.getAppList();
           }
@@ -157,7 +158,7 @@
           validPeriod: this.addForm.validPeriod,
           id: this.editId,
         }
-        this.$http.post(api.update, { params: params }).then(res => {
+        this.$http.post(api.update, qs.stringify(params)).then(res => {
           if (res.data.success) {
             this.getAppList();
           }

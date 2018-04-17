@@ -94,11 +94,11 @@
                   <thead>
                     <tr class="tr-header">
                       <th class="w255">资金单号</th>
-                      <th class="w255">订单创建时间</th>
-                      <th class="w155">资金类型</th>
-                      <th class="w155">付款方式</th>
-                      <th class="w155">付款金额</th>
-                      <th class="w255">付款完成时间</th>
+                      <th class="w175">订单创建时间</th>
+                      <th class="w145">资金类型</th>
+                      <th class="w145">付款方式</th>
+                      <th class="w145">付款金额</th>
+                      <th class="w175">付款完成时间</th>
                       <th>交易单号</th>
                     </tr>
                   </thead>
@@ -218,7 +218,7 @@
   }
   .order-detail-table {
     table {
-      min-width: 1450px;
+      min-width: 900px;
     }
 
     .icon-fold{

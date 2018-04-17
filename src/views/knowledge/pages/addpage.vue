@@ -72,7 +72,7 @@
             obj = {
               "componentType": "nav-module",
               "titleName": "测试标题",
-              "showTitle": "1",
+              "showTitle": "",
               "linkUrl": "www.baidu.com",
               "subTitle": "查看更多"
             }

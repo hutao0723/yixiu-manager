@@ -10,9 +10,9 @@
           <el-input v-model="moduleForm.titleName"></el-input>
         </el-form-item>
         <el-form-item label="展示类型">
-          <el-checkbox name="type" v-model="moduleForm.showTitle" :label="1">{{moduleForm.subTitle}}</el-checkbox>
+          <el-checkbox name="type" v-model="moduleForm.showTitle" :label="1">查看更多</el-checkbox>
         </el-form-item>
-        <el-form-item label="跳转链接" v-show="moduleForm.showTitle">
+        <el-form-item label="跳转链接" v-show="moduleForm.showTitle == 1">
           <el-input v-model="moduleForm.linkUrl"></el-input>
         </el-form-item>
       </el-form>

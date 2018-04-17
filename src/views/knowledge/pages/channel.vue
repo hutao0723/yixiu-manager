@@ -9,7 +9,11 @@
           <el-table :data="appList" style="width: 100%">
             <el-table-column prop="id" label="渠道ID"></el-table-column>
             <el-table-column prop="name" label="渠道名称"></el-table-column>
-            <el-table-column prop="rate" label="分成比例（%）"></el-table-column>
+            <el-table-column label="分成比例（%）">
+              <template slot-scope="scope">
+                <span>{{scope.row.rate/100}}</span>
+              </template>
+            </el-table-column>
             <el-table-column prop="validPeriod" label="用户有效期（天）" :render-header="renderHeader"></el-table-column>
             <el-table-column label="操作" width="80">
               <template slot-scope="scope">

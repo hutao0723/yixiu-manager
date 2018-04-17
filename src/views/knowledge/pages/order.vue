@@ -33,20 +33,20 @@
             <el-form-item>
               <el-input v-model="searchForm.inputThree" placeholder="请输入"></el-input>              
             </el-form-item>
-            <el-form-item label="订单时间">
+            <el-form-item label="创建时间">
               <el-date-picker  v-model="searchForm.time" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
               </el-date-picker>
             </el-form-item>
             <el-form-item label="订单状态">
               <el-select v-model="searchForm.status" placeholder="全部">
-                <el-option label="待支付" value="0"></el-option>
-                <el-option label="交易成功" value="1"></el-option>
-                <el-option label="交易失败" value="2"></el-option>
+                <el-option label="待支付" value="TO_PAY"></el-option>
+                <el-option label="交易成功" value="SUCCESS"></el-option>
+                <el-option label="交易失败" value="FAILED"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="订单类型">
               <el-select v-model="searchForm.orderType" placeholder="全部">
-                <el-option label="普通" value="0"></el-option>
+                <el-option label="普通" value="ordinary"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item>
@@ -60,33 +60,34 @@
       <div class="tabel-wrap">
         <template>
           <el-table :data="orderList" style="width: 100%" >
-            <el-table-column prop="goodsId" label="商品ID" width="80"></el-table-column>
+            <el-table-column prop="itemId" label="商品ID" width="80"></el-table-column>
             <el-table-column label="商品信息" width="300">
               <template slot-scope="scope">
                 <div class="img-container">
-                  <img :src="scope.row.frontCover" alt="" class="goods-list-img">
-                  <div v-if="scope.row.courseType == '1'" class="goods-mask">课程</div>
-                  <div v-else class="goods-mask">专栏</div>
+                  <img :src="scope.row.itemImage" alt="" class="goods-list-img">
+                  <div class="goods-mask">{{scope.row.type}}</div>
                 </div>
-                <span v-if="scope.row.title.length > 15" v-text="scope.row.title" class="two-ellipsis"></span>
-                <span v-else v-text="scope.row.title" class="goods-word"></span>
+                <span v-if="scope.row.itemName.length > 15" v-text="scope.row.itemName" class="two-ellipsis"></span>
+                <span v-else v-text="scope.row.itemName" class="goods-word"></span>
               </template>
             </el-table-column>
-            <el-table-column prop="price" label="单价(元)" ></el-table-column>
-            <el-table-column prop="number" label="数量" ></el-table-column>
-            <el-table-column prop="orderPrice" label="订单金额(元)" ></el-table-column>
-            <el-table-column prop="orderStatus" label="订单状态" >
+            <el-table-column label="单价(元)" >
               <template slot-scope="scope">
-                <div v-if="scope.row.orderStatus == '1'">交易成功</div>
-                <div v-else-if="scope.row.orderStatus == '2'">交易失败</div>
-                <div v-else>待支付</div>
+                <div>{{scope.row.itemPrice ? (scope.row.itemPrice / 100).toFixed(2) : ''}}</div>
               </template>
             </el-table-column>
-            <el-table-column prop="endTime" label="交易完成时间" width="180"></el-table-column>
-            <el-table-column prop="nickName" label="买家昵称" ></el-table-column>
+            <el-table-column prop="orderAmt" label="订单金额(元)" >
+              <template slot-scope="scope">
+                <div>{{scope.row.orderAmt ? (scope.row.orderAmt / 100).toFixed(2) : ''}}</div>
+              </template>
+            </el-table-column>
+            <el-table-column prop="orderStatus" label="订单状态" >
+            </el-table-column>
+            <el-table-column prop="gmtCreate" label="订单创建时间" width="180"></el-table-column>
+            <el-table-column prop="consumerName" label="买家昵称" ></el-table-column>
             <el-table-column  label="操作" >
               <template slot-scope="scope">
-                <router-link :to="{ path: '/manager/knowledge/ordersDetail/' + scope.row.goodsId }">          
+                <router-link :to="{ path: '/manager/knowledge/ordersDetail/' + scope.row.orderId }">          
                   <el-button type="text">详情</el-button>
                 </router-link>
               </template>
@@ -98,7 +99,7 @@
         <el-pagination background  :page-size="20" :current-page.sync="pageOption.pageNum" @current-change="pageChange" layout="total, prev, pager, next" :total="totalSize"></el-pagination>
       </div>
       <el-dialog title="订单导出" :visible.sync="dialogVisible" width="30%" >
-        <span>正在生成导出文件，请稍后<span class="beat-ellipsis"></span></span>
+        <span>{{descUpload}}<span class="beat-ellipsis"></span></span>
         <span slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible = false">取 消</el-button>
           <el-button type="primary" @click="dialogVisible = false" disabled>确 定</el-button>
@@ -109,8 +110,8 @@
 </template>
 
 <script>
-import { formatDateNew } from '../../../utils/dateUtils'
 import knowlwdgerules from '../components/knowledgeValidRules'
+import { formatDateNew } from '../components/knowledgeValidRules'
 import qs from 'qs'
 export default {
   data () {
@@ -118,7 +119,7 @@ export default {
       rules: knowlwdgerules,
       formLabelWidth: '100px',
       searchForm: {
-        name: 'title',
+        name: 'itemName',
         inputOne: '',
         orderNumber: 'orderId',
         inputTwo: '',
@@ -128,22 +129,24 @@ export default {
         status: '',
         orderType: ''
       },
+      startTime: '',
+      endTime: '',
       teacher: '',
       goodsOptions: [
         {
-          value: 'title',
+          value: 'itemName',
           label: '商品标题'
         },
         {
-          value: 'nickName',
-          label: '卖家昵称'
+          value: 'consumerName',
+          label: '买家昵称'
         },
         {
           value: 'courseId',
           label: '课程ID'
         },
         {
-          value: 'culumnId',
+          value: 'columnId',
           label: '课程ID'
         }
       ],
@@ -153,7 +156,7 @@ export default {
           label: '订单号'
         },
         {
-          value: 'transactionId',
+          value: 'outSeqNo',
           label: '交易单号'
         }
       ],
@@ -163,7 +166,7 @@ export default {
           label: '渠道ID'
         },
         {
-          value: 'spreadId',
+          value: 'adzoneId',
           label: '推广位ID'
         },
         {
@@ -178,7 +181,8 @@ export default {
       currentPage: 1,
       totalSize: 0,
       orderList: [],
-      dialogVisible: false
+      dialogVisible: false,
+      descUpload: '正在生成导出文件，请稍后'
     }
   },
   created () {
@@ -187,12 +191,12 @@ export default {
   methods: {
     // 获取讲师列表
     getOrdersList () {
-      this.$http.get('/order/List', {}).then(res => {
+      this.$http.get('/knowledge/order/page', {}).then(res => {
         let resp = res.data
         if (resp.success) {
-          this.orderList = resp.data.lists
+          this.orderList = resp.data.content
           // 算出有多少条数据
-          this.totalSize = resp.data.totalSize
+          this.totalSize = resp.data.totalElements
         } else {
           let msg = resp.desc || '请求失败'
           this.$message.error(msg)
@@ -201,24 +205,25 @@ export default {
     },
     onSearch () {
       let valueArr = Object.values(this.searchForm)
-      console.log(valueArr)
+      this.startTime = this.searchForm.time ? formatDateNew(this.searchForm.time[0]): ''
+      this.endTime = this.searchForm.time ? formatDateNew(this.searchForm.time[1]): ''
       let params = {
         pageNum: 1,
         pageSize: 20,
         [valueArr[0]]: valueArr[1],
         [valueArr[2]]: valueArr[3],
         [valueArr[4]]: valueArr[5],
-        time1: formatDateNew(this.searchForm.time[0]),
-        time2: formatDateNew(this.searchForm.time[1]),
+        startTime: this.startTime,
+        endTime: this.endTime,
         status: this.searchForm.status,
         orderType: this.searchForm.orderType
       }
-      this.$http.get('/order/List', {params}).then(res => {
+      this.$http.get('/knowledge/order/page', {params}).then(res => {
         let resp = res.data
         if (resp.success) {
-          this.orderList = resp.data.lists
+          this.orderList = resp.data.content
           // 算出有多少条数据
-          this.totalSize = resp.data.totalSize
+          this.totalSize = resp.data.totalElements
           this.pageOption.pageNum = 1
           this.currentPage = 1
         } else {
@@ -233,12 +238,14 @@ export default {
     exportOrders () {
       let valueArr = Object.values(this.searchForm)
       console.log(valueArr)
+      this.startTime = this.searchForm.time ? formatDateNew(this.searchForm.time[0]): ''
+      this.endTime = this.searchForm.time ? formatDateNew(this.searchForm.time[1]): ''
       let params = {
         [valueArr[0]]: valueArr[1],
         [valueArr[2]]: valueArr[3],
         [valueArr[4]]: valueArr[5],
-        time1: formatDateNew(this.searchForm.time[0]),
-        time2: formatDateNew(this.searchForm.time[1]),
+        startTime: this.startTime,
+        endTime: this.endTime,
         status: this.searchForm.status,
         orderType: this.searchForm.orderType
       }
@@ -258,23 +265,25 @@ export default {
     pageChange (currentPage) {
       let valueArr = Object.values(this.searchForm)
       this.currentPage = currentPage
+      this.startTime = this.searchForm.time ? formatDateNew(this.searchForm.time[0]): ''
+      this.endTime = this.searchForm.time ? formatDateNew(this.searchForm.time[1]): ''
       let params = {
         pageNum: this.currentPage,
         pageSize:20,
         [valueArr[0]]: valueArr[1],
         [valueArr[2]]: valueArr[3],
         [valueArr[4]]: valueArr[5],
-        time1: formatDateNew(this.searchForm.time[0]),
-        time2: formatDateNew(this.searchForm.time[1]),
+        startTime: this.startTime,
+        endTime: this.endTime,
         status: this.searchForm.status,
         orderType: this.searchForm.orderType
       }
-      this.$http.get('/order/List', {params: params}).then(res => {
+      this.$http.get('/knowledge/order/page', {params: params}).then(res => {
         let resp = res.data
         if (resp.success) {
-          this.orderList = resp.data.lists
+          this.orderList = resp.data.content
           // 算出有多少条数据
-          this.totalSize = resp.data.totalSize
+          this.totalSize = resp.data.totalElements
         } else {
           let msg = resp.desc || '请求失败'
           this.$message.error(msg)

@@ -1,5 +1,5 @@
 <template>
-  <section class="dlv-main">
+  <section class="dlv-main order-deatil-box">
     <div class="title-wrap">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item :to="{ path: '/manager/knowledge/order' }">订单</el-breadcrumb-item>
@@ -13,64 +13,64 @@
             <div class="page-content">
               <div class="page-table">
                 <div class="order-detail-title">买家</div>
-<!--                 <table>
+                <table class="table-list">
                   <thead>
                     <tr class="tr-header">
+                      <th class="w255">买家ID</th>
                       <th>买家信息</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td>{{order.ordersInfo}}</td>
+                      <td>
+                        {{detailList.consumerId}}
+                      </td>
+                      <td>
+                        <div class="clearfix">
+                          <div class="img-container">
+                            <img :src="detailList.headimgurl" v-if="detailList.headimgurl"> 
+                          </div> 
+                          <span class="goods-word">{{detailList.nickname}}</span>
+                        </div>
+                      </td>
                     </tr>
                   </tbody>
-                </table> -->
-                <el-table :data="bull" style="width: 100%" border>
-                  <el-table-column prop="ordersInfo" label="买家信息">
-                    <template slot-scope="scope">
-                        <img :src="scope.row.frontCover" alt="" class="goods-list-img fl">
-                        <span v-text="scope.row.title" class="two-ellipsis"></span>
-                      </template>
-                  </el-table-column>
-                </el-table>
-
+                </table> 
                 <div class="order-detail-title">商品</div>
-                <!-- <table>
+                <table class="table-list">
                   <thead>
                     <tr class="tr-header">
                       <th class="w255">商品信息</th>
-                      <th class="w155">单价</th>
-                      <th class="w175">数量</th>
-                      <th class="w255">总价(元)</th>
+                      <th class="w255">单价</th>
+                      <th class="w155">数量</th>
+                      <th class="w155">总价(元)</th>
                       <th class="w175">讲师抽成比例(%)</th>
                       <th>商品类型</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td>{{goodsList.goodsInfo}}</td>
-                      <td>{{goodsList.price}}</td>
-                      <td>{{goodsList.number}}</td>
-                      <td>{{goodsList.total}}</td>
-                      <td>{{goodsList.rate}}</td>
-                      <td>{{goodsList.goodsType}}</td>
+                      <td>
+                        <div class="clearfix">
+                          <div class="img-container">
+                            <img :src="orderItems.itemImage" v-if="orderItems.itemImage"> 
+                          </div> 
+                          <span class="goods-word info-ellipis">{{orderItems.itemName}}</span>
+                        </div>
+                      </td>
+                      <td>{{singlePrice ? singlePrice: ''}}</td>
+                      <td>{{orderItems.itemNum ? orderItems.itemNum: ''}}</td>
+                      <td>{{totalPrice ? totalPrice: ''}}</td>
+                      <td>{{orderItems.lecturerRate ? (orderItems.lecturerRate / 100).toFixed(2) : ''}}</td>
+                      <td>{{orderItems.type}}</td>
                     </tr>
                   </tbody>
-                </table> -->
-                <el-table :data="goodsList" style="width: 100%" border>
-                  <el-table-column prop="goodsInfo" label="商品信息"></el-table-column>
-                  <el-table-column prop="price" label="单价"></el-table-column>
-                  <el-table-column prop="number" label="数量"></el-table-column>
-                  <el-table-column prop="total" label="总价(元)" ></el-table-column>
-                  <el-table-column prop="rate" label="讲师抽成比例(%)" ></el-table-column>
-                  <el-table-column prop="goodsType" label="商品类型" ></el-table-column>
-                </el-table>
-
+                </table>
                 <div class="order-detail-title">订单</div>
-<!--                 <table>
+                <table class="table-list">
                   <thead>
                     <tr class="tr-header">
-                      <th>订单号</th>
+                      <th class="w255">订单号</th>
                       <th class="w255">订单创建时间</th>
                       <th class="w155">订单金额</th>
                       <th class="w155">订单状态</th>
@@ -80,32 +80,23 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>{{orderList.bullId}}</td>
-                      <td>{{orderList.bullStartTime}}</td>
-                      <td>{{orderList.bullPrice}}</td>
-                      <td>{{orderList.bullStatus}}</td>
-                      <td>{{orderList.bullType}}</td>
-                      <td>{{orderList.bullEndTime}}</td>
+                      <td>{{detailList.orderId}}</td>
+                      <td>{{detailList.gmtCreate}}</td>
+                      <td>{{detailList.orderAmt ? (detailList.orderAmt / 100).toFixed(2) : ''}}</td>
+                      <td>{{detailList.orderStatus}}</td>
+                      <td>{{detailList.orderType}}</td>
+                      <td>{{detailList.finishTime}}</td>
                     </tr>
                   </tbody>
-                </table> -->
-                <el-table :data="orderList" style="width: 100%"  border>
-                  <el-table-column prop="bullId" label="订单号"></el-table-column>
-                  <el-table-column prop="bullStartTime" label="订单创建时间"></el-table-column>
-                  <el-table-column prop="bullPrice" label="订单金额" ></el-table-column>
-                  <el-table-column prop="bullStatus" label="订单状态" ></el-table-column>
-                  <el-table-column prop="bullType" label="订单类型" ></el-table-column>
-                  <el-table-column prop="bullEndTime" label="支付完成时间" ></el-table-column>
-                </el-table>
-
+                </table>
                 <div class="order-detail-title">资金</div>
-<!--                 <table>
+                <table class="table-list">
                   <thead>
                     <tr class="tr-header">
-                      <th>资金单号</th>
+                      <th class="w255">资金单号</th>
                       <th class="w255">订单创建时间</th>
                       <th class="w155">资金类型</th>
-                      <th class="">付款方式</th>
+                      <th class="w155">付款方式</th>
                       <th class="w155">付款金额</th>
                       <th class="w255">付款完成时间</th>
                       <th>交易单号</th>
@@ -113,69 +104,48 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>
-                      <td>{{fundList.fundId}}</td>
-                      <td>{{fundList.fundStartTime}}</td>
-                      <td>{{fundList.fundType}}</td>
-                      <td>{{fundList.fundPay}}</td>
-                      <td>{{fundList.fundPayPrice}}</td>
-                      <td>{{fundList.fundEndTime}}</td>
-                      <td>{{fundList.fundTradeId}}</td>
+                      <td>{{orderFunds.fundId}}</td>
+                      <td>{{orderFunds.gmtCreate}}</td>
+                      <td>{{orderFunds.bizType}}</td>
+                      <td>{{orderFunds.payType}}</td>
+                      <td>{{orderFunds.amt ? (orderFunds.amt / 100).toFixed(2) : ''}}</td>
+                      <td>{{orderFunds.finishTime}}</td>
+                      <td>{{orderFunds.outSeqNo}}</td>
                     </tr>
                   </tbody>
-                </table> -->
-                <el-table :data="fundList" style="width: 100%" border>
-                  <el-table-column prop="fundId" label="资金单号"></el-table-column>
-                  <el-table-column prop="fundStartTime" label="订单创建时间"></el-table-column>
-                  <el-table-column prop="fundType" label="资金类型" ></el-table-column>
-                  <el-table-column prop="fundPay" label="付款方式" ></el-table-column>
-                  <el-table-column prop="fundPayPrice" label="付款金额" ></el-table-column>
-                  <el-table-column prop="fundEndTime" label="付款完成时间" ></el-table-column>
-                  <el-table-column prop="fundTradeId" label="交易单号" ></el-table-column>
-                </el-table>
-
+                </table>
                 <div class="order-detail-title">渠道</div>
-<!--                 <table>
+                <table class="table-list">
                   <thead>
                     <tr class="tr-header">
-                      <th class="w145">渠道ID</th>
-                      <th class="w145">推广位ID</th>
-                      <th class="w255">渠道抽成比例(%)</th>
+                      <th class="w255">渠道ID</th>
+                      <th class="w255">推广位ID</th>
+                      <th>渠道抽成比例(%)</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td>{{channelList.channelId}}</td>
-                      <td>{{channelList.spreadId}}</td>
-                      <td>{{channelList.rate}}</td>
+                      <td>{{detailList.channelId}}</td>
+                      <td>{{detailList.adzoneId}}</td>
+                      <td>{{detailList.channelRate ? (detailList.channelRate / 100).toFixed(2) : ''}}</td>
                     </tr>
                   </tbody>
-                </table> -->
-                <el-table :data="channelList" style="width: 100%" border>
-                  <el-table-column prop="channelId" label="渠道ID" ></el-table-column>
-                  <el-table-column prop="spreadId" label="推广位ID" ></el-table-column>
-                  <el-table-column prop="rate" label="渠道抽成比例(%)" ></el-table-column>
-                </el-table>
-
+                </table>
                 <div class="order-detail-title">讲师</div>
-<!--                 <table>
+                <table class="table-list">
                   <thead>
                     <tr class="tr-header">
-                      <th class="w145">讲师ID</th>
+                      <th class="w255">讲师ID</th>
                       <th>讲师昵称</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td>{{lecturerList}}</td>
-                      <td>{{lecturerList}}</td>
+                      <td>{{detailList.lecturerId}}</td>
+                      <td>{{detailList.lecturerName}}</td>
                     </tr>
                   </tbody>
-                </table> -->
-                <el-table :data="lecturerList" style="width: 100%" border>
-                  <el-table-column prop="lectuerId" label="讲师ID" ></el-table-column>
-                  <el-table-column prop="lectuerName" label="讲师昵称(元)" ></el-table-column>
-                </el-table>
+                </table>
               </div>
             </div>
           </div>
@@ -189,66 +159,46 @@
   export default {
     data() {
       return {
-        params: {
-          orderId: ''
-        },
-        bull: [], // 买家
-        goodsList: [], // 商品
-        orderList: [], // 订单
-        fundList: [], // 资金
-        channelList: [], // 渠道
-        lecturerList: [], // 讲师
-        isFold: true,
-        logisticsInfo: []
+        detailList: {},
+        orderItems: {},
+        orderFunds: {},
+        totalPrice: null,
+        singlePrice: null
       }
     },
     mounted() {
-      this.params.orderId = this.$route.query.id
-      if (this.params.orderId) {
-        this.getDetail()
-      }
-      console.log(this.$store)
+      this.getDetail()
     },
     methods: {
       // 订单详情
       getDetail() {
-        this.$http.post('/order/detail', this.params, {emulateJSON: false}).then(res => {
-          res = res.body;
-          if (res.success) {
-            let data = res.data;
-            this.bull = data.bull || {};
-            this.goodsList = data.goodsList || {};
-            this.orderList = data.orderList || {};
-            this.erpOrderList = data.erpOrderList || {};
-            this.fundList = data.fundList || {};
-            this.channelList = data.channelList || {};
-            this.lecturerList = data.lecturerList || {};
+        let id = this.$route.params.id
+        let params  = {
+          id: id
+        }
+        this.$http.get('/knowledge/order/detail', {params}).then(res => {
+          let resp = res.data
+          if (resp.success) {
+            this.detailList = resp.data
+            if(Object.keys(resp.data).length == 0){
+              return 
+            }
+            if(resp.data.orderItems != undefined){
+              this.orderItems = resp.data.orderItems[0] || {}
+              this.orderItems.itemNum = this.orderItems.itemNum ? this.orderItems.itemNum: 0
+              this.singlePrice = this.orderItems.itemPrice ? ((this.orderItems.itemPrice / 100).toFixed(2)) : 0
+              this.totalPrice = (this.orderItems.itemNum  * this.singlePrice).toFixed(2)
+            }
+            if(resp.data.orderItems != undefined){
+              this.orderFunds = resp.data.orderFunds[0] || {}
+            }
+          } else {
+            let msg = resp.desc || '请求失败'
+            this.$message.error(msg)
           }
         }, e => {
           console.log(e)
         });
-      },
-      getExpressDetail() {
-        this.isFold = !this.isFold;
-        if (!this.isFold) {
-          let params = {
-            logisticsCode: this.fundList.logisticsCode,
-            postId: this.fundList.postId
-          }
-          this.$http.post('/logistics/query/processInfo', params, {emulateJSON: false}).then(res => {
-            res = res.body;
-            if (res.success) {
-              this.logisticsInfo = res.data;
-            } else {
-              let msg = resp.desc || '请求失败'
-              this.$message.error(msg)
-            }
-          }, e => {
-            console.log(e)
-            let msg = resp.desc || '网络错误'
-            this.$message.error(msg)
-          });
-        }
       }
     }
   }
@@ -279,18 +229,20 @@
         cursor: pointer;
       }
     }
-    .tr-header {
-    /* height: 40px;
-      line-height: 40px;
-      background-color: #ededed;
-      th {
-        color: #666;
-        padding: 0;
-        &:first-child {
-          padding-left: 40px;
-          width: 260px;
-        }
-      } */
+    .table-list{
+      border:1px solid #ebeef5;
+      .tr-header {
+        height: 40px;
+        line-height: 40px;
+        background-color: #F5F7FA;
+        th {
+          padding: 0;
+          color: #909399;
+          font-weight: bold;
+          &:first-child {
+            padding-left: 10px;
+          }
+      }
       .w330 {
         width: 330px;
       }
@@ -319,13 +271,15 @@
         width: 100px;
       }
     }
+    }
+    
     .order-detail-title {
       height: 21px;
       line-height: 21px;
       font-size: 18px;
       text-align: left;
       color: #303133;
-      margin: 20px 0  5px 10px;
+      margin: 20px 0  10px 10px;
     }
     .mt40 {
       margin-top: 40px;
@@ -333,11 +287,36 @@
     td {
       height: 38px;
       line-height: 38px;
-      font-size: 12px;
+      font-size: 14px;
       color: #666;
       &:first-child {
-        padding-left: 40px;
+        padding-left: 10px;
       }
+    }
+    .img-container{
+      height: 38px;
+      width: 38px;
+      position: relative;
+      display: inline-block;
+      line-height:38px;
+      float: left;
+      img{
+        height: 30px;
+        width: 30px;
+        vertical-align: middle;
+      }
+    }
+    .goods-word{
+      margin-left: 10px;
+      line-height: 38px;
+    }
+    .info-ellipis{
+      overflow: hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+      display:inline-block;
+      width: 170px;
+      float: left;
     }
     .logistics-info{
       display: flex;
@@ -348,4 +327,5 @@
       }
     }
   }
+
 </style>

@@ -222,7 +222,19 @@ export const constantRouterMap = [
           {
             path: '/',
             component: function (resolve) {
-              require(['../views/knowledge/pages/addpage'], resolve)
+              require(['../views/knowledge/pages/page'], resolve)
+            }
+          },
+          {
+            path: 'channel',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/channel'], resolve)
+            }
+          },
+          {
+            path: 'extend',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/extend'], resolve)
             }
           },
           {

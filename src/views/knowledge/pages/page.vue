@@ -2,14 +2,14 @@
   <section class="app-main-wrap">
     <div class="title-wrap">
       <span class="add-ofa">
-        <el-button type="primary" icon="el-icon-circle-plus" @click="getMiniApp" size="small">页面</el-button>
+        <el-button type="primary" @click="getMiniApp" size="small">新增页面</el-button>
       </span>
     </div>
     <div class="content">
       <div class="tabel-wrap">
         <template>
           <el-table :data="appList" style="width: 100%">
-            <el-table-column prop="ID" label="ID" width="80"></el-table-column>
+            <el-table-column prop="id" label="ID" width="80"></el-table-column>
             <el-table-column prop="pageTitle" label="页面标题"></el-table-column>
             <el-table-column label="创建时间">
               <template slot-scope="scope">
@@ -38,8 +38,9 @@
 
 <script>
   import { formatToMs } from '../../../utils/dateUtils'
+  import qs from 'qs'
 
-  const url = 'https://www.easy-mock.com/mock/5ab0db192f746420c10e810e/test';
+  const url = '';
   const api = {
     list: url + '/knowledgepage/list',
     delete: url + '/knowledgepage/delete',
@@ -97,7 +98,11 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$http.get(api.delete, { params: { id } }).then(res => {
+          let params = {
+            id,
+          }
+          let _params = Object.assign(params)
+          this.$http.post(api.delete, qs.stringify(_params)).then(res => {
             let resp = res.data
             if (resp.success) {
               this.$message({
@@ -108,7 +113,6 @@
             }
           })
         }).catch(() => {
-
         })
       },
       indexApp(id) {
@@ -117,7 +121,11 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$http.get(api.sethomepage, { params: { id } }).then(res => {
+          let params = {
+            id,
+          }
+          let _params = Object.assign(params)
+          this.$http.post(api.sethomepage,  qs.stringify(_params)).then(res => {
             let resp = res.data
             if (resp.success) {
               this.$message({
@@ -136,7 +144,11 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$http.get(api.copy, { params: { id } }).then(res => {
+          let params = {
+            id,
+          }
+          let _params = Object.assign(params)
+          this.$http.post(api.copy, qs.stringify(_params)).then(res => {
             let resp = res.data
             if (resp.success) {
               this.$message({

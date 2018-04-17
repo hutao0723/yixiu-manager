@@ -128,8 +128,8 @@
 						},
 						{
 							min: 1,
-							max: 10,
-							message: '长度在 1 到 10 个字符',
+							max: 64,
+							message: '长度在 1 到 64 个字符',
 							trigger: 'blur'
 						}
 					],

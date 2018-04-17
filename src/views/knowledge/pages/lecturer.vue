@@ -129,8 +129,10 @@ export default {
     },
     // 添加讲师弹框
     openaddDialogLecturer (row) {
+      this.typeForm.id = ""
+      this.typeForm.nickName = ""
+      this.searchForm.value = ""
       this.dialogaddLecturerVisible = true
-      this.typeForm.nickName = row.nickName
     },
     // 获取讲师列表
     getLecturerList () {

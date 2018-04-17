@@ -611,6 +611,9 @@ export default {
     margin-left: 10px;
     line-height:23px;
   }
+  .tr-header th{
+    font-weight: bold;
+  }
   .ml10{
     margin-left:10px;
   }

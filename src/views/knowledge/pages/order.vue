@@ -99,7 +99,7 @@
         <el-pagination background  :page-size="20" :current-page.sync="pageOption.pageNum" @current-change="pageChange" layout="total, prev, pager, next" :total="totalSize"></el-pagination>
       </div>
       <el-dialog title="订单导出" :visible.sync="dialogVisible" width="30%" >
-        <span>正在生成导出文件，请稍后<span class="beat-ellipsis"></span></span>
+        <span>{{descUpload}}<span class="beat-ellipsis"></span></span>
         <span slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible = false">取 消</el-button>
           <el-button type="primary" @click="dialogVisible = false" disabled>确 定</el-button>
@@ -181,7 +181,8 @@ export default {
       currentPage: 1,
       totalSize: 0,
       orderList: [],
-      dialogVisible: false
+      dialogVisible: false,
+      descUpload: '正在生成导出文件，请稍后'
     }
   },
   created () {

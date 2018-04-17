@@ -172,8 +172,11 @@
     methods: {
       // 订单详情
       getDetail() {
-        let id = this.$route.query.id
-        this.$http.get('/knowledge/order/detail', {id}).then(res => {
+        let id = this.$route.params.id
+        let params  = {
+          id: id
+        }
+        this.$http.get('/knowledge/order/detail', {params}).then(res => {
           let resp = res.data
           if (resp.success) {
             this.detailList = resp.data

@@ -290,6 +290,7 @@ export default {
         modelType: 1,
         authorizerId: id
       }
+      this.showTypeName = ''
       this.$http.get('/content/type/band/info', {params}).then(res => {
         let resp = res.data
         if (resp.success) {

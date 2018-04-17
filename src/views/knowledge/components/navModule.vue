@@ -1,19 +1,19 @@
 <template>
   <div class="">
     <div class="module-content" @click="changeDeploy">
-      <h2 class="module-title">{{moduleForm.name}}<a href="javascript:void(0);" v-show="moduleForm.checkAll" class="module-title-all">更多</a></h2>
+      <h2 class="module-title">{{moduleForm.titleName}}<a href="javascript:void(0);" v-show="moduleForm.linkUrl" class="module-title-all">{{moduleForm.subTitle}}</a></h2>
     </div>
     <div class="module-deploy" v-show="deployToggle == moduleIndex">
       <h2 class="module-deploy-title">标题</h2>
       <el-form ref="moduleForm" :model="moduleForm" label-width="80px">
         <el-form-item label="标题栏">
-          <el-input v-model="moduleForm.name"></el-input>
+          <el-input v-model="moduleForm.titleName"></el-input>
         </el-form-item>
         <el-form-item label="展示类型">
-          <el-checkbox name="type" v-model="moduleForm.checkAll">查看全部</el-checkbox>
+          <el-checkbox name="type" v-model="moduleForm.showTitle" :label="1">{{moduleForm.subTitle}}</el-checkbox>
         </el-form-item>
-        <el-form-item label="跳转链接" v-show="moduleForm.checkAll">
-          <el-input v-model="moduleForm.url"></el-input>
+        <el-form-item label="跳转链接" v-show="moduleForm.showTitle">
+          <el-input v-model="moduleForm.linkUrl"></el-input>
         </el-form-item>
       </el-form>
     </div>

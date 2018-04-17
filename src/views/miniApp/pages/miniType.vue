@@ -18,8 +18,8 @@
         <template>
           <el-table :data="typeList" style="width: 100%" >
             <el-table-column prop="id" label="ID" ></el-table-column>
-            <el-table-column prop="parentName" label="类型名称" ></el-table-column>
-            <el-table-column prop="number" label="小程序数量" ></el-table-column>
+            <el-table-column prop="name" label="类型名称" ></el-table-column>
+            <el-table-column prop="appNum" label="小程序数量" ></el-table-column>
             <el-table-column  label="操作" >
               <template slot-scope="scope">
                 <el-button type="text" size="mini" @click="openDialogType(scope.row)">编辑</el-button>        
@@ -29,19 +29,16 @@
           </el-table>
         </template>        
       </div>
-      <div class="page-content">
-        <div class="fl total-num" v-if="totalSize > 0">共<span class="blue">{{totalSize}}</span>条</div>
         <div class="page-control">
-          <el-pagination background  :page-size="20" :current-page.sync="pageOption.pageNum" @current-change="pageChange" layout="prev, pager, next" :total="totalSize"></el-pagination>
+          <el-pagination background  :page-size="20" :current-page.sync="pageOption.pageNum" @current-change="pageChange" layout="total, prev, pager, next" :total="totalSize"></el-pagination>
         </div>    
-      </div>
     </div>
     <!--添加类型-->
     <div class="add-type-diolog">
       <el-dialog title="添加类型" :visible.sync="dialogaddTypeVisible">
         <el-form :model="typeForm" ref="typeForm" :rules="rules">
-          <el-form-item label="类型名称" :label-width="formLabelWidth"  prop="parentName">
-            <el-input v-model="typeForm.parentName" auto-complete="off"></el-input>
+          <el-form-item label="类型名称" :label-width="formLabelWidth"  prop="name">
+            <el-input v-model="typeForm.name" auto-complete="off"></el-input>
           </el-form-item>
         </el-form>
         <div class="btn-wrap">
@@ -54,8 +51,8 @@
     <div class="add-type-diolog">
       <el-dialog title="编辑类型" :visible.sync="dialogTypeVisible">
         <el-form :model="typeForm" ref="typeForm" :rules="rules">
-          <el-form-item label="类型名称" :label-width="formLabelWidth"  prop="parentName">
-            <el-input v-model="typeForm.parentName" auto-complete="off"></el-input>
+          <el-form-item label="类型名称" :label-width="formLabelWidth"  prop="name">
+            <el-input v-model="typeForm.name" auto-complete="off"></el-input>
           </el-form-item>
         </el-form>
         <div class="btn-wrap">
@@ -78,8 +75,7 @@ export default {
       formLabelWidth: '100px',
       typeForm: {
         id: '',
-        parentId: '',
-        parentName: '',
+        name: '',
       },
       dialogTypeVisible: false,
       dialogaddTypeVisible: false,
@@ -100,22 +96,24 @@ export default {
     openDialogType (row) {
       this.dialogTypeVisible = true
       this.typeForm.id = row.id
-      this.typeForm.parentId = row.parentId
-      this.typeForm.parentName = row.parentName
+      this.typeForm.name = row.name
     },
     // 打开添加类型弹框
     openaddDialogType (row) {
       this.dialogaddTypeVisible = true
-      this.typeForm.parentName = row.parentName
+      this.typeForm.name = row.name
     },
     // 获取类型列表
     getTypeList () {
-      this.$http.get('/content/type/typeList', {}).then(res => {
+      let params = {
+        modelType: 1
+      }
+      this.$http.get('/content/type/appType/list', {params}).then(res => {
         let resp = res.data
         if (resp.success) {
-          this.typeList = resp.data.content
+          this.typeList = resp.data.lists
           // 算出有多少条数据
-          this.totalSize = resp.data.totalElements
+          this.totalSize = resp.data.totalSize
         } else {
           let msg = resp.desc || '请求失败'
           this.$message.error(msg)
@@ -127,11 +125,11 @@ export default {
       this.$refs['typeForm'].validate((valid) => {
         if (valid) {
           let params = {
-            parentName: this.typeForm.parentName,
-            parentId: this.typeForm.parentId,
-            id: this.typeForm.id
+            name: this.typeForm.name,
+            id: this.typeForm.id,
+            modelType: 1
           }
-          this.$http.post('/content/type/update', qs.stringify(params)).then(res => {
+          this.$http.post('/content/type/insert', qs.stringify(params)).then(res => {
             if (res.data.data) {
               this.dialogTypeVisible = false
               this.$message.success('保存成功')
@@ -154,9 +152,10 @@ export default {
       this.$refs['typeForm'].validate((valid) => {
         if (valid) {
           let params = {
-            parentName: this.typeForm.parentName
+            name: this.typeForm.name,
+            modelType: 1
           }
-          this.$http.post('/content/type/add', qs.stringify(params)).then(res => {
+          this.$http.post('/content/type/insert', qs.stringify(params)).then(res => {
             if (res.data.data) {
               this.dialogaddTypeVisible = false
               this.$message.success('保存成功')
@@ -178,15 +177,16 @@ export default {
     pageChange (currentPage) {
       this.currentPage = currentPage
       let params = {
+        modelType: 1,
         pageNum: this.currentPage,
-        pageSize:20
+        pageSize: 20
       }
-      this.$http.get('/content/type/typeList', {params: params}).then(res => {
+      this.$http.get('/content/type/appType/list', {params: params}).then(res => {
         let resp = res.data
         if (resp.success) {
-          this.typeList = resp.data.content
+          this.typeList = resp.data.lists
           // 算出有多少条数据
-          this.totalSize = resp.data.totalElements
+          this.totalSize = resp.data.totalSize
         } else {
           let msg = resp.desc || '请求失败'
           this.$message.error(msg)
@@ -203,7 +203,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$http.post('/content/type/delete', qs.stringify(params)).then(res => {
+        this.$http.post('/content/type/appType/delete', qs.stringify(params)).then(res => {
           let msg = res.data.success
           if (msg) {
             if (res.data.data) {
@@ -274,22 +274,11 @@ export default {
   .search-bar {
     margin-top: 20px;
   }
-  .page-content{
-    overflow: hidden;
-    .total-num{
-      margin-top: 28px;
-      margin-left: 10px;
-      color: #606266;
-      .blue{
-        color: #409eff;
-      }
-    }
-    .page-control {
-      float: right;
-      margin-top: 20px;
-      &:after {
-        clear: both;
-      }
+  .page-control {
+    float: right;
+    margin-top: 20px;
+    &:after {
+      clear: both;
     }
   }
   

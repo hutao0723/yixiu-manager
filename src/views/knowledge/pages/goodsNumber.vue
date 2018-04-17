@@ -49,6 +49,11 @@
                         <span>专栏</span>
                       </td>
                     </template>
+                    <template v-else-if="column.price">
+                      <td> 
+                        {{item[column.dataIndex] ? (item[column.dataIndex] / 100).toFixed(2) : ''}}
+                      </td>
+                    </template>
                     <template v-else>
                       <td v-if="column.render" v-bind:style="{width: column.width + '%'}">
                         {{column.render(item[column.dataIndex] || '', item, index)}}
@@ -206,7 +211,8 @@ const columns = [
   {
     title: '商品价格',
     dataIndex: 'price',
-    width: 10
+    width: 10,
+    price: true
   },
   {
     title: '操作',

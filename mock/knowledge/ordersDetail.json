@@ -1,67 +1,42 @@
 {
-  "success": true,
-  "desc": null,
-  "data": {
-    "order": {
-      "orderId": "1201712081358470001D00000081",
-      "gmtCreate": "2017-12-08 13:58:46",
-      "gmtModified": "2017-12-08 13:58:46",
-      "orderAmt": 0,
-      "orderStatus": "待发货",
-      "remark": "啦啦啦啦"
-    },
-    "orderItem": {
-      "itemId": 81,
-      "itemNo": "52635",
-      "itemName": "手动发货商品~",
-      "skuName": "白",
-      "skuNo": "5256311d",
-      "sellingPrice": 0,
-      "quantity": 1,
-      "costPrice": ""
-    },
-    "bullPosition": {
-      "mobile": null,
-      "consumerName": null,
-      "areaNum": null,
-      "province": null,
-      "city": null,
-      "district": null,
-      "address": null
-    },
-    "erpOrderList": [
-      {
-        "erpId": "1201712081358480001R00000081",
-        "erpType": "发货",
-        "gmtCreate": "2017-12-08 13:58:46",
-        "gmtModified": "2017-12-08 13:58:46",
-        "erpStatus": "待通知"
-      }
-    ],
-    "logisticsList": [{
-      "erpId": "1201712081358480001R00000081",
-      "gmtCreate": "2017-12-08 13:58:46",
-      "gmtModified": "2017-12-08 13:58:46",
-      "logisticsId": "1201712081358480001R00000081",
-      "logisticsName": "圆通",
-      "logisticsStatus": "发货中",
-      "orderStatus": "待发货",
-      "orderStatusModified": "2017-12-08 13:58:46",
-      "postId": "1489438833224234423",
-      "logisticsCode": "COD"
-    }],
-    "anticheateList": ["标记用户","读书发发发发啦啦阿里"],
-    "afterSaleList": [{
-      "account": "退款账号",
-      "afterSaleId": "售后子订单id",
-      "afterSaleReason": "售后子订单原因",
-      "afterSaleStatus": "售后订单状态",
-      "afterSaleType": "售后子订单类型",
-      "gmtCreate": "售后子订单创建时间",
-      "gmtModified": "售后子订单更新时间",
-      "postId": "物流单号",
-      "refundAmt": 0,
-      "remark": "备注"
-    }]
-  }
+    "success": true,
+    "data": {
+        "consumerId": "111",
+        "nickname": "某某某",
+        "headimgurl": "http://e.hiphotos.baidu.com/image/w%3D400/sign=999ade6d9058d109c4e3a8b2e159ccd0/c2fdfc039245d68890f10fb7a6c27d1ed21b2435.jpg",
+        "orderId": "dfsdfdssd",
+        "gmtCreate": "2018-04-12 08:33:50",
+        "finishTime": "2018-04-12 08:33:50",
+        "orderAmt": 100,
+        "orderStatus": "待付款",
+        "orderType": "普通",
+        "channelId": 1,
+        "channelRate": 5000,
+        "adzoneId": 1,
+        "lecturerId": 1,
+        "lecturerName": "邱老师",
+        "orderFunds": [
+            {
+                "fundId": "dsadwwwwwww",
+                "payType": "微信小程序支付",
+                "amt": 100,
+                "bizType": "付款",
+                "gmtCreate": "2018-04-12 08:29:40",
+                "finishTime": "2018-04-12 08:33:50",
+                "outSeqNo":"2828"
+            }
+        ],
+        "orderItems": [
+            {
+                "itemName": "课程一课程一课程一课程一课程一课程一课程一课程一课程一课程一课程一课程一课程一",
+                "itemImage": "http://e.hiphotos.baidu.com/image/w%3D400/sign=999ade6d9058d109c4e3a8b2e159ccd0/c2fdfc039245d68890f10fb7a6c27d1ed21b2435.jpg",
+                "itemPrice": 100,
+                "itemType": 1,
+                "itemNum": 5,
+                "lecturerRate": 6000,
+                "courseType": 1,
+                "type": "音频"
+            }
+        ]
+    }
 }

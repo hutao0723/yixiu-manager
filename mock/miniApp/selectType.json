@@ -1,0 +1,33 @@
+{
+	"success": true,
+	"data": [{
+			"id": 3,
+			"typeName": "测试类"
+		},
+		{
+			"id": 4,
+			"typeName": "印象类"
+		},
+		{
+			"id": 1,
+			"typeName": "星座类"
+		},
+		{
+			"id": 2,
+			"typeName": "小说类"
+		},
+		{
+			"id": 5,
+			"typeName": "精品类"
+		},
+		{
+			"id": 7,
+			"typeName": "电商类"
+		},
+		{
+			"id": 9,
+			"typeName": "精选类"
+		}
+	]
+}
+

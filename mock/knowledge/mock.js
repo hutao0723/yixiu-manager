@@ -105,13 +105,13 @@ var setOnline = [
   {
     name: 'ordersList',
     type: 'get',
-    url: '/order/List'
+    url: '/knowledge/order/page'
   },
   //订单详情
   {
     name: 'ordersDetail',
-    type: 'post',
-    url: '/order/detail'
+    type: 'get',
+    url: '/knowledge/order/detail'
   }
 ];
 var fs = require('fs');

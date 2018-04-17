@@ -7,50 +7,57 @@
           <el-menu :collapse="isCollapse" class="menu-collapse" :default-active="pathIndex">
             <router-link :to="{ path: '/manager/knowledge' }">
               <el-menu-item index="1">
-                <i class="iconfont icon-msnui-weixin"></i>
-                <span slot="title">页面</span>
+                <span>页面</span>
               </el-menu-item>
             </router-link>
-            <el-submenu index>
+            <el-submenu index="2">
               <span slot="title">内容</span>
               <router-link :to="{ path: '/manager/knowledge/curriculum' }">
-                <el-menu-item index="2">
-                  <i class="iconfont icon-msnui-weixin"></i>
-                  <span slot="title">课程</span>
+                <el-menu-item index="2-1">
+                  <span>课程</span>
                 </el-menu-item>
               </router-link>
               <router-link :to="{ path: '/manager/knowledge/specialColumn' }">
-                <el-menu-item index="3">
-                  <i class="iconfont icon-msnui-weixin"></i>
-                  <span slot="title">专栏</span>
+                <el-menu-item index="2-2">
+                  <span>专栏</span>
                 </el-menu-item>
               </router-link>
               <router-link :to="{ path: '/manager/knowledge/goodsGroup' }">
-                <el-menu-item index="4">
-                  <i class="iconfont icon-msnui-weixin"></i>
-                  <span slot="title">商品组</span>
+                <el-menu-item index="2-3">
+                  <span>商品组</span>
                 </el-menu-item>
               </router-link>
             </el-submenu>
             <router-link :to="{ path: '/manager/knowledge/order' }">
-              <el-menu-item index="5">
-                <i class="iconfont icon-msnui-weixin"></i>
-                <span slot="title">订单</span>
+              <el-menu-item index="3">
+                <span>订单</span>
               </el-menu-item>
             </router-link>
             <router-link :to="{ path: '/manager/knowledge/lecturer' }">
-              <el-menu-item index="6">
-                <i class="iconfont icon-msnui-weixin"></i>
-                <span slot="title">讲师</span>
+              <el-menu-item index="4">
+                <span>讲师</span>
               </el-menu-item>
             </router-link>
+             <el-submenu index="5">
+              <span slot="title">渠道</span>
+              <router-link :to="{ path: '/manager/knowledge/channel' }">
+                <el-menu-item index="5-1">
+                  <span>渠道管理</span>
+                </el-menu-item>
+              </router-link>
+              <router-link :to="{ path: '/manager/knowledge/extend' }">
+                <el-menu-item index="5-2">
+                  <span>推广位管理</span>
+                </el-menu-item>
+              </router-link>
+            </el-submenu>
           </el-menu>
         </div>
       </el-aside>
       <el-container>
-        <el-header>
+        <!-- <el-header>
           <hamburger class="hamburger-container" :toggleClick="openCollapse" :isActive="!isShow"></hamburger>
-        </el-header>
+        </el-header> -->
         <el-main>
           <div class="content">
             <router-view/>

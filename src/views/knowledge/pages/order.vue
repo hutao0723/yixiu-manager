@@ -99,10 +99,11 @@
         <el-pagination background  :page-size="20" :current-page.sync="pageOption.pageNum" @current-change="pageChange" layout="total, prev, pager, next" :total="totalSize"></el-pagination>
       </div>
       <el-dialog title="订单导出" :visible.sync="dialogVisible" width="30%" >
-        <span>{{descUpload}}<span class="beat-ellipsis"></span></span>
+        <span v-if="downStatus">正在生成导出文件，请稍后<span class="beat-ellipsis"></span></span>
+        <span v-else>订单文件已生成，请点击「下载」按钮！</span>
         <span slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="dialogVisible = false" disabled>确 定</el-button>
+          <a :class="disabled ? 'btn-disabled' : ''" :href="disabled ? 'javascript:;' : downloadUrl" class="el-button el-button--primary">下 载</a>
         </span>
       </el-dialog> 
     </div>
@@ -181,8 +182,11 @@ export default {
       currentPage: 1,
       totalSize: 0,
       orderList: [],
-      dialogVisible: false,
-      descUpload: '正在生成导出文件，请稍后'
+
+      dialogVisible: false, // 弹框
+      downStatus: true, // 文字
+      disabled: true, // 按钮状态
+      downloadUrl: 'http://www.baidu.com' //链接
     }
   },
   created () {
@@ -236,6 +240,7 @@ export default {
     },
     // 导出
     exportOrders () {
+      this.dialogVisible = true
       let valueArr = Object.values(this.searchForm)
       console.log(valueArr)
       this.startTime = this.searchForm.time ? formatDateNew(this.searchForm.time[0]): ''
@@ -252,7 +257,8 @@ export default {
       this.$http.get('/order/export', {params}).then(res => {
         let resp = res.data
         if (resp.success) {
-          
+          this.disabled = false
+          this.downStatus = false
         } else {
           let msg = resp.desc || '请求失败'
           this.$message.error(msg)
@@ -354,6 +360,11 @@ export default {
   .goods-word{
     margin-left: 10px;
     line-height: 50px;
+  }
+  .btn-disabled {
+    color: #fff;
+    background-color: #bdc5ce;
+    border-color: #bdc5ce;
   }
   .beat-ellipsis:after {
     overflow: hidden;

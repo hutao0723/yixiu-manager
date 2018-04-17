@@ -112,6 +112,12 @@ var setOnline = [
     name: 'ordersDetail',
     type: 'get',
     url: '/knowledge/order/detail'
+  },
+  //订单导出
+  {
+    name: 'save',
+    type: 'get',
+    url: '/order/export'
   }
 ];
 var fs = require('fs');

@@ -62,6 +62,9 @@
             <el-table-column prop="title" label="专栏标题">
             </el-table-column>
             <el-table-column prop="price" label="专栏价格">
+              <template slot-scope="scope">
+                {{scope.row.price/100}}
+              </template>
             </el-table-column>
             <el-table-column prop="courseNum" label="课程数量">
             </el-table-column>
@@ -147,7 +150,7 @@
             <img v-if="columnForm.coverList[0]" :src="columnForm.coverList[0]" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             <el-button size="small" type="primary">{{columnForm.coverList[0] ? '修改文件' : '选择文件'}}</el-button>
-            <div slot="tip" class="el-upload__tip">750*544,支持jpg、png、gif格式,最大5M</div>
+            <div slot="tip" class="el-upload__tip">750*545,支持jpg、png、gif格式,最大5M</div>
           </el-upload>
           <el-upload
             class="avatar-uploader"
@@ -159,7 +162,7 @@
             <img v-if="columnForm.coverList[1]" :src="columnForm.coverList[1]" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             <el-button size="small" type="primary">{{columnForm.coverList[1] ? '修改文件' : '选择文件'}}</el-button>
-            <div slot="tip" class="el-upload__tip">360*468,支持jpg、png、gif格式,最大5M</div>
+            <div slot="tip" class="el-upload__tip">360*484,支持jpg、png、gif格式,最大5M</div>
           </el-upload>
         </el-form-item>
         <el-form-item label="专栏详情" prop="detail">
@@ -175,7 +178,7 @@
         <el-form-item label="讲师" prop="lecturerId">
           <el-col :span="6">
             <el-select
-              v-model="columnForm.lecturerId"
+              v-model="columnFormLecturerId"
               filterable
               remote
               reserve-keyword
@@ -184,7 +187,7 @@
             >
               <el-option
                 v-for="item in lecturerOptions"
-                :key="item.id"
+                :key="item.nickName"
                 :label="item.nickName"
                 :value="item.id">
               </el-option>
@@ -437,7 +440,8 @@
           detail: null,
           price: null,
           rate: null,
-          lecturerId: 1, //假设
+          lecturerId: null,
+          lecturerName:null,
           courseNum: null
         },
         rules: {
@@ -488,7 +492,8 @@
           pageNum: null,
           pageSize: null,
           totleSize: null,
-        },
+          columnId:null
+      },
 
         //勾选关联课程
         linkForm: {
@@ -514,7 +519,15 @@
         set: function (newValue) {
           this.columnForm.rate = newValue * 100
         }
-      }
+      },
+      columnFormLecturerId: {
+        get: function () {
+          return this.columnForm.lecturerId
+        },
+        set: function (newValue) {
+          this.columnForm.lecturerId = newValue
+        }
+      },
     },
     created() {
       this.getColumnListData();
@@ -692,6 +705,7 @@
       //课程管理列表
       getColumnManageListData(columnId) {
         this.manageListId = columnId || this.manageListId;
+        this.linkcolumnForm.columnId = columnId;
         this.loading = true;
         getLinkCourse(
           {columnId: this.manageListId}

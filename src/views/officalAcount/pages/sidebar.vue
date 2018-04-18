@@ -7,13 +7,11 @@
         <el-menu :collapse="isCollapse" class="menu-collapse" :default-active="pathIndex">
           <router-link :to="{ path: '/manager/officalAcount' }">   
             <el-menu-item index="1">
-              <i class="iconfont icon-msnui-weixin"></i>
               <span slot="title">公众号</span>
             </el-menu-item>
           </router-link> 
           <router-link :to="{ path: '/manager/officalAcount/graphType' }">   
             <el-menu-item index="2">
-              <i class="iconfont icon-msnui-weixin"></i>
               <span slot="title">图文类型</span>
             </el-menu-item>
           </router-link> 

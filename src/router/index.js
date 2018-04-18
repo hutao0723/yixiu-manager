@@ -194,6 +194,12 @@ export const constantRouterMap = [
             }
           },
           {
+            path: 'miniType',
+            component: function (resolve) {
+              require(['../views/miniApp/pages/miniType'], resolve)
+            }
+          },
+          {
             path: 'contentType/:id/:appId',
             component: function (resolve) {
               require(['../views/miniApp/pages/contentType'], resolve)
@@ -216,7 +222,19 @@ export const constantRouterMap = [
           {
             path: '/',
             component: function (resolve) {
-              require(['../views/knowledge/pages/page'], resolve)
+              require(['../views/knowledge/pages/addpage'], resolve)
+            }
+          },
+          {
+            path: 'channel',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/channel'], resolve)
+            }
+          },
+          {
+            path: 'extend',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/extend'], resolve)
             }
           },
           {
@@ -232,6 +250,12 @@ export const constantRouterMap = [
             }
           },
           {
+            path: 'goodsNumber/:id',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/goodsNumber'], resolve)
+            }
+          },
+          {
             path: 'goodsGroup',
             component: function (resolve) {
               require(['../views/knowledge/pages/goodsGroup'], resolve)
@@ -241,6 +265,12 @@ export const constantRouterMap = [
             path: 'order',
             component: function (resolve) {
               require(['../views/knowledge/pages/order'], resolve)
+            }
+          },
+          {
+            path: 'ordersDetail/:id',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/ordersDetail'], resolve)
             }
           },
           {

@@ -4,6 +4,13 @@ import qs from 'qs';
 axios.defaults.withCredentials = true;
 
 /**
+ * 序列化数组参数
+ */
+axios.defaults.paramsSerializer = (params) => {
+  return qs.stringify(params, { arrayFormat: 'repeat' });
+};
+
+/**
  * get请求
  * @param {*} url 请求url'
  *
@@ -22,7 +29,7 @@ export function get(url, params) {
  */
 export function post(url, params) {
 
-    return axios.post(getUrl(url), qs.stringify(params,{ allowDots: true })).then((response) => {
+    return axios.post(getUrl(url), params).then((response) => {
         return response.data;
     });
 }

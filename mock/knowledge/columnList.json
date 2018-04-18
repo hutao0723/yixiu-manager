@@ -1,0 +1,47 @@
+{
+	"success": true,
+	"data": {
+		"totalSize": 100,
+		"lists": [{
+			"id": 1,
+			"frontCover": "http://img.taopic.com/uploads/allimg/140714/234975-140G4155Z571.jpg",
+			"title": "人气推荐王",
+			"courseType": " "
+		},
+		{
+			"id": 2,
+			"frontCover": "http://img.taopic.com/uploads/allimg/140714/234975-140G4155Z571.jpg",
+			"title": "热销推荐王",
+			"courseType": " "
+		},
+		{
+			"id": 3,
+			"frontCover": "http://img.taopic.com/uploads/allimg/140714/234975-140G4155Z571.jpg",
+			"title": "爆款推荐王人气推荐王人气推荐王人气推荐王人气推荐王人气推荐王人气推荐王人气推荐王人气推荐王",
+			"courseType": " "
+		},{
+			"id": 4,
+			"frontCover": "http://img.taopic.com/uploads/allimg/140714/234975-140G4155Z571.jpg",
+			"title": "人气推荐王",
+			"courseType": ""
+		},
+		{
+			"id": 5,
+			"frontCover": "http://img.taopic.com/uploads/allimg/140714/234975-140G4155Z571.jpg",
+			"title": "热销推荐王",
+			"courseType": " "
+		},
+		{
+			"id": 6,
+			"frontCover": "http://img.taopic.com/uploads/allimg/140714/234975-140G4155Z571.jpg",
+			"title": "爆款推荐王",
+			"courseType": " "
+		},{
+			"id": 7,
+			"frontCover": "http://img.taopic.com/uploads/allimg/140714/234975-140G4155Z571.jpg",
+			"title": "人气推荐王",
+			"courseType": " "
+		}]
+	}
+}
+

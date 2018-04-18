@@ -1,0 +1,42 @@
+{
+    "success": true,
+    "data": {
+        "consumerId": "111",
+        "nickname": "某某某",
+        "headimgurl": "http://e.hiphotos.baidu.com/image/w%3D400/sign=999ade6d9058d109c4e3a8b2e159ccd0/c2fdfc039245d68890f10fb7a6c27d1ed21b2435.jpg",
+        "orderId": "dfsdfdssd",
+        "gmtCreate": "2018-04-12 08:33:50",
+        "finishTime": "2018-04-12 08:33:50",
+        "orderAmt": 100,
+        "orderStatus": "待付款",
+        "orderType": "普通",
+        "channelId": 1,
+        "channelRate": 5000,
+        "adzoneId": 1,
+        "lecturerId": 1,
+        "lecturerName": "邱老师",
+        "orderFunds": [
+            {
+                "fundId": "dsadwwwwwww",
+                "payType": "微信小程序支付",
+                "amt": 100,
+                "bizType": "付款",
+                "gmtCreate": "2018-04-12 08:29:40",
+                "finishTime": "2018-04-12 08:33:50",
+                "outSeqNo":"2828"
+            }
+        ],
+        "orderItems": [
+            {
+                "itemName": "课程一课程一课程一课程一课程一课程一课程一课程一课程一课程一课程一课程一课程一",
+                "itemImage": "http://e.hiphotos.baidu.com/image/w%3D400/sign=999ade6d9058d109c4e3a8b2e159ccd0/c2fdfc039245d68890f10fb7a6c27d1ed21b2435.jpg",
+                "itemPrice": 100,
+                "itemType": 1,
+                "itemNum": 5,
+                "lecturerRate": 6000,
+                "courseType": 1,
+                "type": "音频"
+            }
+        ]
+    }
+}

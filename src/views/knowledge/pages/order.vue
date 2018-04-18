@@ -1,248 +1,298 @@
 <template>
-  <section class="app-main-wrap">
+  <section class="lecturer-container">
     <div class="title-wrap">
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item>小程序</el-breadcrumb-item>
+        <el-breadcrumb-item>订单</el-breadcrumb-item>
       </el-breadcrumb>
-      <span class="add-ofa">
-        <i class="iconfont icon-jia"></i>
-        <span class="offical-acount" @click="getMiniApp">小程序</span>
-      </span>
     </div>
     <div class="content">
+      <div class="search-bar">
+        <template>
+          <el-form :inline="true" :model="searchForm" class="form" size="mini">
+            <el-form-item>
+              <el-select v-model="searchForm.name" placeholder="商品标题">
+                <el-option v-for="(item,index) in goodsOptions" :key="item.id" :label="item.label" :value="item.value"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item>
+              <el-input v-model="searchForm.inputOne" placeholder="请输入"></el-input>              
+            </el-form-item>
+            <el-form-item>
+              <el-select v-model="searchForm.orderNumber" placeholder="订单号">
+                <el-option v-for="(item,index) in ordersOptions" :key="item.id" :label="item.label" :value="item.value"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item>
+              <el-input v-model="searchForm.inputTwo" placeholder="请输入"></el-input>              
+            </el-form-item>
+            <el-form-item>
+              <el-select v-model="searchForm.ids" placeholder="商品标题">
+                <el-option v-for="(item,index) in idsOptions" :key="item.id" :label="item.label" :value="item.value"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item>
+              <el-input v-model="searchForm.inputThree" placeholder="请输入"></el-input>              
+            </el-form-item>
+            <el-form-item label="创建时间">
+              <el-date-picker  v-model="searchForm.time" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
+              </el-date-picker>
+            </el-form-item>
+            <el-form-item label="订单状态">
+              <el-select v-model="searchForm.orderStatus" placeholder="全部">
+                <el-option label="待支付" value="TO_PAY"></el-option>
+                <el-option label="交易成功" value="SUCCESS"></el-option>
+                <el-option label="交易失败" value="FAILED"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="订单类型">
+              <el-select v-model="searchForm.orderType" placeholder="全部">
+                <el-option label="普通" value="ordinary"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="onSearch">查询</el-button>
+              <el-button type="primary" @click="exportOrders">订单导出</el-button>
+            </el-form-item>
+          </el-form>
+        </template>
+      </div>
+
       <div class="tabel-wrap">
         <template>
-          <el-table :data="appList"  style="width: 100%" >
-            <el-table-column prop="id" label="ID" width="80"></el-table-column>
-            <el-table-column label="小程序" >
+          <el-table :data="orderList" style="width: 100%" >
+            <el-table-column prop="itemId" label="商品ID" width="80"></el-table-column>
+            <el-table-column label="商品信息" width="300">
               <template slot-scope="scope">
-                <img :src="scope.row.headImg" class="app-avatar">
-                <span class="app-name">{{scope.row.name}}</span>
+                <div class="img-container">
+                  <img :src="scope.row.itemImage" alt="" class="goods-list-img">
+                  <div class="goods-mask">{{scope.row.type}}</div>
+                </div>
+                <span v-if="scope.row.itemName.length > 15" v-text="scope.row.itemName" class="two-ellipsis"></span>
+                <span v-else v-text="scope.row.itemName" class="goods-word"></span>
               </template>
             </el-table-column>
-            <el-table-column label="创建时间" >
+            <el-table-column label="单价(元)" >
               <template slot-scope="scope">
-                {{scope.row.gmtCreate | formatToMs}}
+                <div>{{scope.row.itemPrice ? (scope.row.itemPrice / 100).toFixed(2) : ''}}</div>
               </template>
             </el-table-column>
-            <el-table-column prop="authorized" label="是否授权">
+            <el-table-column prop="orderAmt" label="订单金额(元)" >
               <template slot-scope="scope">
-                {{scope.row.authorized ? '是' : '否'}}
+                <div>{{scope.row.orderAmt ? (scope.row.orderAmt / 100).toFixed(2) : ''}}</div>
               </template>
             </el-table-column>
-            <el-table-column  label="操作" width="500">
+            <el-table-column prop="orderStatus" label="订单状态" >
+            </el-table-column>
+            <el-table-column prop="gmtCreate" label="订单创建时间" width="180"></el-table-column>
+            <el-table-column prop="consumerName" label="买家昵称" ></el-table-column>
+            <el-table-column  label="操作" >
               <template slot-scope="scope">
-                <router-link :to="{ path: '/manager/miniApp/contentType/' + scope.row.id +'/' + scope.row.appId}">
-                  <el-button type="text" size="mini">内容</el-button>
+                <router-link :to="{ path: '/manager/knowledge/ordersDetail/' + scope.row.orderId }">          
+                  <el-button type="text">详情</el-button>
                 </router-link>
-                <el-button type="text" size="mini" @click="showAppDetail(scope.row.id)">详情</el-button>
-                <el-button type="text" size="mini" @click="getMiniApp">授权</el-button>
-                <el-button type="text" size="mini" @click="showDomain(scope.row.appId)">域名配置</el-button>
-                <router-link :to="{ path: '/manager/miniApp/codeMng/' + scope.row.appId }">
-                  <el-button type="text" size="mini">代码管理</el-button>
-                </router-link>
-                <router-link :to="{ path: '/manager/miniApp/templateMsg/' + scope.row.appId}">
-                  <el-button type="text" size="mini">模板消息</el-button>
-                </router-link>
-                <el-button type="text" size="mini" @click="delApp(scope.row.id)">删除</el-button>               
               </template>
             </el-table-column>
           </el-table>
         </template>        
       </div>
       <div class="page-control">
-        <el-pagination background  :page-size="20" :current-page.sync="pageOption.pageNum" @current-change="pageChange" layout="prev, pager, next" :total="totalSize"></el-pagination>
-      </div>    
-    </div>
-    <div class="appdetail-diolog">
-      <el-dialog title="小程序基本信息" :visible.sync="appdetailDialog.show" width="600px">
-        <el-form label-position="left" size="mini">
-          <el-form-item label="名称:" :label-width="appdetailDialog.formLabelWidth">
-            <span>{{appDetail.nickName}}</span>
-          </el-form-item>
-          <el-form-item label="头像:" :label-width="appdetailDialog.formLabelWidth">
-            <img :src="appDetail.headImg" class="app-avatar">
-          </el-form-item>
-          <el-form-item label="主体信息:" :label-width="appdetailDialog.formLabelWidth">
-            <span>{{appDetail.principalName}}</span>
-          </el-form-item>
-          <el-form-item label="微信认证:" :label-width="appdetailDialog.formLabelWidth">
-            <span>{{appDetail.serviceTypeInfo === 0 ? '已认证' : '未认证'}}</span>
-          </el-form-item>
-           <el-form-item label="原始Id:" :label-width="appdetailDialog.formLabelWidth">
-            <span>{{appDetail.userName}}</span>
-          </el-form-item>     
-           <el-form-item label="appId:" :label-width="appdetailDialog.formLabelWidth">
-            <span>{{appDetail.appId}}</span>
-          </el-form-item> 
-        </el-form>
-      </el-dialog>
-    </div>
-    <div class="domain-diolog">
-      <el-dialog title="域名配置" :visible.sync="domainDialog.show" width="600px">
-        <el-form label-position="left" size="mini">
-          <el-form-item label="request合法域名:" :label-width="domainDialog.formLabelWidth">
-            <span v-for="(item, index) in appDomain.requestdomain">{{item}}</span>
-          </el-form-item>
-          <el-form-item label="socket合法域名:" :label-width="domainDialog.formLabelWidth">
-            <span v-for="(item, index) in appDomain.wsrequestdomain">{{item}}</span>
-          </el-form-item>
-          <el-form-item label="uploadFile合法域名:" :label-width="domainDialog.formLabelWidth">
-            <span v-for="(item, index) in appDomain.uploaddomain">{{item}}</span>
-          </el-form-item>
-          <el-form-item label="downloadFile合法域名:" :label-width="domainDialog.formLabelWidth">
-            <span v-for="(item, index) in appDomain.downloaddomain">{{item}}</span>
-          </el-form-item>
-          <el-form-item label="业务域名:" :label-width="domainDialog.formLabelWidth">
-            <span v-for="(item, index) in appDomain.webviewdomain">{{item}}</span>
-          </el-form-item>
-          <div class="btn-wrap">
-            <el-button size="small" type="primary" @click="setDomain(appId)">更新域名</el-button>
-          </div> 
-        </el-form>
-      </el-dialog>
+        <el-pagination background  :page-size="20" :current-page.sync="pageOption.pageNum" @current-change="pageChange" layout="total, prev, pager, next" :total="totalSize"></el-pagination>
+      </div>
+      <el-dialog title="订单导出" :visible.sync="dialogVisible" width="30%" >
+        <span v-if="downStatus">正在生成导出文件，请稍后<span class="beat-ellipsis"></span></span>
+        <span v-else>订单文件已生成，请点击「下载」按钮！</span>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisible = false">取 消</el-button>
+          <a :class="disabled ? 'btn-disabled' : ''" :href="disabled ? 'javascript:;' : downloadUrl" class="el-button el-button--primary">下 载</a>
+        </span>
+      </el-dialog> 
     </div>
   </section>
 </template>
 
 <script>
-import { formatToMs } from '../../../utils/dateUtils'
+import knowlwdgerules from '../components/knowledgeValidRules'
+import { formatDateNew } from '../components/knowledgeValidRules'
+import qs from 'qs'
 export default {
   data () {
     return {
-      appId: '',
-      appdetailDialog: {
-        show: false,
-        formLabelWidth: '100px'
+      rules: knowlwdgerules,
+      formLabelWidth: '100px',
+      searchForm: {
+        name: 'itemName',
+        inputOne: '',
+        orderNumber: 'orderId',
+        inputTwo: '',
+        ids: 'channelId',
+        inputThree: '',
+        time: [],
+        orderStatus: '',
+        orderType: ''
       },
-      domainDialog: {
-        show: false,
-        formLabelWidth: '160px'
-      },
-      appDetail: {},
-      appDomain: {},
+      startTime: '',
+      endTime: '',
+      teacher: '',
+      goodsOptions: [
+        {
+          value: 'itemName',
+          label: '商品标题'
+        },
+        {
+          value: 'consumerName',
+          label: '买家昵称'
+        },
+        {
+          value: 'courseId',
+          label: '课程ID'
+        },
+        {
+          value: 'columnId',
+          label: '专栏ID'
+        }
+      ],
+      ordersOptions: [
+        {
+          value: 'orderId',
+          label: '订单号'
+        },
+        {
+          value: 'outSeqNo',
+          label: '交易单号'
+        }
+      ],
+      idsOptions: [
+        {
+          value: 'channelId',
+          label: '渠道ID'
+        },
+        {
+          value: 'adzoneId',
+          label: '推广位ID'
+        },
+        {
+          value: 'lecturerId',
+          label: '讲师ID'
+        }
+      ],
       pageOption: {
         pageNum: 1,
-        size: 20
+        pageSize: 20
       },
-      totalSize: 40,
-      appList: []
+      currentPage: 1,
+      totalSize: 0,
+      orderList: [],
+
+      dialogVisible: false, // 弹框
+      downStatus: true, // 文字
+      disabled: true, // 按钮状态
+      downloadUrl: 'http://www.baidu.com' //链接
     }
   },
-  filters: {
-    formatToMs: formatToMs
-  },
   created () {
-    this.getAppList()
+    this.getOrdersList()
   },
   methods: {
-    getAppList () {
-      this.$http.get('/miniapp/list').then(res => {
+    // 获取讲师列表
+    getOrdersList () {
+      this.$http.get('/knowledge/order/page', {}).then(res => {
         let resp = res.data
         if (resp.success) {
-          this.appList = resp.data.lists
+          this.orderList = resp.data.content
           // 算出有多少条数据
-          this.totalSize = resp.data.totalSize
+          this.totalSize = resp.data.totalElements
         } else {
           let msg = resp.desc || '请求失败'
           this.$message.error(msg)
         }
       })
     },
-    pageChange () {
-      this.$http.get('/miniapp/list', {params: this.pageOption}).then(res => {
+    onSearch () {
+      let valueArr = Object.values(this.searchForm)
+      this.startTime = this.searchForm.time ? formatDateNew(this.searchForm.time[0]): ''
+      this.endTime = this.searchForm.time ? formatDateNew(this.searchForm.time[1]): ''
+      let params = {
+        pageNum: 1,
+        pageSize: 20,
+        [valueArr[0]]: valueArr[1],
+        [valueArr[2]]: valueArr[3],
+        [valueArr[4]]: valueArr[5],
+        startTime: this.startTime,
+        endTime: this.endTime,
+        orderStatus: this.searchForm.orderStatus,
+        orderType: this.searchForm.orderType
+      }
+      this.$http.get('/knowledge/order/page', {params}).then(res => {
         let resp = res.data
         if (resp.success) {
-          this.appList = resp.data.lists
+          this.orderList = resp.data.content
           // 算出有多少条数据
-          this.totalSize = resp.data.totalSize
+          this.totalSize = resp.data.totalElements
+          this.pageOption.pageNum = 1
+          this.currentPage = 1
         } else {
           let msg = resp.desc || '请求失败'
           this.$message.error(msg)
-        }
+        } 
+      }, () => {
+        this.$message.error('网络错误')
       })
     },
-    delApp (id) {
-      this.$confirm('删除后会影响相关授权功能的使用，确认删除？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.$http.get('/miniapp/delete', {params: {id}}).then(res => {
-          let resp = res.data
-          if (resp.success) {
-            if (resp.data) {
-              this.$message({
-                type: 'success',
-                message: '删除成功!'
-              })
-              this.getAppList()
-            } else {
-              this.$message({
-                type: 'success',
-                message: '删除失败!'
-              })
-            }
-          } else {
-            this.$message({
-              type: 'error',
-              message: '删除失败!'
-            })
-          }
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
-      })
-    },
-    showAppDetail (id) {
-      this.appdetailDialog.show = true
-      this.$http.get('/miniapp/detail', {params: {id}}).then(res => {
+    // 导出
+    exportOrders () {
+      this.dialogVisible = true
+      let valueArr = Object.values(this.searchForm)
+      console.log(valueArr)
+      this.startTime = this.searchForm.time ? formatDateNew(this.searchForm.time[0]): ''
+      this.endTime = this.searchForm.time ? formatDateNew(this.searchForm.time[1]): ''
+      let params = {
+        [valueArr[0]]: valueArr[1],
+        [valueArr[2]]: valueArr[3],
+        [valueArr[4]]: valueArr[5],
+        startTime: this.startTime,
+        endTime: this.endTime,
+        orderStatus: this.searchForm.orderStatus,
+        orderType: this.searchForm.orderType
+      }
+      this.$http.get('/order/export', {params}).then(res => {
         let resp = res.data
         if (resp.success) {
-          this.appDetail = resp.data
+          this.disabled = false
+          this.downStatus = false
         } else {
           let msg = resp.desc || '请求失败'
           this.$message.error(msg)
-        }
+        } 
+      }, () => {
+        this.$message.error('网络错误')
       })
     },
-    showDomain (appId) {
-      this.domainDialog.show = true
-      this.appId = appId
-      this.$http.get('/miniapp/getDomain', {params: {appId}}).then(res => {
+    // 分页请求
+    pageChange (currentPage) {
+      let valueArr = Object.values(this.searchForm)
+      this.currentPage = currentPage
+      this.startTime = this.searchForm.time ? formatDateNew(this.searchForm.time[0]): ''
+      this.endTime = this.searchForm.time ? formatDateNew(this.searchForm.time[1]): ''
+      let params = {
+        pageNum: this.currentPage,
+        pageSize:20,
+        [valueArr[0]]: valueArr[1],
+        [valueArr[2]]: valueArr[3],
+        [valueArr[4]]: valueArr[5],
+        startTime: this.startTime,
+        endTime: this.endTime,
+        orderStatus: this.searchForm.orderStatus,
+        orderType: this.searchForm.orderType
+      }
+      this.$http.get('/knowledge/order/page', {params: params}).then(res => {
         let resp = res.data
         if (resp.success) {
-          this.appDomain = resp.data
+          this.orderList = resp.data.content
+          // 算出有多少条数据
+          this.totalSize = resp.data.totalElements
         } else {
           let msg = resp.desc || '请求失败'
           this.$message.error(msg)
-        }
-      })
-    },
-    setDomain (appId) {
-      this.$http.get('/miniapp/setDomain', {params: {appId}}).then(res => {
-        let resp = res.data
-        if (resp.success && resp.data) {
-          this.$message({
-            type: 'success',
-            message: '刷新成功!'
-          })
-          this.showDomain(appId)
-        } else {
-          let msg = resp.desc || '请求失败'
-          this.$message.error(msg)
-        }
-      })
-    },
-    getMiniApp () {
-      this.$http.get('/wechat/getAuthorization').then(res => {
-        console.log(res)
-        if (res.data.success) {
-          let redirectUrl = res.data.data
-          window.location.href = redirectUrl
         }
       })
     }
@@ -250,7 +300,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.app-main-wrap {
+.lecturer-container {
   width: 100%;
   .title-wrap {
     width: 100%;
@@ -263,40 +313,9 @@ export default {
       bottom: 10px;
       font-size: 16px;
     }
-    .add-ofa {
-      display: inline-block;
-      position: absolute;
-      right: 0;
-      bottom: 10px;
-      font-size: 12px;
-    }
-    .offical-acount {
-      cursor: pointer;
-      color: #909399;
-      font-weight: 400;
-      &:hover {
-        color: #333;
-      }
-    }
   }
   .search-bar {
     margin-top: 20px;
-  }
-  .tabel-wrap {
-    .app-avatar{
-      width: 40px;
-      height: 40px;
-      line-height: 40px;
-      display: inline-block;
-      float: left;
-    }
-    .app-name{
-      display: inline-block;
-      height: 40px;
-      line-height: 40px;
-      padding-left: 10px;
-    }
-
   }
   .page-control {
     float: right;
@@ -305,20 +324,62 @@ export default {
       clear: both;
     }
   }
-  .appdetail-diolog, .domain-diolog{
-    .el-dialog__body{
-      overflow: hidden;
-      span {
-        display: block;
-      }       
+  .img-container{
+    height: 50px;
+    width: 50px;
+    position:relative;
+    display: inline-block;
+    float: left;
+    .goods-list-img{
+      height: 50px;
+      width: 50px;
+    }
+    .goods-mask{
+      right: 0;
+      bottom: 0;
+      width: 30px;
+      height: 20px;
+      line-height: 20px;
+      text-align: center;
+      background-color: #000;
+      opacity: 0.6;
+      color: #FFF;
+      position:absolute;
     }
   }
-   .app-avatar{
-      width: 40px;
-      height: 40px;
-      line-height: 40px;
-      display: inline-block;
-      float: left;
-    }
+  .two-ellipsis{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    width: 200px;
+    float: left;
+    margin-left: 10px;
+  }
+  .goods-word{
+    margin-left: 10px;
+    line-height: 50px;
+  }
+  .btn-disabled {
+    color: #fff;
+    background-color: #bdc5ce;
+    border-color: #bdc5ce;
+  }
+  .beat-ellipsis:after {
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: bottom;
+    animation: ellipsis 2s infinite;
+    content: "\2026"; 
+  }
+  @keyframes ellipsis {
+      from {
+          width: 2px;
+      }
+      to {
+          width: 15px;
+      }
+  }       
 }
 </style>

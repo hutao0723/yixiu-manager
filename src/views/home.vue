@@ -32,15 +32,6 @@
                   </span>
                 </el-menu-item>
               </router-link> 
-              <router-link :to="{ path: '/manager/knowledge' }">
-                <el-menu-item index="4">
-                  <span slot="title" class="txt-color">   
-                    <span class="title-main">
-                      知识付费   
-                    </span>
-                  </span>
-                </el-menu-item>
-              </router-link>
             </el-menu>
           </el-col>
           <div class="control-wrap">

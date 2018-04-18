@@ -62,6 +62,9 @@
             <el-table-column prop="title" label="专栏标题">
             </el-table-column>
             <el-table-column prop="price" label="专栏价格">
+              <template slot-scope="scope">
+                {{scope.row.price/100}}
+              </template>
             </el-table-column>
             <el-table-column prop="courseNum" label="课程数量">
             </el-table-column>
@@ -175,7 +178,7 @@
         <el-form-item label="讲师" prop="lecturerId">
           <el-col :span="6">
             <el-select
-              v-model="columnForm.lecturerId"
+              v-model="columnFormLecturerId"
               filterable
               remote
               reserve-keyword
@@ -184,7 +187,7 @@
             >
               <el-option
                 v-for="item in lecturerOptions"
-                :key="item.id"
+                :key="item.nickName"
                 :label="item.nickName"
                 :value="item.id">
               </el-option>
@@ -437,7 +440,8 @@
           detail: null,
           price: null,
           rate: null,
-          lecturerId: 1, //假设
+          lecturerId: null,
+          lecturerName:null,
           courseNum: null
         },
         rules: {
@@ -488,7 +492,8 @@
           pageNum: null,
           pageSize: null,
           totleSize: null,
-        },
+          columnId:null
+      },
 
         //勾选关联课程
         linkForm: {
@@ -514,7 +519,15 @@
         set: function (newValue) {
           this.columnForm.rate = newValue * 100
         }
-      }
+      },
+      columnFormLecturerId: {
+        get: function () {
+          return this.columnForm.lecturerId
+        },
+        set: function (newValue) {
+          this.columnForm.lecturerId = newValue
+        }
+      },
     },
     created() {
       this.getColumnListData();
@@ -692,6 +705,7 @@
       //课程管理列表
       getColumnManageListData(columnId) {
         this.manageListId = columnId || this.manageListId;
+        this.linkcolumnForm.columnId = columnId;
         this.loading = true;
         getLinkCourse(
           {columnId: this.manageListId}

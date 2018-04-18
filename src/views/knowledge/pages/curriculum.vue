@@ -60,6 +60,9 @@
             <el-table-column prop="title" label="课程标题">
             </el-table-column>
             <el-table-column prop="price" label="课程价格">
+              <template slot-scope="scope">
+                {{scope.row.price/100}}
+              </template>
             </el-table-column>
             <el-table-column prop="status" label="课程状态" :formatter="getStatus"></el-table-column>
             <el-table-column label="操作" width="300">
@@ -99,7 +102,7 @@
         </el-form-item>
         <el-form-item label="音频上传" class="audio-list" prop="uploadFile">
           <div>
-            <div class="file-container">{{courseForm.uploadFile.name}}</div>
+            <div class="file-container">{{fileText}}</div>
             <el-button size="small" type="primary" id="selectfiles">选择文件</el-button>
             <div slot="tip" class="el-upload__tip">支持mp3、m4a格式，最大500M</div>
             <el-button size="small" type="primary" id="start_upload">点击上传</el-button>
@@ -152,7 +155,7 @@
         <el-form-item label="讲师" prop="lecturerId">
           <el-col :span="6">
             <el-select
-              v-model="courseForm.lecturerId"
+              v-model="courseFormLecturerId"
               filterable
               remote
               reserve-keyword
@@ -161,7 +164,7 @@
             >
               <el-option
                 v-for="item in lecturerOptions"
-                :key="item.id"
+                :key="item.nickName"
                 :label="item.nickName"
                 :value="item.id">
               </el-option>
@@ -175,7 +178,8 @@
               type="date"
               placeholder="选择日期"
               format="yyyy 年 MM 月 dd 日"
-              value-format="timestamp">
+              value-format="yyyy-MM-dd hh:mm:ss"
+            >
             </el-date-picker>
           </el-col>
         </el-form-item>
@@ -199,6 +203,7 @@
         </el-form-item>
       </el-form>
     </div>
+    <!--<audio  style="display: none" id="audio" src="http://yun.youfen666.com/knowledge/1524052062545?auth_key=1524056935-0-0-388d8db7f2f3bf006480f8be441f6a57" />-->
   </section>
 </template>
 <script>
@@ -338,9 +343,11 @@
           price: null,
           uploadFile: {},
           lecturerId: null,
+          lecturerName:null,
           publishTime: null,
           rate: null
         },
+        fileText:null
       }
     },
 
@@ -368,7 +375,15 @@
         set: function (newValue) {
           this.courseForm.rate = newValue * 100
         }
-      }
+      },
+      courseFormLecturerId: {
+        get: function () {
+          return this.courseForm.lecturerId
+        },
+        set: function (newValue) {
+          this.courseForm.lecturerId = newValue
+        }
+      },
     },
     created() {
       this.getData()
@@ -470,6 +485,7 @@
         getCourse({id}).then(res => {
           if (res.success) {
             this.courseForm = Object.assign({}, res.data);
+            this.fileText = this.courseForm.uploadFile.name || ''
             this.getDirectTransmission();
             this.pageType = 2; //1 新增 2 编辑
           } else {
@@ -531,6 +547,7 @@
         }
         this.courseForm.coverList = [];
         this.courseForm.uploadFile = {};
+        this.fileText = null;
         this.getLecturerList();
         this.getDirectTransmission();
         this.pageType = 1
@@ -617,15 +634,29 @@
             })
 
             uploader.init();
-            uploader.bind('FilesAdded', function (uploader, files) {
-              self.courseForm.uploadFile.name = files[0].name;
+            uploader.bind('FilesAdded', function (upload, files) {
+              if(files[files.length-1].type!="audio/mp3" && files[files.length-1].type!="audio/m4a"){
+                self.$message.error("请上传mp3或者m4a格式文件");
+                uploader.removeFile( files );
+                return false
+              }
+              self.courseForm.timeLength = '100' ;  //假数据
+              self.fileText = files[files.length-1].name;
+              self.courseForm.uploadFile.name = files[files.length-1].name;
               self.courseForm.uploadFile.url = uploader.settings.multipart_params.key;
             });
             uploader.bind('uploadProgress', function (uploader, files) {
-              self.courseForm.uploadFile.name = `已完成${files.percent}%`;
+              self.fileText = `已完成${files.percent}%`;
             });
             uploader.bind('UploadComplete', function (uploader, files) {
-              self.courseForm.uploadFile.name = files[0].name;
+              self.fileText = files[files.length-1].name;
+              self.courseForm.uploadFile.name = files[files.length-1].name;
+//              myVid=document.getElementById("audio");
+//              myVid.addEventListener("canplay", function()
+//                {
+//                  alert(myVid.duration);
+//                }
+//              );
             });
             document.getElementById('start_upload').onclick = function () {
               uploader.start();
@@ -647,8 +678,8 @@
     width: 100%;
     .totle-time {
       position: absolute;
-      top: 10px;
-      left: 235px;
+      top: 0px;
+      left: 230px;
       color: #333;
     }
     .audio-list {

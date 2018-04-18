@@ -443,11 +443,11 @@
         rules: {
           title: [
             {required: true, message: '请输入专栏标题', trigger: 'blur'},
-            {min: 1, max: 45, message: '长度在 1 到 45 个字', trigger: 'blur'}
+            {min: 1, max: 30, message: '长度在 1 到 30 个字', trigger: 'blur'}
           ],
-          introduction: [
-            {required: true, message: '请输入专栏简介', trigger: 'blur'},
-            {min: 1, max: 200, message: '长度在 1 到 200 个字', trigger: 'blur'}
+          subTitle: [
+            {required: true, message: '请输入专栏副标题', trigger: 'blur'},
+            {min: 1, max: 30, message: '长度在 1 到 30 个字', trigger: 'blur'}
           ],
           detail: [
             {required: true, message: '请输入专栏详情', trigger: 'blur'},
@@ -498,21 +498,21 @@
         },
       }
     },
-    computed:{
-      columnFormPrice:{
-        get:function(){
-          return this.columnForm.price/100 || ''
+    computed: {
+      columnFormPrice: {
+        get: function () {
+          return this.columnForm.price / 100 || ''
         },
-        set:function(newValue){
-          this.columnForm.price = newValue*100
+        set: function (newValue) {
+          this.columnForm.price = newValue * 100
         },
       },
-      columnFormRate:{
-        get:function () {
-          return this.columnForm.rate/100 || ''
+      columnFormRate: {
+        get: function () {
+          return this.columnForm.rate / 100 || ''
         },
-        set:function (newValue) {
-          this.columnForm.rate = newValue*100
+        set: function (newValue) {
+          this.columnForm.rate = newValue * 100
         }
       }
     },
@@ -626,7 +626,7 @@
 
       handleSelectionChange(val) {
         this.linkForm.courses = val;
-    },
+      },
 
       //分页查询课程信息
       getLinkCourseData() {

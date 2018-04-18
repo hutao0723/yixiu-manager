@@ -150,7 +150,7 @@
             <img v-if="columnForm.coverList[0]" :src="columnForm.coverList[0]" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             <el-button size="small" type="primary">{{columnForm.coverList[0] ? '修改文件' : '选择文件'}}</el-button>
-            <div slot="tip" class="el-upload__tip">750*544,支持jpg、png、gif格式,最大5M</div>
+            <div slot="tip" class="el-upload__tip">750*545,支持jpg、png、gif格式,最大5M</div>
           </el-upload>
           <el-upload
             class="avatar-uploader"
@@ -162,7 +162,7 @@
             <img v-if="columnForm.coverList[1]" :src="columnForm.coverList[1]" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             <el-button size="small" type="primary">{{columnForm.coverList[1] ? '修改文件' : '选择文件'}}</el-button>
-            <div slot="tip" class="el-upload__tip">360*468,支持jpg、png、gif格式,最大5M</div>
+            <div slot="tip" class="el-upload__tip">360*484,支持jpg、png、gif格式,最大5M</div>
           </el-upload>
         </el-form-item>
         <el-form-item label="专栏详情" prop="detail">

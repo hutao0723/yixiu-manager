@@ -11,7 +11,7 @@ export const deleteCourse = params => post('course/delete', params);
 //修改课程基本信息
 export const updateCourse = params => post('course/update', params);
 //依据id查询课程信息
-export const getCourse = params => post('course/get', params);
+export const getCourse = params => get('course/get', params);
 //分页查询课程信息
 export const pageListCourse = params => get('course/pageList', params);
 //修改课程状态

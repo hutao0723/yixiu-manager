@@ -26,7 +26,7 @@
             </el-col>
             <el-col :span="3">
               <el-form-item>
-                <el-select v-model="courseSearchForm.specialState">
+                <el-select v-model="courseSearchForm.status">
                   <el-option v-for="item in specialStateOptions" :key="item.value" :label="item.label"
                              :value="item.value">
                   </el-option>
@@ -67,7 +67,7 @@
                 <!--openDialogAdmin(scope.row.managerName,scope.row.id）-->
                 <el-button type="text" size="mini" @click="getCourseDetail(scope.row.id)">编辑</el-button>
                 <el-button type="text" size="mini" @click="changeStatus(scope.row.id,scope.row.status)">
-                  {{scope.row.status == 1 ? '上线' : '下线'}}
+                  {{scope.row.status == 1 ? '下线' : '上线'}}
                 </el-button>
                 <el-button type="text" size="mini" @click="deleteItem(scope.row.id)" :disabled="false">删除</el-button>
               </template>
@@ -76,7 +76,7 @@
         </template>
       </div>
       <div class="page-control">
-        <el-pagination background :page-size="20" :current-page.sync="pageOption.pageNum" @current-change="getData"
+        <el-pagination background :page-size="20" :current-page.sync="courseSearchForm.pageNum" @current-change="getData"
                        layout="total, prev, pager, next"
                        :total="totalSize"></el-pagination>
       </div>
@@ -96,18 +96,13 @@
             </el-select>
           </el-col>
         </el-form-item>
-        <el-form-item label="音频上传" prop="address" class="audio-list">
-          <el-upload
-            class="upload-demo"
-            action="https://jsonplaceholder.typicode.com/posts/"
-            multiple
-            :limit="1"
-            :on-remove="audioRemove"
-            :on-progress="audioSuccess"
-            :file-list="courseForm.address">
-            <el-button size="small" type="primary" v-if="courseForm.address.length==0">选择文件</el-button>
+        <el-form-item label="音频上传" class="audio-list" prop="uploadFile">
+          <div>
+            <div class="file-container">{{courseForm.uploadFile.name}}</div>
+            <el-button size="small" type="primary" id="selectfiles">选择文件</el-button>
             <div slot="tip" class="el-upload__tip">支持mp3、m4a格式，最大500M</div>
-          </el-upload>
+            <el-button size="small" type="primary" id="start_upload">点击上传</el-button>
+          </div>
         </el-form-item>
         <div class="course-title  mb10 ">基本信息</div>
         <el-form-item label="课程标题" prop="title">
@@ -119,25 +114,26 @@
         <el-form-item label="课程封面">
           <el-upload
             class="avatar-uploader"
-            action="https://jsonplaceholder.typicode.com/posts/"
-            :show-file-list="false"
-            :on-success="handleAvatarSuccess"
+            action="http://172.31.20.47:9101/upload/image"
+            name="imageFile"
+            :show-file-list=false
+            :on-success="firstSuccess"
             :before-upload="beforeAvatarUpload">
-            <img v-if="courseForm.frontCover[0]" :src="courseForm.frontCover[0].url" class="avatar">
+            <img v-if="courseForm.coverList[0]" :src="courseForm.coverList[0]" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            <el-button size="small" type="primary">选择文件</el-button>
+            <el-button size="small" type="primary">{{courseForm.coverList[0]?'修改文件':'选择文件'}}</el-button>
             <div slot="tip" class="el-upload__tip">750*560,支持jpg、png、gif格式,最大5M</div>
           </el-upload>
-
           <el-upload
             class="avatar-uploader"
-            action="https://jsonplaceholder.typicode.com/posts/"
-            :show-file-list="false"
-            :on-success="handleAvatarSuccess"
+            action="http://172.31.20.47:9101/upload/image"
+            name="imageFile"
+            :show-file-list=false
+            :on-success="secondSuccess"
             :before-upload="beforeAvatarUpload">
-            <img v-if="courseForm.frontCover[1]" :src="courseForm.frontCover[1].url" class="avatar">
+            <img v-if="courseForm.coverList[1]" :src="courseForm.coverList[1]" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            <el-button size="small" type="primary">选择文件</el-button>
+            <el-button size="small" type="primary">{{courseForm.coverList[1]?'修改文件':'选择文件'}}</el-button>
             <div slot="tip" class="el-upload__tip">750*xxx,支持jpg、png、gif格式,最大5M</div>
           </el-upload>
         </el-form-item>
@@ -149,7 +145,7 @@
             <el-input v-model="courseForm.freeTime">
               <template slot="append">秒</template>
             </el-input>
-            <div class="totle-time">总长{{audioTimeLength}}</div>
+            <div class="totle-time" v-if="courseForm.timeLength">总长{{audioTimeLength}}</div>
           </el-col>
         </el-form-item>
         <el-form-item label="讲师" prop="lecturerId">
@@ -210,6 +206,8 @@
   import 'quill/dist/quill.snow.css'
   import 'quill/dist/quill.bubble.css'
   import {quillEditor} from 'vue-quill-editor'
+  import plupload from 'plupload';
+
   import {
     addCourse,
     deleteCourse,
@@ -217,7 +215,8 @@
     getCourse,
     pageListCourse,
     updateStatusCourse,
-    lecturerList
+    lecturerList,
+    getDirectTransmissionSign
   } from '@/api/index'
 
   export default {
@@ -227,6 +226,7 @@
     data() {
       return {
         loading: false,
+        directTransmissionSign:null, //上传签名
         pageType: 0,
         courseTypeOptions: [
           {
@@ -285,17 +285,17 @@
           searchTeacherType: 'lecturerNickName',
           id: null,
           title: null,
-          status: null,
+          status: '',
           lecturerId: null,
           lecturerNickName: null,
           lecturerValue: null,
-          pageNum: null,
+          pageNum: 1,
           pageSize: null,
         },
 
         rules: {
-          address: [
-            {required: true, message: '请选择上传文件', trigger: 'change'},
+          uploadFile: [
+            {required: true},
           ],
           courseType: [
             {required: true, message: '请选择课程类型', trigger: 'change'}
@@ -326,12 +326,12 @@
           title: null,
           subTitle: null,
           courseType: null,
-          frontCover: [],
+          coverList: [],
           detail: null,
           freeTime: null,
           timeLength: null,
           price: null,
-          address: [],
+          uploadFile: {},
           lecturerId: null,
           publishTime: null,
           rate: null
@@ -355,20 +355,22 @@
     methods: {
 
       //上下线
-      changeStatus(id, status) {
+      changeStatus(id, changeStatus) {
         this.loading = true;
+        const status = changeStatus%2==0?1:2;
         updateStatusCourse({
           id,
           status
         }).then(res => {
           if (res.success) {
-            this.$message.success('切换成功')
+            this.$message.success('切换成功');
+            this.getData();
           } else {
             let msg = res.desc || '请求失败'
             this.$message.error(msg)
           }
           this.loading = false;
-        }).catch(() => {
+        }).catch(()=>{
           this.loading = false;
         })
       },
@@ -429,7 +431,7 @@
           nickName
         }).then(res => {
           if (res.success) {
-            this.lecturerOptions = res.data.content;
+            this.lecturerOptions = res.data;
           } else {
             let msg = res.desc || '请求失败'
             this.$message.error(msg)
@@ -447,6 +449,7 @@
         getCourse({id}).then(res => {
           if (res.success) {
             this.courseForm = Object.assign({}, res.data);
+            this.getDirectTransmission();
             this.pageType = 2; //1 新增 2 编辑
           } else {
             let msg = res.desc || '获取课程内容失败'
@@ -458,34 +461,37 @@
         })
       },
 
-      audioRemove() {
-        this.courseForm.address.shift();
-      },
-
-      audioSuccess(event, file, fileList) {
-        this.courseForm.address.push({
-          'name': file.name,
-          'url': file.url
-        })
-      },
-
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.loading = true;
-
-            updateCourse(this.courseForm).then(res => {
-              if (res.success) {
-                this.$message.success('修改成功')
-                this.pageType = 0;
-              } else {
-                let msg = res.desc || '请求失败'
-                this.$message.error(msg);
-              }
-              this.loading = false;
-            }).catch(() => {
-              this.loading = false;
-            })
+if(this.courseForm.id){
+  updateCourse(this.courseForm).then(res => {
+    if (res.success) {
+      this.$message.success('修改成功')
+      this.pageType = 0;
+    } else {
+      let msg = res.desc || '请求失败'
+      this.$message.error(msg);
+    }
+    this.loading = false;
+  }).catch(() => {
+    this.loading = false;
+  })
+}else{
+  addCourse(this.courseForm).then(res => {
+    if (res.success) {
+      this.$message.success('新增成功')
+      this.pageType = 0;
+    } else {
+      let msg = res.desc || '请求失败'
+      this.$message.error(msg);
+    }
+    this.loading = false;
+  }).catch(() => {
+    this.loading = false;
+  })
+}
           } else {
             console.log('数据未填写完整');
             return false;
@@ -502,9 +508,10 @@
         for (let i in this.courseForm) {
           this.courseForm[i] = null
         }
-        this.courseForm.frontCover = [];
-        this.courseForm.address = [];
+        this.courseForm.coverList = [];
+        this.courseForm.uploadFile = {};
         this.getLecturerList();
+        this.getDirectTransmission();
         this.pageType = 1
       },
 
@@ -537,18 +544,79 @@
         return isJLtType && isLtSize;
       },
 
-      handleAvatarSuccess(res, file) {
+      firstSuccess(res, file) {
+        const self = this;
         const image = new Image();
         image.src = 'https:' + res.data.fileUrl;
         image.onload = function () {
           const width = image.width;
           if (width != 750) {
-            this.courseForm.frontCover = res.data.fileUrl;
+            self.courseForm.coverList.unshift('https:' + res.data.fileUrl);
           } else {
-            this.$message.error('上传图片的宽度必须为 750px!')
+            self.$message.error('上传图片的宽度必须为 750px!')
           }
         };
       },
+
+      secondSuccess(res, file) {
+        const self = this;
+        const image = new Image();
+        image.src = 'https:' + res.data.fileUrl;
+        image.onload = function () {
+          const width = image.width;
+          if (width != 750) {
+            self.courseForm.coverList.push('https:' + res.data.fileUrl);
+          } else {
+            self.$message.error('上传图片的宽度必须为 750px!')
+          }
+        };
+      },
+
+      getDirectTransmission() {
+        getDirectTransmissionSign().then(res => {
+          const self = this;
+          if (res.success) {
+            this.directTransmissionSign = res.data;
+
+            //        实例化一个plupload上传对象
+            var multipart_params = this.directTransmissionSign;
+            console.log(multipart_params);
+
+            var uploader = new plupload.Uploader({
+              runtimes : 'html5,flash,silverlight,html4',
+              browse_button : 'selectfiles',
+              url : 'http://youfen.oss-cn-hangzhou.aliyuncs.com/',
+              multipart_params: {
+                'key' : multipart_params.dir+new Date().getTime(),
+                'policy': multipart_params.policy,
+                'OSSAccessKeyId': multipart_params.accessid,
+                'success_action_status' : '200', //让服务端返回200,不然，默认会返回204
+                'signature': multipart_params.signature,
+              },
+            })
+
+            uploader.init();
+            uploader.bind('FilesAdded',function(uploader,files){
+              self.courseForm.uploadFile.name = files[0].name;
+              self.courseForm.uploadFile.url = uploader.settings.multipart_params.key;
+            });
+            uploader.bind('uploadProgress',function(uploader,files){
+              self.courseForm.uploadFile.name = `已完成${files.percent}%`;
+            });
+            uploader.bind('UploadComplete',function(uploader,files){
+              self.courseForm.uploadFile.name = files[0].name;
+            });
+            document.getElementById('start_upload').onclick = function(){
+              uploader.start();
+            }
+          } else {
+            let msg = res.desc || '获取上传路径失败'
+            this.$message.error(msg)
+          }
+        }).catch(()=>{
+          this.$message.error('网络错误')
+        })
+      }
     }
   }
 
@@ -563,6 +631,14 @@
       color: #333;
     }
     .audio-list {
+      .file-container{
+        width: 300px;
+        height: 40px;
+        border: 1px solid #aaa;
+        text-align: center;
+        color: #606266;
+      }
+
       .el-upload-list__item, .el-upload-list__item:first-child {
         line-height: 40px;
         margin-top: 0

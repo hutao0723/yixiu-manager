@@ -28,7 +28,7 @@
             </el-col>
             <el-col :span="3">
               <el-form-item>
-                <el-select v-model="columnSearchForm.specialState">
+                <el-select v-model="columnSearchForm.status">
                   <el-option v-for="item in specialStateOptions" :key="item.value" :label="item.label"
                              :value="item.value">
                   </el-option>
@@ -72,7 +72,7 @@
                 <el-button type="text" size="mini" @click="getCourseDetail(scope.row.id)">编辑</el-button>
                 <el-button type="text" size="mini" @click="getColumnManageListData(scope.row.id)">课程管理</el-button>
                 <el-button type="text" size="mini" @click="changeStatus(scope.row.id,scope.row.status)">
-                  {{scope.row.id == 1 ? '上线' : '下线'}}
+                  {{scope.row.status == 1 ? '下线' : '上线'}}
                 </el-button>
                 <el-button type="text" size="mini" @click="deleteItem(scope.row.id)" :disabled="false">删除</el-button>
               </template>
@@ -81,7 +81,8 @@
         </template>
       </div>
       <div class="page-control">
-        <el-pagination background :page-size="20" :current-page.sync="pageOption.pageNum" @current-change="getColumnListData"
+        <el-pagination background :page-size="20" :current-page.sync="columnSearchForm.pageNum"
+                       @current-change="getColumnListData"
                        layout="total, prev, pager, next"
                        :total="totalSize"></el-pagination>
       </div>
@@ -90,7 +91,7 @@
       <div class="tabel-wrap">
         <template>
           <el-button type="primary" @click="getLinkCourseData" class="link-columm" size="mini">关联课程</el-button>
-          <table class="" v-if="columnManageList" >
+          <table class="" v-if="columnManageList">
             <thead>
             <tr class="tr-header">
               <template v-for="column in columns">
@@ -106,8 +107,8 @@
                   <template v-if="column.action">
                     <td>
                       <el-button type="text" size="mini"
-                      @click="changeWatchableStatus(item.columnId,item.watchable)">
-                      {{item.watchable == 0 ? '设为试看' : '取消试看'}}
+                                 @click="changeWatchableStatus(item.id,item.watchable)">
+                        {{item.watchable == 0 ? '设为试看' : '取消试看'}}
                       </el-button>
                       <el-button type="text" size="mini" @click="removeCulum(item.id)" :disabled="false">移除</el-button>
                     </td>
@@ -141,25 +142,26 @@
         <el-form-item label="课程封面">
           <el-upload
             class="avatar-uploader"
-            action="http://youfen.oss-cn-hangzhou.aliyuncs.com/"
-            :data="directTransmissionSign"
-            :show-file-list="false"
-            :on-success="handleAvatarSuccess"
+            action="http://172.31.20.47:9101/upload/image"
+            name="imageFile"
+            :show-file-list=false
+            :on-success="firstSuccess"
             :before-upload="beforeAvatarUpload">
-            <img v-if="columnForm.coverList[0]" :src="columnForm.coverList[0].url" class="avatar">
+            <img v-if="columnForm.coverList[0]" :src="columnForm.coverList[0]" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            <el-button size="small" type="primary">选择文件</el-button>
+            <el-button size="small" type="primary">{{columnForm.coverList[0] ? '修改文件' : '选择文件'}}</el-button>
             <div slot="tip" class="el-upload__tip">750*560,支持jpg、png、gif格式,最大5M</div>
           </el-upload>
           <el-upload
             class="avatar-uploader"
-            action="http://youfen.oss-cn-hangzhou.aliyuncs.com/"
-            :show-file-list="false"
-            :on-success="handleAvatarSuccess"
+            action="http://172.31.20.47:9101/upload/image"
+            name="imageFile"
+            :show-file-list=false
+            :on-success="secondSuccess"
             :before-upload="beforeAvatarUpload">
-            <img v-if="columnForm.coverList[1]" :src="columnForm.coverList[1].url" class="avatar">
+            <img v-if="columnForm.coverList[1]" :src="columnForm.coverList[1]" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            <el-button size="small" type="primary">选择文件</el-button>
+            <el-button size="small" type="primary">{{columnForm.coverList[1] ? '修改文件' : '选择文件'}}</el-button>
             <div slot="tip" class="el-upload__tip">750*xxx,支持jpg、png、gif格式,最大5M</div>
           </el-upload>
         </el-form-item>
@@ -182,7 +184,7 @@
               reserve-keyword
               placeholder="请输入关键词"
               :remote-method="getLecturerList"
-              >
+            >
               <el-option
                 v-for="item in lecturerOptions"
                 :key="item.id"
@@ -211,9 +213,7 @@
           <el-button @click="cancelForm('columnForm')">取消</el-button>
         </el-form-item>
       </el-form>
-        <div id="container"></div>
-      <el-button id="selectfiles">选择文件</el-button>
-      <el-button id="start_upload">文件开始上传</el-button>
+
     </div>
     <el-dialog title="关联课程" :visible.sync="linkVisable">
       <el-form :inline="true" :model="linkcolumnForm" class="demo-form-inline" size="medium">
@@ -273,7 +273,8 @@
           </el-table-column>
         </el-table>
         <div class="page-control">
-          <el-pagination background :page-size="2" :current-page.sync="linkcolumnForm.pageOption.pageNum" @current-change="getLinkCourseData"
+          <el-pagination background :page-size="20" :current-page.sync="linkcolumnForm.pageNum"
+                         @current-change="getLinkCourseData"
                          layout="total, prev, pager, next"
                          :total="linkcolumnForm.totalSize"></el-pagination>
         </div>
@@ -291,7 +292,7 @@
   import 'quill/dist/quill.bubble.css'
   import draggable from 'vuedraggable'
   import {quillEditor} from 'vue-quill-editor'
-  import plupload from 'plupload';
+
   import {
     getColumn,
     updateStatusColumn,
@@ -306,7 +307,6 @@
     coursePageList,
     lecturerList,
     courseSort,
-    getDirectTransmissionSign
   } from '@/api/index'
 
   export default {
@@ -316,8 +316,7 @@
     },
     data() {
       return {
-        loading:false,
-        directTransmissionSign:null, //上传签名
+        loading: false,
         pageType: 0,
         searchOptions: [
           {
@@ -362,7 +361,7 @@
           }
         ],
 
-        columns :[
+        columns: [
           {
             title: '序号',
             width: 10,
@@ -423,25 +422,26 @@
           searchTeacherType: 'lecturerNickName',
           id: null,
           title: null,
-          status: null,
+          status: '',
           lecturerId: null,
           lecturerNickName: null,
           lecturerValue: null,
-          pageNum: null,
-          pageSize: null,
+          pageNum: 1,
+          pageSize: 20,
         },
 
         //新增编辑专栏form表单
         columnForm: {
+          id: null,
           title: null,
           subTitle: null,
-          introduction:null,
-          coverList:[],
+          introduction: null,
+          coverList: [],
           detail: null,
           price: null,
           rate: null,
-          lecturerId: null,
-          courseNum:null
+          lecturerId: 1, //假设
+          courseNum: null
         },
         rules: {
           title: [
@@ -473,6 +473,7 @@
 
         //课程管理
         columnManageList: [],
+        manageListId: null,
 
         //关联课程管理
         linkVisable: false,
@@ -489,24 +490,14 @@
           lecturerValue: null,
           pageNum: null,
           pageSize: null,
-          totleSize:null,
-          pageOption: {
-            pageNum: 1,
-            size: 2
-          },
+          totleSize: null,
         },
 
         //勾选关联课程
-        linkForm:{
-          columnId:'',
-          subCourses:[], //临时集合
-          courses:[
-
-            {
-              courseId:'',
-              lecturerId:''
-            }
-          ]
+        linkForm: {
+          columnId: '',
+          subCourses: [], //临时集合
+          courses: []
         },
       }
     },
@@ -517,17 +508,17 @@
 
       getCourseDetail(id) {
         this.loading = true;
+        this.columnForm.id = id;
         getColumn({id}).then(res => {
           if (res.success) {
             this.columnForm = Object.assign({}, res.data);
-            this.getDirectTransmissionSign();
             this.pageType = 2; //1 新增 2 编辑
           } else {
             let msg = res.desc || '获取课程内容失败'
             this.$message.error(msg)
           }
           this.loading = false;
-        }).catch(()=>{
+        }).catch(() => {
           this.loading = false;
         })
       },
@@ -536,18 +527,36 @@
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.loading = true;
-            updateColumn(this.columnForm).then(res => {
-              if (res.success) {
-                this.$message.success('修改成功')
-                this.pageType = 0;
-              } else {
-                let msg = res.desc || '请求失败'
-                this.$message.error(msg);
-              }
-              this.loading = false;
-            }).catch(()=>{
-              this.loading = false;
-            })
+            if (this.columnForm.id) {
+              updateColumn(this.columnForm).then(res => {
+                if (res.success) {
+                  this.$message.success('修改成功')
+                  this.pageType = 0;
+                  this.getColumnListData();
+                } else {
+                  let msg = res.desc || '请求失败'
+                  this.$message.error(msg);
+                }
+                this.loading = false;
+              }).catch(() => {
+                this.loading = false;
+              })
+            } else {
+              addColumn(this.columnForm).then(res => {
+                if (res.success) {
+                  this.$message.success('新增成功')
+                  this.pageType = 0;
+                  this.getColumnListData();
+                } else {
+                  let msg = res.desc || '请求失败'
+                  this.$message.error(msg);
+                }
+                this.loading = false;
+              }).catch(() => {
+                this.loading = false;
+              })
+            }
+
           } else {
             console.log('数据未填写完整');
             return false;
@@ -565,7 +574,7 @@
       },
 
       getStatus(row, column) {
-        switch (row.status || row.courseStatus) {
+        switch (row.status) {
           case '':
             return '专栏状态';
           case 0:
@@ -577,31 +586,32 @@
         }
       },
 
-      submitlinkForm(){
+      submitlinkForm() {
         this.loading = true;
         relateCourse(this.linkForm).then(res => {
           if (res.success) {
-            this.$message.success('关联成功')
+            this.$message.success('关联成功');
+            this.getColumnManageListData();
             this.linkVisable = false;
           } else {
             let msg = res.desc || '关联失败'
             this.$message.error(msg)
           }
           this.loading = false;
-        }).catch(()=>{
+        }).catch(() => {
           this.loading = false;
         })
       },
 
-      cancelLinkForm(){
-        this.linkVisable =false;
+      cancelLinkForm() {
+        this.linkVisable = false;
       },
 
       //多选
+
       handleSelectionChange(val) {
-        this.linkForm.subCourses = val;
-        console.log(this.linkForm)
-      },
+        this.linkForm.courses = val;
+    },
 
       //分页查询课程信息
       getLinkCourseData() {
@@ -619,25 +629,28 @@
             this.$message.error(msg)
           }
           this.loading = false;
-        }).catch(()=>{
+        }).catch(() => {
           this.loading = false;
         })
       },
 
       //设为试看
-      changeWatchableStatus(relationId, status) {
+      changeWatchableStatus(relationId, changeStatus) {
         this.loading = true;
+        const status = Number(!changeStatus);
         updateWatchStatus({
-          relationId
+          relationId,
+          status
         }).then(res => {
           if (res.success) {
-            this.$message.success('切换状态成功')
+            this.$message.success('切换状态成功');
+            this.getColumnManageListData();
           } else {
             let msg = res.desc || '请求失败'
             this.$message.error(msg)
           }
           this.loading = false;
-        }).catch(()=>{
+        }).catch(() => {
           this.loading = false;
         })
       },
@@ -650,21 +663,23 @@
         }).then(res => {
           if (res.success) {
             this.$message.success('移除成功')
+            this.getColumnManageListData();
           } else {
             let msg = res.desc || '请求失败'
             this.$message.error(msg)
           }
           this.loading = false;
-        }).catch(()=>{
+        }).catch(() => {
           this.loading = false;
         })
       },
 
       //课程管理列表
       getColumnManageListData(columnId) {
+        this.manageListId = columnId || this.manageListId;
         this.loading = true;
         getLinkCourse(
-          {columnId}
+          {columnId: this.manageListId}
         ).then(res => {
           if (res.success) {
             this.columnManageList = res.data;
@@ -675,7 +690,7 @@
             this.$message.error(msg)
           }
           this.loading = false;
-        }).catch(()=>{
+        }).catch(() => {
           this.loading = false;
         })
       },
@@ -697,7 +712,7 @@
               this.$message.error(msg)
             }
             this.loading = false;
-          }).catch(()=>{
+          }).catch(() => {
             this.loading = false;
           })
         }).catch(() => {
@@ -709,20 +724,22 @@
       },
 
       //上下线
-      changeStatus(id, status) {
+      changeStatus(id, changeStatus) {
         this.loading = true;
+        const status = changeStatus % 2 == 0 ? 1 : 2;
         updateStatusColumn({
           id,
           status
         }).then(res => {
           if (res.success) {
-            this.$message.success('切换成功')
+            this.$message.success('切换成功');
+            this.getColumnListData();
           } else {
             let msg = res.desc || '请求失败'
             this.$message.error(msg)
           }
           this.loading = false;
-        }).catch(()=>{
+        }).catch(() => {
           this.loading = false;
         })
       },
@@ -733,7 +750,6 @@
         [this.columnSearchForm.lecturerNickName, this.columnSearchForm.lecturerId] = this.columnSearchForm.searchTeacherType == 'lecturerId' ? ['', this.columnSearchForm.lecturerValue] : [this.columnSearchForm.lecturerValue, ''];
         this.loading = true;
         pageListColumn(this.columnSearchForm).then(res => {
-          debugger
           if (res.success) {
             this.columnList = res.data.content;
             this.totalSize = res.data.totalElements;
@@ -742,24 +758,24 @@
             this.$message.error(msg)
           }
           this.loading = false;
-        }).catch(()=>{
+        }).catch(() => {
           this.loading = false;
         })
       },
 
-      getLecturerList(nickName){
+      getLecturerList(nickName) {
         this.loading = true;
         lecturerList({
           nickName
         }).then(res => {
           if (res.success) {
-            this.lecturerOptions = res.data.content;
+            this.lecturerOptions = res.data;
           } else {
             let msg = res.desc || '请求失败'
             this.$message.error(msg)
           }
           this.loading = false;
-        }).catch(()=>{
+        }).catch(() => {
           this.loading = false;
         })
       },
@@ -776,103 +792,60 @@
         return isJLtType && isLtSize;
       },
 
-      handleAvatarSuccess(res, file) {
+      firstSuccess(res, file) {
+        const self = this;
         const image = new Image();
         image.src = 'https:' + res.data.fileUrl;
         image.onload = function () {
           const width = image.width;
           if (width != 750) {
-            this.courseForm.frontCover = res.data.fileUrl;
+            self.columnForm.coverList.unshift('https:' + res.data.fileUrl);
           } else {
-            this.$message.error('上传图片的宽度必须为 750px!')
+            self.$message.error('上传图片的宽度必须为 750px!')
+          }
+        };
+      },
+      secondSuccess(res, file) {
+        const self = this;
+        const image = new Image();
+        image.src = 'https:' + res.data.fileUrl;
+        image.onload = function () {
+          const width = image.width;
+          if (width != 750) {
+            self.columnForm.coverList.push('https:' + res.data.fileUrl);
+          } else {
+            self.$message.error('上传图片的宽度必须为 750px!')
           }
         };
       },
 
-      newcolumnForm(){
-        for(let i in this.columnForm){
+      newcolumnForm() {
+        for (let i in this.columnForm) {
           this.columnForm[i] = null
         }
-        this.columnForm.coverList=[];
+        this.columnForm.coverList = [];
         this.getLecturerList();
-        this.getDirectTransmissionSign();
         this.pageType = 1;
       },
 
-      datadragEnd (e) {
+      datadragEnd(e) {
         let columnId = this.columnManageList[0] && this.columnManageList[0].columnId;
         let id = +this.columnManageList[e.newIndex].id
         let initPosition = +this.columnManageList[e.newIndex].relationSort
         let movedPosition = e.newIndex > e.oldIndex ? +(this.columnManageList[e.newIndex - 1].relationSort) : +(this.columnManageList[e.newIndex + 1].relationSort)
         this.loading = true;
-        courseSort({ columnId,id,initPosition, movedPosition,}).then(res => {
+        courseSort({columnId, id, initPosition, movedPosition,}).then(res => {
           if (res.success) {
             this.getColumnManageListData();
           } else {
             let msg = res.desc || '排序失败'
             this.$message.error(msg)
           }
-        }).catch(()=>{
+        }).catch(() => {
           this.$message.error('网络错误')
         })
       },
 
-      getDirectTransmissionSign() {
-
-        getDirectTransmissionSign().then(res => {
-          if (res.success) {
-            this.directTransmissionSign = res.data;
-
-            //        实例化一个plupload上传对象
-            var multipart_params = this.directTransmissionSign;
-            console.log(multipart_params);
-
-            var uploader = new plupload.Uploader({
-              runtimes : 'html5,flash,silverlight,html4',
-              browse_button : 'selectfiles',
-              //runtimes : 'flash',
-              container: 'container',
-              flash_swf_url : multipart_params.dir,
-              silverlight_xap_url : multipart_params.dir,
-              url : 'http://youfen.oss-cn-hangzhou.aliyuncs.com/',
-
-              multipart_params: {
-                'Filename': 'test',
-                'key' : 'test',
-                'policy': multipart_params.policy,
-                'OSSAccessKeyId': multipart_params.accessid,
-                'success_action_status' : '200', //让服务端返回200,不然，默认会返回204
-                'signature': multipart_params.signature,
-              },
-            })
-
-            //在实例对象上调用init()方法进行初始化
-            uploader.init();
-
-            //绑定各种事件，并在事件监听函数中做你想做的事
-            uploader.bind('FilesAdded',function(uploader,files){
-              //每个事件监听函数都会传入一些很有用的参数，
-              //我们可以利用这些参数提供的信息来做比如更新UI，提示上传进度等操作
-            });
-            uploader.bind('UploadProgress',function(uploader,file){
-              //每个事件监听函数都会传入一些很有用的参数，
-              //我们可以利用这些参数提供的信息来做比如更新UI，提示上传进度等操作
-            });
-            //......
-            //......
-
-            //最后给"开始上传"按钮注册事件
-            document.getElementById('start_upload').onclick = function(){
-              uploader.start(); //调用实例对象的start()方法开始上传文件，当然你也可以在其他地方调用该方法
-            }
-          } else {
-            let msg = res.desc || '获取上传路径失败'
-            this.$message.error(msg)
-          }
-        }).catch(()=>{
-          this.$message.error('网络错误')
-        })
-      }
     }
   }
 
@@ -961,13 +934,13 @@
         height: 178px;
         display: block;
       }
-      .el-upload__tip,.el-button{
+      .el-upload__tip, .el-button {
         position: absolute;
         left: 200px;
         top: 0;
       }
-      .el-upload__tip{
-        top:30px;
+      .el-upload__tip {
+        top: 30px;
       }
     }
   }

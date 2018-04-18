@@ -22,7 +22,7 @@ export function get(url, params) {
  */
 export function post(url, params) {
 
-    return axios.post(getUrl(url), qs.stringify(params,{ arrayFormat: 'repeat' })).then((response) => {
+    return axios.post(getUrl(url), qs.stringify(params,{ allowDots: true })).then((response) => {
         return response.data;
     });
 }

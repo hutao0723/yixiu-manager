@@ -76,7 +76,8 @@
         </template>
       </div>
       <div class="page-control">
-        <el-pagination background :page-size="20" :current-page.sync="courseSearchForm.pageNum" @current-change="getData"
+        <el-pagination background :page-size="20" :current-page.sync="courseSearchForm.pageNum"
+                       @current-change="getData"
                        layout="total, prev, pager, next"
                        :total="totalSize"></el-pagination>
       </div>
@@ -106,10 +107,10 @@
         </el-form-item>
         <div class="course-title  mb10 ">基本信息</div>
         <el-form-item label="课程标题" prop="title">
-          <el-input v-model="courseForm.title" placeholder="1-45个字"></el-input>
+          <el-input v-model="courseForm.title" placeholder="1-30字，建议14字以内" :maxlength="30"></el-input>
         </el-form-item>
         <el-form-item label="课程副标题" prop="subTitle">
-          <el-input v-model="courseForm.subTitle" placeholder="1-45个字"></el-input>
+          <el-input v-model="courseForm.subTitle" placeholder="1-30字，建议14字以内" :maxlength="30"></el-input>
         </el-form-item>
         <el-form-item label="课程封面">
           <el-upload
@@ -121,8 +122,8 @@
             :before-upload="beforeAvatarUpload">
             <img v-if="courseForm.coverList[0]" :src="courseForm.coverList[0]" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            <el-button size="small" type="primary">{{courseForm.coverList[0]?'修改文件':'选择文件'}}</el-button>
-            <div slot="tip" class="el-upload__tip">750*560,支持jpg、png、gif格式,最大5M</div>
+            <el-button size="small" type="primary">{{courseForm.coverList[0] ? '修改文件' : '选择文件'}}</el-button>
+            <div slot="tip" class="el-upload__tip">750*544,支持jpg、png、gif格式,最大5M</div>
           </el-upload>
           <el-upload
             class="avatar-uploader"
@@ -133,15 +134,15 @@
             :before-upload="beforeAvatarUpload">
             <img v-if="courseForm.coverList[1]" :src="courseForm.coverList[1]" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            <el-button size="small" type="primary">{{courseForm.coverList[1]?'修改文件':'选择文件'}}</el-button>
-            <div slot="tip" class="el-upload__tip">750*xxx,支持jpg、png、gif格式,最大5M</div>
+            <el-button size="small" type="primary">{{courseForm.coverList[1] ? '修改文件' : '选择文件'}}</el-button>
+            <div slot="tip" class="el-upload__tip">360*468,支持jpg、png、gif格式,最大5M</div>
           </el-upload>
         </el-form-item>
         <el-form-item label="课程详情" prop="detail">
           <quill-editor v-model="courseForm.detail"></quill-editor>
         </el-form-item>
         <el-form-item label="试听时长" prop="freeTime">
-          <el-col :span="4">
+          <el-col :span="6">
             <el-input v-model="courseForm.freeTime">
               <template slot="append">秒</template>
             </el-input>
@@ -149,7 +150,7 @@
           </el-col>
         </el-form-item>
         <el-form-item label="讲师" prop="lecturerId">
-          <el-col :span="4">
+          <el-col :span="6">
             <el-select
               v-model="courseForm.lecturerId"
               filterable
@@ -168,7 +169,7 @@
           </el-col>
         </el-form-item>
         <el-form-item label="课程日期" prop="publishTime">
-          <el-col :span="4">
+          <el-col :span="6">
             <el-date-picker
               v-model="courseForm.publishTime"
               type="date"
@@ -179,15 +180,15 @@
           </el-col>
         </el-form-item>
         <el-form-item label="课程价格" prop="price">
-          <el-col :span="4">
-            <el-input v-model="courseForm.price">
+          <el-col :span="6">
+            <el-input v-model="courseFormPrice" placeholder="0.00-99999.99">
               <template slot="append">元</template>
             </el-input>
           </el-col>
         </el-form-item>
         <el-form-item label="讲师抽成" prop="rate">
-          <el-col :span="4">
-            <el-input v-model="courseForm.rate">
+          <el-col :span="6">
+            <el-input v-model="courseFormRate" placeholder="0.00-100.00">
               <template slot="append">%</template>
             </el-input>
           </el-col>
@@ -226,7 +227,7 @@
     data() {
       return {
         loading: false,
-        directTransmissionSign:null, //上传签名
+        directTransmissionSign: null, //上传签名
         pageType: 0,
         courseTypeOptions: [
           {
@@ -302,7 +303,11 @@
           ],
           title: [
             {required: true, message: '请输入课程标题', trigger: 'blur'},
-            {min: 1, max: 45, message: '长度在 1 到 45 个字', trigger: 'blur'}
+            {min: 1, max: 30, message: '长度在 1 到 30 个字', trigger: 'blur'}
+          ],
+          subTitle: [
+            {required: true, message: '请输入课程副标题', trigger: 'blur'},
+            {min: 1, max: 30, message: '长度在 1 到 30 个字', trigger: 'blur'}
           ],
           freeTime: [
             {required: true, message: '请输入试听时长', trigger: 'blur'}
@@ -347,6 +352,22 @@
         let min = Math.floor(s / 60) % 60;
         let sec = s % 60;
         return `${hour}时${min}分${sec}秒`
+      },
+      courseFormPrice: {
+        get: function () {
+          return this.courseForm.price / 100 || ''
+        },
+        set: function (newValue) {
+          this.courseForm.price = newValue * 100
+        },
+      },
+      courseFormRate: {
+        get: function () {
+          return this.courseForm.rate / 100 || ''
+        },
+        set: function (newValue) {
+          this.courseForm.rate = newValue * 100
+        }
       }
     },
     created() {
@@ -357,7 +378,7 @@
       //上下线
       changeStatus(id, changeStatus) {
         this.loading = true;
-        const status = changeStatus%2==0?1:2;
+        const status = changeStatus % 2 == 0 ? 1 : 2;
         updateStatusCourse({
           id,
           status
@@ -370,7 +391,7 @@
             this.$message.error(msg)
           }
           this.loading = false;
-        }).catch(()=>{
+        }).catch(() => {
           this.loading = false;
         })
       },
@@ -465,33 +486,33 @@
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.loading = true;
-if(this.courseForm.id){
-  updateCourse(this.courseForm).then(res => {
-    if (res.success) {
-      this.$message.success('修改成功')
-      this.pageType = 0;
-    } else {
-      let msg = res.desc || '请求失败'
-      this.$message.error(msg);
-    }
-    this.loading = false;
-  }).catch(() => {
-    this.loading = false;
-  })
-}else{
-  addCourse(this.courseForm).then(res => {
-    if (res.success) {
-      this.$message.success('新增成功')
-      this.pageType = 0;
-    } else {
-      let msg = res.desc || '请求失败'
-      this.$message.error(msg);
-    }
-    this.loading = false;
-  }).catch(() => {
-    this.loading = false;
-  })
-}
+            if (this.courseForm.id) {
+              updateCourse(this.courseForm).then(res => {
+                if (res.success) {
+                  this.$message.success('修改成功')
+                  this.pageType = 0;
+                } else {
+                  let msg = res.desc || '请求失败'
+                  this.$message.error(msg);
+                }
+                this.loading = false;
+              }).catch(() => {
+                this.loading = false;
+              })
+            } else {
+              addCourse(this.courseForm).then(res => {
+                if (res.success) {
+                  this.$message.success('新增成功')
+                  this.pageType = 0;
+                } else {
+                  let msg = res.desc || '请求失败'
+                  this.$message.error(msg);
+                }
+                this.loading = false;
+              }).catch(() => {
+                this.loading = false;
+              })
+            }
           } else {
             console.log('数据未填写完整');
             return false;
@@ -583,37 +604,37 @@ if(this.courseForm.id){
             console.log(multipart_params);
 
             var uploader = new plupload.Uploader({
-              runtimes : 'html5,flash,silverlight,html4',
-              browse_button : 'selectfiles',
-              url : 'http://youfen.oss-cn-hangzhou.aliyuncs.com/',
+              runtimes: 'html5,flash,silverlight,html4',
+              browse_button: 'selectfiles',
+              url: 'http://youfen.oss-cn-hangzhou.aliyuncs.com/',
               multipart_params: {
-                'key' : multipart_params.dir+new Date().getTime(),
+                'key': multipart_params.dir + new Date().getTime(),
                 'policy': multipart_params.policy,
                 'OSSAccessKeyId': multipart_params.accessid,
-                'success_action_status' : '200', //让服务端返回200,不然，默认会返回204
+                'success_action_status': '200', //让服务端返回200,不然，默认会返回204
                 'signature': multipart_params.signature,
               },
             })
 
             uploader.init();
-            uploader.bind('FilesAdded',function(uploader,files){
+            uploader.bind('FilesAdded', function (uploader, files) {
               self.courseForm.uploadFile.name = files[0].name;
               self.courseForm.uploadFile.url = uploader.settings.multipart_params.key;
             });
-            uploader.bind('uploadProgress',function(uploader,files){
+            uploader.bind('uploadProgress', function (uploader, files) {
               self.courseForm.uploadFile.name = `已完成${files.percent}%`;
             });
-            uploader.bind('UploadComplete',function(uploader,files){
+            uploader.bind('UploadComplete', function (uploader, files) {
               self.courseForm.uploadFile.name = files[0].name;
             });
-            document.getElementById('start_upload').onclick = function(){
+            document.getElementById('start_upload').onclick = function () {
               uploader.start();
             }
           } else {
             let msg = res.desc || '获取上传路径失败'
             this.$message.error(msg)
           }
-        }).catch(()=>{
+        }).catch(() => {
           this.$message.error('网络错误')
         })
       }
@@ -631,7 +652,7 @@ if(this.courseForm.id){
       color: #333;
     }
     .audio-list {
-      .file-container{
+      .file-container {
         width: 300px;
         height: 40px;
         border: 1px solid #aaa;

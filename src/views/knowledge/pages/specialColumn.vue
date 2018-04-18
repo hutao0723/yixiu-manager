@@ -131,13 +131,10 @@
     <div class="content " v-else>
       <el-form :model="columnForm" :rules="rules" ref="columnForm" label-width="100px" class="column-uleForm">
         <el-form-item label="专栏标题" prop="title">
-          <el-input v-model="columnForm.title" placeholder="1-45个字"></el-input>
+          <el-input v-model="columnForm.title" placeholder="1-30字，建议14字以内" :maxlength="30"></el-input>
         </el-form-item>
         <el-form-item label="专栏副标题" prop="subTitle">
-          <el-input v-model="columnForm.subTitle" placeholder="1-45个字"></el-input>
-        </el-form-item>
-        <el-form-item label="专栏简介" prop="introduction">
-          <el-input v-model="columnForm.introduction" placeholder="1-45个字"></el-input>
+          <el-input v-model="columnForm.subTitle" placeholder="1-30字，建议14字以内" :maxlength="30"></el-input>
         </el-form-item>
         <el-form-item label="课程封面">
           <el-upload
@@ -150,7 +147,7 @@
             <img v-if="columnForm.coverList[0]" :src="columnForm.coverList[0]" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             <el-button size="small" type="primary">{{columnForm.coverList[0] ? '修改文件' : '选择文件'}}</el-button>
-            <div slot="tip" class="el-upload__tip">750*560,支持jpg、png、gif格式,最大5M</div>
+            <div slot="tip" class="el-upload__tip">750*544,支持jpg、png、gif格式,最大5M</div>
           </el-upload>
           <el-upload
             class="avatar-uploader"
@@ -162,21 +159,21 @@
             <img v-if="columnForm.coverList[1]" :src="columnForm.coverList[1]" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             <el-button size="small" type="primary">{{columnForm.coverList[1] ? '修改文件' : '选择文件'}}</el-button>
-            <div slot="tip" class="el-upload__tip">750*xxx,支持jpg、png、gif格式,最大5M</div>
+            <div slot="tip" class="el-upload__tip">360*468,支持jpg、png、gif格式,最大5M</div>
           </el-upload>
         </el-form-item>
         <el-form-item label="专栏详情" prop="detail">
           <quill-editor v-model="columnForm.detail"></quill-editor>
         </el-form-item>
         <el-form-item label="课程期数" prop="courseNum">
-          <el-col :span="4">
-            <el-input v-model="columnForm.courseNum">
+          <el-col :span="6">
+            <el-input v-model="columnForm.courseNum" placeholder="1-999" :maxlength="3">
               <template slot="append">期</template>
             </el-input>
           </el-col>
         </el-form-item>
         <el-form-item label="讲师" prop="lecturerId">
-          <el-col :span="4">
+          <el-col :span="6">
             <el-select
               v-model="columnForm.lecturerId"
               filterable
@@ -195,15 +192,15 @@
           </el-col>
         </el-form-item>
         <el-form-item label="专栏价格" prop="price">
-          <el-col :span="4">
-            <el-input v-model="columnForm.price">
+          <el-col :span="6">
+            <el-input v-model="columnFormPrice" placeholder="0.00-99999.99">
               <template slot="append">元</template>
             </el-input>
           </el-col>
         </el-form-item>
         <el-form-item label="讲师抽成" prop="rate">
-          <el-col :span="4">
-            <el-input v-model="columnForm.rate">
+          <el-col :span="6">
+            <el-input v-model="columnFormRate" placeholder="0.00-100.00">
               <template slot="append">%</template>
             </el-input>
           </el-col>
@@ -446,11 +443,11 @@
         rules: {
           title: [
             {required: true, message: '请输入专栏标题', trigger: 'blur'},
-            {min: 1, max: 45, message: '长度在 1 到 45 个字', trigger: 'blur'}
+            {min: 1, max: 30, message: '长度在 1 到 30 个字', trigger: 'blur'}
           ],
-          introduction: [
-            {required: true, message: '请输入专栏简介', trigger: 'blur'},
-            {min: 1, max: 200, message: '长度在 1 到 200 个字', trigger: 'blur'}
+          subTitle: [
+            {required: true, message: '请输入专栏副标题', trigger: 'blur'},
+            {min: 1, max: 30, message: '长度在 1 到 30 个字', trigger: 'blur'}
           ],
           detail: [
             {required: true, message: '请输入专栏详情', trigger: 'blur'},
@@ -499,6 +496,24 @@
           subCourses: [], //临时集合
           courses: []
         },
+      }
+    },
+    computed: {
+      columnFormPrice: {
+        get: function () {
+          return this.columnForm.price / 100 || ''
+        },
+        set: function (newValue) {
+          this.columnForm.price = newValue * 100
+        },
+      },
+      columnFormRate: {
+        get: function () {
+          return this.columnForm.rate / 100 || ''
+        },
+        set: function (newValue) {
+          this.columnForm.rate = newValue * 100
+        }
       }
     },
     created() {
@@ -611,7 +626,7 @@
 
       handleSelectionChange(val) {
         this.linkForm.courses = val;
-    },
+      },
 
       //分页查询课程信息
       getLinkCourseData() {

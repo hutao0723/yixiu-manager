@@ -109,7 +109,7 @@
         <el-form ref="typeName" :model="changeForm" >
           <el-form-item label="类型名称" :label-width="formLabelWidth" prop="typeId">
             <el-select v-model="showTypeName" value-key="id" filterable placeholder="请选择" style="width:100%">
-              <el-option v-for="(item, index)  in typeList" :key="item.id" :label="item.typeName" :value="index"></el-option>
+              <el-option v-for="(item, index)  in typeList" :key="item.id" :label="item.name" :value="index"></el-option>
             </el-select>
           </el-form-item>
         </el-form>
@@ -286,7 +286,12 @@ export default {
       this.changeForm.id = row.id
       this.appId = row.appId
       let id = this.changeForm.id
-      this.$http.get('/wxAuthorizerExt/getByAuthorizerId', {id}).then(res => {
+      let params = {
+        modelType: 1,
+        authorizerId: id
+      }
+      this.showTypeName = ''
+      this.$http.get('/content/type/band/info', {params}).then(res => {
         let resp = res.data
         if (resp.success) {
           if(resp.data){
@@ -303,12 +308,19 @@ export default {
     },
     // 获取全部小程序的类型
     getTypeList(){
-      this.$http.get('/content/type/select', {}).then(res => {
+      let params = {
+        modelType:1
+      }
+      this.$http.get('/content/type/appType/all', {params}).then(res => {
         let resp = res.data
         if (resp.success) {
           if(resp.data){
             this.typeList  = resp.data
-            let checkObj = {id: 0, typeName: "请选择"}
+            let checkObj = {
+              "id": 0, 
+              "name": "请选择",
+              "parentId": 0,
+              "modelType": 1}
             this.typeList.unshift(checkObj)
           }
         } else {

@@ -177,6 +177,18 @@ var setOnline = [
     name: 'save',
     type: 'post',
     url: '/content/type/band'
+  },
+  // 获取单个小程序绑定的小程序类型
+  {
+    name: 'bandInfo',
+    type: 'get',
+    url: '/content/type/band/info'
+  },
+  // 获取全部列表
+  {
+    name: 'selectType',
+    type: 'get',
+    url: '/content/type/appType/all'
   }
 ];
 var fs = require('fs');

@@ -1,13 +1,25 @@
 <template>
       <div class="module-item" @click="changeDeploy">
-        <div class="module-content" v-bind:style="{ height: moduleForm.height + 'px', lineHeight: moduleForm.height + 'px' }">
+        <div class="module-content" 
+        v-bind:style="{ 
+          height: moduleForm.blankHeight / 2 + 'px', 
+          lineHeight: moduleForm.blankHeight / 2 + 'px',
+          width: 375 - moduleForm.blankWidth + 'px',
+          backgroundColor: moduleForm.blankFillColor?moduleForm.blankFillColor:none,
+        }">
           空白
         </div>
         <div class="module-deploy" v-show="deployToggle == moduleIndex">
           <h2 class="module-deploy-title">空白</h2>
           <el-form ref="moduleForm" :model="moduleForm" label-width="80px">
-            <el-form-item label="空白距离">
-              <el-slider v-model="moduleForm.height"></el-slider>
+            <el-form-item label="空白高度">
+              <el-input v-model="moduleForm.blankHeight" size="small" class="w200"></el-input> px
+            </el-form-item>
+            <el-form-item label="内边距">
+              <el-input v-model="moduleForm.blankWidth" size="small" class="w200"></el-input> px
+            </el-form-item>
+            <el-form-item label="背景颜色">
+              <el-color-picker v-model="moduleForm.blankFillColor"></el-color-picker>
             </el-form-item>
           </el-form>
         </div>
@@ -33,8 +45,7 @@
 <style lang="less" scoped>
     @import "../../../styles/components/knowledge.less";
     .module-content{
-    height: 200px;
-    line-height: 200px;
+    margin: 0 auto;
     text-align: center;
   }
 </style>

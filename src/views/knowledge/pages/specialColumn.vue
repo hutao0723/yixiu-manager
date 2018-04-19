@@ -539,7 +539,7 @@
         this.columnForm.id = id;
         getColumn({id}).then(res => {
           if (res.success) {
-            this.columnForm = Object.assign({}, res.data);
+            this.columnForm = Object.assign({},this.columnForm,res.data);
             this.pageType = 2; //1 新增 2 编辑
           } else {
             let msg = res.desc || '获取课程内容失败'
@@ -827,23 +827,28 @@
         image.src = 'https:' + res.data.fileUrl;
         image.onload = function () {
           const width = image.width;
-          if (width != 750) {
-            self.columnForm.coverList.unshift('https:' + res.data.fileUrl);
+          const height = image.height;
+          if (width == 750 && height == 545) {
+            self.columnForm.coverList = ['https:' + res.data.fileUrl, ...self.courseForm.coverList]
           } else {
-            self.$message.error('上传图片的宽度必须为 750px!')
+            self.$message.error('上传图片的尺寸必须为 750*545!')
           }
         };
+
+
+
       },
       secondSuccess(res, file) {
         const self = this;
         const image = new Image();
-        image.src = 'https:' + res.data.fileUrl;
         image.onload = function () {
           const width = image.width;
-          if (width != 750) {
-            self.columnForm.coverList.push('https:' + res.data.fileUrl);
+          const height = image.height;
+
+          if (width == 360 && height ==484) {
+            self.columnForm.coverList = [...self.courseForm.coverList,'https:' + res.data.fileUrl]
           } else {
-            self.$message.error('上传图片的宽度必须为 750px!')
+            self.$message.error('上传图片的尺寸必须为 360*484!')
           }
         };
       },

@@ -124,9 +124,9 @@
             :show-file-list=false
             :on-success="firstSuccess"
             :before-upload="beforeAvatarUpload">
-            <img v-if="courseForm.coverList[0]" :src="courseForm.coverList[0]" class="avatar">
+            <img v-if="courseForm.coverList" :src="courseForm.coverList[0]" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            <el-button size="small" type="primary">{{courseForm.coverList[0] ? '修改文件' : '选择文件'}}</el-button>
+            <el-button size="small" type="primary">{{courseForm.coverList && courseForm.coverList[0] ? '修改文件' : '选择文件'}}</el-button>
             <div slot="tip" class="el-upload__tip">750*545,支持jpg、png、gif格式,最大5M</div>
           </el-upload>
           <el-upload
@@ -136,9 +136,9 @@
             :show-file-list=false
             :on-success="secondSuccess"
             :before-upload="beforeAvatarUpload">
-            <img v-if="courseForm.coverList[1]" :src="courseForm.coverList[1]" class="avatar">
+            <img v-if="courseForm.coverList" :src="courseForm.coverList[1]" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            <el-button size="small" type="primary">{{courseForm.coverList[1] ? '修改文件' : '选择文件'}}</el-button>
+            <el-button size="small" type="primary">{{courseForm.coverList && courseForm.coverList[1] ? '修改文件' : '选择文件'}}</el-button>
             <div slot="tip" class="el-upload__tip">360*484,支持jpg、png、gif格式,最大5M</div>
           </el-upload>
         </el-form-item>
@@ -471,7 +471,6 @@
 
       getLecturerList(nickName) {
         this.loading = true;
-
         lecturerList({
           nickName
         }).then(res => {
@@ -493,7 +492,7 @@
 
         getCourse({id}).then(res => {
           if (res.success) {
-            this.courseForm = Object.assign({}, res.data);
+            this.courseForm = Object.assign({}, this.courseForm,res.data);
             this.fileText = this.courseForm.uploadFile.name || ''
             this.getDirectTransmission();
             this.pageType = 2; //1 新增 2 编辑
@@ -597,10 +596,11 @@
         image.src = 'https:' + res.data.fileUrl;
         image.onload = function () {
           const width = image.width;
-          if (width != 750) {
-            self.courseForm.coverList.unshift('https:' + res.data.fileUrl);
+          const height = image.height;
+          if (width == 750 && height == 545) {
+          self.courseForm.coverList = ['https:' + res.data.fileUrl, ...self.courseForm.coverList]
           } else {
-            self.$message.error('上传图片的宽度必须为 750px!')
+            self.$message.error('上传图片的尺寸必须为 750*545!')
           }
         };
       },
@@ -611,10 +611,12 @@
         image.src = 'https:' + res.data.fileUrl;
         image.onload = function () {
           const width = image.width;
-          if (width != 750) {
-            self.courseForm.coverList.push('https:' + res.data.fileUrl);
+          const height = image.height;
+
+          if (width == 360 && height ==484) {
+          self.courseForm.coverList = [...self.courseForm.coverList,'https:' + res.data.fileUrl]
           } else {
-            self.$message.error('上传图片的宽度必须为 750px!')
+            self.$message.error('上传图片的尺寸必须为 360*484!')
           }
         };
       },

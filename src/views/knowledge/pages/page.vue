@@ -7,14 +7,14 @@
     </el-row>
     <el-row class="home-page mt10" v-show="homePage.pageTitle">
       <el-col :span="6">
-        <img :src="appId.headImg" alt="" class="home-page-header">
+        <!-- <img :src="appId.headImg" alt="" class="home-page-header"> -->
         <span class="" v-text="homePage.pageTitle"></span>
       </el-col>
       <el-col :span="6">
         <span class="" v-text="homePage.gmtCreate"></span>
       </el-col>
       <el-col :span="6">‘
-        <router-link :to="{ path: '/manager/knowledge/add'+homePage.id}">
+        <router-link :to="{ path:'/manager/knowledge/add?id=' + homePage.id + '&authorizerId=' + this.appId}">
           <el-button type="text" size="mini">编辑</el-button>
         </router-link>
       </el-col>
@@ -105,8 +105,8 @@
         })
       },
       changeAppId(item) {
-        this.appId = item;
         console.log(item)
+        this.appId = item;
         this.getAppList();
       },
       getWechatList() {

@@ -12,7 +12,9 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '*': {
-        target: '',
+        target: 'http://172.31.50.240:9101/',
+        // target: 'http://172.31.20.47:9101/',
+        // target: 'http://localhost:3000/',
         secure: false,
         changeOrigin: true
       }

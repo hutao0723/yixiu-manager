@@ -23,7 +23,9 @@
   background-color: #d3dce6;
 }
 
-
+.el-aside, .el-main{
+  overflow: scroll;
+}
 /* .module-item {
   position: relative;
   border: 1px solid #e5e5e5;
@@ -41,16 +43,20 @@
   position: relative;
   .module-item {
     position: relative;
+    margin-bottom: 1px;
     .module-btn {
       position: absolute;
       z-index: 5;
-      font-size: 0;
-      line-height: 0;
+      // font-size: 0;
+      line-height: 20px;
+      text-align: center;
+      font-size: 18px;
       width: 20px;
       height: 20px;
-      background: #38f;
+      // background: #38f;
       cursor: pointer;
       display: none;
+      background: #fff;
     }
     .module-add {
       right: 50%;
@@ -62,12 +68,25 @@
       top: -10px;
     }
   }
+  .module-item::before:hover {
+    display: block;
+    .module-add {
+      display: block;
+    }
+    .module-close {
+      display: block;
+    }
+  }
   .module-item:hover {
     display: block;
     .module-add {
       display: block;
     }
     .module-close {
+      display: block;
+    }
+    .module-content::before {
+      border: 1px dashed #38f;
       display: block;
     }
   }
@@ -78,6 +97,14 @@
       height: 75px;
       background-image: url(https://img.yzcdn.cn/public_files/2017/12/15/c16b686fda5bc8b2c607f8c64edbef6c.png);
       background-size: 375px 75px;
+      p{
+        line-height: 50px;
+        height: 50px;
+        font-size: 16px;
+        padding-top: 25px;
+        color: #fff;
+        text-align: center;
+      }
     }
   }
   .module-content::before {
@@ -122,6 +149,10 @@
       border-radius: 5px;
       background: #fff;
       margin-bottom: 10px;
+      position: relative;
+    }
+    .shop-list:hover .shop-close{
+      display: block;
     }
     .shop-add {
       height: 40px;
@@ -130,6 +161,17 @@
       border-radius: 5px;
       background: #fff;
       text-align: center;
+      cursor: pointer;
+    }
+    .shop-close {
+      height: 40px;
+      line-height: 40px;
+      width: 40px;
+      position: absolute;
+      top: 0;
+      right: 0;
+      text-align: center;
+      display: none;
       cursor: pointer;
     }
     .module-deploy-item {

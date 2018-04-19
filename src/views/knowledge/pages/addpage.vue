@@ -58,9 +58,9 @@
           id: null,
           components: [],
           pageTitle: "页面标题",
-          shareDescribe: "页面分享说明",
-          sharePictureUrl: "www.hao123.com",
-          backgroundColor: "#fff",
+          shareDescribe: "页面描述内容",
+          sharePictureUrl: "",
+          backgroundColor: "",
         },
         boxList: [
           
@@ -72,13 +72,13 @@
     filters: {
     },
     created() {
+
       this.editId = this.$route.query.id ? this.$route.query.id : null;
       this.authorizerId = this.$route.query.authorizerId ? this.$route.query.authorizerId : null;
       
       if (this.editId) {
         this.$http.get('/knowledgepage/component/detail', { params: { id: this.editId } }).then(res => {
           if (res.data.data) {
-            console.log(1, res.data.data)
             this.boxData = res.data.data;
 
             this.boxList = res.data.data.components;
@@ -97,7 +97,6 @@
                 })
               }
             })
-            console.log(2, this.boxList)
           } else {
             let msg = res.data.desc || "保存失败"
             this.$message.error(msg)
@@ -139,7 +138,7 @@
           case 'TITLE':
             obj = {
               "componentType": "TITLE",
-              "titleName": "测试标题",
+              "titleName": "标题",
               "showTitle": true,
               "linkType": 0,
               "linkDataJson": {},
@@ -153,7 +152,6 @@
               "fillType": "widthFix",
               "layout": "MAX",
               "tabs": [
-
               ]
             }
             break;
@@ -169,8 +167,8 @@
             obj = {
               "componentType": "BLANK",
               "blankHeight": 50,
-              "blankWidth": 70,
-              "blankFillColor": "#FFF"
+              "blankWidth": 0,
+              "blankFillColor": ""
             }
             break;
           default:
@@ -179,7 +177,7 @@
         this.boxList.splice(this.modulePosition, 0, obj);
         this.deployToggle = this.modulePosition;
 
-        console.log(this.boxList)
+        console.log(this.$refs)
 
 
       },

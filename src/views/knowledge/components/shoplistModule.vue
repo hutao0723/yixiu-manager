@@ -71,13 +71,13 @@
         <el-form-item label="商品组">
           <div class="shop">
             <div class="shop-list" v-for="(item,index) in moduleForm.tabs">
-              <el-form :model="item" label-width="80px">
+              <el-form :model="item" label-width="80px" :rules="rulesForm" ref="moduleForm">
                 <el-form-item label="商品来源">
                   <el-input v-model="item.linkDataJson.goodsGroupName" size="small" disabled class="w200">
                     <el-button slot="append" icon="el-icon-edit" @click="showDialogGoods(index)"></el-button>
                   </el-input>
                 </el-form-item>
-                <el-form-item label="分组名称">
+                <el-form-item label="分组名称" prop="groupName">
                   <el-input v-model="item.groupName" size="small" class="w200"></el-input>
                 </el-form-item>
                 <el-form-item label="显示个数">
@@ -189,6 +189,12 @@
         },
         totalSize: 0,
         goodsTitle: '',
+        rulesForm: {
+          groupName: [
+            { required: true, message: '请输入分组名称', trigger: 'change' },
+            { min: 1, max: 10, message: '长度在 1 到 10 个字符', trigger: 'change' }
+          ],
+        }
       }
     },
     props: ['deployToggle', 'moduleForm', 'moduleIndex'],
@@ -203,12 +209,14 @@
         console.log(this.selectIndex)
         if (this.selectIndex> -1) {
           this.moduleForm.tabs[this.selectIndex].linkDataJson = this.selectValue;
+          this.moduleForm.tabs[this.selectIndex].goodsGroupId = this.selectValue.id;
+          this.moduleForm.tabs[this.selectIndex].groupName = this.selectValue.goodsGroupName;
           this.$set(this.moduleForm.tabs, this.selectIndex, this.moduleForm.tabs[this.selectIndex])
         } else {
           let obj = {
             "goodsGroupId": this.moduleForm.tabs.length + 1,
-            "groupName": "最新修改  1",
-            "showLimitNumber": "10",
+            "groupName": this.selectValue.goodsGroupName,
+            "showLimitNumber": 3,
             "linkType": 1,
             "linkDataJson": this.selectValue,
           };

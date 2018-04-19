@@ -10,20 +10,18 @@
     </div>
     <div class="module-deploy" v-show="deployToggle == moduleIndex">
       <h2 class="module-deploy-title">标题</h2>
-      <el-form ref="moduleForm" :model="moduleForm" label-width="100px">
-          <el-form-item label="外链地址">
+      <el-form ref="moduleForm" :rules="rulesForm" :model="moduleForm" label-width="100px">
+          <el-form-item label="外链地址" prop="layout">
               <el-radio-group v-model="moduleForm.layout">
                 <el-radio label="BASE">左右</el-radio>
                 <el-radio label="CENTER">居中</el-radio>
               </el-radio-group>
             </el-form-item>
-        <el-form-item label="标题栏">
+        <el-form-item label="标题名称" prop="titleName">
           <el-input v-model="moduleForm.titleName" size="small"></el-input>
         </el-form-item>
-        <el-form-item label="展示类型">
-          <el-checkbox v-model="moduleForm.showTitle" :checked="moduleForm.showTitle">
+        <el-form-item label="查看更多" prop="subTitle">
             <el-input v-model="moduleForm.subTitle" size="small"></el-input>
-          </el-checkbox>
         </el-form-item>
         <el-form-item label="跳转类型">
           <el-select v-model="moduleForm.linkType" placeholder="请选择" size="small">
@@ -64,7 +62,6 @@
         <el-table-column label="商品信息">
           <template slot-scope="scope">
             <div class="list-goods otw">
-              <img :src="scope.row.frontCover" alt="">
               <span>{{scope.row.title}}</span>
             </div>
           </template>
@@ -85,7 +82,7 @@
       </span>
     </el-dialog>
 
-    <el-dialog title="外链" :visible.sync="dialogHref">
+    <el-dialog title="外链" :visible.sync="dialogHref" v-if="selectValue">
       <el-form>
         <el-form-item label="外链地址" label-width="100px">
           <el-input v-model="selectValue.linkUrl"></el-input>
@@ -98,7 +95,7 @@
         <el-button type="primary" @click="selectOver" size="small">确 定</el-button>
       </div>
     </el-dialog>
-    <el-dialog title="小程序" :visible.sync="dialogWechat">
+    <el-dialog title="小程序" :visible.sync="dialogWechat" v-if="selectValue">
       <el-form>
         <el-form-item label="外链地址" label-width="100px">
           <el-radio-group v-model="selectValue.courseType">
@@ -106,9 +103,9 @@
             <el-radio :label="2">外部小程序</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="AppId" label-width="100px" v-show="selectValue.wechatType == 2">
+        <el-form-item label="AppId" label-width="100px" v-show="selectValue.courseType == 2">
           <el-input v-model="selectValue.appId"></el-input>
-        </el-form-item>
+        </el-form-item v-if="selectValue.linkUrl">
         <el-form-item label="路径" label-width="100px">
           <el-input v-model="selectValue.linkUrl"></el-input>
         </el-form-item>
@@ -143,6 +140,14 @@
         },
         totalSize: 0,
         goodsTitle: '',
+        rulesForm: {
+          titleName: [
+            { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'change' }
+          ],
+          subTitle: [
+            { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'change' }
+          ],
+        },
       }
     },
     
@@ -155,17 +160,14 @@
       },
       selectOver() {
         this.moduleForm.linkDataJson = this.selectValue;
-        console.log(this.moduleForm.tabs)
         this.dialogGoods = false;
         this.dialogHref = false;
         this.dialogWechat = false;
       },
       handleCurrentChange(row) {
-        console.log(row)
         this.selectValue = row;
       },
       getShopList() {
-        console.log(1)
         let url = this.goodsActiveName == 0 ? api.courseList : api.columnList;
         let params = {
           title: this.goodsTitle ? this.goodsTitle : '',
@@ -175,7 +177,6 @@
         this.$http.get(url, { params: params }).then(res => {
           let resp = res.data
           if (resp.success) {
-            console.log(1,resp.data.content)
             this.appList = resp.data.content
             this.totalSize = resp.data.totalElements
           } else {
@@ -190,20 +191,27 @@
       },
       showDialogGoods() {
         this.selectValue = {};
+        this.goodsTitle = "";
         this.getShopList();
         this.dialogGoods = true;
       },
       showDialogHref() {
         this.dialogHref = true;
-        this.selectValue = this.moduleForm.linkDataJson;
+        this.selectValue = {
+          linkUrl: "",
+        }
       },
       showDialogWechat() {
         this.dialogWechat = true;
-        this.selectValue = this.moduleForm.linkDataJson;
+        this.selectValue = {
+          appId: "",
+          linkUrl: "",
+          courseType: 1,
+        };
       },
     },
     created() {
-      console.log(this.moduleForm)
+      console.log(this.$refs)
     },
 
   }
@@ -241,8 +249,8 @@
 
   .list-goods {
     position: relative;
-    padding-left: 60px;
-    padding-right: 10px;
+    // padding-left: 60px;
+    // padding-right: 10px;
     height: 50px;
     img {
       vertical-align: middle;

@@ -1,5 +1,6 @@
 <template>
   <section class="ofa-main-wrap" v-loading="loading">
+    <audio controls="true" style="display: none;" :src="fileSrc"/>
     <div class="title-wrap">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item><span @click="pageType = 0">课程</span></el-breadcrumb-item>
@@ -61,7 +62,7 @@
             </el-table-column>
             <el-table-column prop="price" label="课程价格">
               <template slot-scope="scope">
-                {{scope.row.price/100}}
+                {{scope.row.price / 100}}
               </template>
             </el-table-column>
             <el-table-column prop="status" label="课程状态" :formatter="getStatus"></el-table-column>
@@ -203,7 +204,6 @@
         </el-form-item>
       </el-form>
     </div>
-    <!--<audio  style="display: none" id="audio" src="http://yun.youfen666.com/knowledge/1524052062545?auth_key=1524056935-0-0-388d8db7f2f3bf006480f8be441f6a57" />-->
   </section>
 </template>
 <script>
@@ -222,7 +222,8 @@
     pageListCourse,
     updateStatusCourse,
     lecturerList,
-    getDirectTransmissionSign
+    getDirectTransmissionSign,
+    getCdnFileUrl
   } from '@/api/index'
 
   export default {
@@ -343,11 +344,12 @@
           price: null,
           uploadFile: {},
           lecturerId: null,
-          lecturerName:null,
+          lecturerName: null,
           publishTime: null,
           rate: null
         },
-        fileText:null
+        fileText: null,
+        fileSrc: null
       }
     },
 
@@ -386,9 +388,17 @@
       },
     },
     created() {
-      this.getData()
+      this.getData();
     },
     methods: {
+      getAudioLength() {
+        const myAudio = document.getElementsByTagName('audio')[0];
+        myAudio.addEventListener("canplay", function () {
+            this.courseForm.timeLength = Math.round(myAudio.duration);
+            console.log(myAudio.duration);
+          }.bind(this)
+        );
+      },
 
       //上下线
       changeStatus(id, changeStatus) {
@@ -445,7 +455,6 @@
         [this.courseSearchForm.id, this.courseSearchForm.title] = this.courseSearchForm.selectType == 'id' ? [this.courseSearchForm.searchValue, ''] : ['', this.courseSearchForm.searchValue];
         [this.courseSearchForm.lecturerNickName, this.courseSearchForm.lecturerId] = this.courseSearchForm.searchTeacherType == 'lecturerId' ? ['', this.courseSearchForm.lecturerValue] : [this.courseSearchForm.lecturerValue, ''];
         this.loading = true;
-
         pageListCourse(this.courseSearchForm).then(res => {
           if (res.success) {
             this.courseList = res.data.content;
@@ -635,28 +644,25 @@
 
             uploader.init();
             uploader.bind('FilesAdded', function (upload, files) {
-              if(files[files.length-1].type!="audio/mp3" && files[files.length-1].type!="audio/m4a"){
+              if (files[files.length - 1].type != "audio/mp3" && files[files.length - 1].type != "audio/m4a") {
                 self.$message.error("请上传mp3或者m4a格式文件");
-                uploader.removeFile( files );
+                uploader.removeFile(files);
                 return false
               }
-              self.courseForm.timeLength = '100' ;  //假数据
-              self.fileText = files[files.length-1].name;
-              self.courseForm.uploadFile.name = files[files.length-1].name;
+              self.courseForm.timeLength = '100';  //假数据
+              self.fileText = files[files.length - 1].name;
+              self.courseForm.uploadFile.name = files[files.length - 1].name;
               self.courseForm.uploadFile.url = uploader.settings.multipart_params.key;
             });
-            uploader.bind('uploadProgress', function (uploader, files) {
+            uploader.bind('uploadProgress', function (upload, files) {
               self.fileText = `已完成${files.percent}%`;
             });
-            uploader.bind('UploadComplete', function (uploader, files) {
-              self.fileText = files[files.length-1].name;
-              self.courseForm.uploadFile.name = files[files.length-1].name;
-//              myVid=document.getElementById("audio");
-//              myVid.addEventListener("canplay", function()
-//                {
-//                  alert(myVid.duration);
-//                }
-//              );
+            uploader.bind('UploadComplete', function (upload, files) {
+              const key = uploader.settings.multipart_params.key;
+              ;
+              self.fileText = files[files.length - 1].name;
+              self.courseForm.uploadFile.name = files[files.length - 1].name;
+              self.getCdnFileUrlFc(key);
             });
             document.getElementById('start_upload').onclick = function () {
               uploader.start();
@@ -668,7 +674,21 @@
         }).catch(() => {
           this.$message.error('网络错误')
         })
-      }
+      },
+      getCdnFileUrlFc(fileKey) {
+        getCdnFileUrl({
+          fileKey
+        }).then(res => {
+          if (res.success) {
+            this.fileSrc = res.data;
+            this.getAudioLength();
+          } else {
+            let msg = res.desc || '请求失败'
+            this.$message.error(msg)
+          }
+        }).catch(() => {
+        })
+      },
     }
   }
 

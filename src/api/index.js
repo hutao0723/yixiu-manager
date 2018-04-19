@@ -59,4 +59,6 @@ export const lecturerList = params => get('lecturer/getList', params);
  */
 //获取文件上传的签名信息
 export const getDirectTransmissionSign = params => get('upload/getDirectTransmissionSign', params);
+export const getCdnFileUrl = params => get('upload/getCdnFileUrl', params);
+
 

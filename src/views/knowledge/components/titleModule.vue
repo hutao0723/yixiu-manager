@@ -7,14 +7,14 @@
     </div>
     <div class="module-deploy" v-show="deployToggle == moduleIndex">
       <h2 class="module-deploy-title">标题</h2>
-      <el-form ref="moduleForm" :model="moduleForm" label-width="80px">
-        <el-form-item label="页面标题">
+      <el-form ref="moduleForm" :rules="rulesForm" :model="moduleForm" label-width="80px">
+        <el-form-item label="页面标题" prop="pageTitle">
           <el-input v-model="moduleForm.pageTitle"></el-input>
         </el-form-item>
-        <el-form-item label="页面描述">
+        <el-form-item label="页面描述" prop="shareDescribe">
           <el-input v-model="moduleForm.shareDescribe"></el-input>
         </el-form-item>
-        <el-form-item label="页面图片">
+        <el-form-item label="页面图片" prop="sharePictureUrl">
           <img :src="moduleForm.sharePictureUrl" alt="" v-show="moduleForm.sharePictureUrl" class="module-deploy-img">
           <el-upload class="upload-demo" action="/upload/image" :on-success="submitImage" name="imageFile" :before-upload="beforeImage"
             :show-file-list="false">
@@ -22,7 +22,7 @@
             <div slot="tip" class="el-upload__tip">只能上传jpeg/jpg/png文件，且不超过2m。</div>
           </el-upload>
         </el-form-item>
-        <el-form-item label="背景颜色">
+        <el-form-item label="背景颜色" prop="backgroundColor">
           <el-color-picker v-model="moduleForm.backgroundColor"></el-color-picker>
         </el-form-item>
       </el-form>
@@ -35,6 +35,15 @@
   export default {
     data() {
       return {
+        rulesForm: {
+          pageTitle: [
+            { required: true, message: '请输入页面标题', trigger: 'change' },
+            { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'change' }
+          ],
+          shareDescribe: [
+            { min: 1, max: 35, message: '长度在 1 到 35 个字符', trigger: 'change' }
+          ],
+        }
       }
     },
     props: ['deployToggle', 'moduleForm', 'moduleIndex'],

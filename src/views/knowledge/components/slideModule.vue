@@ -21,7 +21,7 @@
             <el-radio label="aspectFit">自适应宽度x固定高度</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="图片链接">
+        <el-form-item label="图片链接" v-show="moduleForm.tabs.length>0">
           <div class="shop">
             <div class="shop-list" v-for="(item,index) in moduleForm.tabs" :key="index" v-dragging="{ item: item, list: moduleForm.subEntry, group: 'item' }">
               <el-form :model="item" label-width="100px">
@@ -70,7 +70,7 @@
 
 
 
-    <el-dialog title="商品" :visible.sync="dialogGoods">
+    <el-dialog title="商品" :visible.sync="dialogGoods" v-if="selectValue">
       <el-tabs v-model="goodsActiveName" @tab-click="getAppList">
         <el-tab-pane label="课程" name="0"></el-tab-pane>
         <el-tab-pane label="专栏" name="1"></el-tab-pane>
@@ -105,7 +105,7 @@
       </span>
     </el-dialog>
 
-    <el-dialog title="外链" :visible.sync="dialogHref">
+    <el-dialog title="外链" :visible.sync="dialogHref" v-if="selectValue">
       <el-form>
         <el-form-item label="外链地址" label-width="100px">
           <el-input v-model="selectValue.linkUrl"></el-input>
@@ -118,15 +118,15 @@
         <el-button type="primary" @click="selectOver" size="small">确 定</el-button>
       </div>
     </el-dialog>
-    <el-dialog title="小程序" :visible.sync="dialogWechat">
+    <el-dialog title="小程序" :visible.sync="dialogWechat" v-if="selectValue">
       <el-form>
         <el-form-item label="外链地址" label-width="100px">
-          <el-radio-group v-model="selectValue.wechatType">
+          <el-radio-group v-model="selectValue.courseType">
             <el-radio :label="1">我的小程序</el-radio>
             <el-radio :label="2">外部小程序</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="AppId" label-width="100px" v-show="selectValue.wechatType == 2">
+        <el-form-item label="AppId" label-width="100px" v-show="selectValue.courseType == 2">
           <el-input v-model="selectValue.appId"></el-input>
         </el-form-item>
         <el-form-item label="路径" label-width="100px">
@@ -179,17 +179,20 @@
         console.log(file)
         const isJPG = file.type === 'image/jpg' || file.type === 'image/png' || file.type === 'image/jpeg';
         const isLt2M = file.size / 1024 < 2048;
+        const isIMGLENGTH = this.moduleForm.tabs.length < 10;
         if (!isJPG) {
           this.$message.error('上传图片只能是 jpeg/jpg/png 格式!');
         }
         if (!isLt2M) {
           this.$message.error('上传图片大小不能超过 2M!');
         }
-        return isJPG && isLt2M;
+        if(!isIMGLENGTH){
+          this.$message.error('最多上传10张图片!');
+        }
+        return isJPG && isLt2M && isIMGLENGTH;
       },
       // 上传图片
       submitImage(res, file, fileList) {
-        console.log(res.data.fileUrl)
         if (res.success) {
           let obj = {
             "pictureUrl": res.data.fileUrl,
@@ -249,12 +252,18 @@
       },
       showDialogHref(index) {
         this.dialogHref = true;
-        this.selectValue = this.moduleForm.tabs[index].linkDataJson;
+        this.selectValue = {
+          linkUrl: "",
+        }
         this.selectIndex = index;
       },
       showDialogWechat(index) {
         this.dialogWechat = true;
-        this.selectValue = this.moduleForm.tabs[index].linkDataJson;
+        this.selectValue = {
+          appId: "",
+          linkUrl: "",
+          courseType: 1,
+        };
         this.selectIndex = index;
       },
     },

@@ -91,12 +91,13 @@
         <div class="course-title  mb10 ">课程内容</div>
         <el-form-item label="课程类型" prop="courseType" :formatter="getCourseType">
           <el-col :span="4">
-            <el-select v-model="courseForm.courseType" filterable placeholder="请选择">
+            <el-select v-model="courseForm.courseType" filterable placeholder="请选择" :disabled="pageType==2">
               <el-option
                 v-for="item in courseTypeOptions"
                 :key="item.value"
                 :label="item.label"
-                :value="item.value">
+                :value="item.value"
+              >
               </el-option>
             </el-select>
           </el-col>
@@ -106,7 +107,6 @@
             <div class="file-container">{{fileText}}</div>
             <el-button size="small" type="primary" id="selectfiles">选择文件</el-button>
             <div slot="tip" class="el-upload__tip">支持mp3、m4a格式，最大500M</div>
-            <el-button size="small" type="primary" id="start_upload">点击上传</el-button>
           </div>
         </el-form-item>
         <div class="course-title  mb10 ">基本信息</div>
@@ -147,7 +147,7 @@
         </el-form-item>
         <el-form-item label="试听时长" prop="freeTime">
           <el-col :span="6">
-            <el-input v-model="courseForm.freeTime">
+            <el-input v-model="courseForm.freeTime" type="number">
               <template slot="append">秒</template>
             </el-input>
             <div class="totle-time" v-if="courseForm.timeLength">总长{{audioTimeLength}}</div>
@@ -162,6 +162,7 @@
               reserve-keyword
               placeholder="请输入关键词"
               :remote-method="getLecturerList"
+              :disabled="pageType==2"
             >
               <el-option
                 v-for="item in lecturerOptions"
@@ -231,6 +232,14 @@
       quillEditor
     },
     data() {
+//      var maxFreeTime = (rule, value, callback) => {
+//        console.log(value>800)
+//        if(value>800){
+//          callback(new Error('最大值为800'));
+//        }
+//      };
+
+
       return {
         loading: false,
         directTransmissionSign: null, //上传签名
@@ -316,7 +325,8 @@
             {min: 1, max: 30, message: '长度在 1 到 30 个字', trigger: 'blur'}
           ],
           freeTime: [
-            {required: true, message: '请输入试听时长', trigger: 'blur'}
+            {required: true, message: '请输入试听时长', trigger: 'blur'},
+//            {validator: maxFreeTime, trigger: 'blur' }
           ],
           lecturerId: [
             {required: true, message: '请选择讲师', trigger: 'change'}
@@ -339,7 +349,7 @@
           courseType: null,
           coverList: [],
           detail: null,
-          freeTime: null,
+          freeTime: 120,
           timeLength: null,
           price: null,
           uploadFile: {},
@@ -364,7 +374,7 @@
       },
       courseFormPrice: {
         get: function () {
-          return this.courseForm.price / 100 || ''
+          return this.courseForm.price / 100 || 0
         },
         set: function (newValue) {
           this.courseForm.price = newValue * 100
@@ -513,7 +523,9 @@
             if (this.courseForm.id) {
               updateCourse(this.courseForm).then(res => {
                 if (res.success) {
-                  this.$message.success('修改成功')
+                  this.$message.success('修改成功');
+                  this.clearCourseSearchForm();
+                  this.getData();
                   this.pageType = 0;
                 } else {
                   let msg = res.desc || '请求失败'
@@ -526,7 +538,9 @@
             } else {
               addCourse(this.courseForm).then(res => {
                 if (res.success) {
-                  this.$message.success('新增成功')
+                  this.$message.success('新增成功');
+                  this.clearCourseSearchForm();
+                  this.getData();
                   this.pageType = 0;
                 } else {
                   let msg = res.desc || '请求失败'
@@ -546,16 +560,13 @@
 
       cancelForm(formName) {
         this.$refs[formName].resetFields();
+        this.clearCourseSearchForm();
+        this.getData();
         this.pageType = 0;
       },
 
       newcourseForm() {
-        for (let i in this.courseForm) {
-          this.courseForm[i] = null
-        }
-        this.courseForm.coverList = [];
-        this.courseForm.uploadFile = {};
-        this.fileText = null;
+        this.clearCourseForm();
         this.getLecturerList();
         this.getDirectTransmission();
         this.pageType = 1
@@ -646,15 +657,20 @@
 
             uploader.init();
             uploader.bind('FilesAdded', function (upload, files) {
-              if (files[files.length - 1].type != "audio/mp3" && files[files.length - 1].type != "audio/m4a") {
+              if (files[files.length - 1].type != "audio/mp3" && files[files.length - 1].type != "audio/x-m4a") {
                 self.$message.error("请上传mp3或者m4a格式文件");
                 uploader.removeFile(files);
                 return false
               }
-              self.courseForm.timeLength = '100';  //假数据
+              if (files[files.length - 1].size >500000000) {
+                self.$message.error("文件过大！文件大小必须500M以内");
+                uploader.removeFile(files);
+                return false
+              }
               self.fileText = files[files.length - 1].name;
               self.courseForm.uploadFile.name = files[files.length - 1].name;
               self.courseForm.uploadFile.url = uploader.settings.multipart_params.key;
+              uploader.start();
             });
             uploader.bind('uploadProgress', function (upload, files) {
               self.fileText = `已完成${files.percent}%`;
@@ -666,9 +682,7 @@
               self.courseForm.uploadFile.name = files[files.length - 1].name;
               self.getCdnFileUrlFc(key);
             });
-            document.getElementById('start_upload').onclick = function () {
-              uploader.start();
-            }
+
           } else {
             let msg = res.desc || '获取上传路径失败'
             this.$message.error(msg)
@@ -677,6 +691,7 @@
           this.$message.error('网络错误')
         })
       },
+
       getCdnFileUrlFc(fileKey) {
         getCdnFileUrl({
           fileKey
@@ -691,6 +706,26 @@
         }).catch(() => {
         })
       },
+
+      clearCourseForm(){
+        for (let i in this.courseForm) {
+          this.courseForm[i] = null
+        }
+        this.courseForm.coverList = [];
+        this.courseForm.uploadFile = {};
+        this.courseForm.freeTime = 120;
+        this.fileText = null;
+      },
+
+      clearCourseSearchForm(){
+        for (let i in this.courseSearchForm) {
+          this.courseSearchForm[i] = null
+        }
+        this.courseSearchForm.selectType = 'title';
+        this.courseSearchForm.specialState= '' ;
+        this.courseSearchForm.searchTeacherType='lecturerNickName';
+        this.courseSearchForm.pageNum=1
+      }
     }
   }
 
@@ -699,9 +734,6 @@
   .ofa-main-wrap {
     width: 100%;
     .totle-time {
-      position: absolute;
-      top: 0px;
-      left: 230px;
       color: #333;
     }
     .audio-list {

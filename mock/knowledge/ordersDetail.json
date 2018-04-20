@@ -7,7 +7,7 @@
         "orderId": "dfsdfdssd",
         "gmtCreate": "2018-04-12 08:33:50",
         "finishTime": "2018-04-12 08:33:50",
-        "orderAmt": 100,
+        "amount": 100,
         "orderStatus": "待付款",
         "orderType": "普通",
         "channelId": 1,
@@ -19,7 +19,7 @@
             {
                 "fundId": "dsadwwwwwww",
                 "payType": "微信小程序支付",
-                "amt": 100,
+                "amount": 100,
                 "bizType": "付款",
                 "gmtCreate": "2018-04-12 08:29:40",
                 "finishTime": "2018-04-12 08:33:50",
@@ -34,7 +34,7 @@
                 "itemType": 1,
                 "itemNum": 5,
                 "lecturerRate": 6000,
-                "courseType": 1,
+                "itemCategory": 1,
                 "type": "音频"
             }
         ]

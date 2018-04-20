@@ -32,13 +32,12 @@
                       </td>
                     </template>
                     <template v-else-if="column.hasUrl">
-                      <td  v-if="item[column.dataIndex].length > 30"> 
-                        <img :src="item[column.itemPicture]" alt="" class="goods-list-img fl">
-                        <span v-text="item[column.dataIndex]" class="two-ellipsis-list"></span>
-                      </td>
-                      <td  v-else> 
-                        <img :src="item[column.itemPicture]" alt="" class="goods-list-img">
-                        <span v-text="item[column.dataIndex]" class="ml10"></span>
+                      <td> 
+                          <div v-if="item[column.lateralCover]" class="img-box" v-bind:style="{backgroundImage:'url('+item[column.lateralCover]+')',backgroundSize: 'contain',backgroundPosition: 'center'}"></div>
+                          <div v-else-if="item[column.verticalCover]" class="img-box" v-bind:style="{backgroundImage:'url('+item[column.verticalCover]+')',backgroundSize: 'contain',backgroundPosition: 'center'}"></div>
+                          <div  v-else class="img-box" v-bind:style="{backgroundImage:'url(//yun.dui88.com/yoofans/images/201804/noClassImg.png)',backgroundSize: 'contain',backgroundPosition: 'center'}"></div>
+                           <span v-if="item[column.dataIndex].length > 30" v-text="item[column.dataIndex]" class="two-ellipsis-list twoLines ln37 w330"></span>
+                           <span v-else v-text="item[column.dataIndex]" class="ml10 ln75"></span>
                       </td>
                     </template>
                     <template v-else-if="column.type">
@@ -103,8 +102,11 @@
                     <el-table-column property="id" label="ID" width="100"></el-table-column>
                     <el-table-column label="商品信息" width="260">
                       <template slot-scope="scope">
-                        <img :src="scope.row.frontCover" alt="" class="goods-list-img fl">
-                        <span v-text="scope.row.title" class="two-ellipsis"></span>
+                        <div v-if="scope.row.lateralCover" class="img-box" v-bind:style="{backgroundImage:'url('+scope.row.lateralCover+')',backgroundSize: 'contain',backgroundPosition: 'center'}"></div>
+                        <div v-else-if="scope.row.verticalCover" class="img-box" v-bind:style="{backgroundImage:'url('+scope.row.verticalCover+')',backgroundSize: 'contain',backgroundPosition: 'center'}"></div>
+                        <div  v-else class="img-box" v-bind:style="{backgroundImage:'url(//yun.dui88.com/yoofans/images/201804/noClassImg.png)',backgroundSize: 'contain',backgroundPosition: 'center'}"></div>
+                         <span v-if="scope.row.title.length > 20" v-text="scope.row.title" class="two-ellipsis-list twoLines ln37 w150"></span>
+                         <span v-else v-text="scope.row.title" class="ml10 ln75"></span>
                       </template>
                     </el-table-column>
                     <el-table-column label="商品类型" width="200">
@@ -148,8 +150,11 @@
                     <el-table-column property="id" label="ID" width="100"></el-table-column>
                     <el-table-column label="商品信息" width="260">
                       <template slot-scope="scope" >
-                        <img :src="scope.row.frontCover" alt="" class="goods-list-img fl">
-                        <span v-text="scope.row.title" class="two-ellipsis"></span>
+                        <div v-if="scope.row.lateralCover" class="img-box" v-bind:style="{backgroundImage:'url('+scope.row.lateralCover+')',backgroundSize: 'contain',backgroundPosition: 'center'}"></div>
+                        <div v-else-if="scope.row.verticalCover" class="img-box" v-bind:style="{backgroundImage:'url('+scope.row.verticalCover+')',backgroundSize: 'contain',backgroundPosition: 'center'}"></div>
+                        <div  v-else class="img-box" v-bind:style="{backgroundImage:'url(//yun.dui88.com/yoofans/images/201804/noClassImg.png)',backgroundSize: 'contain',backgroundPosition: 'center'}"></div>
+                        <span v-if="scope.row.title.length > 20" v-text="scope.row.title" class="two-ellipsis-list twoLines ln37 w150"></span>
+                        <span v-else v-text="scope.row.title" class="ml10 ln75"></span>
                       </template>
                     </el-table-column>
                     <el-table-column label="商品类型" width="200">
@@ -193,13 +198,17 @@ const columns = [
   {
     title: '排序',
     width: 10,
-    dataIndex: 'relationSort',
+    render: (text, record, index) => {
+      return index + 1
+    }
   },
   {
     title: '商品标题',
     dataIndex: 'title',
     width: 30,
     itemPicture: 'itemPicture',
+    lateralCover: 'lateralCover',
+    verticalCover: 'verticalCover',
     hasUrl: true
   },
   {
@@ -262,6 +271,8 @@ export default {
   },
   methods: {
     openDialogGoods () {
+      this.arrClassStatus = []
+      this.arrColumnStatus = []
       this.searchForm.title = ''
       this.getContentList(this.activeName)
       this.dialogTableVisible = true
@@ -433,11 +444,11 @@ export default {
     handleCheckedChange(event,row,activeName){
       if(activeName == "课程"){
         this.arrClassStatus[row.id] = event
-        console.log(this.arrClassStatus)
+        // console.log(this.arrClassStatus)
       }
       if(activeName == "专栏"){
         this.arrColumnStatus[row.id] = event
-        console.log(this.arrColumnStatus)
+        // console.log(this.arrColumnStatus)
       }
     },
     saveGoods () {
@@ -590,32 +601,54 @@ export default {
     display: inline-block;
     vertical-align: middle;
   }
-  .two-ellipsis{
+  /*不同规格的图片显示*/
+  .long-img{
+    height: 54.5px;
+    width: 75px;
+  }
+  .width-img{
+    height: 48.4px;
+    width: 36px;
+  }
+  .imgBox{
+    display: inline-block;
+    vertical-align: middle;
+    float: left;
+  }
+  .twoLines{
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
-    width: 180px;
     float: left;
     margin-left: 10px;
   }
-  .two-ellipsis-list{
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    width: 300px;
-    float: left;
-    margin-left: 10px;
-    line-height:23px;
+  .ln75{
+    line-height:75px;
+  }
+  .ln37{
+    line-height:37px;
+  }
+  .w330{
+    width:330px;
+  }
+  .w150{
+    width:150px;
   }
   .tr-header th{
     font-weight: bold;
   }
   .ml10{
     margin-left:10px;
+  }
+  .img-box{
+    overflow: hidden;
+    width: 75px;
+    height: 75px;
+    display: inline-block;
+    float: left;
+    background-repeat: no-repeat;
   }
 }
 

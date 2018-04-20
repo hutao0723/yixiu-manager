@@ -82,7 +82,7 @@
                     <tr>
                       <td>{{detailList.orderId}}</td>
                       <td>{{detailList.gmtCreate}}</td>
-                      <td>{{detailList.orderAmt ? (detailList.orderAmt / 100).toFixed(2) : ''}}</td>
+                      <td>{{detailList.amount? (detailList.amount / 100).toFixed(2) : ''}}</td>
                       <td>{{detailList.orderStatus}}</td>
                       <td>{{detailList.orderType}}</td>
                       <td>{{detailList.finishTime}}</td>
@@ -108,7 +108,7 @@
                       <td>{{orderFunds.gmtCreate}}</td>
                       <td>{{orderFunds.bizType}}</td>
                       <td>{{orderFunds.payType}}</td>
-                      <td>{{orderFunds.amt ? (orderFunds.amt / 100).toFixed(2) : ''}}</td>
+                      <td>{{orderFunds.amount ? (orderFunds.amount / 100).toFixed(2) : ''}}</td>
                       <td>{{orderFunds.finishTime}}</td>
                       <td>{{orderFunds.outSeqNo}}</td>
                     </tr>

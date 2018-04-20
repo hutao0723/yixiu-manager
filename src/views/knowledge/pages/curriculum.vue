@@ -161,8 +161,8 @@
               remote
               reserve-keyword
               placeholder="请输入关键词"
-              :remote-method="getLecturerList"
               :disabled="pageType==2"
+              @keyup.native="searchLecturer"
             >
               <el-option
                 v-for="item in lecturerOptions"
@@ -187,14 +187,14 @@
         </el-form-item>
         <el-form-item label="课程价格" prop="price">
           <el-col :span="6">
-            <el-input v-model="courseFormPrice" placeholder="0.00-99999.99" type="number" :maxlength="7">
+            <el-input v-model="courseForm.price" placeholder="0.00-99999.99" type="number" :maxlength="8">
               <template slot="append">元</template>
             </el-input>
           </el-col>
         </el-form-item>
         <el-form-item label="讲师抽成" prop="rate">
           <el-col :span="6">
-            <el-input v-model="courseFormRate" placeholder="0.00-100.00" type="number" :maxlength="5">
+            <el-input v-model="courseForm.rate" placeholder="0.00-100.00" type="number" :maxlength="5">
               <template slot="append">%</template>
             </el-input>
           </el-col>
@@ -241,10 +241,10 @@
       };
 
       var priceRule = (rule, value, callback) => {
-        if(/^\d+\.\d+$/.test(String(value))){
+        if(/^\d+\.\d+$/.test(String(value*100))){
           callback(new Error('最多两位小数'));
         }else{
-          if(value> 9999999){
+          if(value> 99999.99){
             callback(new Error('最大值为99999.99'));
           }else{
             callback()
@@ -254,10 +254,10 @@
       };
 
       var rateRule = (rule, value, callback) => {
-        if(/^\d+\.\d+$/.test(String(value))){
+        if(/^\d+\.\d+$/.test(String(value*100))){
           callback(new Error('最多两位小数'));
         }else{
-          if(value > 10000){
+          if(value > 100){
             callback(new Error('最大值为100.00'));
           }else{
             callback()
@@ -362,11 +362,11 @@
           ],
           price: [
             {required: true, message: '请输入课程价格', trigger: 'blur'},
-//            {validator: priceRule, trigger: 'blur' }
+            {validator: priceRule, trigger: 'blur' }
           ],
           rate: [
             {required: true, message: '请输入抽成比例', trigger: 'blur'},
-//            {validator: rateRule, trigger: 'blur' },
+            {validator: rateRule, trigger: 'blur' }
           ]
         },
         //新增编辑课程form表单
@@ -401,24 +401,7 @@
         let sec = s % 60;
         return `${hour}时${min}分${sec}秒`
       },
-      courseFormPrice: {
-        get: function () {
-          if(this.courseForm.price == null) return
-          return this.courseForm.price/100
-        },
-        set: function (newValue) {
-          this.courseForm.price = newValue? newValue * 100:newValue
-        },
-      },
-      courseFormRate: {
-        get: function () {
-          if(this.courseForm.rate == null) return
-          return this.courseForm.rate / 100
-        },
-        set: function (newValue) {
-          this.courseForm.rate = newValue? newValue * 100:newValue
-        }
-      },
+
       courseFormLecturerId: {
         get: function () {
           if(this.pageType==2){
@@ -435,6 +418,18 @@
       this.getData();
     },
     methods: {
+      priceFilter(data){
+        if(/^\d+\.\d+$/.test(String(data.courseForm.price))) {
+          this.courseForm.price = Number(String(this.courseForm.price).split('.')[0])
+        }
+      },
+
+      rateFilter(data){
+        if(/^\d+\.\d+$/.test(String(data.courseForm.rate))) {
+          this.courseForm.rate = Number(String(this.courseForm.rate).split('.')[0])
+        }
+      },
+
       getAudioLength() {
         const myAudio = document.getElementsByTagName('audio')[0];
         myAudio.addEventListener("canplay", function () {
@@ -529,7 +524,9 @@
           this.loading = false;
         })
       },
-
+      searchLecturer(val){
+        this.getLecturerList()
+      },
 
       getCourseDetail(id) {
         this.loading = true;
@@ -537,6 +534,8 @@
         getCourse({id}).then(res => {
           if (res.success) {
             this.courseForm = Object.assign({}, this.courseForm,res.data);
+            this.courseForm.price = this.courseForm.price/100;
+            this.courseForm.rate = this.courseForm.rate/100;
             this.fileText = this.courseForm.uploadFile.name || ''
             this.getDirectTransmission();
             this.pageType = 2; //1 新增 2 编辑
@@ -554,8 +553,11 @@
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.loading = true;
+            const params = Object.assign({},this.courseForm);
+            params.price = this.courseForm.price*100;
+            params.rate = this.courseForm.rate*100;
             if (this.courseForm.id) {
-              updateCourse(this.courseForm).then(res => {
+              updateCourse(params).then(res => {
                 if (res.success) {
                   this.$message.success('修改成功');
                   this.clearCourseSearchForm();
@@ -755,7 +757,7 @@
           this.courseSearchForm[i] = null
         }
         this.courseSearchForm.selectType = 'title';
-        this.courseSearchForm.specialState= '' ;
+        this.courseSearchForm.status= '' ;
         this.courseSearchForm.searchTeacherType='lecturerNickName';
         this.courseSearchForm.pageNum=1
       }

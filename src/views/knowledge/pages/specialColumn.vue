@@ -173,7 +173,7 @@
         </el-form-item>
         <el-form-item label="课程期数" prop="courseNum">
           <el-col :span="6">
-            <el-input v-model="columnForm.courseNum" placeholder="1-999" :maxlength="3">
+            <el-input v-model="columnForm.courseNum" placeholder="1-999" type="number" :maxlength="3">
               <template slot="append">期</template>
             </el-input>
           </el-col>
@@ -185,8 +185,8 @@
               filterable
               remote
               reserve-keyword
-              :remote-method="getLecturerList"
-              :disabled="true"
+              :disabled="pageType==2"
+              @keyup.native="searchLecturer"
             >
               <el-option
                 v-for="item in lecturerOptions"
@@ -199,14 +199,14 @@
         </el-form-item>
         <el-form-item label="专栏价格" prop="price">
           <el-col :span="6">
-            <el-input v-model="columnFormPrice" placeholder="0.00-99999.99">
+            <el-input v-model="columnForm.price" placeholder="0.00-99999.99" type="number" :maxlength="8">
               <template slot="append">元</template>
             </el-input>
           </el-col>
         </el-form-item>
         <el-form-item label="讲师抽成" prop="rate">
           <el-col :span="6">
-            <el-input v-model="columnFormRate" placeholder="0.00-100.00">
+            <el-input v-model="columnForm.rate" placeholder="0.00-100.00" type="number" :maxlength="5">
               <template slot="append">%</template>
             </el-input>
           </el-col>
@@ -293,8 +293,8 @@
   import 'quill/dist/quill.core.css'
   import 'quill/dist/quill.snow.css'
   import 'quill/dist/quill.bubble.css'
-  import draggable from 'vuedraggable'
   import {quillEditor} from 'vue-quill-editor'
+  import draggable from 'vuedraggable'
 
   import {
     getColumn,
@@ -314,34 +314,34 @@
 
   export default {
     components: {
-      quillEditor,
-      draggable
+      draggable,
+      quillEditor
     },
     data() {
       var priceRule = (rule, value, callback) => {
-        if(/^\d+\.\d+$/.test(String(value))){
+        if(/^\d+\.\d+$/.test(String(value*100))){
           callback(new Error('最多两位小数'));
         }else{
-          if(value> 9999999){
+          if(value> 99999.99){
             callback(new Error('最大值为99999.99'));
           }else{
             callback()
           }
         }
+
       };
 
       var rateRule = (rule, value, callback) => {
-        if(/^\d+\.\d+$/.test(String(value))){
+        if(/^\d+\.\d+$/.test(String(value*100))){
           callback(new Error('最多两位小数'));
         }else{
-          if(value > 10000){
+          if(value > 100){
             callback(new Error('最大值为100.00'));
           }else{
             callback()
           }
         }
       };
-
 
       var courseNumRule = (rule, value, callback) => {
         if(/^\d+\.\d+$/.test(String(value))){
@@ -553,27 +553,10 @@
           subCourses: [], //临时集合
           courses: []
         },
+        linkFormColumnId:null
       }
     },
     computed: {
-      columnFormPrice: {
-        get: function () {
-          if(this.columnForm.price == null) return
-          return this.columnForm.price/100
-        },
-        set: function (newValue) {
-          this.columnForm.price = newValue? newValue * 100:newValue
-        },
-      },
-      columnFormRate: {
-        get: function () {
-          if(this.columnForm.rate == null) return
-          return this.columnForm.rate / 100
-        },
-        set: function (newValue) {
-          this.columnForm.rate = newValue? newValue * 100:newValue
-        }
-      },
       columnFormLecturerId: {
         get: function () {
           if(this.pageType==2){
@@ -590,13 +573,25 @@
       this.getColumnListData();
     },
     methods: {
+      priceFilter(data){
+        if(/^\d+\.\d+$/.test(String(data.columnForm.price))) {
+          this.columnForm.price = Number(String(this.columnForm.price).split('.')[0])
+        }
+      },
 
+      rateFilter(data){
+        if(/^\d+\.\d+$/.test(String(data.columnForm.rate))) {
+          this.columnForm.rate = Number(String(this.columnForm.rate).split('.')[0])
+        }
+      },
       getCourseDetail(id) {
         this.loading = true;
         this.columnForm.id = id;
         getColumn({id}).then(res => {
           if (res.success) {
             this.columnForm = Object.assign({},this.columnForm,res.data);
+            this.columnForm.price = this.columnForm.price/100;
+            this.columnForm.rate = this.columnForm.rate/100;
             this.pageType = 2; //1 新增 2 编辑
           } else {
             let msg = res.desc || '获取课程内容失败'
@@ -612,8 +607,11 @@
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.loading = true;
+            const params = Object.assign({},this.columnForm);
+            params.price = this.columnForm.price*100;
+            params.rate = this.columnForm.rate*100;
             if (this.columnForm.id) {
-              updateColumn(this.columnForm).then(res => {
+              updateColumn(params).then(res => {
                 if (res.success) {
                   this.$message.success('修改成功')
                   this.clearColumnSearchForm();
@@ -677,7 +675,9 @@
       },
 
       submitlinkForm() {
+        this.clearLinkcolumnForm();
         this.loading = true;
+        this.linkForm.columnId = this.linkFormColumnId;
         relateCourse(this.linkForm).then(res => {
           if (res.success) {
             this.$message.success('关联成功');
@@ -698,7 +698,6 @@
       },
 
       //多选
-
       handleSelectionChange(val) {
         this.linkForm.courses = val;
       },
@@ -767,14 +766,14 @@
       //课程管理列表
       getColumnManageListData(columnId) {
         this.manageListId = columnId || this.manageListId;
-        this.linkcolumnForm.columnId = columnId;
+        this.linkFormColumnId = columnId || this.linkFormColumnId;
+        this.linkcolumnForm.columnId = columnId || this.linkFormColumnId;
         this.loading = true;
         getLinkCourse(
           {columnId: this.manageListId}
         ).then(res => {
           if (res.success) {
             this.columnManageList = res.data;
-            this.linkForm.columnId = columnId;
             this.pageType = 3;
           } else {
             let msg = res.data.desc || '请求失败'
@@ -871,6 +870,10 @@
         })
       },
 
+      searchLecturer(val){
+          this.getLecturerList()
+      },
+
       beforeAvatarUpload(file) {
         const isJLtType = file.type === 'image/jpg' || file.type === 'image/png' || file.type === 'image/gif';
         const isLtSize = file.size / 1024 <= 5000;
@@ -950,11 +953,21 @@
           this.columnSearchForm[i] = null
         }
         this.columnSearchForm.selectType= 'title',
-        this.columnSearchForm.specialState='',
+        this.columnSearchForm.status='',
         this.columnSearchForm.searchTeacherType= 'lecturerNickName',
         this.columnSearchForm.pageNum=1,
         this.columnSearchForm.pageSize= 20
-      }
+      },
+
+      clearLinkcolumnForm(){
+        for (let i in this.linkcolumnForm) {
+          this.linkcolumnForm[i] = null
+        }
+        this.linkcolumnForm.selectType= 'title',
+        this.linkcolumnForm.searchTeacherType= 'lecturerNickName',
+        this.columnSearchForm.pageNum=1,
+        this.columnSearchForm.pageSize= 20
+      },
     }
   }
 

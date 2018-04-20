@@ -124,9 +124,9 @@
             :show-file-list=false
             :on-success="firstSuccess"
             :before-upload="beforeAvatarUpload">
-            <img v-if="courseForm.coverList" :src="courseForm.coverList[0]" class="avatar">
+            <img v-if="courseForm.lateralCover" :src="courseForm.lateralCover" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            <el-button size="small" type="primary">{{courseForm.coverList && courseForm.coverList[0] ? '修改文件' : '选择文件'}}</el-button>
+            <el-button size="small" type="primary">{{courseForm.lateralCover ? '修改文件' : '选择文件'}}</el-button>
             <div slot="tip" class="el-upload__tip">750*545,支持jpg、png、gif格式,最大5M</div>
           </el-upload>
           <el-upload
@@ -136,9 +136,9 @@
             :show-file-list=false
             :on-success="secondSuccess"
             :before-upload="beforeAvatarUpload">
-            <img v-if="courseForm.coverList" :src="courseForm.coverList[1]" class="avatar">
+            <img v-if="courseForm.verticalCover" :src="courseForm.verticalCover" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            <el-button size="small" type="primary">{{courseForm.coverList && courseForm.coverList[1] ? '修改文件' : '选择文件'}}</el-button>
+            <el-button size="small" type="primary">{{courseForm.verticalCover ? '修改文件' : '选择文件'}}</el-button>
             <div slot="tip" class="el-upload__tip">360*484,支持jpg、png、gif格式,最大5M</div>
           </el-upload>
         </el-form-item>
@@ -187,14 +187,14 @@
         </el-form-item>
         <el-form-item label="课程价格" prop="price">
           <el-col :span="6">
-            <el-input v-model="courseFormPrice" placeholder="0.00-99999.99">
+            <el-input v-model="courseFormPrice" placeholder="0.00-99999.99" type="number" :maxlength="7">
               <template slot="append">元</template>
             </el-input>
           </el-col>
         </el-form-item>
         <el-form-item label="讲师抽成" prop="rate">
           <el-col :span="6">
-            <el-input v-model="courseFormRate" placeholder="0.00-100.00">
+            <el-input v-model="courseFormRate" placeholder="0.00-100.00" type="number" :maxlength="5">
               <template slot="append">%</template>
             </el-input>
           </el-col>
@@ -232,12 +232,38 @@
       quillEditor
     },
     data() {
-//      var maxFreeTime = (rule, value, callback) => {
-//        console.log(value>800)
-//        if(value>800){
-//          callback(new Error('最大值为800'));
-//        }
-//      };
+      var maxFreeTime = (rule, value, callback) => {
+        if(value>800){
+          callback(new Error('最大值为800'));
+        }else{
+          callback();
+        }
+      };
+
+      var priceRule = (rule, value, callback) => {
+        if(/^\d+\.\d+$/.test(String(value))){
+          callback(new Error('最多两位小数'));
+        }else{
+          if(value> 9999999){
+            callback(new Error('最大值为99999.99'));
+          }else{
+            callback()
+          }
+        }
+
+      };
+
+      var rateRule = (rule, value, callback) => {
+        if(/^\d+\.\d+$/.test(String(value))){
+          callback(new Error('最多两位小数'));
+        }else{
+          if(value > 10000){
+            callback(new Error('最大值为100.00'));
+          }else{
+            callback()
+          }
+        }
+      };
 
 
       return {
@@ -326,7 +352,7 @@
           ],
           freeTime: [
             {required: true, message: '请输入试听时长', trigger: 'blur'},
-//            {validator: maxFreeTime, trigger: 'blur' }
+            {validator: maxFreeTime, trigger: 'blur' }
           ],
           lecturerId: [
             {required: true, message: '请选择讲师', trigger: 'change'}
@@ -335,10 +361,12 @@
             {required: true, message: '请选择课程日期', trigger: 'change'}
           ],
           price: [
-            {required: true, message: '请输入课程价格', trigger: 'blur'}
+            {required: true, message: '请输入课程价格', trigger: 'blur'},
+//            {validator: priceRule, trigger: 'blur' }
           ],
           rate: [
-            {required: true, message: '请输入抽成比例', trigger: 'blur'}
+            {required: true, message: '请输入抽成比例', trigger: 'blur'},
+//            {validator: rateRule, trigger: 'blur' },
           ]
         },
         //新增编辑课程form表单
@@ -347,7 +375,8 @@
           title: null,
           subTitle: null,
           courseType: null,
-          coverList: [],
+          lateralCover:null,
+          verticalCover:null,
           detail: null,
           freeTime: 120,
           timeLength: null,
@@ -374,22 +403,27 @@
       },
       courseFormPrice: {
         get: function () {
-          return this.courseForm.price / 100 || 0
+          if(this.courseForm.price == null) return
+          return this.courseForm.price/100
         },
         set: function (newValue) {
-          this.courseForm.price = newValue * 100
+          this.courseForm.price = newValue? newValue * 100:newValue
         },
       },
       courseFormRate: {
         get: function () {
-          return this.courseForm.rate / 100 || ''
+          if(this.courseForm.rate == null) return
+          return this.courseForm.rate / 100
         },
         set: function (newValue) {
-          this.courseForm.rate = newValue * 100
+          this.courseForm.rate = newValue? newValue * 100:newValue
         }
       },
       courseFormLecturerId: {
         get: function () {
+          if(this.pageType==2){
+            return this.courseForm.lecturerName
+          }
           return this.courseForm.lecturerId
         },
         set: function (newValue) {
@@ -609,7 +643,7 @@
           const width = image.width;
           const height = image.height;
           if (width == 750 && height == 545) {
-          self.courseForm.coverList = ['https:' + res.data.fileUrl, ...self.courseForm.coverList]
+          self.courseForm.lateralCover = 'https:' + res.data.fileUrl;
           } else {
             self.$message.error('上传图片的尺寸必须为 750*545!')
           }
@@ -625,7 +659,7 @@
           const height = image.height;
 
           if (width == 360 && height ==484) {
-          self.courseForm.coverList = [...self.courseForm.coverList,'https:' + res.data.fileUrl]
+          self.courseForm.verticalCover = 'https:' + res.data.fileUrl;
           } else {
             self.$message.error('上传图片的尺寸必须为 360*484!')
           }
@@ -711,7 +745,6 @@
         for (let i in this.courseForm) {
           this.courseForm[i] = null
         }
-        this.courseForm.coverList = [];
         this.courseForm.uploadFile = {};
         this.courseForm.freeTime = 120;
         this.fileText = null;

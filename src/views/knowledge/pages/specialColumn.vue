@@ -147,9 +147,9 @@
             :show-file-list=false
             :on-success="firstSuccess"
             :before-upload="beforeAvatarUpload">
-            <img v-if="columnForm.coverList" :src="columnForm.coverList[0]" class="avatar">
+            <img v-if="columnForm.lateralCover" :src="columnForm.lateralCover" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            <el-button size="small" type="primary">{{columnForm.coverList && columnForm.coverList[0] ? '修改文件' : '选择文件'}}</el-button>
+            <el-button size="small" type="primary">{{columnForm.lateralCover ? '修改文件' : '选择文件'}}</el-button>
             <div slot="tip" class="el-upload__tip">750*545,支持jpg、png、gif格式,最大5M</div>
           </el-upload>
           <el-upload
@@ -159,9 +159,9 @@
             :show-file-list=false
             :on-success="secondSuccess"
             :before-upload="beforeAvatarUpload">
-            <img v-if="columnForm.coverList" :src="columnForm.coverList[1]" class="avatar">
+            <img v-if="columnForm.verticalCover" :src="columnForm.verticalCover" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            <el-button size="small" type="primary">{{columnForm.coverList && columnForm.coverList[1] ? '修改文件' : '选择文件'}}</el-button>
+            <el-button size="small" type="primary">{{columnForm.verticalCover ? '修改文件' : '选择文件'}}</el-button>
             <div slot="tip" class="el-upload__tip">360*484,支持jpg、png、gif格式,最大5M</div>
           </el-upload>
         </el-form-item>
@@ -184,6 +184,7 @@
               reserve-keyword
               placeholder="请输入关键词"
               :remote-method="getLecturerList"
+              :disabled="pageType==2"
             >
               <el-option
                 v-for="item in lecturerOptions"
@@ -278,7 +279,7 @@
                          layout="total, prev, pager, next"
                          :total="linkcolumnForm.totalSize"></el-pagination>
         </div>
-        <el-col :span="5" :offset="19" class="mt20">
+        <el-col :span="7" :offset="17" class="mt20">
           <el-button type="default" @click="cancelLinkForm" size="mini">取消</el-button>
           <el-button type="primary" @click="submitlinkForm" size="mini">保存</el-button>
         </el-col>
@@ -315,6 +316,46 @@
       draggable
     },
     data() {
+      var priceRule = (rule, value, callback) => {
+        if(/^\d+\.\d+$/.test(String(value))){
+          callback(new Error('最多两位小数'));
+        }else{
+          if(value> 9999999){
+            callback(new Error('最大值为99999.99'));
+          }else{
+            callback()
+          }
+        }
+      };
+
+      var rateRule = (rule, value, callback) => {
+        if(/^\d+\.\d+$/.test(String(value))){
+          callback(new Error('最多两位小数'));
+        }else{
+          if(value > 10000){
+            callback(new Error('最大值为100.00'));
+          }else{
+            callback()
+          }
+        }
+      };
+
+
+      var courseNumRule = (rule, value, callback) => {
+        if(/^\d+\.\d+$/.test(String(value))){
+          callback(new Error('不可以为小数'));
+        }else{
+          if(value > 999){
+            callback(new Error('最大值为999'));
+          }else{
+            if(value < 1){
+              callback(new Error('最小值为1'));
+            }else{
+              callback()
+            }
+          }
+        }
+      };
       return {
         loading: false,
         pageType: 0,
@@ -444,7 +485,8 @@
           title: null,
           subTitle: null,
           introduction: null,
-          coverList: [],
+          lateralCover:null,
+          verticalCover:null,
           detail: null,
           price: null,
           rate: null,
@@ -466,15 +508,18 @@
           ],
           courseNum: [
             {required: true, message: '请输入课程期数', trigger: 'blur'},
+            {validator: courseNumRule, trigger: 'blur' }
           ],
           lecturerId: [
             {required: true, message: '请选择讲师', trigger: 'change'},
           ],
           price: [
             {required: true, message: '请输入专栏价格', trigger: 'blur'},
+            {validator: priceRule, trigger: 'blur' }
           ],
           rate: [
             {required: true, message: '请输入讲师抽成', trigger: 'blur'},
+            {validator: rateRule, trigger: 'blur' },
           ],
 
         },
@@ -514,22 +559,27 @@
     computed: {
       columnFormPrice: {
         get: function () {
-          return this.columnForm.price / 100 || ''
+          if(this.columnForm.price == null) return
+          return this.columnForm.price/100
         },
         set: function (newValue) {
-          this.columnForm.price = newValue * 100
+          this.columnForm.price = newValue? newValue * 100:newValue
         },
       },
       columnFormRate: {
         get: function () {
-          return this.columnForm.rate / 100 || ''
+          if(this.columnForm.rate == null) return
+          return this.columnForm.rate / 100
         },
         set: function (newValue) {
-          this.columnForm.rate = newValue * 100
+          this.columnForm.rate = newValue? newValue * 100:newValue
         }
       },
       columnFormLecturerId: {
         get: function () {
+          if(this.pageType==2){
+            return this.columnForm.lecturerName
+          }
           return this.columnForm.lecturerId
         },
         set: function (newValue) {
@@ -842,7 +892,7 @@
           const width = image.width;
           const height = image.height;
           if (width == 750 && height == 545) {
-            self.columnForm.coverList = ['https:' + res.data.fileUrl, ...self.columnForm.coverList]
+            self.columnForm.lateralCover = 'https:' + res.data.fileUrl;
           } else {
             self.$message.error('上传图片的尺寸必须为 750*545!')
           }
@@ -857,7 +907,7 @@
           const height = image.height;
 
           if (width == 360 && height ==484) {
-            self.columnForm.coverList = [...self.columnForm.coverList,'https:' + res.data.fileUrl]
+            self.columnForm.verticalCover = 'https:' + res.data.fileUrl
           } else {
             self.$message.error('上传图片的尺寸必须为 360*484!')
           }
@@ -894,20 +944,17 @@
         for (let i in this.columnForm) {
           this.columnForm[i] = null
         }
-        this.columnForm.coverList = [];
       },
 
       clearColumnSearchForm(){
         for (let i in this.columnSearchForm) {
           this.columnSearchForm[i] = null
         }
-        this.columnSearchForm.coverList = [];
         this.columnSearchForm.selectType= 'title',
         this.columnSearchForm.specialState='',
         this.columnSearchForm.searchTeacherType= 'lecturerNickName',
         this.columnSearchForm.pageNum=1,
-        this.columnSearchForm.pageSize= 20,
-        this.columnSearchForm.coverList = [];
+        this.columnSearchForm.pageSize= 20
       }
     }
   }

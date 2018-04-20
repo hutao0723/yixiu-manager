@@ -67,6 +67,9 @@
               </template>
             </el-table-column>
             <el-table-column prop="courseNum" label="课程数量">
+              <template slot-scope="scope">
+                {{scope.row.courseRelated+'/'+scope.row.courseNum}}
+              </template>
             </el-table-column>
             <el-table-column prop="status" label="专栏状态" :formatter="getStatus"></el-table-column>
             <el-table-column label="操作" width="300">
@@ -142,7 +145,7 @@
         <el-form-item label="课程封面">
           <el-upload
             class="avatar-uploader"
-            action="http://172.31.20.47:9101/upload/image"
+            action="/upload/image"
             name="imageFile"
             :show-file-list=false
             :on-success="firstSuccess"
@@ -154,7 +157,7 @@
           </el-upload>
           <el-upload
             class="avatar-uploader"
-            action="http://172.31.20.47:9101/upload/image"
+            action="/upload/image"
             name="imageFile"
             :show-file-list=false
             :on-success="secondSuccess"
@@ -182,9 +185,8 @@
               filterable
               remote
               reserve-keyword
-              placeholder="请输入关键词"
               :remote-method="getLecturerList"
-              :disabled="pageType==2"
+              :disabled="true"
             >
               <el-option
                 v-for="item in lecturerOptions"
@@ -509,9 +511,6 @@
           courseNum: [
             {required: true, message: '请输入课程期数', trigger: 'blur'},
             {validator: courseNumRule, trigger: 'blur' }
-          ],
-          lecturerId: [
-            {required: true, message: '请选择讲师', trigger: 'change'},
           ],
           price: [
             {required: true, message: '请输入专栏价格', trigger: 'blur'},
@@ -873,13 +872,13 @@
       },
 
       beforeAvatarUpload(file) {
-        const isJLtType = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/gif';
-        const isLtSize = file.size / 1024 <= 10000;
+        const isJLtType = file.type === 'image/jpg' || file.type === 'image/png' || file.type === 'image/gif';
+        const isLtSize = file.size / 1024 <= 5000;
         if (!isJLtType) {
-          this.$message.error('上传皮肤图片只能是 JPG/PNG/GIF 格式!');
+          this.$message.error('上传图片只能是 JPG/PNG/GIF 格式!');
         }
         if (!isLtSize) {
-          this.$message.error('上传皮肤图片大小不能超过 100KB!');
+          this.$message.error('上传图片大小不能超过 5M!');
         }
         return isJLtType && isLtSize;
       },

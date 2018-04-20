@@ -119,7 +119,7 @@
         <el-form-item label="课程封面">
           <el-upload
             class="avatar-uploader"
-            action="http://172.31.20.47:9101/upload/image"
+            action="/upload/image"
             name="imageFile"
             :show-file-list=false
             :on-success="firstSuccess"
@@ -131,7 +131,7 @@
           </el-upload>
           <el-upload
             class="avatar-uploader"
-            action="http://172.31.20.47:9101/upload/image"
+            action="/upload/image"
             name="imageFile"
             :show-file-list=false
             :on-success="secondSuccess"
@@ -624,13 +624,13 @@
       },
 
       beforeAvatarUpload(file) {
-        const isJLtType = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/gif';
-        const isLtSize = file.size / 1024 <= 10000;
+        const isJLtType = file.type === 'image/jpg' || file.type === 'image/png' || file.type === 'image/gif';
+        const isLtSize = file.size / 1024 <= 5000;
         if (!isJLtType) {
-          this.$message.error('上传皮肤图片只能是 JPG/PNG/GIF 格式!');
+          this.$message.error('上传图片只能是 JPG/PNG/GIF 格式!');
         }
         if (!isLtSize) {
-          this.$message.error('上传皮肤图片大小不能超过 100KB!');
+            this.$message.error('上传图片大小不能超过 5M!');
         }
         return isJLtType && isLtSize;
       },

@@ -147,9 +147,9 @@
             :show-file-list=false
             :on-success="firstSuccess"
             :before-upload="beforeAvatarUpload">
-            <img v-if="columnForm.coverList[0]" :src="columnForm.coverList[0]" class="avatar">
+            <img v-if="columnForm.coverList" :src="columnForm.coverList[0]" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            <el-button size="small" type="primary">{{columnForm.coverList[0] ? '修改文件' : '选择文件'}}</el-button>
+            <el-button size="small" type="primary">{{columnForm.coverList && columnForm.coverList[0] ? '修改文件' : '选择文件'}}</el-button>
             <div slot="tip" class="el-upload__tip">750*545,支持jpg、png、gif格式,最大5M</div>
           </el-upload>
           <el-upload
@@ -159,9 +159,9 @@
             :show-file-list=false
             :on-success="secondSuccess"
             :before-upload="beforeAvatarUpload">
-            <img v-if="columnForm.coverList[1]" :src="columnForm.coverList[1]" class="avatar">
+            <img v-if="columnForm.coverList" :src="columnForm.coverList[1]" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            <el-button size="small" type="primary">{{columnForm.coverList[1] ? '修改文件' : '选择文件'}}</el-button>
+            <el-button size="small" type="primary">{{columnForm.coverList && columnForm.coverList[1] ? '修改文件' : '选择文件'}}</el-button>
             <div slot="tip" class="el-upload__tip">360*484,支持jpg、png、gif格式,最大5M</div>
           </el-upload>
         </el-form-item>
@@ -220,7 +220,7 @@
         <el-col :span="4">
           <el-form-item>
             <el-select v-model="linkcolumnForm.selectType">
-              <el-option v-for="item in searchOptions" :key="item.value" :label="item.label" :value="item.value">
+              <el-option v-for="item in courseOptions" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
           </el-form-item>
@@ -326,6 +326,14 @@
             value: 'id',
             label: '专栏ID'
           }],
+        courseOptions: [
+        {
+          value: 'title',
+          label: '课程标题'
+        }, {
+          value: 'id',
+          label: '课程ID'
+        }],
         courseTypeOptions: [
           {
             value: 1,
@@ -559,7 +567,9 @@
               updateColumn(this.columnForm).then(res => {
                 if (res.success) {
                   this.$message.success('修改成功')
+                  this.clearColumnSearchForm();
                   this.pageType = 0;
+
                   this.getColumnListData();
                 } else {
                   let msg = res.desc || '请求失败'
@@ -573,8 +583,10 @@
               addColumn(this.columnForm).then(res => {
                 if (res.success) {
                   this.$message.success('新增成功')
-                  this.pageType = 0;
+                  this.clearColumnSearchForm();
                   this.getColumnListData();
+                  this.pageType = 0;
+
                 } else {
                   let msg = res.desc || '请求失败'
                   this.$message.error(msg);
@@ -594,6 +606,7 @@
 
       cancelForm(formName) {
         this.$refs[formName].resetFields();
+        this.clearColumnSearchForm();
         this.pageType = 0;
       },
 
@@ -829,24 +842,22 @@
           const width = image.width;
           const height = image.height;
           if (width == 750 && height == 545) {
-            self.columnForm.coverList = ['https:' + res.data.fileUrl, ...self.courseForm.coverList]
+            self.columnForm.coverList = ['https:' + res.data.fileUrl, ...self.columnForm.coverList]
           } else {
             self.$message.error('上传图片的尺寸必须为 750*545!')
           }
         };
-
-
-
       },
       secondSuccess(res, file) {
         const self = this;
         const image = new Image();
+        image.src = 'https:' + res.data.fileUrl;
         image.onload = function () {
           const width = image.width;
           const height = image.height;
 
           if (width == 360 && height ==484) {
-            self.columnForm.coverList = [...self.courseForm.coverList,'https:' + res.data.fileUrl]
+            self.columnForm.coverList = [...self.columnForm.coverList,'https:' + res.data.fileUrl]
           } else {
             self.$message.error('上传图片的尺寸必须为 360*484!')
           }
@@ -854,13 +865,12 @@
       },
 
       newcolumnForm() {
-        for (let i in this.columnForm) {
-          this.columnForm[i] = null
-        }
-        this.columnForm.coverList = [];
+        this.clearColumnForm();
         this.getLecturerList();
         this.pageType = 1;
       },
+
+
 
       datadragEnd(e) {
         let columnId = this.columnManageList[0] && this.columnManageList[0].columnId;
@@ -880,6 +890,25 @@
         })
       },
 
+      clearColumnForm(){
+        for (let i in this.columnForm) {
+          this.columnForm[i] = null
+        }
+        this.columnForm.coverList = [];
+      },
+
+      clearColumnSearchForm(){
+        for (let i in this.columnSearchForm) {
+          this.columnSearchForm[i] = null
+        }
+        this.columnSearchForm.coverList = [];
+        this.columnSearchForm.selectType= 'title',
+        this.columnSearchForm.specialState='',
+        this.columnSearchForm.searchTeacherType= 'lecturerNickName',
+        this.columnSearchForm.pageNum=1,
+        this.columnSearchForm.pageSize= 20,
+        this.columnSearchForm.coverList = [];
+      }
     }
   }
 

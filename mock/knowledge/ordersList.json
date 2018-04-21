@@ -4,7 +4,7 @@
         "content": [
             {
                 "orderId": "dfsdfdssd",
-                "orderAmt": 10003,
+                "amount": 10003,
                 "gmtCreate": "2018-04-12 08:33:50",
                 "itemId": 1,
                 "itemName": "课程一",
@@ -16,7 +16,7 @@
             },
             {
                 "orderId": "dfsdfdssd",
-                "orderAmt": 1000,
+                "amount": 1000,
                 "gmtCreate": "2018-04-12 08:33:50",
                 "itemId": 1,
                 "itemName": "课程一",

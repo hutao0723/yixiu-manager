@@ -145,7 +145,7 @@
         <el-form-item label="课程封面">
           <el-upload
             class="avatar-uploader"
-            action="http://172.31.20.47:9101/upload/image"
+            action="/upload/image"
             name="imageFile"
             :show-file-list=false
             :on-success="firstSuccess"
@@ -157,7 +157,7 @@
           </el-upload>
           <el-upload
             class="avatar-uploader"
-            action="http://172.31.20.47:9101/upload/image"
+            action="/upload/image"
             name="imageFile"
             :show-file-list=false
             :on-success="secondSuccess"
@@ -170,7 +170,6 @@
         </el-form-item>
         <el-form-item label="专栏详情" prop="detail">
           <div id="editorElem" style="text-align:left"></div>
-          <button v-on:click="getContent">查看内容</button>
         </el-form-item>
         <el-form-item label="课程期数" prop="courseNum">
           <el-col :span="6">
@@ -524,7 +523,6 @@
 
         },
 
-
         //课程管理
         columnManageList: [],
         manageListId: null,
@@ -570,24 +568,29 @@
         }
       },
     },
-    mounted() {
-      var editor = new E('#editorElem')
-      /* 处理上传图片的controller路径 */
-      editor.customConfig.uploadImgServer = 'http://172.31.20.47:9101/upload/image'
-      /* 定义上传图片的默认名字 */
-      editor.customConfig.uploadFileName = 'myFileName'
-      editor.customConfig.uploadImgHeaders = {
-        'Accept': 'text/x-json'
-      }
-      editor.create()
-    },
     created() {
       this.getColumnListData();
     },
     methods: {
-      getContent: function () {
-        alert(this.editorContent)
+      creatRichText(res){
+        var editor = new E('#editorElem')
+        /* 处理上传图片的controller路径 */
+        editor.customConfig.uploadImgServer = '/upload/image'
+        /* 定义上传图片的默认名字 */
+        editor.customConfig.uploadFileName = 'myFileName'
+        editor.customConfig.withCredentials = false;
+        editor.customConfig.debug=true;
+        editor.customConfig.uploadImgHeaders = {
+          'Accept': 'text/x-json'
+        }
+        editor.customConfig.onchange = (html) => {
+          this.columnForm.detail = html;
+        }
+        editor.create()
+        editor.txt.clear();
+        editor.txt.html(res || null)
       },
+
       priceFilter(data){
         if(/^\d+\.\d+$/.test(String(data.columnForm.price))) {
           this.columnForm.price = Number(String(this.columnForm.price).split('.')[0])
@@ -601,12 +604,15 @@
       },
       getCourseDetail(id) {
         this.loading = true;
+        this.clearColumnForm();
         this.columnForm.id = id;
         getColumn({id}).then(res => {
           if (res.success) {
+
             this.columnForm = Object.assign({},this.columnForm,res.data);
             this.columnForm.price = this.columnForm.price/100;
             this.columnForm.rate = this.columnForm.rate/100;
+            this.creatRichText(this.columnForm.detail)
             this.pageType = 2; //1 新增 2 编辑
           } else {
             let msg = res.desc || '获取课程内容失败'
@@ -619,7 +625,6 @@
       },
 
       submitForm(formName) {
-        this.courseForm.detail = this.editorContent;
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.loading = true;
@@ -632,7 +637,6 @@
                   this.$message.success('修改成功')
                   this.clearColumnSearchForm();
                   this.pageType = 0;
-
                   this.getColumnListData();
                 } else {
                   let msg = res.desc || '请求失败'
@@ -935,6 +939,7 @@
       newcolumnForm() {
         this.clearColumnForm();
         this.getLecturerList();
+        this.creatRichText()
         this.pageType = 1;
       },
 

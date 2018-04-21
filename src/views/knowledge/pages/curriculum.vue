@@ -8,7 +8,7 @@
         <el-breadcrumb-item v-if="pageType == 2">编辑课程</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-    <div class="content" v-if="pageType == 0">
+    <div class="content" v-show="pageType == 0">
       <div class="search-bar">
         <template>
           <el-form :inline="true" :model="courseSearchForm" class="demo-form-inline" size="mini">
@@ -86,7 +86,7 @@
                        :total="totalSize"></el-pagination>
       </div>
     </div>
-    <div class="content " v-else>
+    <div class="content " v-show="pageType!=0">
       <el-form :model="courseForm" :rules="rules" ref="courseForm" label-width="100px" class="column-uleForm">
         <div class="course-title  mb10 ">课程内容</div>
         <el-form-item label="课程类型" prop="courseType" :formatter="getCourseType">
@@ -143,7 +143,7 @@
           </el-upload>
         </el-form-item>
         <el-form-item label="课程详情" prop="detail">
-          <quill-editor v-model="courseForm.detail"></quill-editor>
+          <div id="editorElem" style="text-align:left"></div>
         </el-form-item>
         <el-form-item label="试听时长" prop="freeTime">
           <el-col :span="6">
@@ -212,7 +212,7 @@
   import 'quill/dist/quill.core.css'
   import 'quill/dist/quill.snow.css'
   import 'quill/dist/quill.bubble.css'
-  import {quillEditor} from 'vue-quill-editor'
+  import E from 'wangeditor'
   import plupload from 'plupload';
 
   import {
@@ -228,9 +228,6 @@
   } from '@/api/index'
 
   export default {
-    components: {
-      quillEditor
-    },
     data() {
       var maxFreeTime = (rule, value, callback) => {
         if(value>800){
@@ -268,6 +265,7 @@
 
       return {
         loading: false,
+        editorContent:null,
         directTransmissionSign: null, //上传签名
         pageType: 0,
         courseTypeOptions: [
@@ -418,6 +416,25 @@
       this.getData();
     },
     methods: {
+      creatRichText(res){
+        var editor = new E('#editorElem')
+        /* 处理上传图片的controller路径 */
+        editor.customConfig.uploadImgServer = '/upload/image'
+        /* 定义上传图片的默认名字 */
+        editor.customConfig.uploadFileName = 'myFileName'
+        editor.customConfig.withCredentials = false;
+        editor.customConfig.debug=true;
+        editor.customConfig.uploadImgHeaders = {
+          'Accept': 'text/x-json'
+        }
+        editor.customConfig.onchange = (html) => {
+          this.courseForm.detail = html;
+        }
+        editor.create()
+        editor.txt.clear();
+        editor.txt.html(res || null)
+      },
+
       priceFilter(data){
         if(/^\d+\.\d+$/.test(String(data.courseForm.price))) {
           this.courseForm.price = Number(String(this.courseForm.price).split('.')[0])
@@ -536,6 +553,7 @@
             this.courseForm = Object.assign({}, this.courseForm,res.data);
             this.courseForm.price = this.courseForm.price/100;
             this.courseForm.rate = this.courseForm.rate/100;
+            this.creatRichText(this.courseForm.detail);
             this.fileText = this.courseForm.uploadFile.name || ''
             this.getDirectTransmission();
             this.pageType = 2; //1 新增 2 编辑
@@ -605,6 +623,7 @@
         this.clearCourseForm();
         this.getLecturerList();
         this.getDirectTransmission();
+        this.creatRichText()
         this.pageType = 1
       },
 

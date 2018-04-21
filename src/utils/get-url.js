@@ -17,6 +17,6 @@ export default function getUrl(key, mock) {
     }
 
   }
-  return key
+  return `${testHost}/${key}`
 }
 

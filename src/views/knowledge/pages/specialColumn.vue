@@ -9,7 +9,7 @@
         <el-breadcrumb-item v-if="pageType == 3">课程管理</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-    <div class="content" v-if="pageType == 0">
+    <div class="content" v-show="pageType == 0">
       <div class="search-bar">
         <template>
           <el-form :inline="true" :model="columnSearchForm" class="demo-form-inline" size="mini">
@@ -93,7 +93,7 @@
                        :total="totalSize"></el-pagination>
       </div>
     </div>
-    <div class="content" v-else-if="pageType == 3">
+    <div class="content" v-show="pageType == 3">
       <div class="tabel-wrap">
         <template>
           <el-button type="primary" @click="getLinkCourseData" class="link-columm" size="mini">关联课程</el-button>
@@ -134,7 +134,7 @@
         </template>
       </div>
     </div>
-    <div class="content " v-else>
+    <div class="content " v-show="pageType != 3 && pageType != 0">
       <el-form :model="columnForm" :rules="rules" ref="columnForm" label-width="100px" class="column-uleForm">
         <el-form-item label="专栏标题" prop="title">
           <el-input v-model="columnForm.title" placeholder="1-30字，建议14字以内" :maxlength="30"></el-input>
@@ -145,7 +145,7 @@
         <el-form-item label="课程封面">
           <el-upload
             class="avatar-uploader"
-            action="/upload/image"
+            action="http://172.31.20.47:9101/upload/image"
             name="imageFile"
             :show-file-list=false
             :on-success="firstSuccess"
@@ -157,7 +157,7 @@
           </el-upload>
           <el-upload
             class="avatar-uploader"
-            action="/upload/image"
+            action="http://172.31.20.47:9101/upload/image"
             name="imageFile"
             :show-file-list=false
             :on-success="secondSuccess"
@@ -169,7 +169,8 @@
           </el-upload>
         </el-form-item>
         <el-form-item label="专栏详情" prop="detail">
-          <quill-editor v-model="columnForm.detail"></quill-editor>
+          <div id="editorElem" style="text-align:left"></div>
+          <button v-on:click="getContent">查看内容</button>
         </el-form-item>
         <el-form-item label="课程期数" prop="courseNum">
           <el-col :span="6">
@@ -293,8 +294,8 @@
   import 'quill/dist/quill.core.css'
   import 'quill/dist/quill.snow.css'
   import 'quill/dist/quill.bubble.css'
-  import {quillEditor} from 'vue-quill-editor'
   import draggable from 'vuedraggable'
+  import E from 'wangeditor'
 
   import {
     getColumn,
@@ -314,8 +315,7 @@
 
   export default {
     components: {
-      draggable,
-      quillEditor
+      draggable
     },
     data() {
       var priceRule = (rule, value, callback) => {
@@ -359,6 +359,7 @@
         }
       };
       return {
+        editorContent:null,
         loading: false,
         pageType: 0,
         searchOptions: [
@@ -569,10 +570,24 @@
         }
       },
     },
+    mounted() {
+      var editor = new E('#editorElem')
+      /* 处理上传图片的controller路径 */
+      editor.customConfig.uploadImgServer = 'http://172.31.20.47:9101/upload/image'
+      /* 定义上传图片的默认名字 */
+      editor.customConfig.uploadFileName = 'myFileName'
+      editor.customConfig.uploadImgHeaders = {
+        'Accept': 'text/x-json'
+      }
+      editor.create()
+    },
     created() {
       this.getColumnListData();
     },
     methods: {
+      getContent: function () {
+        alert(this.editorContent)
+      },
       priceFilter(data){
         if(/^\d+\.\d+$/.test(String(data.columnForm.price))) {
           this.columnForm.price = Number(String(this.columnForm.price).split('.')[0])
@@ -604,6 +619,7 @@
       },
 
       submitForm(formName) {
+        this.courseForm.detail = this.editorContent;
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.loading = true;

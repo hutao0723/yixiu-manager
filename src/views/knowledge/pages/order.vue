@@ -63,8 +63,8 @@
             <el-table-column prop="itemId" label="商品ID" width="80"></el-table-column>
             <el-table-column label="商品信息" width="300">
               <template slot-scope="scope">
-                <div v-if="scope.row.itemImage" class="img-box" v-bind:style="{backgroundImage:'url('+scope.row.itemImage+')',backgroundSize: 'contain',backgroundPosition: 'center'}"></div>
-                <div  v-else class="img-box" v-bind:style="{backgroundImage:'url(//yun.dui88.com/yoofans/images/201804/noClassImg.png)',backgroundSize: 'contain',backgroundPosition: 'center'}"></div>
+                <div v-if="scope.row.itemImage" class="img-box por" v-bind:style="{backgroundImage:'url('+scope.row.itemImage+')',backgroundSize: 'contain',backgroundPosition: 'center'}"><div class="goods-mask">{{scope.row.type}}</div></div>
+                <div  v-else class="img-box por" v-bind:style="{backgroundImage:'url(//yun.dui88.com/yoofans/images/201804/noClassImg.png)',backgroundSize: 'contain',backgroundPosition: 'center'}"><div class="goods-mask">{{scope.row.type}}</div></div>
                  <span v-if="scope.row.itemName.length > 12" v-text="scope.row.itemName" class="twoLines ln37 w150"></span>
                  <span v-else v-text="scope.row.itemName" class="goods-word"></span>
               </template>
@@ -322,28 +322,17 @@ export default {
       clear: both;
     }
   }
-  .img-container{
-    height: 50px;
-    width: 50px;
-    position:relative;
-    display: inline-block;
-    float: left;
-    .goods-list-img{
-      height: 50px;
-      width: 50px;
-    }
-    .goods-mask{
-      right: 0;
-      bottom: 0;
-      width: 30px;
-      height: 20px;
-      line-height: 20px;
-      text-align: center;
-      background-color: #000;
-      opacity: 0.6;
-      color: #FFF;
-      position:absolute;
-    }
+  .goods-mask{
+    right: 0;
+    bottom: 0;
+    width: 30px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    background-color: #000;
+    opacity: 0.6;
+    color: #FFF;
+    position:absolute;
   }
   .goods-word{
     margin-left: 10px;
@@ -386,6 +375,9 @@ export default {
     display: inline-block;
     float: left;
     background-repeat: no-repeat;
+  }
+  .por{
+    position:relative;
   }
   @keyframes ellipsis {
       from {

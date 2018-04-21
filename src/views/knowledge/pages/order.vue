@@ -39,6 +39,7 @@
             </el-form-item>
             <el-form-item label="订单状态">
               <el-select v-model="searchForm.orderStatus" placeholder="全部">
+                <el-option label="全部" value=""></el-option>
                 <el-option label="待支付" value="TO_PAY"></el-option>
                 <el-option label="交易成功" value="SUCCESS"></el-option>
                 <el-option label="交易失败" value="FAILED"></el-option>
@@ -46,6 +47,7 @@
             </el-form-item>
             <el-form-item label="订单类型">
               <el-select v-model="searchForm.orderType" placeholder="全部">
+                <el-option label="普通" value=""></el-option>
                 <el-option label="普通" value="ordinary"></el-option>
               </el-select>
             </el-form-item>

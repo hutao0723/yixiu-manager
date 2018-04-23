@@ -44,7 +44,10 @@
       <el-form :model="addForm" :rules="addRules" ref="addForm">
         <el-form-item label="渠道名称" label-width="100px" prop="channelId">
           <el-select v-model="addForm.channelId" placeholder="请选择" :disabled="editId>0" class="w200">
-            <el-option :label="item.name" :value="item.id" v-for="item in channelList" :key="item.id"></el-option>
+            <el-option :label="item.name" :value="item.id" v-for="item in channelList" :key="item.id">
+              <span style="float: left">{{ item.name }}</span>
+              <span style="float: right; color: #8492a6; font-size: 13px">{{ item.id }}</span>
+            </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="推广位名称" label-width="100px" prop="name">
@@ -91,6 +94,7 @@
           name: '',
         },
         channelList: [], // 渠道列表
+        
         titleDialog: '',
         editId: '',
         addRules: {
@@ -182,6 +186,7 @@
             let _params = Object.assign(params)
             this.$http.post(api.add, qs.stringify(_params)).then(res => {
               if (res.data.success) {
+                this.$message.success('保存成功');
                 this.getAppList();
               }
             })
@@ -200,6 +205,7 @@
             let _params = Object.assign(params)
             this.$http.post(api.update, qs.stringify(_params)).then(res => {
               if (res.data.success) {
+                this.$message.success('保存成功');
                 this.getAppList();
               }
             })

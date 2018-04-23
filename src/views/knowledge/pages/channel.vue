@@ -87,7 +87,8 @@
         addRules: {
           rate: [
             { required: true, message: '请输入分成比例', trigger: 'change' },
-            { pattern: /^[1-9][0-9]{0,1}[0]{0,1}$/, message: '数值为 1 到 100', trigger: 'change' }
+            { pattern: /^[1-9][0-9]{0,1}[0]{0,1}$/, message: '数值为 1 到 100', trigger: 'change' },
+            // { pattern: /^\.\d{1,2}?$/, message: '只支持2位小数', trigger: 'change' }
           ],
           validPeriod: [
             { required: true, message: '请输入用户有效期', trigger: 'change' },
@@ -110,8 +111,9 @@
         return (
           <div>
             用户有效期（天）
-            <el-tooltip class="item" effect="dark" content="用户点击推广链接会和渠道绑定用户关系，在有效期内用户再次进入小程序下单，无论是再通过该渠道的推广链接还是直接进入小程序购买，都算渠道收入。且用户在有效期内不会变更绑定关系。" placement="top">
-              <i class="el-icon-question"></i>
+            <el-tooltip class="item" effect="dark" placement="top">
+              <div slot="content">用户点击推广链接会和渠道绑定用户关系，在有效期内用户再次进入小程序下单，无论是再通过该渠道的推广链接<br/>还是直接进入小程序购买，都算渠道收入。且用户在有效期内不会变更绑定关系。</div>
+              <i class="el-icon-question cp"></i>
             </el-tooltip>
           </div>
 
@@ -181,6 +183,7 @@
             let _params = Object.assign(params)
             this.$http.post(api.add, qs.stringify(_params)).then(res => {
               if (res.data.success) {
+                this.$message.success('保存成功');
                 this.getAppList();
               }
             })
@@ -200,6 +203,7 @@
             let _params = Object.assign(params)
             this.$http.post(api.update, qs.stringify(_params)).then(res => {
               if (res.data.success) {
+                this.$message.success('保存成功');
                 this.getAppList();
               }
             })

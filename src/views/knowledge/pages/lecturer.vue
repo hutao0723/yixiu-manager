@@ -251,6 +251,7 @@ export default {
       let params ={
         id : row.id
       }
+      this.getLecturerList()
       this.$confirm('确认删除讲师吗?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -261,6 +262,7 @@ export default {
           if (msg) {
             if (res.data.data) {
               this.$message.success('删除成功')
+              this.searchForm.value = ""
               this.getLecturerList()
             } else {
               let msg = res.data.desc || '删除失败'

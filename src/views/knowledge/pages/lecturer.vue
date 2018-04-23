@@ -251,7 +251,6 @@ export default {
       let params ={
         id : row.id
       }
-      this.getLecturerList()
       this.$confirm('确认删除讲师吗?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',

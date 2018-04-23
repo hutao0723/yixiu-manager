@@ -462,7 +462,7 @@
           pageNum: 1,
           size: 20
         },
-        totalSize: 1,
+        totalSize: null,
         columnList: [],
 
         //分页查询课程信息
@@ -590,8 +590,10 @@
             // result 必须是一个 JSON 格式字符串！！！否则报错
           }
         };
+        editor.customConfig.$initContent ='';
         editor.customConfig.onchange = (html) => {
-          this.columnForm.detail = html;
+          const content = html=='<p><br></p>'?'':html;
+          this.columnForm.detail = content;
         }
         editor.create()
         editor.txt.clear();
@@ -710,6 +712,7 @@
           if (res.success) {
             this.$message.success('关联成功');
             this.getColumnManageListData();
+            this.getColumnListData();
             this.linkVisable = false;
           } else {
             let msg = res.desc || '关联失败'

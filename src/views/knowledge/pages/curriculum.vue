@@ -314,7 +314,7 @@
           pageNum: 1,
           size: 20
         },
-        totalSize: 1,
+        totalSize: null,
         courseList: [],
 
         //分页查询课程信息
@@ -435,7 +435,8 @@
           }
         };
         editor.customConfig.onchange = (html) => {
-          this.courseForm.detail = html;
+          const content = html=='<p><br></p>'?'':html;
+          this.courseForm.detail = content;
         }
         editor.create()
         editor.txt.clear();

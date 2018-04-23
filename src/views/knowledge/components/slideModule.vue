@@ -32,7 +32,7 @@
                   </el-upload>
                 </el-form-item>
                 <el-form-item label="跳转类型">
-                  <el-select v-model="item.linkType" placeholder="请选择" size="small">
+                  <el-select v-model="item.linkType" placeholder="请选择" size="small" @change="(v) => changeLinkType(v,index)">
                     <el-option label="无跳转" :value="0"></el-option>
                     <el-option label="商品" :value="1"></el-option>
                     <el-option label="外链" :value="2"></el-option>
@@ -61,8 +61,8 @@
         </el-form-item>
         <el-form-item label="图片上传">
           <el-upload class="upload-demo" action="/upload/image" :on-success="submitImage" name="imageFile" :before-upload="beforeImage" :show-file-list="false">
-            <el-button size="small" type="primary">点击上传</el-button>
-            <div slot="tip" class="el-upload__tip">只能上传jpeg/jpg/png文件，且不超过2m。</div>
+            <el-button size="small" type="primary" v-show="moduleForm.tabs<10">点击上传</el-button>
+            <div slot="tip" class="el-upload__tip">建议尺寸：750px * 340px，只能上传jpeg/jpg/png文件，且不超过2m。</div>
           </el-upload>
         </el-form-item>
       </el-form>
@@ -79,7 +79,7 @@
         <el-input placeholder="商品标题" size="small" class="w150 vam" v-model="goodsTitle"></el-input>
         <el-button size="small" type="primary" @click="getAppList">查询</el-button>
       </div>
-      <el-table :data="appList" stripe style="width: 100%" highlight-current-row @current-change="handleCurrentChange">
+      <el-table :data="appList" highlight-current-row style="width: 100%" @current-change="handleCurrentChange">
         <el-table-column prop="id" label="ID" width="100" align="center"></el-table-column>
         <el-table-column label="商品信息">
           <template slot-scope="scope">
@@ -92,6 +92,7 @@
         <el-table-column label="商品类型" align="center">
           <template slot-scope="scope">
             <span v-if="scope.row.courseType == 1">课程 - 音频</span>
+            <span v-if="goodsActiveName == 1">专栏</span>
           </template>
         </el-table-column>
       </el-table>
@@ -121,7 +122,7 @@
     <el-dialog title="小程序" :visible.sync="dialogWechat" v-if="selectValue">
       <el-form>
         <el-form-item label="外链地址" label-width="100px">
-          <el-radio-group v-model="selectValue.courseType">
+          <el-radio-group v-model="selectValue.courseType" @change="changeSelectValue">
             <el-radio :label="1">我的小程序</el-radio>
             <el-radio :label="2">外部小程序</el-radio>
           </el-radio-group>
@@ -177,11 +178,11 @@
       },
       beforeImage(file) {
         console.log(file)
-        const isJPG = file.type === 'image/jpg' || file.type === 'image/png' || file.type === 'image/jpeg';
+        const isJPG = file.type === 'image/jpg' || file.type === 'image/png' || file.type === 'image/jpeg' || file.type === 'image/gif';
         const isLt2M = file.size / 1024 < 2048;
         const isIMGLENGTH = this.moduleForm.tabs.length < 10;
         if (!isJPG) {
-          this.$message.error('上传图片只能是 jpeg/jpg/png 格式!');
+          this.$message.error('上传图片只能是 jpeg/jpg/png/gif 格式!');
         }
         if (!isLt2M) {
           this.$message.error('上传图片大小不能超过 2M!');
@@ -218,7 +219,10 @@
         console.log(row)
         this.selectValue = row;
       },
-      getAppList() {
+      getAppList(v) {
+        if(v){
+          this.goodsTitle = "";
+        }
         console.log(1)
         let url = this.goodsActiveName == 0 ? api.courseList : api.columnList;
         let params = {
@@ -246,6 +250,7 @@
       },
       showDialogGoods(index) {
         this.selectValue = {};
+        this.goodsTitle = "";
         this.selectIndex = index;
         this.getAppList();
         this.dialogGoods = true;
@@ -253,19 +258,38 @@
       showDialogHref(index) {
         this.dialogHref = true;
         this.selectValue = {
-          linkUrl: "",
+          linkUrl: this.selectValue.linkUrl?this.selectValue.linkUrl:"https://",
         }
         this.selectIndex = index;
       },
       showDialogWechat(index) {
         this.dialogWechat = true;
         this.selectValue = {
-          appId: "",
-          linkUrl: "",
-          courseType: 1,
+          appId: this.selectValue.appId ? this.selectValue.appId: "",
+          linkUrl: this.selectValue.linkUrl ? this.selectValue.linkUrl: "",
+          courseType: this.selectValue.courseType ? this.selectValue.courseType: 1,
         };
         this.selectIndex = index;
       },
+      changeSelectValue(){
+        this.selectValue.appId =  "";
+        this.selectValue.linkUrl =  "";
+      },
+      changeLinkType(v){
+        switch (v) {
+          case 1:
+            this.moduleForm.linkDataJson.title = "";
+            break;
+            case 2:
+            this.moduleForm.linkDataJson.linkUrl = "";
+            break;
+            case 3:
+            this.moduleForm.linkDataJson.linkUrl = "";
+            break;
+          default:
+            break;
+        }
+      }
     },
 
   }

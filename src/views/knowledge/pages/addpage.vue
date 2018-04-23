@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="module">
+    <div class="module" v-bind:style="{backgroundColor: boxData.backgroundColor?boxData.backgroundColor:'none'}">
       <div class="module-deploy" v-show="deployToggle == -2">
         <h2 class="module-deploy-title">新增</h2>
         <el-row :gutter="20">
@@ -159,7 +159,7 @@
             obj = {
               "componentType": "GOODSBOX",
               "fillType": "aspectFit",
-              "layout": "NOPIC",
+              "layout": "ROW",
               "tabs": []
             }
             break;

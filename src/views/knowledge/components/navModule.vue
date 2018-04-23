@@ -24,7 +24,7 @@
             <el-input v-model="moduleForm.subTitle" size="small"></el-input>
         </el-form-item>
         <el-form-item label="跳转类型">
-          <el-select v-model="moduleForm.linkType" placeholder="请选择" size="small">
+          <el-select v-model="moduleForm.linkType" placeholder="请选择" size="small" @change="changeLinkType">
             <el-option label="无跳转" :value="0"></el-option>
             <el-option label="商品" :value="1"></el-option>
             <el-option label="外链" :value="2"></el-option>
@@ -57,7 +57,7 @@
         <el-input placeholder="商品标题" size="small" class="w150 vam" v-model="goodsTitle"></el-input>
         <el-button size="small" type="primary" @click="getShopList">查询</el-button>
       </div>
-      <el-table :data="appList" stripe style="width: 100%" highlight-current-row @current-change="handleCurrentChange">
+      <el-table :data="appList" highlight-current-row style="width: 100%" @current-change="handleCurrentChange">
         <el-table-column prop="id" label="ID" width="100" align="center"></el-table-column>
         <el-table-column label="商品信息">
           <template slot-scope="scope">
@@ -69,6 +69,7 @@
         <el-table-column label="商品类型" align="center">
           <template slot-scope="scope">
             <span v-if="scope.row.courseType == 1">课程 - 音频</span>
+            <span v-if="goodsActiveName == 1">专栏</span>
           </template>
         </el-table-column>
       </el-table>
@@ -98,7 +99,7 @@
     <el-dialog title="小程序" :visible.sync="dialogWechat" v-if="selectValue">
       <el-form>
         <el-form-item label="外链地址" label-width="100px">
-          <el-radio-group v-model="selectValue.courseType">
+          <el-radio-group v-model="selectValue.courseType" @change="changeSelectValue">
             <el-radio :label="1">我的小程序</el-radio>
             <el-radio :label="2">外部小程序</el-radio>
           </el-radio-group>
@@ -167,7 +168,10 @@
       handleCurrentChange(row) {
         this.selectValue = row;
       },
-      getShopList() {
+      getShopList(v) {
+        if(v){
+          this.goodsTitle = "";
+        }
         let url = this.goodsActiveName == 0 ? api.courseList : api.columnList;
         let params = {
           title: this.goodsTitle ? this.goodsTitle : '',
@@ -198,17 +202,36 @@
       showDialogHref() {
         this.dialogHref = true;
         this.selectValue = {
-          linkUrl: "",
+          linkUrl: this.selectValue.linkUrl?this.selectValue.linkUrl:"https://",
         }
       },
       showDialogWechat() {
         this.dialogWechat = true;
         this.selectValue = {
-          appId: "",
-          linkUrl: "",
-          courseType: 1,
+          appId: this.selectValue.appId ? this.selectValue.appId: "",
+          linkUrl: this.selectValue.linkUrl ? this.selectValue.linkUrl: "",
+          courseType: this.selectValue.courseType ? this.selectValue.courseType: 1,
         };
       },
+      changeSelectValue(){
+        this.selectValue.appId =  "";
+        this.selectValue.linkUrl =  "";
+      },
+      changeLinkType(v,index){
+        switch (v) {
+          case 1:
+            this.moduleForm[index].linkDataJson.title = "";
+            break;
+            case 2:
+            this.moduleForm[index].linkDataJson.linkUrl = "";
+            break;
+            case 3:
+            this.moduleForm[index].linkDataJson.linkUrl = "";
+            break;
+          default:
+            break;
+        }
+      }
     },
     created() {
       console.log(this.$refs)
@@ -220,6 +243,7 @@
   @import "../../../styles/components/knowledge.less";
   .module-content {
     padding: 0 15px;
+    background: #fff;
   }
 
   .module-title {

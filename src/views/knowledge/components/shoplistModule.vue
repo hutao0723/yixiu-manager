@@ -117,7 +117,7 @@
         <el-input placeholder="商品标题" size="small" class="w150 vam" v-model="goodsTitle"></el-input>
         <el-button size="small" type="primary" @click="getAppList">查询</el-button>
       </div>
-      <el-table :data="appList" stripe style="width: 100%" highlight-current-row @current-change="handleCurrentChange">
+      <el-table :data="appList" style="width: 100%" highlight-current-row @current-change="handleCurrentChange">
         <el-table-column prop="id" label="ID" width="100" align="center"></el-table-column>
         <el-table-column prop="goodsGroupName" label="商品信息">
         </el-table-column>
@@ -275,6 +275,8 @@
 <style lang="less" scoped>
   @import "../../../styles/components/knowledge.less";
   .module-content {
+    background: #fff;
+    
     .module-tabs {
       height: 50px;
       overflow: auto;
@@ -368,57 +370,57 @@
         .module-content-item {
           position: relative;
           padding: 10px 0;
-          height: 95px;
+          height: 113px;
           /* border-bottom: 1px solid #e5e5e5; */
           .two-img {
-            height: 95px;
-            width: 75px;
+            height: 82px;
+            width: 112px;
             position: absolute;
-            left: 0;
+            left: 0px;
             top: 10px;
             background: #999;
             border-radius: 4px;
           }
           .two-title {
-            line-height: 22px;
+            line-height: 20px;
             position: absolute;
-            left: 85px;
-            top: 20px;
-            font-size: 15px;
+            left: 125px;
+            top: 16px;
+            font-size: 14px;
             color: #333;
           }
           .two-jj {
-            line-height: 20px;
+            line-height: 16px;
             position: absolute;
-            left: 85px;
-            top: 50px;
-            font-size: 14px;
+            left: 125px;
+            top: 56px;
+            font-size: 12px;
             color: #787878;
           }
           .two-status {
-            line-height: 16px;
+            line-height: 15px;
             position: absolute;
-            left: 85px;
+            left: 125px;
             top: 80px;
-            font-size: 12px;
-            color: #787878;
+            font-size: 11px;
+            color: #999999;
           }
           .two-price {
-            line-height: 14px;
+            line-height: 18px;
             position: absolute;
             right: 0;
-            top: 25px;
-            font-size: 12px;
+            top: 15px;
+            font-size: 13px;
             color: #ff3e44;
             text-align: right;
           }
           .two-btn {
             position: absolute;
             right: 0;
-            bottom: 16px;
-            width: 60px;
-            height: 26px;
-            line-height: 26px;
+            top: 76px;
+            width: 55px;
+            height: 23px;
+            line-height: 23px;
             text-align: center;
             font-size: 14px;
             color: #fff;

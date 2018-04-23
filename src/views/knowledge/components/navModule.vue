@@ -62,6 +62,9 @@
         <el-table-column label="商品信息">
           <template slot-scope="scope">
             <div class="list-goods otw">
+              <img :src="scope.row.lateralCover" alt="" v-if="scope.row.lateralCover">
+              <img :src="scope.row.verticalCover" alt="" v-if="scope.row.verticalCover && !scope.row.lateralCover">
+              <img src="" alt="" v-if="!scope.row.verticalCover && !scope.row.lateralCover">
               <span>{{scope.row.title}}</span>
             </div>
           </template>
@@ -217,16 +220,16 @@
         this.selectValue.appId =  "";
         this.selectValue.linkUrl =  "";
       },
-      changeLinkType(v,index){
+      changeLinkType(v){
         switch (v) {
           case 1:
-            this.moduleForm[index].linkDataJson.title = "";
+            this.moduleForm.linkDataJson.title = "";
             break;
             case 2:
-            this.moduleForm[index].linkDataJson.linkUrl = "";
+            this.moduleForm.linkDataJson.linkUrl = "";
             break;
             case 3:
-            this.moduleForm[index].linkDataJson.linkUrl = "";
+            this.moduleForm.linkDataJson.linkUrl = "";
             break;
           default:
             break;
@@ -279,10 +282,8 @@
     img {
       vertical-align: middle;
       height: 50px;
-      width: 50px;
       display: inline-block;
-      position: absolute;
-      left: 0;
+     
     }
     span {
       line-height: 50px;

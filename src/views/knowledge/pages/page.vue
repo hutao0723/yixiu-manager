@@ -7,7 +7,7 @@
     </el-row>
     <el-row class="home-page mt10" v-show="homePage.pageTitle">
       <el-col :span="6">
-        <!-- <img :src="appId.headImg" alt="" class="home-page-header"> -->
+        <img :src="headImg" alt="" class="home-page-header">
         <span class="" v-text="homePage.pageTitle"></span>
       </el-col>
       <el-col :span="6">
@@ -88,6 +88,7 @@
         homePage: {},
         wechatList: [],
         appId: null,
+        headImg:'',
       }
     },
     filters: {
@@ -116,6 +117,8 @@
             this.wechatList = resp.data;
 
             this.appId = this.appId ? Number(this.appId) : resp.data[0].id;
+
+            
             this.getAppList()
           } else {
             let msg = resp.desc || '请求失败'
@@ -135,6 +138,14 @@
           if (resp.success) {
             this.appList = resp.data.lists;
             this.totalSize = resp.data.totalSize;
+            for (let i = 0; i < this.wechatList.length; i++) {
+              const element = this.wechatList[i];
+              console.log(element.id)
+              if(element.id == this.appId){
+                this.headImg = element.headImg?element.headImg:'';
+              }
+            }
+            console.log(this.headImg)
             this.homePage = resp.data.homePage ? resp.data.homePage : {};
           } else {
             let msg = resp.desc || '请求失败'

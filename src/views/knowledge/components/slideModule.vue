@@ -23,7 +23,7 @@
         </el-form-item>
         <el-form-item label="图片链接" v-show="moduleForm.tabs.length>0">
           <div class="shop">
-            <div class="shop-list" v-for="(item,index) in moduleForm.tabs" :key="index" v-dragging="{ item: item, list: moduleForm.subEntry, group: 'item' }">
+            <div class="shop-list" v-for="(item,index) in moduleForm.tabs" :key="index" v-dragging="{ item: item, list: moduleForm.tabs, group: 'item' }">
               <el-form :model="item" label-width="100px">
                 <el-form-item label="图片">
                   <img :src="item.pictureUrl" alt="" width="50" height="50">
@@ -61,7 +61,7 @@
         </el-form-item>
         <el-form-item label="图片上传">
           <el-upload class="upload-demo" action="/upload/image" :on-success="submitImage" name="imageFile" :before-upload="beforeImage" :show-file-list="false">
-            <el-button size="small" type="primary" v-show="moduleForm.tabs<10">点击上传</el-button>
+            <el-button size="small" type="primary" v-show="moduleForm.tabs.length < 10">点击上传</el-button>
             <div slot="tip" class="el-upload__tip">建议尺寸：750px * 340px，只能上传jpeg/jpg/png文件，且不超过2m。</div>
           </el-upload>
         </el-form-item>
@@ -275,16 +275,18 @@
         this.selectValue.appId =  "";
         this.selectValue.linkUrl =  "";
       },
-      changeLinkType(v){
+      changeLinkType(v,index){
+        console.log(v)
+        console.log(this.moduleForm)
         switch (v) {
-          case 1:
-            this.moduleForm.linkDataJson.title = "";
+            case 1:
+            this.moduleForm.tabs[index].linkDataJson['title'] = "";
             break;
             case 2:
-            this.moduleForm.linkDataJson.linkUrl = "";
+            this.moduleForm.tabs[index].linkDataJson['linkUrl ']= "";
             break;
             case 3:
-            this.moduleForm.linkDataJson.linkUrl = "";
+            this.moduleForm.tabs[index].linkDataJson['linkUrl'] = "";
             break;
           default:
             break;
@@ -308,10 +310,7 @@
     img {
       vertical-align: middle;
       height: 50px;
-      width: 50px;
       display: inline-block;
-      position: absolute;
-      left: 0;
     }
     span {
       line-height: 50px;

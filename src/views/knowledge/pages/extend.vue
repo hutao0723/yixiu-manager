@@ -43,8 +43,9 @@
     <el-dialog :title="titleDialog" :visible.sync="addDialog" @close="closeDialog('addForm')">
       <el-form :model="addForm" :rules="addRules" ref="addForm">
         <el-form-item label="渠道名称" label-width="100px" prop="channelId">
-          <el-select v-model="addForm.channelId" placeholder="请选择" :disabled="editId>0" class="w200">
-            <el-option :label="item.name" :value="item.id" v-for="item in channelList" :key="item.id">
+          <el-select v-model="addForm.channelId" filterable remote reserve-keyword :remote-method="remoteMethod" class="w200" :loading="loading"
+            :disabled="editId>0">
+            <el-option v-for="item in channelList" :key="item.id" :label="item.name" :value="item.id">
               <span style="float: left">{{ item.name }}</span>
               <span style="float: right; color: #8492a6; font-size: 13px">{{ item.id }}</span>
             </el-option>
@@ -94,7 +95,7 @@
           name: '',
         },
         channelList: [], // 渠道列表
-        
+
         titleDialog: '',
         editId: '',
         addRules: {
@@ -105,7 +106,8 @@
             { required: true, message: '请输入推广位名称', trigger: 'change' },
             { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'change' }
           ],
-        }
+        },
+        loading: false,
       }
     },
     filters: {
@@ -118,9 +120,20 @@
       closeDialog(formName) {
         this.$refs[formName].resetFields();
       },
+      remoteMethod(query) {
+        console.log(query)
+        this.$http.get(api.getList, { params:{name: query} }).then(res => {
+          let resp = res.data
+          if (resp.success) {
+            this.channelList = resp.data
+            this.loading = false;
+          } else {
+            let msg = resp.desc || '请求失败'
+            this.$message.error(msg)
+          }
+        })
+      },
       getChannelList() {
-
-
         this.$http.get(api.getList).then(res => {
           let resp = res.data
           if (resp.success) {

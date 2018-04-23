@@ -68,6 +68,17 @@
   }
   export default {
     data() {
+      var rateRule = (rule, value, callback) => {
+        if(/^\d+\.\d+$/.test(String(value*100))){
+          callback(new Error('最多两位小数'));
+        }else{
+          if(value > 100){
+            callback(new Error('最大值为100.00'));
+          }else{
+            callback()
+          }
+        }
+      };
       return {
         pageOption: {
           pageNum: 1,
@@ -87,8 +98,7 @@
         addRules: {
           rate: [
             { required: true, message: '请输入分成比例', trigger: 'change' },
-            { pattern: /^[1-9][0-9]{0,1}[0]{0,1}$/, message: '数值为 1 到 100', trigger: 'change' },
-            // { pattern: /^\.\d{1,2}?$/, message: '只支持2位小数', trigger: 'change' }
+            {validator: rateRule, trigger: 'change' },
           ],
           validPeriod: [
             { required: true, message: '请输入用户有效期', trigger: 'change' },
@@ -101,6 +111,7 @@
         }
       }
     },
+    
     filters: {
     },
     created() {

@@ -1,19 +1,28 @@
 <template>
   <div>
     <div class="module" v-bind:style="{backgroundColor: boxData.backgroundColor?boxData.backgroundColor:'none'}">
-      <div class="module-deploy" v-show="deployToggle == -2">
-        <h2 class="module-deploy-title">新增</h2>
-        <el-row :gutter="20">
-          <el-col :span="6" v-for="item in moduleList" :key="item.id">
-            <div class="module-deploy-item" @click="addModuleFun(item.id)">{{item.name}}</div>
-          </el-col>
-        </el-row>
-      </div>
+
       <div class="module-item">
+        <div class="module-deploy" v-show="deployToggle == -51">
+          <h2 class="module-deploy-title">新增</h2>
+          <el-row :gutter="20">
+            <el-col :span="6" v-for="item in moduleList" :key="item.id">
+              <div class="module-deploy-item" @click="addModuleFun(item.id)">{{item.name}}</div>
+            </el-col>
+          </el-row>
+        </div>
         <div is="PAGE" :deploy-toggle="deployToggle" :module-form="boxData" :module-index="-1" v-on:changeDeploy="changeDeploy"></div>
         <i class="module-add module-btn el-icon-circle-plus-outline" @click="clickModuleFun(-1)"></i>
       </div>
       <div class="module-item" v-for="(item,index) in boxList" :key="index" v-dragging="{ item: item, list: boxList, group: 'item' }">
+        <div class="module-deploy" v-show="deployToggle == index - 50">
+          <h2 class="module-deploy-title">新增</h2>
+          <el-row :gutter="20">
+            <el-col :span="6" v-for="item in moduleList" :key="item.id">
+              <div class="module-deploy-item" @click="addModuleFun(item.id)">{{item.name}}</div>
+            </el-col>
+          </el-row>
+        </div>
         <div :is="item.componentType" :key="index" :deploy-toggle="deployToggle" :module-form="item" :module-index="index" v-on:changeDeploy="changeDeploy"></div>
         <i class="module-add module-btn el-icon-circle-plus-outline" @click="clickModuleFun(index)"></i>
         <i class="module-close module-btn el-icon-circle-close-outline" @click="deleteModuleFun(index)"></i>
@@ -63,7 +72,7 @@
           backgroundColor: "",
         },
         boxList: [
-          
+
         ],
         modulePosition: 0,
         editId: null,
@@ -75,7 +84,7 @@
 
       this.editId = this.$route.query.id ? this.$route.query.id : null;
       this.authorizerId = this.$route.query.authorizerId ? this.$route.query.authorizerId : null;
-      
+
       if (this.editId) {
         this.$http.get('/knowledgepage/component/detail', { params: { id: this.editId } }).then(res => {
           if (res.data.data) {
@@ -108,7 +117,7 @@
     methods: {
       submitAdd() {
         let params = this.boxData;
-        params['authorizerId'] = this.authorizerId ;
+        params['authorizerId'] = this.authorizerId;
         params.components = JSON.stringify(this.boxList);
         let _params = Object.assign(params)
         this.$http.post('/knowledgepage/component/insert', qs.stringify(_params)).then(res => {
@@ -126,7 +135,8 @@
       },
       clickModuleFun(index) {
         this.modulePosition = index + 1;
-        this.deployToggle = -2;
+        this.deployToggle = index - 50;
+        console.log(index - 50)
         console.log(this.modulePosition)
       },
       deleteModuleFun(index) {

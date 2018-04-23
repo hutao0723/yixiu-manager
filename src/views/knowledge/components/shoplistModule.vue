@@ -70,7 +70,7 @@
       <el-form ref="moduleForm" :model="moduleForm" label-width="80px">
         <el-form-item label="商品组">
           <div class="shop">
-            <div class="shop-list" v-for="(item,index) in moduleForm.tabs">
+            <div class="shop-list" v-for="(item,index) in moduleForm.tabs"  v-dragging="{ item: item, list: moduleForm.tabs }">
               <el-form :model="item" label-width="80px" :rules="rulesForm" ref="moduleForm">
                 <el-form-item label="商品来源">
                   <el-input v-model="item.linkDataJson.goodsGroupName" size="small" disabled class="w200">
@@ -504,14 +504,6 @@
     padding-left: 60px;
     padding-right: 10px;
     height: 50px;
-    img {
-      vertical-align: middle;
-      height: 50px;
-      width: 50px;
-      display: inline-block;
-      position: absolute;
-      left: 0;
-    }
     span {
       line-height: 50px;
     }

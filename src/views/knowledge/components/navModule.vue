@@ -64,7 +64,7 @@
             <div class="list-goods otw">
               <img :src="scope.row.lateralCover" alt="" v-if="scope.row.lateralCover">
               <img :src="scope.row.verticalCover" alt="" v-if="scope.row.verticalCover && !scope.row.lateralCover">
-              <img src="" alt="" v-if="!scope.row.verticalCover && !scope.row.lateralCover">
+              <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1524500109724&di=482c198f5f8fc8557677c635ad4addfe&imgtype=0&src=http%3A%2F%2Fpic2.cxtuku.com%2F00%2F05%2F14%2Fb5098065ea99.jpg" alt="" v-if="!scope.row.verticalCover && !scope.row.lateralCover">
               <span>{{scope.row.title}}</span>
             </div>
           </template>
@@ -87,8 +87,11 @@
     </el-dialog>
 
     <el-dialog title="外链" :visible.sync="dialogHref" v-if="selectValue">
-      <el-form ref="moduleHrefForm" :rules="rulesHrefForm" :model="selectValue">
-        <el-form-item label="外链地址" label-width="100px" prop="linkUrl">
+      <el-form ref="moduleHrefForm" :model="selectValue">
+        <el-form-item label="外链地址" label-width="100px" prop="linkUrl" :rules="[
+            { required: true, message: '请输入路径', trigger: 'change' },
+            { min: 1, max: 1000, message: '长度在 1 到 1000 个字符', trigger: 'change' }
+          ]">
           <el-input v-model="selectValue.linkUrl"></el-input>
         </el-form-item>
       </el-form>
@@ -100,17 +103,23 @@
       </div>
     </el-dialog>
     <el-dialog title="小程序" :visible.sync="dialogWechat" v-if="selectValue">
-      <el-form ref="moduleWechatForm" :rules="rulesWechatForm" :model="selectValue">
+      <el-form ref="moduleWechatForm" :model="selectValue">
         <el-form-item label="外链地址" label-width="100px">
           <el-radio-group v-model="selectValue.courseType" @change="changeSelectValue">
             <el-radio :label="1">我的小程序</el-radio>
             <el-radio :label="2">外部小程序</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="AppId" label-width="100px" v-show="selectValue.courseType == 2" prop="appId">
+        <el-form-item label="AppId" label-width="100px" v-show="selectValue.courseType == 2" prop="appId" :rules="[
+            { required: true, message: '请输入AppId', trigger: 'change' },
+            { min: 1, max: 200, message: '长度在 1 到 200 个字符', trigger: 'change' }
+          ]">
           <el-input v-model="selectValue.appId" prop="appId"></el-input>
         </el-form-item v-if="selectValue.linkUrl">
-        <el-form-item label="路径" label-width="100px" prop="linkUrl">
+        <el-form-item label="路径" label-width="100px" prop="linkUrl" :rules="[
+            { required: true, message: '请输入路径', trigger: 'change' },
+            { min: 1, max: 200, message: '长度在 1 到 200 个字符', trigger: 'change' }
+          ]">
           <el-input v-model="selectValue.linkUrl"></el-input>
         </el-form-item>
       </el-form>
@@ -152,22 +161,6 @@
             { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'change' }
           ],
         },
-        rulesWechatForm: {
-          appId: [
-            { required: true, message: '请输入AppId', trigger: 'change' },
-            { min: 1, max: 200, message: '长度在 1 到 200 个字符', trigger: 'change' }
-          ],
-          linkUrl: [
-            { required: true, message: '请输入路径', trigger: 'change' },
-            { min: 1, max: 200, message: '长度在 1 到 200 个字符', trigger: 'change' }
-          ],
-        },
-        rulesHrefForm: {
-          linkUrl: [
-            { required: true, message: '请输入路径', trigger: 'change' },
-            { min: 1, max: 1000, message: '长度在 1 到 1000 个字符', trigger: 'change' }
-          ],
-        }
       }
     },
 
@@ -250,7 +243,7 @@
         };
       },
       changeSelectValue() {
-        this.$refs['rulesWechatForm'].resetFields();
+        this.$refs['moduleWechatForm'].resetFields();
         this.selectValue.appId = "";
         this.selectValue.linkUrl = "";
       },

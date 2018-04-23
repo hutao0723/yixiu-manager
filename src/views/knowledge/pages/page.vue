@@ -111,7 +111,7 @@
         this.getAppList();
       },
       getWechatList() {
-        this.$http.get(api.appList,{authorizerType: 1}).then(res => {
+        this.$http.get(api.appList,{params: {authorizerType: 1}}).then(res => {
           let resp = res.data
           if (resp.success) {
             this.wechatList = resp.data;

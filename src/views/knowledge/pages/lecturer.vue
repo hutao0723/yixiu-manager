@@ -261,6 +261,7 @@ export default {
           if (msg) {
             if (res.data.data) {
               this.$message.success('删除成功')
+              this.searchForm.value = ""
               this.getLecturerList()
             } else {
               let msg = res.data.desc || '删除失败'

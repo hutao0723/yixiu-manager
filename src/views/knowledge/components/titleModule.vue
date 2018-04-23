@@ -7,11 +7,14 @@
     </div>
     <div class="module-deploy" v-show="deployToggle == moduleIndex">
       <h2 class="module-deploy-title">标题</h2>
-      <el-form ref="moduleForm" :rules="rulesForm" :model="moduleForm" label-width="80px">
-        <el-form-item label="页面标题" prop="pageTitle">
+      <el-form ref="moduleForm" :model="moduleForm" label-width="80px">
+        <el-form-item label="页面标题" prop="pageTitle" :rules="[
+            { required: true, message: '请输入页面标题', trigger: 'change' },
+            { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'change' }
+          ]">
           <el-input v-model="moduleForm.pageTitle"></el-input>
         </el-form-item>
-        <el-form-item label="页面描述" prop="shareDescribe">
+        <el-form-item label="页面描述" prop="shareDescribe" :rules="{ min: 1, max: 35, message: '长度在 1 到 35 个字符', trigger: 'change' }">
           <el-input v-model="moduleForm.shareDescribe"></el-input>
         </el-form-item>
         <el-form-item label="页面图片" prop="sharePictureUrl">
@@ -35,15 +38,6 @@
   export default {
     data() {
       return {
-        rulesForm: {
-          pageTitle: [
-            { required: true, message: '请输入页面标题', trigger: 'change' },
-            { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'change' }
-          ],
-          shareDescribe: [
-            { min: 1, max: 35, message: '长度在 1 到 35 个字符', trigger: 'change' }
-          ],
-        }
       }
     },
     props: ['deployToggle', 'moduleForm', 'moduleIndex'],
@@ -71,14 +65,24 @@
       changeDeploy() {
         this.$emit('changeDeploy', this.moduleIndex)
         console.log(this.moduleIndex)
-      }
+      },
+      examineForm(){
+        let isValid;
+        this.$refs['moduleForm'].validate((valid) => {
+          isValid = valid
+        });
+        return isValid
+      },
+
+      
+
     },
 
   }
 </script>
 <style lang="less" scoped>
   @import "../../../styles/components/knowledge.less";
-  .module-deploy-img{
+  .module-deploy-img {
     height: 50px;
     width: 50px;
     display: inline-block;

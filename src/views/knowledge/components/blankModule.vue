@@ -31,6 +31,7 @@
     data() {
       return {
         rulesForm: {
+          
           blankHeight: [
             { required: true, message: '请输入空白高度', trigger: 'change' },
             { type: 'number',  message: '只能输入数字', trigger: 'change' }
@@ -44,6 +45,13 @@
     },
     props: ['deployToggle', 'moduleForm', 'moduleIndex'],
     methods: {
+      examineForm(){
+        let isValid;
+        this.$refs['moduleForm'].validate((valid) => {
+          isValid = valid
+        });
+        return isValid
+      },
       changeDeploy() {
         this.$emit('changeDeploy', this.moduleIndex)
       }

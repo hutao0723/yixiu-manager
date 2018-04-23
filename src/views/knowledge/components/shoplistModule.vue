@@ -71,7 +71,7 @@
         <el-form-item label="商品组">
           <div class="shop">
             <div class="shop-list" v-for="(item,index) in moduleForm.tabs"  v-dragging="{ item: item, list: moduleForm.tabs }">
-              <el-form :model="item" label-width="80px" :rules="rulesForm" ref="moduleForm">
+              <el-form :model="item" label-width="80px"  ref="moduleListForm" :rules="moduleListForm">
                 <el-form-item label="商品来源">
                   <el-input v-model="item.linkDataJson.goodsGroupName" size="small" disabled class="w200">
                     <el-button slot="append" icon="el-icon-edit" @click="showDialogGoods(index)"></el-button>
@@ -80,7 +80,7 @@
                 <el-form-item label="分组名称" prop="groupName">
                   <el-input v-model="item.groupName" size="small" class="w200"></el-input>
                 </el-form-item>
-                <el-form-item label="显示个数">
+                <el-form-item label="显示个数" prop="showLimitNumber">
                   <el-radio-group v-model="item.linkType">
                     <el-radio :label="1">
                       <el-input v-model="item.showLimitNumber" size="small" class="w50"></el-input>
@@ -117,7 +117,7 @@
         <el-input placeholder="商品标题" size="small" class="w150 vam" v-model="goodsTitle"></el-input>
         <el-button size="small" type="primary" @click="getAppList">查询</el-button>
       </div>
-      <el-table :data="appList" style="width: 100%" highlight-current-row @current-change="handleCurrentChange">
+      <el-table :data="appList" highlight-current-row style="width: 100%" @current-change="handleCurrentChange">
         <el-table-column prop="id" label="ID" width="100" align="center"></el-table-column>
         <el-table-column prop="goodsGroupName" label="商品信息">
         </el-table-column>
@@ -189,10 +189,13 @@
         },
         totalSize: 0,
         goodsTitle: '',
-        rulesForm: {
+        moduleListForm: {
           groupName: [
             { required: true, message: '请输入分组名称', trigger: 'change' },
             { min: 1, max: 10, message: '长度在 1 到 10 个字符', trigger: 'change' }
+          ],
+          showLimitNumber: [
+            { pattern: /^[1-9][0-9]{0,4}$/, message: '数值为 1 到 99999', trigger: 'change' }
           ],
         }
       }
@@ -201,6 +204,13 @@
     created() {
     },
     methods: {
+      examineForm(){
+        let isValid;
+        this.$refs['moduleListForm'].validate((valid) => {
+          isValid = valid
+        });
+        return isValid
+      },
       delImage(index) {
         console.log(this.moduleForm.tabs, index)
         this.moduleForm.tabs.splice(index, 1)

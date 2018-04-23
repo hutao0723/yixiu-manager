@@ -11,7 +11,7 @@
             </el-col>
           </el-row>
         </div>
-        <div is="PAGE" :deploy-toggle="deployToggle" :module-form="boxData" :module-index="-1" v-on:changeDeploy="changeDeploy"></div>
+        <div is="PAGE" :deploy-toggle="deployToggle" :module-form="boxData" :module-index="-1" v-on:changeDeploy="changeDeploy" :ref="'module' + '-1'"></div>
         <i class="module-add module-btn el-icon-circle-plus-outline" @click="clickModuleFun(-1)"></i>
       </div>
       <div class="module-item" v-for="(item,index) in boxList" :key="index" v-dragging="{ item: item, list: boxList, group: 'item' }">
@@ -23,7 +23,8 @@
             </el-col>
           </el-row>
         </div>
-        <div :is="item.componentType" :key="index" :deploy-toggle="deployToggle" :module-form="item" :module-index="index" v-on:changeDeploy="changeDeploy"></div>
+        <div :is="item.componentType" :key="index" :deploy-toggle="deployToggle" :module-form="item" :module-index="index" v-on:changeDeploy="changeDeploy"
+          :ref="'module' + index"></div>
         <i class="module-add module-btn el-icon-circle-plus-outline" @click="clickModuleFun(index)"></i>
         <i class="module-close module-btn el-icon-circle-close-outline" @click="deleteModuleFun(index)"></i>
       </div>
@@ -51,17 +52,19 @@
       return {
         addModuleToggle: false,
 
-        moduleList: [
-          {
-            name: '标题', id: 'TITLE'
-          }, {
-            name: '轮播图', id: 'SWIPER'
-          }, {
-            name: '商品组', id: 'GOODSBOX'
-          }, {
-            name: '空白', id: 'BLANK'
-          }
-        ],
+        moduleList: [{
+          name: '标题',
+          id: 'TITLE'
+        }, {
+          name: '轮播图',
+          id: 'SWIPER'
+        }, {
+          name: '商品组',
+          id: 'GOODSBOX'
+        }, {
+          name: '空白',
+          id: 'BLANK'
+        }],
         deployToggle: -1,
         boxData: {
           id: null,
@@ -78,15 +81,18 @@
         editId: null,
       }
     },
-    filters: {
-    },
+    filters: {},
     created() {
 
       this.editId = this.$route.query.id ? this.$route.query.id : null;
       this.authorizerId = this.$route.query.authorizerId ? this.$route.query.authorizerId : null;
 
       if (this.editId) {
-        this.$http.get('/knowledgepage/component/detail', { params: { id: this.editId } }).then(res => {
+        this.$http.get('/knowledgepage/component/detail', {
+          params: {
+            id: this.editId
+          }
+        }).then(res => {
           if (res.data.data) {
             this.boxData = res.data.data;
 
@@ -116,6 +122,26 @@
     },
     methods: {
       submitAdd() {
+        console.log(this.$refs)
+        for (let i = -1; i < this.boxList.length; i++) {
+          let isValid;
+          if (i < 0) {
+            isValid = this.$refs['module' + i].examineForm()
+          } else {
+            isValid = this.$refs['module' + i][0].examineForm()
+          }
+          if(!isValid){
+            this.deployToggle = i;
+            return false;
+          }
+          // if(!this.$refs['module' + i].examineForm){
+          //   console.log(this.$refs['module' + i].examineForm())
+          //   console.log(i)
+          //   this.deployToggle = i;
+          //   return;
+          // }
+        }
+
         let params = this.boxData;
         params['authorizerId'] = this.authorizerId;
         params.components = JSON.stringify(this.boxList);
@@ -161,14 +187,13 @@
               "componentType": "SWIPER",
               "fillType": "widthFix",
               "layout": "MAX",
-              "tabs": [
-              ]
+              "tabs": []
             }
             break;
           case 'GOODSBOX':
             obj = {
               "componentType": "GOODSBOX",
-              "fillType": "aspectFit",
+              "fillType": "widthFix",
               "layout": "ROW",
               "tabs": []
             }
@@ -203,7 +228,9 @@
       PAGE: PAGE,
     }
   }
+
 </script>
 <style lang="less" scoped>
   @import "../../../styles/components/knowledge.less";
+
 </style>

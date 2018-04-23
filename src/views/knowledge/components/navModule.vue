@@ -5,23 +5,23 @@
         <a href="javascript:void(0);" v-show="moduleForm.showTitle" class="module-title-right">{{moduleForm.subTitle}}</a>
       </h2>
       <h2 class="module-title tac" v-show="moduleForm.layout=='CENTER'">
-          <a href="javascript:void(0);" v-show="moduleForm.showTitle" class="module-title-center">{{moduleForm.subTitle}}</a>
-        </h2>
+        <a href="javascript:void(0);" v-show="moduleForm.showTitle" class="module-title-center">{{moduleForm.subTitle}}</a>
+      </h2>
     </div>
     <div class="module-deploy" v-show="deployToggle == moduleIndex">
       <h2 class="module-deploy-title">标题</h2>
       <el-form ref="moduleForm" :rules="rulesForm" :model="moduleForm" label-width="100px">
-          <el-form-item label="外链地址" prop="layout">
-              <el-radio-group v-model="moduleForm.layout">
-                <el-radio label="BASE">左右</el-radio>
-                <el-radio label="CENTER">居中</el-radio>
-              </el-radio-group>
-            </el-form-item>
+        <el-form-item label="外链地址" prop="layout">
+          <el-radio-group v-model="moduleForm.layout">
+            <el-radio label="BASE">左右</el-radio>
+            <el-radio label="CENTER">居中</el-radio>
+          </el-radio-group>
+        </el-form-item>
         <el-form-item label="标题名称" prop="titleName">
           <el-input v-model="moduleForm.titleName" size="small"></el-input>
         </el-form-item>
         <el-form-item label="查看更多" prop="subTitle">
-            <el-input v-model="moduleForm.subTitle" size="small"></el-input>
+          <el-input v-model="moduleForm.subTitle" size="small"></el-input>
         </el-form-item>
         <el-form-item label="跳转类型">
           <el-select v-model="moduleForm.linkType" placeholder="请选择" size="small" @change="changeLinkType">
@@ -49,7 +49,7 @@
       </el-form>
     </div>
     <el-dialog title="商品" :visible.sync="dialogGoods">
-      <el-tabs v-model="goodsActiveName" @tab-click="getShopList">
+      <el-tabs v-model="goodsActiveName" @tab-click="getShopList('toggle')">
         <el-tab-pane label="课程" name="0"></el-tab-pane>
         <el-tab-pane label="专栏" name="1"></el-tab-pane>
       </el-tabs>
@@ -87,8 +87,8 @@
     </el-dialog>
 
     <el-dialog title="外链" :visible.sync="dialogHref" v-if="selectValue">
-      <el-form>
-        <el-form-item label="外链地址" label-width="100px">
+      <el-form ref="moduleHrefForm" :rules="rulesHrefForm" :model="selectValue">
+        <el-form-item label="外链地址" label-width="100px" prop="linkUrl">
           <el-input v-model="selectValue.linkUrl"></el-input>
         </el-form-item>
       </el-form>
@@ -96,21 +96,21 @@
       </el-alert>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogHref = false" size="small">取 消</el-button>
-        <el-button type="primary" @click="selectOver" size="small">确 定</el-button>
+        <el-button type="primary" @click="selectOver(1)" size="small">确 定</el-button>
       </div>
     </el-dialog>
     <el-dialog title="小程序" :visible.sync="dialogWechat" v-if="selectValue">
-      <el-form>
+      <el-form ref="moduleWechatForm" :rules="rulesWechatForm" :model="selectValue">
         <el-form-item label="外链地址" label-width="100px">
           <el-radio-group v-model="selectValue.courseType" @change="changeSelectValue">
             <el-radio :label="1">我的小程序</el-radio>
             <el-radio :label="2">外部小程序</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="AppId" label-width="100px" v-show="selectValue.courseType == 2">
-          <el-input v-model="selectValue.appId"></el-input>
+        <el-form-item label="AppId" label-width="100px" v-show="selectValue.courseType == 2" prop="appId">
+          <el-input v-model="selectValue.appId" prop="appId"></el-input>
         </el-form-item v-if="selectValue.linkUrl">
-        <el-form-item label="路径" label-width="100px">
+        <el-form-item label="路径" label-width="100px" prop="linkUrl">
           <el-input v-model="selectValue.linkUrl"></el-input>
         </el-form-item>
       </el-form>
@@ -118,7 +118,7 @@
       </el-alert>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogWechat = false" size="small">取 消</el-button>
-        <el-button type="primary" @click="selectOver" size="small">确 定</el-button>
+        <el-button type="primary" @click="selectOver(2)" size="small">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -152,27 +152,60 @@
             { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'change' }
           ],
         },
+        rulesWechatForm: {
+          appId: [
+            { required: true, message: '请输入AppId', trigger: 'change' },
+            { min: 1, max: 200, message: '长度在 1 到 200 个字符', trigger: 'change' }
+          ],
+          linkUrl: [
+            { required: true, message: '请输入路径', trigger: 'change' },
+            { min: 1, max: 200, message: '长度在 1 到 200 个字符', trigger: 'change' }
+          ],
+        },
+        rulesHrefForm: {
+          linkUrl: [
+            { required: true, message: '请输入路径', trigger: 'change' },
+            { min: 1, max: 1000, message: '长度在 1 到 1000 个字符', trigger: 'change' }
+          ],
+        }
       }
     },
-    
+
     props: ['deployToggle', 'moduleForm', 'moduleIndex'],
     created() {
     },
     methods: {
+      examineForm() {
+        let isValid;
+        this.$refs['moduleForm'].validate((valid) => {
+          isValid = valid
+        });
+        return isValid
+      },
       changeDeploy() {
         this.$emit('changeDeploy', this.moduleIndex)
       },
-      selectOver() {
-        this.moduleForm.linkDataJson = this.selectValue;
-        this.dialogGoods = false;
-        this.dialogHref = false;
-        this.dialogWechat = false;
+      selectOver(v) {
+        let refName;
+        if(v == 1){
+          refName = 'moduleHrefForm';
+        }else if(v == 2){
+          refName = 'moduleWechatForm';
+        }
+        this.$refs[refName].validate((valid) => {
+          if (valid) {
+            this.moduleForm.linkDataJson = this.selectValue;
+            this.dialogGoods = false;
+            this.dialogHref = false;
+            this.dialogWechat = false;
+          }
+        });
       },
       handleCurrentChange(row) {
         this.selectValue = row;
       },
       getShopList(v) {
-        if(v){
+        if (v == "toggle") {
           this.goodsTitle = "";
         }
         let url = this.goodsActiveName == 0 ? api.courseList : api.columnList;
@@ -205,30 +238,31 @@
       showDialogHref() {
         this.dialogHref = true;
         this.selectValue = {
-          linkUrl: this.selectValue.linkUrl?this.selectValue.linkUrl:"https://",
+          linkUrl: this.selectValue.linkUrl ? this.selectValue.linkUrl : "https://",
         }
       },
       showDialogWechat() {
         this.dialogWechat = true;
         this.selectValue = {
-          appId: this.selectValue.appId ? this.selectValue.appId: "",
-          linkUrl: this.selectValue.linkUrl ? this.selectValue.linkUrl: "",
-          courseType: this.selectValue.courseType ? this.selectValue.courseType: 1,
+          appId: this.selectValue.appId ? this.selectValue.appId : "",
+          linkUrl: this.selectValue.linkUrl ? this.selectValue.linkUrl : "",
+          courseType: this.selectValue.courseType ? this.selectValue.courseType : 1,
         };
       },
-      changeSelectValue(){
-        this.selectValue.appId =  "";
-        this.selectValue.linkUrl =  "";
+      changeSelectValue() {
+        this.$refs['rulesWechatForm'].resetFields();
+        this.selectValue.appId = "";
+        this.selectValue.linkUrl = "";
       },
-      changeLinkType(v){
+      changeLinkType(v) {
         switch (v) {
           case 1:
             this.moduleForm.linkDataJson.title = "";
             break;
-            case 2:
+          case 2:
             this.moduleForm.linkDataJson.linkUrl = "";
             break;
-            case 3:
+          case 3:
             this.moduleForm.linkDataJson.linkUrl = "";
             break;
           default:
@@ -257,39 +291,41 @@
     font-weight: bold;
     color: #222;
     position: relative;
-    
+
   }
+
   .module-title-right {
-      line-height: 28px;
-      height: 28px;
-      font-size: 13px;
-      color: #666;
-      float: right;
-    }
-    .module-title-center {
-      line-height: 28px;
-      height: 28px;
-      font-size: 13px;
-      color: #666;
-      text-align: center;
-    }
+    line-height: 28px;
+    height: 28px;
+    font-size: 13px;
+    color: #666;
+    float: right;
+  }
+
+  .module-title-center {
+    line-height: 28px;
+    height: 28px;
+    font-size: 13px;
+    color: #666;
+    text-align: center;
+  }
 
   .list-goods {
-    position: relative;
-    // padding-left: 60px;
+    position: relative; // padding-left: 60px;
     // padding-right: 10px;
     height: 50px;
     img {
       vertical-align: middle;
       height: 50px;
       display: inline-block;
-     
+
     }
     span {
       line-height: 50px;
 
     }
   }
+
   .page-control {
     float: right;
     margin-top: 20px;

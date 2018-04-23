@@ -71,7 +71,7 @@
 
 
     <el-dialog title="商品" :visible.sync="dialogGoods" v-if="selectValue">
-      <el-tabs v-model="goodsActiveName" @tab-click="getAppList">
+      <el-tabs v-model="goodsActiveName" @tab-click="getAppList('toggle')">
         <el-tab-pane label="课程" name="0"></el-tab-pane>
         <el-tab-pane label="专栏" name="1"></el-tab-pane>
       </el-tabs>
@@ -84,7 +84,9 @@
         <el-table-column label="商品信息">
           <template slot-scope="scope">
             <div class="list-goods otw">
-              <img :src="scope.row.frontCover" alt="">
+              <img :src="scope.row.lateralCover" alt="" v-if="scope.row.lateralCover">
+              <img :src="scope.row.verticalCover" alt="" v-if="scope.row.verticalCover && !scope.row.lateralCover">
+              <img src="" alt="" v-if="!scope.row.verticalCover && !scope.row.lateralCover">
               <span>{{scope.row.title}}</span>
             </div>
           </template>
@@ -173,6 +175,13 @@
     created() {
     },
     methods: {
+      examineForm(){
+        let isValid;
+        this.$refs['moduleForm'].validate((valid) => {
+          isValid = valid
+        });
+        return isValid
+      },
       delImage(index) {
         this.moduleForm.tabs.splice(index, 1)
       },
@@ -220,7 +229,7 @@
         this.selectValue = row;
       },
       getAppList(v) {
-        if(v){
+        if (v == "toggle") {
           this.goodsTitle = "";
         }
         console.log(1)
@@ -280,13 +289,13 @@
         console.log(this.moduleForm)
         switch (v) {
             case 1:
-            this.moduleForm.tabs[index].linkDataJson['title'] = "";
+            this.moduleForm.tabs[index].linkDataJson.title = "";
             break;
             case 2:
-            this.moduleForm.tabs[index].linkDataJson['linkUrl ']= "";
+            this.moduleForm.tabs[index].linkDataJson.linkUrl= "";
             break;
             case 3:
-            this.moduleForm.tabs[index].linkDataJson['linkUrl'] = "";
+            this.moduleForm.tabs[index].linkDataJson.linkUrl = "";
             break;
           default:
             break;

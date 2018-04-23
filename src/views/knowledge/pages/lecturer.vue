@@ -125,6 +125,7 @@ export default {
     openDialogLecturer (row) {
       this.dialogLecturerVisible = true
       this.typeForm.id = row.id
+      this.searchForm.value = ""
       this.typeForm.nickName = row.nickName
     },
     // 添加讲师弹框

@@ -39,6 +39,7 @@
             </el-form-item>
             <el-form-item label="订单状态">
               <el-select v-model="searchForm.orderStatus" placeholder="全部">
+                <el-option label="全部" value=""></el-option>
                 <el-option label="待支付" value="TO_PAY"></el-option>
                 <el-option label="交易成功" value="SUCCESS"></el-option>
                 <el-option label="交易失败" value="FAILED"></el-option>
@@ -46,6 +47,7 @@
             </el-form-item>
             <el-form-item label="订单类型">
               <el-select v-model="searchForm.orderType" placeholder="全部">
+                <el-option label="全部" value=""></el-option>
                 <el-option label="普通" value="ordinary"></el-option>
               </el-select>
             </el-form-item>
@@ -63,12 +65,10 @@
             <el-table-column prop="itemId" label="商品ID" width="80"></el-table-column>
             <el-table-column label="商品信息" width="300">
               <template slot-scope="scope">
-                <div class="img-container">
-                  <img :src="scope.row.itemImage" alt="" class="goods-list-img">
-                  <div class="goods-mask">{{scope.row.type}}</div>
-                </div>
-                <span v-if="scope.row.itemName.length > 15" v-text="scope.row.itemName" class="two-ellipsis"></span>
-                <span v-else v-text="scope.row.itemName" class="goods-word"></span>
+                <div v-if="scope.row.itemImage" class="img-box por" v-bind:style="{backgroundImage:'url('+scope.row.itemImage+')',backgroundSize: 'contain',backgroundPosition: 'center'}"><div class="goods-mask">{{scope.row.type}}</div></div>
+                <div  v-else class="img-box por" v-bind:style="{backgroundImage:'url(//yun.dui88.com/yoofans/images/201804/noClassImg.png)',backgroundSize: 'contain',backgroundPosition: 'center'}"><div class="goods-mask">{{scope.row.type}}</div></div>
+                 <span v-if="scope.row.itemName.length > 12" v-text="scope.row.itemName" class="twoLines ln37 w150"></span>
+                 <span v-else v-text="scope.row.itemName" class="goods-word"></span>
               </template>
             </el-table-column>
             <el-table-column label="单价(元)" >
@@ -76,9 +76,9 @@
                 <div>{{scope.row.itemPrice ? (scope.row.itemPrice / 100).toFixed(2) : ''}}</div>
               </template>
             </el-table-column>
-            <el-table-column prop="orderAmt" label="订单金额(元)" >
+            <el-table-column prop="amount" label="订单金额(元)" >
               <template slot-scope="scope">
-                <div>{{scope.row.orderAmt ? (scope.row.orderAmt / 100).toFixed(2) : ''}}</div>
+                <div>{{scope.row.amount ? (scope.row.amount / 100).toFixed(2) : ''}}</div>
               </template>
             </el-table-column>
             <el-table-column prop="orderStatus" label="订单状态" >
@@ -324,42 +324,21 @@ export default {
       clear: both;
     }
   }
-  .img-container{
-    height: 50px;
-    width: 50px;
-    position:relative;
-    display: inline-block;
-    float: left;
-    .goods-list-img{
-      height: 50px;
-      width: 50px;
-    }
-    .goods-mask{
-      right: 0;
-      bottom: 0;
-      width: 30px;
-      height: 20px;
-      line-height: 20px;
-      text-align: center;
-      background-color: #000;
-      opacity: 0.6;
-      color: #FFF;
-      position:absolute;
-    }
-  }
-  .two-ellipsis{
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    width: 200px;
-    float: left;
-    margin-left: 10px;
+  .goods-mask{
+    right: 0;
+    bottom: 0;
+    width: 30px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    background-color: #000;
+    opacity: 0.6;
+    color: #FFF;
+    position:absolute;
   }
   .goods-word{
     margin-left: 10px;
-    line-height: 50px;
+    line-height: 75px;
   }
   .btn-disabled {
     color: #fff;
@@ -372,6 +351,35 @@ export default {
     vertical-align: bottom;
     animation: ellipsis 2s infinite;
     content: "\2026"; 
+  }
+  .twoLines{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    float: left;
+    margin-left: 10px;
+  }
+  .ln75{
+    line-height:75px;
+  }
+  .ln37{
+    line-height:37px;
+  }
+  .w150{
+    width:150px;
+  }
+  .img-box{
+    overflow: hidden;
+    width: 75px;
+    height: 75px;
+    display: inline-block;
+    float: left;
+    background-repeat: no-repeat;
+  }
+  .por{
+    position:relative;
   }
   @keyframes ellipsis {
       from {

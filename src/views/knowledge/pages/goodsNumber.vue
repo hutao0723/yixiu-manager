@@ -404,7 +404,7 @@ export default {
       let params = {
         goodsGroupId: this.goodsGroupId,
         title: this.searchForm.title,
-        pageNum: this.pageOption.pageNum,
+        pageNum: 1,
         pageSize:10
       }
       this.$http.get(url, {params:params}).then(res => {

@@ -126,6 +126,7 @@ export default {
       this.dialogLecturerVisible = true
       this.typeForm.id = row.id
       this.searchForm.value = ""
+      this.getLecturerList()
       this.typeForm.nickName = row.nickName
     },
     // 添加讲师弹框
@@ -133,6 +134,7 @@ export default {
       this.typeForm.id = ""
       this.typeForm.nickName = ""
       this.searchForm.value = ""
+      this.getLecturerList()
       this.dialogaddLecturerVisible = true
     },
     // 获取讲师列表

@@ -421,12 +421,19 @@
         /* 处理上传图片的controller路径 */
         editor.customConfig.uploadImgServer = '/upload/image'
         /* 定义上传图片的默认名字 */
-        editor.customConfig.uploadFileName = 'myFileName'
+        editor.customConfig.uploadFileName = 'imageFile'
         editor.customConfig.withCredentials = false;
         editor.customConfig.debug=true;
-        editor.customConfig.uploadImgHeaders = {
-          'Accept': 'text/x-json'
-        }
+        editor.customConfig.uploadImgHooks = {
+          customInsert: function (insertImg, result, editor) {
+            // 图片上传并返回结果，自定义插入图片的事件（而不是编辑器自动插入图片！！！）
+            // insertImg 是插入图片的函数，editor 是编辑器对象，result 是服务器端返回的结果
+            // 举例：假如上传图片成功后，服务器端返回的是 {url:'....'} 这种格式，即可这样插入图片：
+            var url = result.data.fileUrl
+            insertImg(url)
+            // result 必须是一个 JSON 格式字符串！！！否则报错
+          }
+        };
         editor.customConfig.onchange = (html) => {
           this.courseForm.detail = html;
         }
@@ -541,7 +548,11 @@
           this.loading = false;
         })
       },
-      searchLecturer(val){
+
+      searchLecturer(selectVal){
+        if(selectVal.target.value == ''){
+          this.courseFormLecturerId = ''
+        }
         this.getLecturerList()
       },
 
@@ -578,7 +589,7 @@
               updateCourse(params).then(res => {
                 if (res.success) {
                   this.$message.success('修改成功');
-                  this.clearCourseSearchForm();
+//                  this.clearCourseSearchForm();
                   this.getData();
                   this.pageType = 0;
                 } else {
@@ -593,7 +604,7 @@
               addCourse(this.courseForm).then(res => {
                 if (res.success) {
                   this.$message.success('新增成功');
-                  this.clearCourseSearchForm();
+//                  this.clearCourseSearchForm();
                   this.getData();
                   this.pageType = 0;
                 } else {
@@ -614,7 +625,7 @@
 
       cancelForm(formName) {
         this.$refs[formName].resetFields();
-        this.clearCourseSearchForm();
+//        this.clearCourseSearchForm();
         this.getData();
         this.pageType = 0;
       },
@@ -645,7 +656,7 @@
       },
 
       beforeAvatarUpload(file) {
-        const isJLtType = file.type === 'image/jpg' || file.type === 'image/png' || file.type === 'image/gif';
+        const isJLtType = file.type === 'image/jpg' || file.type === 'image/png' || file.type === 'image/gif' || file.type ==='image/jpeg';
         const isLtSize = file.size / 1024 <= 5000;
         if (!isJLtType) {
           this.$message.error('上传图片只能是 JPG/PNG/GIF 格式!');

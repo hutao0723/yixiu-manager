@@ -47,7 +47,7 @@
             </el-form-item>
             <el-form-item label="订单类型">
               <el-select v-model="searchForm.orderType" placeholder="全部">
-                <el-option label="普通" value=""></el-option>
+                <el-option label="全部" value=""></el-option>
                 <el-option label="普通" value="ordinary"></el-option>
               </el-select>
             </el-form-item>

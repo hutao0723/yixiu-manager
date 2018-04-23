@@ -37,7 +37,7 @@
                   </tbody>
                 </table> 
                 <div class="order-detail-title">商品</div>
-                <table class="table-list">
+                <table class="table-list goods">
                   <thead>
                     <tr class="tr-header">
                       <th class="w255">商品信息</th>
@@ -52,10 +52,12 @@
                     <tr>
                       <td>
                         <div class="clearfix">
-                          <div class="img-container">
+                          <!-- <div class="img-container">
                             <img :src="orderItems.itemImage" v-if="orderItems.itemImage"> 
-                          </div> 
-                          <span class="goods-word info-ellipis">{{orderItems.itemName}}</span>
+                          </div>  -->
+                          <div v-if="orderItems.itemImage" class="img-box" v-bind:style="{backgroundImage:'url('+orderItems.itemImage+')',backgroundSize: 'contain',backgroundPosition: 'center'}"></div>
+                          <div  v-else class="img-box" v-bind:style="{backgroundImage:'url(//yun.dui88.com/yoofans/images/201804/noClassImg.png)',backgroundSize: 'contain',backgroundPosition: 'center'}"></div>
+                          <span class="info-ellipis">{{orderItems.itemName}}</span>
                         </div>
                       </td>
                       <td>{{singlePrice ? singlePrice: ''}}</td>
@@ -272,7 +274,11 @@
       }
     }
     }
-    
+    .goods{
+      td{
+        line-height: 75px!important;
+      }
+    }
     .order-detail-title {
       height: 21px;
       line-height: 21px;
@@ -315,8 +321,18 @@
       text-overflow:ellipsis;
       white-space:nowrap;
       display:inline-block;
-      width: 170px;
+      width: 140px;
       float: left;
+      margin-left: 10px;
+      line-height: 75px;
+    }
+    .img-box{
+      overflow: hidden;
+      width: 75px;
+      height: 75px;
+      display: inline-block;
+      float: left;
+      background-repeat: no-repeat;
     }
     .logistics-info{
       display: flex;

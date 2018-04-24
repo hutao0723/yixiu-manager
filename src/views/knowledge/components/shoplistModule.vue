@@ -109,7 +109,7 @@
         <el-form-item label="填充方式">
           <el-radio-group v-model="moduleForm.fillType">
             <el-radio label="widthFix">固定宽度x自适应高度</el-radio>
-            <el-radio label="aspectFit">自适应宽度x固定高度</el-radio>
+            <el-radio label="aspectFill">自适应宽度x固定高度</el-radio>
           </el-radio-group>
         </el-form-item>
       </el-form>

@@ -85,27 +85,39 @@
       }
     },
     created() {
+      console.log(this.$route.path)
       let pathIndex;
       let path = this.$route.path;
-      if (path.indexOf("/manager/miniApp/editContent") != -1) {
-        path = '/manager/miniApp/editContent'
-      }
-      console.log(path)
       switch (path) {
-        case '/manager/miniApp':
+        case '/manager/knowledge':
           pathIndex = "1";
           break;
-        case '/manager/miniApp/contentManage':
-          pathIndex = "2";
+        case '/manager/knowledge/curriculum':
+          pathIndex = "2-1";
           break;
-        case '/manager/miniApp/editContent':
-          pathIndex = "2";
+        case '/manager/knowledge/specialColumn':
+          pathIndex = "2-2";
           break;
-        case '/manager/knowledge/lecturer':
-          pathIndex = "6";
+        case '/manager/knowledge/goodsGroup':
+          pathIndex = "2-3";
           break;
+        case '/manager/knowledge/order':
+          pathIndex = "3";
+          break;
+          case '/manager/knowledge/lecturer':
+          pathIndex = "4";
+          break;
+          case '/manager/knowledge/channel':
+          pathIndex = "5-1";
+          break;
+          case '/manager/knowledge/extend':
+          pathIndex = "5-2";
+          break;
+          case '/manager/knowledge/add':
+          pathIndex = "1";
+          break;
+      
         default:
-          pathIndex = "1";
           break;
       }
       this.pathIndex = pathIndex;

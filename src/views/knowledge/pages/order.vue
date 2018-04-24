@@ -186,7 +186,8 @@ export default {
       dialogVisible: false, // 弹框
       downStatus: true, // 文字
       disabled: true, // 按钮状态
-      downloadUrl: 'http://www.baidu.com' //链接
+      downloadUrl: 'http://www.baidu.com',//链接
+      filename: ''
     }
   },
   created () {
@@ -254,11 +255,36 @@ export default {
         orderStatus: this.searchForm.orderStatus,
         orderType: this.searchForm.orderType
       }
-      this.$http.get('/order/export', {params}).then(res => {
+      this.$http.get('/knowledge/order/export', {params}).then(res => {
         let resp = res.data
         if (resp.success) {
-          this.disabled = false
-          this.downStatus = false
+          this.filename = resp.data
+          let that = this
+          let orders = setInterval(function(){
+            let params = {
+              filename: that.filename
+            }
+            that.$http.get('/knowledge/order/checkExport', {params}).then(res => {
+              let resp = res.data
+              if (resp.success) {
+                if(resp.data.succeed){
+                  clearInterval(orders)
+                  that.disabled = false
+                  that.downStatus = false
+                  that.downloadUrl = resp.data.fileUrl
+                }else{
+                  // let msg = resp.data.message || '文件正在上传中'
+                  // that.$message.error(msg)
+                  console.log(resp.data.message)
+                }
+              } else {
+                let msg = resp.desc || '请求失败'
+                that.$message.error(msg)
+              } 
+            }, () => {
+              that.$message.error('网络错误')
+            })
+          }, 500)
         } else {
           let msg = resp.desc || '请求失败'
           this.$message.error(msg)

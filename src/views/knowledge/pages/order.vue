@@ -67,7 +67,7 @@
               <template slot-scope="scope">
                 <div v-if="scope.row.itemImage" class="img-box por" v-bind:style="{backgroundImage:'url('+scope.row.itemImage+')',backgroundSize: 'contain',backgroundPosition: 'center'}"><div class="goods-mask">{{scope.row.type}}</div></div>
                 <div  v-else class="img-box por" v-bind:style="{backgroundImage:'url(//yun.dui88.com/yoofans/images/201804/noClassImg.png)',backgroundSize: 'contain',backgroundPosition: 'center'}"><div class="goods-mask">{{scope.row.type}}</div></div>
-                 <span v-if="scope.row.itemName.length > 12" v-text="scope.row.itemName" class="twoLines ln37 w150"></span>
+                 <span v-if="scope.row.itemName.length > 12" v-text="scope.row.itemName" class="twoLines-goods ln37 w150"></span>
                  <span v-else v-text="scope.row.itemName" class="goods-word"></span>
               </template>
             </el-table-column>
@@ -242,6 +242,8 @@ export default {
     // 导出
     exportOrders () {
       this.dialogVisible = true
+      this.disabled = true
+      this.downStatus = true
       let valueArr = Object.values(this.searchForm)
       console.log(valueArr)
       this.startTime = this.searchForm.time ? formatDateNew(this.searchForm.time[0]): ''
@@ -378,7 +380,7 @@ export default {
     animation: ellipsis 2s infinite;
     content: "\2026"; 
   }
-  .twoLines{
+  .twoLines-goods{
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;

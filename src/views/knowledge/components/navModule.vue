@@ -57,18 +57,19 @@
         <el-input placeholder="商品标题" size="small" class="w150 vam" v-model="goodsTitle"></el-input>
         <el-button size="small" type="primary" @click="getShopList">查询</el-button>
       </div>
-      <el-table :data="appList" highlight-current-row style="width: 100%" @current-change="handleCurrentChange">
+      <el-table :data="appList" highlight-current-row style="width: 100%" @current-change="handleCurrentChange" class="none-hover">
         <el-table-column prop="id" label="ID" width="100" align="center"></el-table-column>
-        <el-table-column label="商品信息">
+        <el-table-column label="商品图片" width="100" align="center">
           <template slot-scope="scope">
             <div class="list-goods otw">
               <img :src="scope.row.lateralCover" alt="" v-if="scope.row.lateralCover">
               <img :src="scope.row.verticalCover" alt="" v-if="scope.row.verticalCover && !scope.row.lateralCover">
-              <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1524500109724&di=482c198f5f8fc8557677c635ad4addfe&imgtype=0&src=http%3A%2F%2Fpic2.cxtuku.com%2F00%2F05%2F14%2Fb5098065ea99.jpg" alt="" v-if="!scope.row.verticalCover && !scope.row.lateralCover">
-              <span>{{scope.row.title}}</span>
+              <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1524500109724&di=482c198f5f8fc8557677c635ad4addfe&imgtype=0&src=http%3A%2F%2Fpic2.cxtuku.com%2F00%2F05%2F14%2Fb5098065ea99.jpg"
+                alt="" v-if="!scope.row.verticalCover && !scope.row.lateralCover">
             </div>
           </template>
         </el-table-column>
+        <el-table-column label="商品标题" prop="title"></el-table-column>
         <el-table-column label="商品类型" align="center">
           <template slot-scope="scope">
             <span v-if="scope.row.courseType == 1">课程 - 音频</span>
@@ -180,19 +181,36 @@
       },
       selectOver(v) {
         let refName;
-        if(v == 1){
+        if (v == 1) {
           refName = 'moduleHrefForm';
-        }else if(v == 2){
+          this.$refs[refName].validate((valid) => {
+            if (valid) {
+              this.moduleForm.linkDataJson = this.selectValue;
+              this.dialogHref = false;
+            }
+          });
+        } else if (v == 2) {
           refName = 'moduleWechatForm';
-        }
-        this.$refs[refName].validate((valid) => {
-          if (valid) {
-            this.moduleForm.linkDataJson = this.selectValue;
-            this.dialogGoods = false;
-            this.dialogHref = false;
-            this.dialogWechat = false;
+          if (this.selectValue.courseType == 2) {
+            this.$refs[refName].validate((valid) => {
+              if (valid) {
+                this.moduleForm.linkDataJson = this.selectValue;
+                this.dialogWechat = false;
+              }
+            });
+          } else {
+            this.$refs[refName].validateField('linkUrl', (valid) => {
+              console.log(1, valid)
+              if (!valid) {
+                this.moduleForm.linkDataJson = this.selectValue;
+                this.dialogWechat = false;
+              }
+            })
           }
-        });
+        } else {
+          this.moduleForm.linkDataJson = this.selectValue;
+          this.dialogGoods = false;
+        }
       },
       handleCurrentChange(row) {
         this.selectValue = row;
@@ -304,8 +322,7 @@
   }
 
   .list-goods {
-    position: relative; // padding-left: 60px;
-    // padding-right: 10px;
+    position: relative;
     height: 50px;
     img {
       vertical-align: middle;

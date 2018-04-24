@@ -27,7 +27,8 @@
               <el-form :model="item" label-width="100px">
                 <el-form-item label="图片">
                   <img :src="item.pictureUrl" alt="" width="50" height="50">
-                  <el-upload class="shop-list-upload" action="/upload/image" :on-success="(res) => changeImage(res, index)" name="imageFile" :before-upload="beforeImage" :show-file-list="false">
+                  <el-upload class="shop-list-upload" action="/upload/image" :on-success="(res) => changeImage(res, index)" name="imageFile"
+                    :before-upload="beforeImage" :show-file-list="false">
                     <i class="el-icon-edit"></i>
                   </el-upload>
                 </el-form-item>
@@ -60,7 +61,8 @@
           </div>
         </el-form-item>
         <el-form-item label="图片上传">
-          <el-upload class="upload-demo" action="/upload/image" :on-success="submitImage" name="imageFile" :before-upload="beforeImage" :show-file-list="false">
+          <el-upload class="upload-demo" action="/upload/image" :on-success="submitImage" name="imageFile" :before-upload="beforeImage"
+            :show-file-list="false">
             <el-button size="small" type="primary" v-show="moduleForm.tabs.length < 10">点击上传</el-button>
             <div slot="tip" class="el-upload__tip">建议尺寸：750px * 340px，只能上传jpeg/jpg/png文件，且不超过2m。</div>
           </el-upload>
@@ -79,18 +81,19 @@
         <el-input placeholder="商品标题" size="small" class="w150 vam" v-model="goodsTitle"></el-input>
         <el-button size="small" type="primary" @click="getAppList">查询</el-button>
       </div>
-      <el-table :data="appList" highlight-current-row style="width: 100%" @current-change="handleCurrentChange">
+      <el-table :data="appList" highlight-current-row style="width: 100%" @current-change="handleCurrentChange" class="none-hover">
         <el-table-column prop="id" label="ID" width="100" align="center"></el-table-column>
-        <el-table-column label="商品信息">
+        <el-table-column label="商品图片" width="100" align="center">
           <template slot-scope="scope">
             <div class="list-goods otw">
               <img :src="scope.row.lateralCover" alt="" v-if="scope.row.lateralCover">
               <img :src="scope.row.verticalCover" alt="" v-if="scope.row.verticalCover && !scope.row.lateralCover">
-              <img src="" alt="" v-if="!scope.row.verticalCover && !scope.row.lateralCover">
-              <span>{{scope.row.title}}</span>
+              <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1524500109724&di=482c198f5f8fc8557677c635ad4addfe&imgtype=0&src=http%3A%2F%2Fpic2.cxtuku.com%2F00%2F05%2F14%2Fb5098065ea99.jpg"
+                alt="" v-if="!scope.row.verticalCover && !scope.row.lateralCover">
             </div>
           </template>
         </el-table-column>
+        <el-table-column label="商品标题" prop="title"></el-table-column>
         <el-table-column label="商品类型" align="center">
           <template slot-scope="scope">
             <span v-if="scope.row.courseType == 1">课程 - 音频</span>
@@ -109,8 +112,11 @@
     </el-dialog>
 
     <el-dialog title="外链" :visible.sync="dialogHref" v-if="selectValue">
-      <el-form>
-        <el-form-item label="外链地址" label-width="100px">
+      <el-form ref="moduleHrefForm" :model="selectValue">
+        <el-form-item label="外链地址" label-width="100px" prop="linkUrl" :rules="[
+            { required: true, message: '请输入路径', trigger: 'change' },
+            { min: 1, max: 1000, message: '长度在 1 到 1000 个字符', trigger: 'change' }
+          ]">
           <el-input v-model="selectValue.linkUrl"></el-input>
         </el-form-item>
       </el-form>
@@ -118,21 +124,27 @@
       </el-alert>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogHref = false" size="small">取 消</el-button>
-        <el-button type="primary" @click="selectOver" size="small">确 定</el-button>
+        <el-button type="primary" @click="selectOver(1)" size="small">确 定</el-button>
       </div>
     </el-dialog>
     <el-dialog title="小程序" :visible.sync="dialogWechat" v-if="selectValue">
-      <el-form>
+      <el-form ref="moduleWechatForm" :model="selectValue">
         <el-form-item label="外链地址" label-width="100px">
           <el-radio-group v-model="selectValue.courseType" @change="changeSelectValue">
             <el-radio :label="1">我的小程序</el-radio>
             <el-radio :label="2">外部小程序</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="AppId" label-width="100px" v-show="selectValue.courseType == 2">
-          <el-input v-model="selectValue.appId"></el-input>
-        </el-form-item>
-        <el-form-item label="路径" label-width="100px">
+        <el-form-item label="AppId" label-width="100px" v-show="selectValue.courseType == 2" prop="appId" :rules="[
+            { required: true, message: '请输入AppId', trigger: 'change' },
+            { min: 1, max: 200, message: '长度在 1 到 200 个字符', trigger: 'change' }
+          ]">
+          <el-input v-model="selectValue.appId" prop="appId"></el-input>
+        </el-form-item v-if="selectValue.linkUrl">
+        <el-form-item label="路径" label-width="100px" prop="linkUrl" :rules="[
+            { required: true, message: '请输入路径', trigger: 'change' },
+            { min: 1, max: 200, message: '长度在 1 到 200 个字符', trigger: 'change' }
+          ]">
           <el-input v-model="selectValue.linkUrl"></el-input>
         </el-form-item>
       </el-form>
@@ -140,7 +152,7 @@
       </el-alert>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogWechat = false" size="small">取 消</el-button>
-        <el-button type="primary" @click="selectOver" size="small">确 定</el-button>
+        <el-button type="primary" @click="selectOver(2)" size="small">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -175,7 +187,7 @@
     created() {
     },
     methods: {
-      examineForm(){
+      examineForm() {
         let isValid;
         this.$refs['moduleForm'].validate((valid) => {
           isValid = valid
@@ -196,7 +208,7 @@
         if (!isLt2M) {
           this.$message.error('上传图片大小不能超过 2M!');
         }
-        if(!isIMGLENGTH){
+        if (!isIMGLENGTH) {
           this.$message.error('最多上传10张图片!');
         }
         return isJPG && isLt2M && isIMGLENGTH;
@@ -212,17 +224,49 @@
           this.moduleForm.tabs.push(obj)
         }
       },
-      changeImage(res,index){
+      changeImage(res, index) {
         this.moduleForm.tabs[index]['pictureUrl'] = res.data.fileUrl
         this.$set(this.moduleForm.tabs, index, this.moduleForm.tabs[index])
       },
-      selectOver() {
+      selectOver(v) {
         this.moduleForm.tabs[this.selectIndex].linkDataJson = this.selectValue;
         this.$set(this.moduleForm.tabs, this.selectIndex, this.moduleForm.tabs[this.selectIndex])
-        console.log(this.moduleForm.tabs)
-        this.dialogGoods = false;
-        this.dialogHref = false;
-        this.dialogWechat = false;
+
+
+        let refName;
+        if (v == 1) {
+          refName = 'moduleHrefForm';
+          this.$refs[refName].validate((valid) => {
+            if (valid) {
+              this.moduleForm.tabs[this.selectIndex].linkDataJson = this.selectValue;
+              this.$set(this.moduleForm.tabs, this.selectIndex, this.moduleForm.tabs[this.selectIndex])
+              this.dialogHref = false;
+            }
+          });
+        } else if (v == 2) {
+          refName = 'moduleWechatForm';
+          if (this.selectValue.courseType == 2) {
+            this.$refs[refName].validate((valid) => {
+              if (valid) {
+                this.moduleForm.tabs[this.selectIndex].linkDataJson = this.selectValue;
+                this.$set(this.moduleForm.tabs, this.selectIndex, this.moduleForm.tabs[this.selectIndex])
+                this.dialogWechat = false;
+              }
+            });
+          } else {
+            this.$refs[refName].validateField('linkUrl', (valid) => {
+              console.log(1, valid)
+              if (!valid) {
+                this.moduleForm.tabs[this.selectIndex].linkDataJson = this.selectValue;
+                this.$set(this.moduleForm.tabs, this.selectIndex, this.moduleForm.tabs[this.selectIndex])
+                this.dialogWechat = false;
+              }
+            })
+          }
+        } else {
+          this.moduleForm.linkDataJson = this.selectValue;
+          this.dialogGoods = false;
+        }
       },
       handleCurrentChange(row) {
         console.log(row)
@@ -267,34 +311,35 @@
       showDialogHref(index) {
         this.dialogHref = true;
         this.selectValue = {
-          linkUrl: this.selectValue.linkUrl?this.selectValue.linkUrl:"https://",
+          linkUrl: this.selectValue.linkUrl ? this.selectValue.linkUrl : "https://",
         }
         this.selectIndex = index;
       },
       showDialogWechat(index) {
         this.dialogWechat = true;
         this.selectValue = {
-          appId: this.selectValue.appId ? this.selectValue.appId: "",
-          linkUrl: this.selectValue.linkUrl ? this.selectValue.linkUrl: "",
-          courseType: this.selectValue.courseType ? this.selectValue.courseType: 1,
+          appId: this.selectValue.appId ? this.selectValue.appId : "",
+          linkUrl: this.selectValue.linkUrl ? this.selectValue.linkUrl : "",
+          courseType: this.selectValue.courseType ? this.selectValue.courseType : 1,
         };
         this.selectIndex = index;
       },
-      changeSelectValue(){
-        this.selectValue.appId =  "";
-        this.selectValue.linkUrl =  "";
+      changeSelectValue() {
+        this.$refs['moduleWechatForm'].resetFields();
+        this.selectValue.appId = "";
+        this.selectValue.linkUrl = "";
       },
-      changeLinkType(v,index){
+      changeLinkType(v, index) {
         console.log(v)
         console.log(this.moduleForm)
         switch (v) {
-            case 1:
+          case 1:
             this.moduleForm.tabs[index].linkDataJson.title = "";
             break;
-            case 2:
-            this.moduleForm.tabs[index].linkDataJson.linkUrl= "";
+          case 2:
+            this.moduleForm.tabs[index].linkDataJson.linkUrl = "";
             break;
-            case 3:
+          case 3:
             this.moduleForm.tabs[index].linkDataJson.linkUrl = "";
             break;
           default:
@@ -313,8 +358,6 @@
 
   .list-goods {
     position: relative;
-    padding-left: 60px;
-    padding-right: 10px;
     height: 50px;
     img {
       vertical-align: middle;
@@ -327,7 +370,7 @@
     }
   }
 
-  .shop-list-upload{
+  .shop-list-upload {
     display: inline-block;
     margin-left: 10px;
   }

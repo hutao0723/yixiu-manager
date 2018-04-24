@@ -228,7 +228,7 @@
           this.$set(this.moduleForm.tabs, this.selectIndex, this.moduleForm.tabs[this.selectIndex])
         } else {
           let obj = {
-            "goodsGroupId": this.moduleForm.tabs.length + 1,
+            "goodsGroupId": this.selectValue.id,
             "groupName": this.selectValue.goodsGroupName,
             "showLimitNumber": 3,
             "linkType": 1,

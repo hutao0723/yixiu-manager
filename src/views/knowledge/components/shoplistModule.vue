@@ -68,32 +68,36 @@
     <div class=" module-deploy" v-show="deployToggle == moduleIndex">
       <h2 class="module-deploy-title">商品组</h2>
       <el-form ref="moduleForm" :model="moduleForm" label-width="80px">
-        <el-form-item label="商品组">
-          <div class="shop">
-            <div class="shop-list" v-for="(item,index) in moduleForm.tabs"  v-dragging="{ item: item, list: moduleForm.tabs }">
-              <el-form :model="item" label-width="80px"  ref="moduleListForm" :rules="moduleListForm">
-                <el-form-item label="商品来源">
-                  <el-input v-model="item.linkDataJson.goodsGroupName" size="small" disabled class="w200">
-                    <el-button slot="append" icon="el-icon-edit" @click="showDialogGoods(index)"></el-button>
-                  </el-input>
-                </el-form-item>
-                <el-form-item label="分组名称" prop="groupName">
-                  <el-input v-model="item.groupName" size="small" class="w200"></el-input>
-                </el-form-item>
-                <el-form-item label="显示个数" prop="showLimitNumber">
-                  <el-radio-group v-model="item.linkType">
-                    <el-radio :label="1">
-                      <el-input v-model="item.showLimitNumber" size="small" class="w50"></el-input>
-                    </el-radio>
-                    <el-radio :label="2">显示全部</el-radio>
-                  </el-radio-group>
-                </el-form-item>
-              </el-form>
+        <!-- <el-form-item label="商品组"> -->
+
+          <template class="shop">
+            <div v-for="(item,index) in moduleForm.tabs" :key="index" class="shop-list">
+              <el-form-item label="商品来源">
+                <el-input v-model="item.linkDataJson.goodsGroupName" size="small" disabled class="w200">
+                  <el-button slot="append" icon="el-icon-edit" @click="showDialogGoods(index)"></el-button>
+                </el-input>
+              </el-form-item>
+              <el-form-item label="分组名称" :prop="'tabs.' + index + '.groupName'" :rules="[
+            { required: true, message: '请输入分组名称', trigger: 'change' },
+            { min: 1, max: 10, message: '长度在 1 到 10 个字符', trigger: 'change' }
+          ]">
+                <el-input v-model="item.groupName" size="small" class="w200"></el-input>
+              </el-form-item>
+              
+              <el-form-item label="显示个数" :prop="'tabs.' + index + '.showLimitNumber'" :rules="{ pattern: /^(([1-9]\d?)|100)$/, message: '数值为 1 到 100', trigger: 'change' }">
+                <el-radio-group v-model="item.linkType">
+                  <el-radio :label="1">
+                    <el-input v-model="item.showLimitNumber" size="small" class="w100"></el-input>
+                  </el-radio>
+                  <el-radio :label="2">显示全部</el-radio>
+                </el-radio-group>
+              </el-form-item>
               <i class="el-icon-close shop-close" @click="delImage(index)"></i>
             </div>
             <div class="shop-add" @click="getShopData">添加商品组</div>
-          </div>
-        </el-form-item>
+          </template>
+        <!-- </el-form-item> -->
+
         <el-form-item label="列表样式">
           <el-radio-group v-model="moduleForm.layout">
             <el-radio label="ROW">列表</el-radio>
@@ -195,7 +199,7 @@
             { min: 1, max: 10, message: '长度在 1 到 10 个字符', trigger: 'change' }
           ],
           showLimitNumber: [
-            { pattern: /^[1-9][0-9]{0,4}$/, message: '数值为 1 到 99999', trigger: 'change' }
+            { pattern: /^(([1-9]\d?)|100)$/, message: '数值为 1 到 100', trigger: 'change' }
           ],
         }
       }
@@ -204,9 +208,9 @@
     created() {
     },
     methods: {
-      examineForm(){
+      examineForm() {
         let isValid;
-        this.$refs['moduleListForm'].validate((valid) => {
+        this.$refs['moduleForm'].validate((valid) => {
           isValid = valid
         });
         return isValid
@@ -217,7 +221,7 @@
       },
       selectOver() {
         console.log(this.selectIndex)
-        if (this.selectIndex> -1) {
+        if (this.selectIndex > -1) {
           this.moduleForm.tabs[this.selectIndex].linkDataJson = this.selectValue;
           this.moduleForm.tabs[this.selectIndex].goodsGroupId = this.selectValue.id;
           this.moduleForm.tabs[this.selectIndex].groupName = this.selectValue.goodsGroupName;
@@ -266,15 +270,15 @@
       getShopData() {
         this.selectValue = {};
         this.selectIndex = -1;
-      this.getAppList();
-      this.dialogGoods = true;
-      
+        this.getAppList();
+        this.dialogGoods = true;
+
       },
       showDialogGoods(index) {
         this.selectValue = {};
         this.selectIndex = index;
-      this.getAppList();
-      this.dialogGoods = true;
+        this.getAppList();
+        this.dialogGoods = true;
 
         console.log(index)
       },
@@ -286,7 +290,7 @@
   @import "../../../styles/components/knowledge.less";
   .module-content {
     background: #fff;
-    
+
     .module-tabs {
       height: 50px;
       overflow: auto;

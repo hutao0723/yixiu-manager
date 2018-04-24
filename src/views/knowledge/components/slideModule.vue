@@ -88,7 +88,7 @@
             <div class="list-goods otw">
               <img :src="scope.row.lateralCover" alt="" v-if="scope.row.lateralCover">
               <img :src="scope.row.verticalCover" alt="" v-if="scope.row.verticalCover && !scope.row.lateralCover">
-              <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1524500109724&di=482c198f5f8fc8557677c635ad4addfe&imgtype=0&src=http%3A%2F%2Fpic2.cxtuku.com%2F00%2F05%2F14%2Fb5098065ea99.jpg"
+              <img src="//yun.dui88.com/yoofans/images/201804/noClassImg.png"
                 alt="" v-if="!scope.row.verticalCover && !scope.row.lateralCover">
             </div>
           </template>

@@ -1,0 +1,19 @@
+{
+	"success": true,
+	"data": {
+		"totalElements": 100,
+		"content": [{
+			"id": 3,
+			"nickName": "张老师"
+		},
+		{
+			"id": 4,
+			"nickName": "王老师"
+		},
+		{
+			"id": 8,
+			"nickName": "胡老师"
+		}]
+	}
+}
+

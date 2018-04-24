@@ -12,14 +12,15 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '*': {
-        target: 'http://localhost:3000/',
-        secure: false,
-        changeOrigin: true
+        // 测试环境
+        target: 'http://172.31.20.47:9101',  // 接口域名
+        changeOrigin: true,  //是否跨域
       }
+          
     },
 
     // Various Dev Server settings
-    host: 'localhost', // can be overwritten by process.env.HOST
+    host: 'localhost', // can be overwritten by process.env.HOST 172.31.50.163
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,

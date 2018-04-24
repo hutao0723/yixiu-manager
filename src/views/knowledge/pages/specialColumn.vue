@@ -462,7 +462,7 @@
           pageNum: 1,
           size: 20
         },
-        totalSize: 1,
+        totalSize: null,
         columnList: [],
 
         //分页查询课程信息
@@ -580,6 +580,28 @@
         editor.customConfig.uploadFileName = 'imageFile'
         editor.customConfig.withCredentials = false;
         editor.customConfig.debug=true;
+        editor.customConfig.menus = [
+          'head',  // 标题
+          'bold',  // 粗体
+          'fontSize',  // 字号
+          'fontName',  // 字体
+          'italic',  // 斜体
+          'underline',  // 下划线
+          'strikeThrough',  // 删除线
+          'foreColor',  // 文字颜色
+          'backColor',  // 背景颜色
+          'link',  // 插入链接
+          'list',  // 列表
+          'justify',  // 对齐方式
+          'quote',  // 引用
+          'emoticon',  // 表情
+          'image',  // 插入图片
+          'table',  // 表格
+//          'video',  // 插入视频
+          'code',  // 插入代码
+          'undo',  // 撤销
+          'redo'  // 重复
+        ];
         editor.customConfig.uploadImgHooks = {
           customInsert: function (insertImg, result, editor) {
             // 图片上传并返回结果，自定义插入图片的事件（而不是编辑器自动插入图片！！！）
@@ -590,8 +612,10 @@
             // result 必须是一个 JSON 格式字符串！！！否则报错
           }
         };
+        editor.customConfig.$initContent ='';
         editor.customConfig.onchange = (html) => {
-          this.columnForm.detail = html;
+          const content = html=='<p><br></p>'?'':html;
+          this.columnForm.detail = content;
         }
         editor.create()
         editor.txt.clear();
@@ -710,6 +734,7 @@
           if (res.success) {
             this.$message.success('关联成功');
             this.getColumnManageListData();
+            this.getColumnListData();
             this.linkVisable = false;
           } else {
             let msg = res.desc || '关联失败'

@@ -321,8 +321,8 @@
         if(/^\d+\.\d+$/.test(String(value*100))){
           callback(new Error('最多两位小数'));
         }else{
-          if(value> 99999.99){
-            callback(new Error('最大值为99999.99'));
+          if(value> 99999.99 || value <0){
+            callback(new Error('价格区间在0.00-99999.99之间'));
           }else{
             callback()
           }
@@ -334,8 +334,8 @@
         if(/^\d+\.\d+$/.test(String(value*100))){
           callback(new Error('最多两位小数'));
         }else{
-          if(value > 100){
-            callback(new Error('最大值为100.00'));
+          if(value > 100 || value <0){
+            callback(new Error('抽成比例在0.00-100.00之间'));
           }else{
             callback()
           }
@@ -639,7 +639,6 @@
         this.columnForm.id = id;
         getColumn({id}).then(res => {
           if (res.success) {
-
             this.columnForm = Object.assign({},this.columnForm,res.data);
             this.columnForm.price = this.columnForm.price/100;
             this.columnForm.rate = this.columnForm.rate/100;
@@ -678,7 +677,7 @@
                 this.loading = false;
               })
             } else {
-              addColumn(this.columnForm).then(res => {
+              addColumn(params).then(res => {
                 if (res.success) {
                   this.$message.success('新增成功')
 //                  this.clearColumnSearchForm();

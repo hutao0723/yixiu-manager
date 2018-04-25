@@ -71,7 +71,7 @@
         <!-- <el-form-item label="商品组"> -->
 
           <template class="shop">
-            <div v-for="(item,index) in moduleForm.tabs" :key="index" class="shop-list">
+            <div v-for="(item,index) in moduleForm.tabs" :key="index" class="shop-list"  v-dragging="{ item: item, list: moduleForm.tabs}">
               <el-form-item label="商品来源">
                 <el-input v-model="item.linkDataJson.goodsGroupName" size="small" disabled class="w200">
                   <el-button slot="append" icon="el-icon-edit" @click="showDialogGoods(index)"></el-button>
@@ -228,7 +228,7 @@
           this.$set(this.moduleForm.tabs, this.selectIndex, this.moduleForm.tabs[this.selectIndex])
         } else {
           let obj = {
-            "goodsGroupId": this.moduleForm.tabs.length + 1,
+            "goodsGroupId": this.selectValue.id,
             "groupName": this.selectValue.goodsGroupName,
             "showLimitNumber": 3,
             "linkType": 1,

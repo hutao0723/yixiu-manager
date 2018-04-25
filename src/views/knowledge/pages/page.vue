@@ -73,7 +73,7 @@
     insert: url + '/knowledgepage/insert',
     update: url + '/knowledgepage/update',
     copy: url + '/knowledgepage/copy',
-    appList: url + '/subscriptionInfo/all'
+    appList: url + '/content/type/authorizer/info'
   }
   export default {
     data() {

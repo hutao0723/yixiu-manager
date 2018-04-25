@@ -338,6 +338,7 @@ export default {
           // 算出有多少条数据
           this.totalSize = resp.data.totalSize
           this.pageOption.pageNum = 1
+          this.currentPage = 1
         } else {
           let msg = resp.desc || '请求失败'
           this.$message.error(msg)
@@ -434,6 +435,8 @@ export default {
           this.goodsList = resp.data.lists
           // 算出有多少条数据
           this.totalSize = resp.data.totalSize
+          this.pageOption.pageNum = 1
+          this.currentPage = 1
         } else {
           let msg = resp.desc || '请求失败'
           this.$message.error(msg)

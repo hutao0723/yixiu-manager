@@ -36,7 +36,7 @@
                           <div v-if="item[column.lateralCover]" class="img-box" v-bind:style="{backgroundImage:'url('+item[column.lateralCover]+')',backgroundSize: 'contain',backgroundPosition: 'center'}"></div>
                           <div v-else-if="item[column.verticalCover]" class="img-box" v-bind:style="{backgroundImage:'url('+item[column.verticalCover]+')',backgroundSize: 'contain',backgroundPosition: 'center'}"></div>
                           <div  v-else class="img-box" v-bind:style="{backgroundImage:'url(//yun.dui88.com/yoofans/images/201804/noClassImg.png)',backgroundSize: 'contain',backgroundPosition: 'center'}"></div>
-                           <span v-if="item[column.dataIndex].length > 30" v-text="item[column.dataIndex]" class="two-ellipsis-list twoLines ln37 w330"></span>
+                           <span v-if="item[column.dataIndex].length > 30" v-text="item[column.dataIndex]" v-bind:style="{'-webkit-box-orient': 'vertical'}" class="two-ellipsis-list twoLines ln37 w330"></span>
                            <span v-else v-text="item[column.dataIndex]" class="ml10 ln75"></span>
                       </td>
                     </template>
@@ -105,7 +105,7 @@
                         <div v-if="scope.row.lateralCover" class="img-box" v-bind:style="{backgroundImage:'url('+scope.row.lateralCover+')',backgroundSize: 'contain',backgroundPosition: 'center'}"></div>
                         <div v-else-if="scope.row.verticalCover" class="img-box" v-bind:style="{backgroundImage:'url('+scope.row.verticalCover+')',backgroundSize: 'contain',backgroundPosition: 'center'}"></div>
                         <div  v-else class="img-box" v-bind:style="{backgroundImage:'url(//yun.dui88.com/yoofans/images/201804/noClassImg.png)',backgroundSize: 'contain',backgroundPosition: 'center'}"></div>
-                         <span v-if="scope.row.title.length > 20" v-text="scope.row.title" class="two-ellipsis-list twoLines ln37 w150"></span>
+                         <span v-if="scope.row.title.length > 10" v-text="scope.row.title" v-bind:style="{'-webkit-box-orient': 'vertical'}" class="two-ellipsis-list twoLines ln37 w150"></span>
                          <span v-else v-text="scope.row.title" class="ml10 ln75"></span>
                       </template>
                     </el-table-column>
@@ -153,7 +153,7 @@
                         <div v-if="scope.row.lateralCover" class="img-box" v-bind:style="{backgroundImage:'url('+scope.row.lateralCover+')',backgroundSize: 'contain',backgroundPosition: 'center'}"></div>
                         <div v-else-if="scope.row.verticalCover" class="img-box" v-bind:style="{backgroundImage:'url('+scope.row.verticalCover+')',backgroundSize: 'contain',backgroundPosition: 'center'}"></div>
                         <div  v-else class="img-box" v-bind:style="{backgroundImage:'url(//yun.dui88.com/yoofans/images/201804/noClassImg.png)',backgroundSize: 'contain',backgroundPosition: 'center'}"></div>
-                        <span v-if="scope.row.title.length > 20" v-text="scope.row.title" class="two-ellipsis-list twoLines ln37 w150"></span>
+                        <span v-if="scope.row.title.length > 10" v-text="scope.row.title" v-bind:style="{'-webkit-box-orient': 'vertical'}" class="two-ellipsis-list twoLines ln37 w150"></span>
                         <span v-else v-text="scope.row.title" class="ml10 ln75"></span>
                       </template>
                     </el-table-column>
@@ -338,6 +338,7 @@ export default {
           // 算出有多少条数据
           this.totalSize = resp.data.totalSize
           this.pageOption.pageNum = 1
+          this.currentPage = 1
         } else {
           let msg = resp.desc || '请求失败'
           this.$message.error(msg)
@@ -434,6 +435,8 @@ export default {
           this.goodsList = resp.data.lists
           // 算出有多少条数据
           this.totalSize = resp.data.totalSize
+          this.pageOption.pageNum = 1
+          this.currentPage = 1
         } else {
           let msg = resp.desc || '请求失败'
           this.$message.error(msg)
@@ -620,7 +623,9 @@ export default {
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    /*! autoprefixer: off */
     -webkit-box-orient: vertical;
+    /* autoprefixer: on*/
     float: left;
     margin-left: 10px;
   }

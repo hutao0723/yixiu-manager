@@ -67,7 +67,7 @@
               <template slot-scope="scope">
                 <div v-if="scope.row.itemImage" class="img-box por" v-bind:style="{backgroundImage:'url('+scope.row.itemImage+')',backgroundSize: 'contain',backgroundPosition: 'center'}"><div class="goods-mask">{{scope.row.type}}</div></div>
                 <div  v-else class="img-box por" v-bind:style="{backgroundImage:'url(//yun.dui88.com/yoofans/images/201804/noClassImg.png)',backgroundSize: 'contain',backgroundPosition: 'center'}"><div class="goods-mask">{{scope.row.type}}</div></div>
-                 <span v-if="scope.row.itemName.length > 12" v-text="scope.row.itemName" class="twoLines ln37 w150"></span>
+                 <span v-if="scope.row.itemName.length > 12" v-text="scope.row.itemName" v-bind:style="{'-webkit-box-orient': 'vertical'}" class="twoLines ln37 w150"></span>
                  <span v-else v-text="scope.row.itemName" class="goods-word"></span>
               </template>
             </el-table-column>
@@ -186,7 +186,8 @@ export default {
       dialogVisible: false, // 弹框
       downStatus: true, // 文字
       disabled: true, // 按钮状态
-      downloadUrl: 'http://www.baidu.com' //链接
+      downloadUrl: 'http://www.baidu.com',//链接
+      filename: ''
     }
   },
   created () {
@@ -241,6 +242,8 @@ export default {
     // 导出
     exportOrders () {
       this.dialogVisible = true
+      this.disabled = true
+      this.downStatus = true
       let valueArr = Object.values(this.searchForm)
       console.log(valueArr)
       this.startTime = this.searchForm.time ? formatDateNew(this.searchForm.time[0]): ''
@@ -254,11 +257,36 @@ export default {
         orderStatus: this.searchForm.orderStatus,
         orderType: this.searchForm.orderType
       }
-      this.$http.get('/order/export', {params}).then(res => {
+      this.$http.get('/knowledge/order/export', {params}).then(res => {
         let resp = res.data
         if (resp.success) {
-          this.disabled = false
-          this.downStatus = false
+          this.filename = resp.data
+          let that = this
+          let orders = setInterval(function(){
+            let params = {
+              filename: that.filename
+            }
+            that.$http.get('/knowledge/order/checkExport', {params}).then(res => {
+              let resp = res.data
+              if (resp.success) {
+                if(resp.data.succeed){
+                  clearInterval(orders)
+                  that.disabled = false
+                  that.downStatus = false
+                  that.downloadUrl = resp.data.fileUrl
+                }else{
+                  // let msg = resp.data.message || '文件正在上传中'
+                  // that.$message.error(msg)
+                  console.log(resp.data.message)
+                }
+              } else {
+                let msg = resp.desc || '请求失败'
+                that.$message.error(msg)
+              } 
+            }, () => {
+              that.$message.error('网络错误')
+            })
+          }, 500)
         } else {
           let msg = resp.desc || '请求失败'
           this.$message.error(msg)

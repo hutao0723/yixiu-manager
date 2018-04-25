@@ -71,7 +71,7 @@
         <!-- <el-form-item label="商品组"> -->
 
           <template class="shop">
-            <div v-for="(item,index) in moduleForm.tabs" :key="index" class="shop-list">
+            <div v-for="(item,index) in moduleForm.tabs" :key="index" class="shop-list"  v-dragging="{ item: item, list: moduleForm.tabs}">
               <el-form-item label="商品来源">
                 <el-input v-model="item.linkDataJson.goodsGroupName" size="small" disabled class="w200">
                   <el-button slot="append" icon="el-icon-edit" @click="showDialogGoods(index)"></el-button>

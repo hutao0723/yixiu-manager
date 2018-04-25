@@ -238,7 +238,7 @@
       };
 
       var priceRule = (rule, value, callback) => {
-        if(/^\d+\.\d+$/.test(String(value*100))){
+        if(String(value).indexOf('.') !=-1 && String(value).split('.')[1].length >2){
           callback(new Error('最多两位小数'));
         }else{
           if(value> 99999.99 || value <0){
@@ -251,7 +251,7 @@
       };
 
       var rateRule = (rule, value, callback) => {
-        if(/^\d+\.\d+$/.test(String(value*100))){
+        if(String(value).indexOf('.') !=-1 && String(value).split('.')[1].length >2){
           callback(new Error('最多两位小数'));
         }else{
           if(value > 100 || value <0){

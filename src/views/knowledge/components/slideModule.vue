@@ -64,7 +64,7 @@
           <el-upload class="upload-demo" action="/upload/image" :on-success="submitImage" name="imageFile" :before-upload="beforeImage"
             :show-file-list="false">
             <el-button size="small" type="primary" v-show="moduleForm.tabs.length < 10">点击上传</el-button>
-            <div slot="tip" class="el-upload__tip">建议尺寸：750px * 340px，只能上传jpeg/jpg/png文件，且不超过2m。</div>
+            <div slot="tip" class="el-upload__tip">建议尺寸：750px * 340px，只能上传jpeg/jpg/png/gif文件，且不超过2m。</div>
           </el-upload>
         </el-form-item>
       </el-form>

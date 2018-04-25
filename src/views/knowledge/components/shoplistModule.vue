@@ -85,11 +85,11 @@
               </el-form-item>
               
               <el-form-item label="显示个数" :prop="'tabs.' + index + '.showLimitNumber'" :rules="{ pattern: /^(([1-9]\d?)|100)$/, message: '数值为 1 到 100', trigger: 'change' }">
-                <el-radio-group v-model="item.linkType">
-                  <el-radio :label="1">
+                <el-radio-group v-model="item.showAll">
+                  <el-radio :label="0">
                     <el-input v-model="item.showLimitNumber" size="small" class="w100"></el-input>
                   </el-radio>
-                  <el-radio :label="2">显示全部</el-radio>
+                  <el-radio :label="1">显示全部</el-radio>
                 </el-radio-group>
               </el-form-item>
               <i class="el-icon-close shop-close" @click="delImage(index)"></i>
@@ -231,7 +231,7 @@
             "goodsGroupId": this.selectValue.id,
             "groupName": this.selectValue.goodsGroupName,
             "showLimitNumber": 3,
-            "linkType": 1,
+            "showAll": 0,
             "linkDataJson": this.selectValue,
           };
           this.moduleForm.tabs.push(obj)

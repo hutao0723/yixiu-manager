@@ -1,53 +1,45 @@
 <template>
   <section class="ofa-main-wrap" v-loading="loading">
     <audio controls="true" style="display: none;" :src="fileSrc"/>
-    <div class="title-wrap">
+    <!-- <div class="title-wrap">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item><span @click="pageType = 0">课程</span></el-breadcrumb-item>
         <el-breadcrumb-item v-if="pageType == 1">新建课程</el-breadcrumb-item>
         <el-breadcrumb-item v-if="pageType == 2">编辑课程</el-breadcrumb-item>
       </el-breadcrumb>
-    </div>
+    </div> -->
     <div class="content" v-show="pageType == 0">
       <div class="search-bar">
+            <el-button type="primary" @click="newcourseForm" size="small" class="fr">新建课程</el-button>
         <template>
-          <el-form :inline="true" :model="courseSearchForm" class="demo-form-inline" size="mini">
-            <el-col :span="3">
+          <el-form :inline="true" :model="courseSearchForm" class="demo-form-inline" size="small">
               <el-form-item>
-                <el-select v-model="courseSearchForm.selectType">
+                <el-select v-model="courseSearchForm.selectType" class="iptl w150">
                   <el-option v-for="item in searchOptions" :key="item.value" :label="item.label" :value="item.value">
                   </el-option>
                 </el-select>
               </el-form-item>
-            </el-col>
-            <el-col :span="3">
               <el-form-item>
-                <el-input v-model="courseSearchForm.searchValue"></el-input>
+                <el-input v-model="courseSearchForm.searchValue" class="iptr"></el-input>
               </el-form-item>
-            </el-col>
-            <el-col :span="3">
               <el-form-item>
-                <el-select v-model="courseSearchForm.status">
+                <el-select v-model="courseSearchForm.status" class="w150">
                   <el-option v-for="item in specialStateOptions" :key="item.value" :label="item.label"
                              :value="item.value">
                   </el-option>
                 </el-select>
               </el-form-item>
-            </el-col>
-            <el-col :span="3">
               <el-form-item>
-                <el-select v-model="courseSearchForm.searchTeacherType">
+                <el-select v-model="courseSearchForm.searchTeacherType" class="iptl w150">
                   <el-option v-for="item in searchTeacherTypeOption" :key="item.value" :label="item.label"
                              :value="item.value">
                   </el-option>
                 </el-select>
               </el-form-item>
-            </el-col>
             <el-form-item>
-              <el-input v-model="courseSearchForm.lecturerValue"></el-input>
+              <el-input v-model="courseSearchForm.lecturerValue" class="iptr"></el-input>
             </el-form-item>
-            <el-button type="primary" @click="getData" size="mini">查询</el-button>
-            <el-button type="primary" @click="newcourseForm" size="mini">新建课程</el-button>
+            <el-button type="primary" @click="getData" size="small">查询</el-button>
           </el-form>
         </template>
       </div>

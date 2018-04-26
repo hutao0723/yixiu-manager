@@ -118,12 +118,12 @@
 
     <el-dialog title="商品组" :visible.sync="dialogGoods">
       <div class="tar">
-        <el-input placeholder="商品标题" size="small" class="w150 vam" v-model="goodsTitle"></el-input>
+        <el-input placeholder="商品组" size="small" class="w150 vam" v-model="goodsTitle"></el-input>
         <el-button size="small" type="primary" @click="getAppList">查询</el-button>
       </div>
       <el-table :data="appList" highlight-current-row style="width: 100%" @current-change="handleCurrentChange" class="none-hover">
         <el-table-column prop="id" label="ID" width="100" align="center"></el-table-column>
-        <el-table-column prop="goodsGroupName" label="商品信息">
+        <el-table-column prop="goodsGroupName" label="商品组">
         </el-table-column>
       </el-table>
       <div class="page-control">

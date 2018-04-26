@@ -1,13 +1,14 @@
 <template>
   <section class="ofa-main-wrap">
     <div class="title-wrap">
-      <el-breadcrumb separator="/">
+      <!-- <el-breadcrumb separator="/">
         <el-breadcrumb-item>商品组</el-breadcrumb-item>
       </el-breadcrumb>
       <span class="add-type">
         <i class="iconfont icon-jia" style="vertical-align: middle;"></i>
         <span class="connect-ad" @click="openaddDialogTitle" style="vertical-align: middle;">商品组</span>
-      </span>
+      </span> -->
+            <el-button type="primary" @click="openaddDialogTitle" size="small" class="fr">新建商品组</el-button>
     </div>
     <div class="content">
       <div class="search-bar">
@@ -268,7 +269,7 @@ export default {
   .title-wrap {
     width: 100%;
     height: 30px;
-    border-bottom: 1px dotted #ccc;
+    // border-bottom: 1px dotted #ccc;
     position: relative;
     .el-breadcrumb {
       position: absolute;

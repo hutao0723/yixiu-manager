@@ -1,44 +1,44 @@
 <template>
   <section class="lecturer-container">
-    <div class="title-wrap">
+    <!-- <div class="title-wrap">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>订单</el-breadcrumb-item>
       </el-breadcrumb>
-    </div>
+    </div> -->
     <div class="content">
       <div class="search-bar">
         <template>
-          <el-form :inline="true" :model="searchForm" class="form" size="mini">
+          <el-form :inline="true" :model="searchForm" class="form" size="small">
             <el-form-item>
-              <el-select v-model="searchForm.name" placeholder="商品标题">
+              <el-select v-model="searchForm.name" placeholder="商品标题" class="w150 iptl">
                 <el-option v-for="(item,index) in goodsOptions" :key="item.id" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item>
-              <el-input v-model="searchForm.inputOne" placeholder="请输入"></el-input>              
+              <el-input v-model="searchForm.inputOne" placeholder="请输入" class="iptr"></el-input>              
             </el-form-item>
             <el-form-item>
-              <el-select v-model="searchForm.orderNumber" placeholder="订单号">
+              <el-select v-model="searchForm.orderNumber" placeholder="订单号" class="w150 iptl">
                 <el-option v-for="(item,index) in ordersOptions" :key="item.id" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item>
-              <el-input v-model="searchForm.inputTwo" placeholder="请输入"></el-input>              
+              <el-input v-model="searchForm.inputTwo" placeholder="请输入" class="iptr"></el-input>              
             </el-form-item>
             <el-form-item>
-              <el-select v-model="searchForm.ids" placeholder="商品标题">
+              <el-select v-model="searchForm.ids" placeholder="商品标题" class="w150 iptl">
                 <el-option v-for="(item,index) in idsOptions" :key="item.id" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item>
-              <el-input v-model="searchForm.inputThree" placeholder="请输入"></el-input>              
+              <el-input v-model="searchForm.inputThree" placeholder="请输入" class="iptr"></el-input>              
             </el-form-item>
             <el-form-item label="创建时间">
               <el-date-picker  v-model="searchForm.time" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
               </el-date-picker>
             </el-form-item>
             <el-form-item label="订单状态">
-              <el-select v-model="searchForm.orderStatus" placeholder="全部">
+              <el-select v-model="searchForm.orderStatus" placeholder="全部" class="w150">
                 <el-option label="全部" value=""></el-option>
                 <el-option label="待支付" value="TO_PAY"></el-option>
                 <el-option label="交易成功" value="SUCCESS"></el-option>
@@ -46,7 +46,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="订单类型">
-              <el-select v-model="searchForm.orderType" placeholder="全部">
+              <el-select v-model="searchForm.orderType" placeholder="全部" class="w150">
                 <el-option label="全部" value=""></el-option>
                 <el-option label="普通" value="ordinary"></el-option>
               </el-select>

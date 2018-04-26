@@ -4,17 +4,33 @@
       <!-- <span class="add-ofa">
         <el-button type="primary" icon="el-icon-circle-plus" @click="getMiniApp" size="small">页面</el-button>
       </span> -->
-      <el-select v-model="topForm.extendType" size="small" class="fl mr10 w150">
-        <el-option label="渠道ID" :value="0"></el-option>
-        <el-option label="渠道名称" :value="1"></el-option>
-      </el-select>
-      <el-input v-model="topForm.extendValue" placeholder="请输入" size="small" class="fl mr10 w200"></el-input>
-      <el-select v-model="topForm.channelType" size="small" class="fl mr10 w150">
-        <el-option label="推广位ID" :value="0"></el-option>
-        <el-option label="推广位名称" :value="1"></el-option>
-      </el-select>
-      <el-input v-model="topForm.channelValue" placeholder="请输入" size="small" class="fl mr10 w200"></el-input>
-      <el-button type="primary" size="small" @click="getAppList">查询</el-button>
+      <template>
+        <el-form :inline="true" :model="topForm" class="form" size="small">
+          <el-form-item>
+            <el-select v-model="topForm.extendType" size="small" class="iptl w150">
+              <el-option label="渠道ID" :value="0"></el-option>
+              <el-option label="渠道名称" :value="1"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-input v-model="topForm.extendValue" placeholder="请输入" size="small" class="iptr"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-select v-model="topForm.channelType" size="small" class="iptl w150">
+              <el-option label="推广位ID" :value="0"></el-option>
+              <el-option label="推广位名称" :value="1"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-input v-model="topForm.channelValue" placeholder="请输入" size="small" class="iptr w200"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" size="small" @click="getAppList">查询</el-button>
+          </el-form-item>
+        </el-form>
+      </template>
+
+
 
 
       <el-button type="primary" size="small" class="fr" @click="showAppAdd">新增推广位</el-button>
@@ -122,7 +138,7 @@
       },
       remoteMethod(query) {
         console.log(query)
-        this.$http.get(api.getList, { params:{name: query} }).then(res => {
+        this.$http.get(api.getList, { params: { name: query } }).then(res => {
           let resp = res.data
           if (resp.success) {
             this.channelList = resp.data

@@ -69,9 +69,6 @@
         </el-form-item>
       </el-form>
     </div>
-
-
-
     <el-dialog title="商品" :visible.sync="dialogGoods" v-if="selectValue">
       <el-tabs v-model="goodsActiveName" @tab-click="getAppList('toggle')">
         <el-tab-pane label="课程" name="0"></el-tab-pane>

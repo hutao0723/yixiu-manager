@@ -243,7 +243,8 @@
           :data="linkcolumnList"
           tooltip-effect="dark"
           style="width: 100%"
-          @selection-change="handleSelectionChange">
+          @selection-change="handleSelectionChange"
+          @row-click="handleRowClick">
           <el-table-column
             type="selection"
             width="100">
@@ -580,7 +581,7 @@
           'strikeThrough',  // 删除线
           'foreColor',  // 文字颜色
           'backColor',  // 背景颜色
-          'link',  // 插入链接
+          // 'link',  // 插入链接
           'list',  // 列表
           'justify',  // 对齐方式
           'quote',  // 引用
@@ -743,6 +744,10 @@
       //多选
       handleSelectionChange(val) {
         this.linkForm.courses = val;
+      },
+
+      handleRowClick(row,event,column) {
+        this.$refs.multipleTable.toggleRowSelection(row)
       },
 
       //分页查询课程信息

@@ -364,7 +364,7 @@
           id: null,
           title: null,
           subTitle: null,
-          courseType: null,
+          courseType: 1,
           lateralCover:null,
           verticalCover:null,
           detail: null,
@@ -426,7 +426,7 @@
           'strikeThrough',  // 删除线
           'foreColor',  // 文字颜色
           'backColor',  // 背景颜色
-          'link',  // 插入链接
+          // 'link',  // 插入链接
           'list',  // 列表
           'justify',  // 对齐方式
           'quote',  // 引用
@@ -756,7 +756,7 @@
             uploader.bind('uploadProgress', function (upload, files) {
               self.fileText = `已完成${files.percent}%`;
             });
-            uploader.bind('UploadComplete', function (upload, files) {
+            uploader.bind('UploadSuccess', function (upload, files) {
               const key = uploader.settings.multipart_params.key;
               ;
               self.fileText = files[files.length - 1].name;
@@ -794,6 +794,7 @@
         }
         this.courseForm.uploadFile = {};
         this.courseForm.freeTime = 120;
+        this.courseForm.courseType = 1;
         this.fileText = null;
       },
 

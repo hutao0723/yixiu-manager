@@ -58,7 +58,6 @@
           </el-form>
         </template>
       </div>
-
       <div class="tabel-wrap">
         <template>
           <el-table :data="orderList" >

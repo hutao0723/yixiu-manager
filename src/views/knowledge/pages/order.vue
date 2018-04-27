@@ -1,5 +1,5 @@
 <template>
-  <section class="lecturer-container">
+  <section class="order-container">
     <!-- <div class="title-wrap">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>订单</el-breadcrumb-item>
@@ -327,7 +327,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.lecturer-container {
+.order-container {
   width: 100%;
   .title-wrap {
     width: 100%;

@@ -1,6 +1,6 @@
 <template>
   <section class="ofa-main-wrap" v-loading="loading">
-    <!-- <div class="title-wrap">
+     <div class="title-wrap">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item :to="{ path: '/manager/knowledge/specialColumn' }"><span @click="pageType = 0">专栏</span>
         </el-breadcrumb-item>
@@ -8,7 +8,7 @@
         <el-breadcrumb-item v-if="pageType == 2">编辑专栏</el-breadcrumb-item>
         <el-breadcrumb-item v-if="pageType == 3">课程管理</el-breadcrumb-item>
       </el-breadcrumb>
-    </div> -->
+    </div>
     <div class="content" v-show="pageType == 0">
       <div class="search-bar">
             <el-button type="primary" @click="newcolumnForm" size="small" class="fr">新建专栏</el-button>
@@ -86,7 +86,7 @@
     <div class="content" v-show="pageType == 3">
       <div class="tabel-wrap">
         <template>
-          <el-button type="primary" @click="getLinkCourseData" class="link-columm" size="mini">关联课程</el-button>
+          <el-button type="primary" @click="linkCouseData" class="link-columm" size="mini">关联课程</el-button>
           <table class="" v-if="columnManageList">
             <thead>
             <tr class="tr-header">
@@ -531,7 +531,7 @@
           lecturerId: null,
           lecturerNickName: null,
           lecturerValue: null,
-          pageNum: null,
+          pageNum: 1,
           pageSize: null,
           totleSize: null,
           columnId:null
@@ -718,15 +718,15 @@
       },
 
       submitlinkForm() {
-        this.clearLinkcolumnForm();
         this.loading = true;
         this.linkForm.columnId = this.linkFormColumnId;
         relateCourse(this.linkForm).then(res => {
           if (res.success) {
             this.$message.success('关联成功');
+            this.linkVisable = false;
+            this.clearLinkcolumnForm();
             this.getColumnManageListData();
             this.getColumnListData();
-            this.linkVisable = false;
           } else {
             let msg = res.desc || '关联失败'
             this.$message.error(msg)
@@ -760,7 +760,6 @@
           if (res.success) {
             this.linkcolumnList = res.data.content;
             this.linkcolumnForm.totalSize = res.data.totalElements;
-            this.linkVisable = true;
           } else {
             let msg = res.data.desc || '请求失败'
             this.$message.error(msg)
@@ -769,6 +768,11 @@
         }).catch(() => {
           this.loading = false;
         })
+      },
+
+      async linkCouseData(){
+        await this.getLinkCourseData();
+        this.linkVisable = true;
       },
 
       //设为试看

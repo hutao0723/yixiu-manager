@@ -148,6 +148,7 @@
       text-decoration: none;
     }
     .el-container {
+      flex-basis: 0;
       .el-aside {
         background-color: #fff;
       }

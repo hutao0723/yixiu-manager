@@ -738,6 +738,7 @@
             })
 
             uploader.init();
+
             uploader.bind('FilesAdded', function (upload, files) {
               if (files[files.length - 1].type != "audio/mp3" && files[files.length - 1].type != "audio/x-m4a") {
                 self.$message.error("请上传mp3或者m4a格式文件");
@@ -765,7 +766,7 @@
                 self.$message.error("文件上传失败，请重新上传");
                 return
               }
-
+              uploader.settings.multipart_params.key = multipart_params.dir + new Date().getTime();
               self.fileText = files[files.length - 1].name;
               self.courseForm.uploadFile.name = files[files.length - 1].name;
               self.getCdnFileUrlFc(key);

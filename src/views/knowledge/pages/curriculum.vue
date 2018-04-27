@@ -1,13 +1,13 @@
 <template>
   <section class="ofa-main-wrap" v-loading="loading">
     <audio controls="true" style="display: none;" :src="fileSrc"/>
-    <!-- <div class="title-wrap">
+    <div class="title-wrap">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item><span @click="pageType = 0">课程</span></el-breadcrumb-item>
         <el-breadcrumb-item v-if="pageType == 1">新建课程</el-breadcrumb-item>
         <el-breadcrumb-item v-if="pageType == 2">编辑课程</el-breadcrumb-item>
       </el-breadcrumb>
-    </div> -->
+    </div>
     <div class="content" v-show="pageType == 0">
       <div class="search-bar">
             <el-button type="primary" @click="newcourseForm" size="small" class="fr">新建课程</el-button>
@@ -733,6 +733,7 @@
                 'OSSAccessKeyId': multipart_params.accessid,
                 'success_action_status': '200', //让服务端返回200,不然，默认会返回204
                 'signature': multipart_params.signature,
+
               },
             })
 
@@ -756,13 +757,20 @@
             uploader.bind('uploadProgress', function (upload, files) {
               self.fileText = `已完成${files.percent}%`;
             });
-            uploader.bind('UploadSuccess', function (upload, files) {
+            uploader.bind('uploadComplete', function (upload, files) {
               const key = uploader.settings.multipart_params.key;
-              ;
+
+              if(upload.total.uploaded <=0) {
+                self.fileText = '';
+                self.$message.error("文件上传失败，请重新上传");
+                return
+              }
+
               self.fileText = files[files.length - 1].name;
               self.courseForm.uploadFile.name = files[files.length - 1].name;
               self.getCdnFileUrlFc(key);
             });
+
 
           } else {
             let msg = res.desc || '获取上传路径失败'

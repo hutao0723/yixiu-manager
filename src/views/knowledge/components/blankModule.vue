@@ -3,9 +3,9 @@
     <div class="module-content" v-bind:style="{ 
           height: moduleForm.blankHeight / 2 + 'px', 
           lineHeight: moduleForm.blankHeight / 2 + 'px',
-          width: 375 - moduleForm.blankWidth + 'px',
+          width: moduleForm.blankWidth / 2 + 'px',
           backgroundColor: moduleForm.blankFillColor?moduleForm.blankFillColor:'inherit',
-        }">
+        }"> 
       空白
     </div>
     <div class="module-deploy" v-show="deployToggle == moduleIndex">
@@ -14,7 +14,7 @@
         <el-form-item label="空白高度" prop="blankHeight">
           <el-input v-model.number="moduleForm.blankHeight" size="small" class="w200"></el-input> px
         </el-form-item>
-        <el-form-item label="内边距" prop="blankWidth">
+        <el-form-item label="空白宽度" prop="blankWidth">
           <el-input v-model.number="moduleForm.blankWidth" size="small" class="w200"></el-input> px
         </el-form-item>
         <el-form-item label="背景颜色">

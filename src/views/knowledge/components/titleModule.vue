@@ -25,9 +25,9 @@
             <div slot="tip" class="el-upload__tip">只能上传jpeg/jpg/png文件，且不超过2m。</div>
           </el-upload>
         </el-form-item>
-        <el-form-item label="背景颜色" prop="backgroundColor">
+        <!-- <el-form-item label="背景颜色" prop="backgroundColor">
           <el-color-picker v-model="moduleForm.backgroundColor"></el-color-picker>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
     </div>
   </div>

@@ -4,6 +4,7 @@
       <!-- <span class="add-ofa">
         <el-button type="primary" icon="el-icon-circle-plus" @click="getMiniApp" size="small">页面</el-button>
       </span> -->
+      <el-button type="primary" size="small" class="fr" @click="showAppAdd">新增推广位</el-button>
       <template>
         <el-form :inline="true" :model="topForm" class="form" size="small">
           <el-form-item>
@@ -33,7 +34,6 @@
 
 
 
-      <el-button type="primary" size="small" class="fr" @click="showAppAdd">新增推广位</el-button>
     </div>
     <div class="content">
       <div class="tabel-wrap">

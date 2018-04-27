@@ -630,7 +630,6 @@
         this.columnForm.id = id;
         getColumn({id}).then(res => {
           if (res.success) {
-
             this.columnForm = Object.assign({},this.columnForm,res.data);
             this.columnForm.price = this.columnForm.price/100;
             this.columnForm.rate = this.columnForm.rate/100;
@@ -723,12 +722,14 @@
         relateCourse(this.linkForm).then(res => {
           if (res.success) {
             this.$message.success('关联成功');
-            this.linkVisable = false;
             this.clearLinkcolumnForm();
+            this.linkVisable = false;
             this.getColumnManageListData();
             this.getColumnListData();
           } else {
-            let msg = res.desc || '关联失败'
+            let msg = res.desc || '关联失败';
+            this.clearLinkcolumnForm();
+            this.linkVisable = false;
             this.$message.error(msg)
           }
           this.loading = false;
@@ -738,6 +739,7 @@
       },
 
       cancelLinkForm() {
+        this.clearLinkcolumnForm();
         this.linkVisable = false;
       },
 

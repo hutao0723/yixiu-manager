@@ -4,20 +4,36 @@
       <!-- <span class="add-ofa">
         <el-button type="primary" icon="el-icon-circle-plus" @click="getMiniApp" size="small">页面</el-button>
       </span> -->
-      <el-select v-model="topForm.extendType" size="small" class="fl mr10 w150">
-        <el-option label="渠道ID" :value="0"></el-option>
-        <el-option label="渠道名称" :value="1"></el-option>
-      </el-select>
-      <el-input v-model="topForm.extendValue" placeholder="请输入" size="small" class="fl mr10 w200"></el-input>
-      <el-select v-model="topForm.channelType" size="small" class="fl mr10 w150">
-        <el-option label="推广位ID" :value="0"></el-option>
-        <el-option label="推广位名称" :value="1"></el-option>
-      </el-select>
-      <el-input v-model="topForm.channelValue" placeholder="请输入" size="small" class="fl mr10 w200"></el-input>
-      <el-button type="primary" size="small" @click="getAppList">查询</el-button>
-
-
       <el-button type="primary" size="small" class="fr" @click="showAppAdd">新增推广位</el-button>
+      <template>
+        <el-form :inline="true" :model="topForm" class="form" size="small">
+          <el-form-item>
+            <el-select v-model="topForm.extendType" size="small" class="iptl w150">
+              <el-option label="渠道ID" :value="0"></el-option>
+              <el-option label="渠道名称" :value="1"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-input v-model="topForm.extendValue" placeholder="请输入" size="small" class="iptr"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-select v-model="topForm.channelType" size="small" class="iptl w150">
+              <el-option label="推广位ID" :value="0"></el-option>
+              <el-option label="推广位名称" :value="1"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-input v-model="topForm.channelValue" placeholder="请输入" size="small" class="iptr w200"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" size="small" @click="getAppList">查询</el-button>
+          </el-form-item>
+        </el-form>
+      </template>
+
+
+
+
     </div>
     <div class="content">
       <div class="tabel-wrap">
@@ -43,8 +59,12 @@
     <el-dialog :title="titleDialog" :visible.sync="addDialog" @close="closeDialog('addForm')">
       <el-form :model="addForm" :rules="addRules" ref="addForm">
         <el-form-item label="渠道名称" label-width="100px" prop="channelId">
-          <el-select v-model="addForm.channelId" placeholder="请选择" :disabled="editId>0" class="w200">
-            <el-option :label="item.name" :value="item.id" v-for="item in channelList" :key="item.id"></el-option>
+          <el-select v-model="addForm.channelId" filterable remote reserve-keyword :remote-method="remoteMethod" class="w200" :loading="loading"
+            :disabled="editId>0">
+            <el-option v-for="item in channelList" :key="item.id" :label="item.name" :value="item.id">
+              <span style="float: left">{{ item.name }}</span>
+              <span style="float: right; color: #8492a6; font-size: 13px">{{ item.id }}</span>
+            </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="推广位名称" label-width="100px" prop="name">
@@ -91,6 +111,7 @@
           name: '',
         },
         channelList: [], // 渠道列表
+
         titleDialog: '',
         editId: '',
         addRules: {
@@ -101,7 +122,8 @@
             { required: true, message: '请输入推广位名称', trigger: 'change' },
             { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'change' }
           ],
-        }
+        },
+        loading: false,
       }
     },
     filters: {
@@ -114,9 +136,20 @@
       closeDialog(formName) {
         this.$refs[formName].resetFields();
       },
+      remoteMethod(query) {
+        console.log(query)
+        this.$http.get(api.getList, { params: { name: query } }).then(res => {
+          let resp = res.data
+          if (resp.success) {
+            this.channelList = resp.data
+            this.loading = false;
+          } else {
+            let msg = resp.desc || '请求失败'
+            this.$message.error(msg)
+          }
+        })
+      },
       getChannelList() {
-
-
         this.$http.get(api.getList).then(res => {
           let resp = res.data
           if (resp.success) {
@@ -182,6 +215,7 @@
             let _params = Object.assign(params)
             this.$http.post(api.add, qs.stringify(_params)).then(res => {
               if (res.data.success) {
+                this.$message.success('保存成功');
                 this.getAppList();
               }
             })
@@ -200,6 +234,7 @@
             let _params = Object.assign(params)
             this.$http.post(api.update, qs.stringify(_params)).then(res => {
               if (res.data.success) {
+                this.$message.success('保存成功');
                 this.getAppList();
               }
             })

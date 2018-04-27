@@ -10,44 +10,36 @@
     </div>
     <div class="content" v-show="pageType == 0">
       <div class="search-bar">
+            <el-button type="primary" @click="newcourseForm" size="small" class="fr">新建课程</el-button>
         <template>
-          <el-form :inline="true" :model="courseSearchForm" class="demo-form-inline" size="mini">
-            <el-col :span="3">
+          <el-form :inline="true" :model="courseSearchForm" class="demo-form-inline" size="small">
               <el-form-item>
-                <el-select v-model="courseSearchForm.selectType">
+                <el-select v-model="courseSearchForm.selectType" class="iptl w150">
                   <el-option v-for="item in searchOptions" :key="item.value" :label="item.label" :value="item.value">
                   </el-option>
                 </el-select>
               </el-form-item>
-            </el-col>
-            <el-col :span="3">
               <el-form-item>
-                <el-input v-model="courseSearchForm.searchValue"></el-input>
+                <el-input v-model="courseSearchForm.searchValue" class="iptr"></el-input>
               </el-form-item>
-            </el-col>
-            <el-col :span="3">
               <el-form-item>
-                <el-select v-model="courseSearchForm.status">
+                <el-select v-model="courseSearchForm.status" class="w150">
                   <el-option v-for="item in specialStateOptions" :key="item.value" :label="item.label"
                              :value="item.value">
                   </el-option>
                 </el-select>
               </el-form-item>
-            </el-col>
-            <el-col :span="3">
               <el-form-item>
-                <el-select v-model="courseSearchForm.searchTeacherType">
+                <el-select v-model="courseSearchForm.searchTeacherType" class="iptl w150">
                   <el-option v-for="item in searchTeacherTypeOption" :key="item.value" :label="item.label"
                              :value="item.value">
                   </el-option>
                 </el-select>
               </el-form-item>
-            </el-col>
             <el-form-item>
-              <el-input v-model="courseSearchForm.lecturerValue"></el-input>
+              <el-input v-model="courseSearchForm.lecturerValue" class="iptr"></el-input>
             </el-form-item>
-            <el-button type="primary" @click="getData" size="mini">查询</el-button>
-            <el-button type="primary" @click="newcourseForm" size="mini">新建课程</el-button>
+            <el-button type="primary" @click="getData" size="small">查询</el-button>
           </el-form>
         </template>
       </div>
@@ -238,12 +230,12 @@
       };
 
       var priceRule = (rule, value, callback) => {
-        if(/^\d+\.\d+$/.test(String(value*100))){
+        if(String(value).indexOf('.') !=-1 && String(value).split('.')[1].length >2){
           callback(new Error('最多两位小数'));
         }else{
           if(value> 99999.99 || value <0){
             callback(new Error('价格区间在0.00-99999.99之间'));
-          }else{
+          } else{
             callback()
           }
         }
@@ -251,7 +243,7 @@
       };
 
       var rateRule = (rule, value, callback) => {
-        if(/^\d+\.\d+$/.test(String(value*100))){
+        if(String(value).indexOf('.') !=-1 && String(value).split('.')[1].length >2){
           callback(new Error('最多两位小数'));
         }else{
           if(value > 100 || value <0){
@@ -372,7 +364,7 @@
           id: null,
           title: null,
           subTitle: null,
-          courseType: null,
+          courseType: 1,
           lateralCover:null,
           verticalCover:null,
           detail: null,
@@ -434,7 +426,7 @@
           'strikeThrough',  // 删除线
           'foreColor',  // 文字颜色
           'backColor',  // 背景颜色
-          'link',  // 插入链接
+          // 'link',  // 插入链接
           'list',  // 列表
           'justify',  // 对齐方式
           'quote',  // 引用
@@ -741,6 +733,7 @@
                 'OSSAccessKeyId': multipart_params.accessid,
                 'success_action_status': '200', //让服务端返回200,不然，默认会返回204
                 'signature': multipart_params.signature,
+
               },
             })
 
@@ -764,13 +757,20 @@
             uploader.bind('uploadProgress', function (upload, files) {
               self.fileText = `已完成${files.percent}%`;
             });
-            uploader.bind('UploadComplete', function (upload, files) {
+            uploader.bind('uploadComplete', function (upload, files) {
               const key = uploader.settings.multipart_params.key;
-              ;
+
+              if(upload.total.uploaded <=0) {
+                self.fileText = '';
+                self.$message.error("文件上传失败，请重新上传");
+                return
+              }
+
               self.fileText = files[files.length - 1].name;
               self.courseForm.uploadFile.name = files[files.length - 1].name;
               self.getCdnFileUrlFc(key);
             });
+
 
           } else {
             let msg = res.desc || '获取上传路径失败'
@@ -802,6 +802,7 @@
         }
         this.courseForm.uploadFile = {};
         this.courseForm.freeTime = 120;
+        this.courseForm.courseType = 1;
         this.fileText = null;
       },
 

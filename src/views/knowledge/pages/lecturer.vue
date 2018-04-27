@@ -1,25 +1,26 @@
 <template>
   <section class="lecturer-container">
-    <div class="title-wrap">
-      <el-breadcrumb separator="/">
+    <!-- <div class="title-wrap"> -->
+      <!-- <el-breadcrumb separator="/">
         <el-breadcrumb-item>讲师</el-breadcrumb-item>
-      </el-breadcrumb>
-      <span class="add-type">
-        <i class="iconfont icon-jia" style="vertical-align: middle;"></i>
-        <span class="connect-ad" @click="openaddDialogLecturer" style="vertical-align: middle;">讲师</span>
-      </span>
-    </div>
+      </el-breadcrumb> -->
+      <!-- <span class="add-type"> -->
+        <!-- <i class="iconfont icon-jia" style="vertical-align: middle;"></i> -->
+        <!-- <el-button class="connect-ad" @click="openaddDialogLecturer" style="vertical-align: middle;">新增讲师</span> -->
+      <!-- </span> -->
+    <!-- </div> -->
     <div class="content">
       <div class="search-bar">
+        <el-button type="primary" size="small" class="fr" @click="openaddDialogLecturer">新增讲师</el-button>
         <template>
-          <el-form :inline="true" :model="searchForm" class="form" size="mini">
+          <el-form :inline="true" :model="searchForm" class="form" size="small">
             <el-form-item>
-              <el-select v-model="searchForm.name" placeholder="讲师名称">
+              <el-select v-model="searchForm.name" placeholder="讲师名称" class="w150 iptl">
                 <el-option v-for="(item,index) in selectOptions" :key="item.id" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item>
-              <el-input v-model="searchForm.value" placeholder="请输入"></el-input>              
+              <el-input v-model="searchForm.value" placeholder="请输入" class="iptr"></el-input>              
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="onSearch">查询</el-button>
@@ -27,7 +28,7 @@
           </el-form>
         </template>
       </div>
-      <div class="tabel-wrap">
+      <div class="tabel-wrap">  
         <template>
           <el-table :data="typeList" style="width: 100%" >
             <el-table-column prop="id" label="讲师ID" ></el-table-column>
@@ -125,12 +126,17 @@ export default {
     openDialogLecturer (row) {
       this.dialogLecturerVisible = true
       this.typeForm.id = row.id
+      this.searchForm.value = ""
+      this.getLecturerList()
       this.typeForm.nickName = row.nickName
     },
     // 添加讲师弹框
     openaddDialogLecturer (row) {
+      this.typeForm.id = ""
+      this.typeForm.nickName = ""
+      this.searchForm.value = ""
+      this.getLecturerList()
       this.dialogaddLecturerVisible = true
-      this.typeForm.nickName = row.nickName
     },
     // 获取讲师列表
     getLecturerList () {
@@ -256,6 +262,7 @@ export default {
           if (msg) {
             if (res.data.data) {
               this.$message.success('删除成功')
+              this.searchForm.value = ""
               this.getLecturerList()
             } else {
               let msg = res.data.desc || '删除失败'
@@ -282,7 +289,7 @@ export default {
   .title-wrap {
     width: 100%;
     height: 30px;
-    border-bottom: 1px dotted #ccc;
+    // border-bottom: 1px dotted #ccc;
     position: relative;
     .el-breadcrumb {
       position: absolute;

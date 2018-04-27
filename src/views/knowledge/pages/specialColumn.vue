@@ -1,6 +1,6 @@
 <template>
   <section class="ofa-main-wrap" v-loading="loading">
-    <div class="title-wrap">
+     <div class="title-wrap">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item :to="{ path: '/manager/knowledge/specialColumn' }"><span @click="pageType = 0">专栏</span>
         </el-breadcrumb-item>
@@ -11,46 +11,36 @@
     </div>
     <div class="content" v-show="pageType == 0">
       <div class="search-bar">
+            <el-button type="primary" @click="newcolumnForm" size="small" class="fr">新建专栏</el-button>
         <template>
-          <el-form :inline="true" :model="columnSearchForm" class="demo-form-inline" size="mini">
-            <el-col :span="3">
+          <el-form :inline="true" :model="columnSearchForm" class="demo-form-inline" size="small">
               <el-form-item>
-                <el-select v-model="columnSearchForm.selectType">
+                <el-select v-model="columnSearchForm.selectType" class="w150 iptl">
                   <el-option v-for="item in searchOptions" :key="item.value" :label="item.label" :value="item.value">
                   </el-option>
                 </el-select>
               </el-form-item>
-            </el-col>
-            <el-col :span="3">
               <el-form-item>
-                <el-input v-model="columnSearchForm.searchValue"></el-input>
+                <el-input v-model="columnSearchForm.searchValue" class="iptr"></el-input>
               </el-form-item>
-            </el-col>
-            <el-col :span="3">
               <el-form-item>
-                <el-select v-model="columnSearchForm.status">
+                <el-select v-model="columnSearchForm.status" class="w150">
                   <el-option v-for="item in specialStateOptions" :key="item.value" :label="item.label"
                              :value="item.value">
                   </el-option>
                 </el-select>
               </el-form-item>
-            </el-col>
-            <el-col :span="3">
               <el-form-item>
-                <el-select v-model="columnSearchForm.searchTeacherType">
+                <el-select v-model="columnSearchForm.searchTeacherType" class="w150 iptl">
                   <el-option v-for="item in searchTeacherTypeOption" :key="item.value" :label="item.label"
                              :value="item.value">
                   </el-option>
                 </el-select>
               </el-form-item>
-            </el-col>
-            <el-col :span="3">
               <el-form-item>
-                <el-input v-model="columnSearchForm.lecturerValue"></el-input>
+                <el-input v-model="columnSearchForm.lecturerValue" class="iptr"></el-input>
               </el-form-item>
-            </el-col>
-            <el-button type="primary" @click="getColumnListData" size="mini">查询</el-button>
-            <el-button type="primary" @click="newcolumnForm" size="mini">新建专栏</el-button>
+            <el-button type="primary" @click="getColumnListData" size="small">查询</el-button>
           </el-form>
         </template>
       </div>
@@ -96,7 +86,7 @@
     <div class="content" v-show="pageType == 3">
       <div class="tabel-wrap">
         <template>
-          <el-button type="primary" @click="getLinkCourseData" class="link-columm" size="mini">关联课程</el-button>
+          <el-button type="primary" @click="linkCouseData" class="link-columm" size="mini">关联课程</el-button>
           <table class="" v-if="columnManageList">
             <thead>
             <tr class="tr-header">
@@ -247,13 +237,14 @@
             <el-input v-model="linkcolumnForm.lecturerValue"></el-input>
           </el-form-item>
         </el-col>
-        <el-button type="primary" @click="getLinkCourseData" size="mini">查询</el-button>
+        <el-button type="primary" @click="getLinkCourseData" size="mini" class="min-search">查询</el-button>
         <el-table
           ref="multipleTable"
           :data="linkcolumnList"
           tooltip-effect="dark"
           style="width: 100%"
-          @selection-change="handleSelectionChange">
+          @selection-change="handleSelectionChange"
+          @row-click="handleRowClick">
           <el-table-column
             type="selection"
             width="100">
@@ -281,7 +272,7 @@
                          layout="total, prev, pager, next"
                          :total="linkcolumnForm.totalSize"></el-pagination>
         </div>
-        <el-col :span="7" :offset="17" class="mt20">
+        <el-col :span="5" :offset="19" class="mt20">
           <el-button type="default" @click="cancelLinkForm" size="mini">取消</el-button>
           <el-button type="primary" @click="submitlinkForm" size="mini">保存</el-button>
         </el-col>
@@ -318,12 +309,12 @@
     },
     data() {
       var priceRule = (rule, value, callback) => {
-        if(/^\d+\.\d+$/.test(String(value*100))){
+        if(String(value).indexOf('.') !=-1 && String(value).split('.')[1].length >2){
           callback(new Error('最多两位小数'));
         }else{
           if(value> 99999.99 || value <0){
             callback(new Error('价格区间在0.00-99999.99之间'));
-          }else{
+          } else{
             callback()
           }
         }
@@ -331,12 +322,12 @@
       };
 
       var rateRule = (rule, value, callback) => {
-        if(/^\d+\.\d+$/.test(String(value*100))){
+        if(String(value).indexOf('.') !=-1 && String(value).split('.')[1].length >2){
           callback(new Error('最多两位小数'));
         }else{
           if(value > 100 || value <0){
             callback(new Error('抽成比例在0.00-100.00之间'));
-          }else{
+          } else{
             callback()
           }
         }
@@ -540,7 +531,7 @@
           lecturerId: null,
           lecturerNickName: null,
           lecturerValue: null,
-          pageNum: null,
+          pageNum: 1,
           pageSize: null,
           totleSize: null,
           columnId:null
@@ -590,7 +581,7 @@
           'strikeThrough',  // 删除线
           'foreColor',  // 文字颜色
           'backColor',  // 背景颜色
-          'link',  // 插入链接
+          // 'link',  // 插入链接
           'list',  // 列表
           'justify',  // 对齐方式
           'quote',  // 引用
@@ -726,15 +717,15 @@
       },
 
       submitlinkForm() {
-        this.clearLinkcolumnForm();
         this.loading = true;
         this.linkForm.columnId = this.linkFormColumnId;
         relateCourse(this.linkForm).then(res => {
           if (res.success) {
             this.$message.success('关联成功');
+            this.linkVisable = false;
+            this.clearLinkcolumnForm();
             this.getColumnManageListData();
             this.getColumnListData();
-            this.linkVisable = false;
           } else {
             let msg = res.desc || '关联失败'
             this.$message.error(msg)
@@ -754,6 +745,10 @@
         this.linkForm.courses = val;
       },
 
+      handleRowClick(row,event,column) {
+        this.$refs.multipleTable.toggleRowSelection(row)
+      },
+
       //分页查询课程信息
       getLinkCourseData() {
         console.log(this.linkcolumnForm);
@@ -764,7 +759,6 @@
           if (res.success) {
             this.linkcolumnList = res.data.content;
             this.linkcolumnForm.totalSize = res.data.totalElements;
-            this.linkVisable = true;
           } else {
             let msg = res.data.desc || '请求失败'
             this.$message.error(msg)
@@ -773,6 +767,11 @@
         }).catch(() => {
           this.loading = false;
         })
+      },
+
+      async linkCouseData(){
+        await this.getLinkCourseData();
+        this.linkVisable = true;
       },
 
       //设为试看
@@ -1033,6 +1032,9 @@
     min-height: 200px !important;
   }
 
+.min-search{
+  vertical-align: -webkit-baseline-middle;
+}
   .ofa-main-wrap {
     width: 100%;
     .title-wrap {

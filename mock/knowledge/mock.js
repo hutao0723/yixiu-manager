@@ -115,9 +115,15 @@ var setOnline = [
   },
   //订单导出
   {
-    name: 'save',
+    name: 'export',
     type: 'get',
-    url: '/order/export'
+    url: '/knowledge/order/export'
+  },
+  // 导出成功
+  {
+    name: 'successExport',
+    type: 'get',
+    url: '/knowledge/order/checkExport'
   }
 ];
 var fs = require('fs');

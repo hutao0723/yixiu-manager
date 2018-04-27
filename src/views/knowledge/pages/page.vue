@@ -1,27 +1,52 @@
 <template>
   <section class="app-main-wrap">
+    <el-row class="tar">
+      <el-select v-model="appId" placeholder="请选择" size="small" @change="changeAppId">
+        <el-option v-for="item in wechatList" :key="item.id" :label="item.nickName" :value="item.id"></el-option>
+      </el-select>
+    </el-row>
+    <el-row class="home-page mt10" v-show="homePage.pageTitle">
+      <el-col :span="6">
+        <img :src="headImg" alt="" class="home-page-header">
+        <span class="" v-text="homePage.pageTitle"></span>
+      </el-col>
+      <el-col :span="6">
+        <span class="" v-text="homePage.gmtCreate"></span>
+      </el-col>
+      <el-col :span="6">
+        <router-link :to="{ path:'/manager/knowledge/add?id=' + homePage.id + '&authorizerId=' + this.appId}">
+          <el-button type="text" size="mini">编辑</el-button>
+        </router-link>
+      </el-col>
+    </el-row>
     <div class="title-wrap">
       <span class="add-ofa">
-        <el-button type="primary" @click="getMiniApp" size="small">新增页面</el-button>
+        <router-link :to="{ path: '/manager/knowledge/add?authorizerId=' + appId}">
+          <el-button type="primary" size="small">新增页面</el-button>
+        </router-link>
       </span>
     </div>
     <div class="content">
       <div class="tabel-wrap">
         <template>
           <el-table :data="appList" style="width: 100%">
-            <el-table-column prop="id" label="ID" width="80"></el-table-column>
+            <el-table-column prop="id" label="ID" width="150">
+                <template slot-scope="scope">
+                    {{scope.row.id}}
+                    <el-tag v-show="scope.row.homePage == 1" size="small">小程序主页</el-tag>
+                  </template>
+            </el-table-column>
             <el-table-column prop="pageTitle" label="页面标题"></el-table-column>
             <el-table-column label="创建时间">
               <template slot-scope="scope">
-                {{scope.row.gmtCreate | formatToMs}}
+                {{scope.row.gmtCreate}}
               </template>
             </el-table-column>
             <el-table-column label="操作" width="300">
               <template slot-scope="scope">
-                <el-button type="text" size="mini" @click="showAppDetail(scope.row.id)">编辑</el-button>
+                <el-button type="text" size="mini" @click="editApp(scope.row.id)">编辑</el-button>
                 <el-button type="text" size="mini" @click="delApp(scope.row.id)">删除</el-button>
                 <el-button type="text" size="mini" @click="copyApp(scope.row.id)">复制</el-button>
-                <!-- <el-button type="text" size="mini" @click="showAppDetail(scope.row.id)">预览</el-button> -->
                 <el-button type="text" size="mini" @click="indexApp(scope.row.id)">设为主页</el-button>
               </template>
             </el-table-column>
@@ -48,6 +73,7 @@
     insert: url + '/knowledgepage/insert',
     update: url + '/knowledgepage/update',
     copy: url + '/knowledgepage/copy',
+    appList: url + '/content/type/authorizer/info'
   }
   export default {
     data() {
@@ -59,27 +85,68 @@
         totalSize: 0,
         appList: [],
         authorizerId: '',
+        homePage: {},
+        wechatList: [],
+        appId: null,
+        headImg:'',
       }
     },
     filters: {
       formatToMs: formatToMs
     },
     created() {
-      this.getAppList()
+      this.getWechatList()
+      this.appId = this.$route.query.authorizerId ? this.$route.query.authorizerId : null;
+
     },
     methods: {
+      editApp(id) {
+        this.$router.push({
+          path: '/manager/knowledge/add?id=' + id + '&authorizerId=' + this.appId,
+        })
+      },
+      changeAppId(item) {
+        console.log(item)
+        this.appId = item;
+        this.getAppList();
+      },
+      getWechatList() {
+        this.$http.get(api.appList,{params: {authorizerType: 1}}).then(res => {
+          let resp = res.data
+          if (resp.success) {
+            this.wechatList = resp.data;
+
+            this.appId = this.appId ? Number(this.appId) : resp.data[0].id;
+
+            
+            this.getAppList()
+          } else {
+            let msg = resp.desc || '请求失败'
+            this.$message.error(msg)
+          }
+        })
+      },
       getAppList() {
         let params = {
           pageTitle: '',
-          authorizerId: this.authorizerId ? this.authorizerId : '',
+          authorizerId: this.appId,
           pageNum: this.pageOption.pageNum,
           pageSize: this.pageOption.pageSize,
         }
         this.$http.get(api.list, { params: params }).then(res => {
           let resp = res.data
           if (resp.success) {
-            this.appList = resp.data.lists
-            this.totalSize = resp.data.totalSize
+            this.appList = resp.data.lists;
+            this.totalSize = resp.data.totalSize;
+            for (let i = 0; i < this.wechatList.length; i++) {
+              const element = this.wechatList[i];
+              console.log(element.id)
+              if(element.id == this.appId){
+                this.headImg = element.headImg?element.headImg:'';
+              }
+            }
+            console.log(this.headImg)
+            this.homePage = resp.data.homePage ? resp.data.homePage : {};
           } else {
             let msg = resp.desc || '请求失败'
             this.$message.error(msg)
@@ -125,7 +192,7 @@
             id,
           }
           let _params = Object.assign(params)
-          this.$http.post(api.sethomepage,  qs.stringify(_params)).then(res => {
+          this.$http.post(api.sethomepage, qs.stringify(_params)).then(res => {
             let resp = res.data
             if (resp.success) {
               this.$message({
@@ -162,61 +229,6 @@
 
         })
       },
-
-
-
-
-
-
-      showAppDetail(id) {
-        this.appdetailDialog.show = true
-        this.$http.get('/miniapp/detail', { params: { id } }).then(res => {
-          let resp = res.data
-          if (resp.success) {
-            this.appDetail = resp.data
-          } else {
-            let msg = resp.desc || '请求失败'
-            this.$message.error(msg)
-          }
-        })
-      },
-      showDomain(appId) {
-        this.domainDialog.show = true
-        this.appId = appId
-        this.$http.get('/miniapp/getDomain', { params: { appId } }).then(res => {
-          let resp = res.data
-          if (resp.success) {
-            this.appDomain = resp.data
-          } else {
-            let msg = resp.desc || '请求失败'
-            this.$message.error(msg)
-          }
-        })
-      },
-      setDomain(appId) {
-        this.$http.get('/miniapp/setDomain', { params: { appId } }).then(res => {
-          let resp = res.data
-          if (resp.success && resp.data) {
-            this.$message({
-              type: 'success',
-              message: '刷新成功!'
-            })
-            this.showDomain(appId)
-          } else {
-            let msg = resp.desc || '请求失败'
-            this.$message.error(msg)
-          }
-        })
-      },
-      getMiniApp() {
-        this.$http.get('/wechat/getAuthorization').then(res => {
-          console.log(res)
-          if (res.data.success) {
-            let redirectUrl = res.data.data
-            window.location.href = redirectUrl
-          }
-        })
-      }
     }
   }
 </script>
@@ -290,6 +302,20 @@
       line-height: 40px;
       display: inline-block;
       float: left;
+    }
+  }
+
+  .home-page {
+    height: 70px;
+    line-height: 50px;
+    padding: 10px 20px;
+    border: 1px solid #ebeef5;
+    .home-page-header {
+      height: 50px;
+      width: 50px;
+      display: inline-block;
+      vertical-align: middle;
+      font-size: 0;
     }
   }
 </style>

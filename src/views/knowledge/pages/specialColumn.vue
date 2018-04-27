@@ -237,7 +237,7 @@
             <el-input v-model="linkcolumnForm.lecturerValue"></el-input>
           </el-form-item>
         </el-col>
-        <el-button type="primary" @click="getLinkCourseData" size="mini">查询</el-button>
+        <el-button type="primary" @click="getLinkCourseData" size="mini" class="min-search">查询</el-button>
         <el-table
           ref="multipleTable"
           :data="linkcolumnList"
@@ -272,7 +272,7 @@
                          layout="total, prev, pager, next"
                          :total="linkcolumnForm.totalSize"></el-pagination>
         </div>
-        <el-col :span="7" :offset="17" class="mt20">
+        <el-col :span="5" :offset="19" class="mt20">
           <el-button type="default" @click="cancelLinkForm" size="mini">取消</el-button>
           <el-button type="primary" @click="submitlinkForm" size="mini">保存</el-button>
         </el-col>
@@ -1029,6 +1029,9 @@
     min-height: 200px !important;
   }
 
+.min-search{
+  vertical-align: -webkit-baseline-middle;
+}
   .ofa-main-wrap {
     width: 100%;
     .title-wrap {

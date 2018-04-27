@@ -79,7 +79,7 @@
               </el-form-item>
               <el-form-item label="分组名称" :prop="'tabs.' + index + '.groupName'" :rules="[
             { required: true, message: '请输入分组名称', trigger: 'change' },
-            { min: 1, max: 10, message: '长度在 1 到 10 个字符', trigger: 'change' }
+            { validator: textLength, trigger: 'change' }
           ]">
                 <el-input v-model="item.groupName" size="small" class="w200"></el-input>
               </el-form-item>
@@ -144,7 +144,25 @@
   }
   export default {
     data() {
+      var textLength = (rule, value, callback) => {
+
+        var len = 0;
+        for (var i = 0; i < value.length; i++) {
+          var a = value.charAt(i);
+          if (a.match(/[^\x00-\xff]/ig) != null) {
+            len += 2;
+          }
+          else {
+            len += 1;
+          }
+        }
+        if (len > 10) {
+          callback(new Error('最多输入5个汉字或10个英文数字'));
+        }
+
+      }
       return {
+        textLength: textLength,
         activeName: 0,
         shopList: [
           {

@@ -130,6 +130,7 @@
           } else {
             isValid = this.$refs['module' + i][0].examineForm()
           }
+        console.log(isValid)
           if(!isValid){
             this.deployToggle = i;
             return false;

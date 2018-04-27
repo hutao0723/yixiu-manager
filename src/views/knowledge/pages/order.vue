@@ -61,7 +61,7 @@
 
       <div class="tabel-wrap">
         <template>
-          <el-table :data="orderList" style="width: 100%" >
+          <el-table :data="orderList" >
             <el-table-column prop="itemId" label="商品ID" width="80"></el-table-column>
             <el-table-column label="商品信息" width="300">
               <template slot-scope="scope">

@@ -69,16 +69,18 @@
   export default {
     data() {
       var rateRule = (rule, value, callback) => {
-        if(/^\d+\.\d+$/.test(String(value*100))){
+        if (/^\d+\.\d+$/.test(String(value * 100))) {
           callback(new Error('最多两位小数'));
-        }else{
-          if(value > 100){
+        } else {
+          if (value > 100) {
             callback(new Error('最大值为100.00'));
-          }else{
+          } else {
             callback()
           }
         }
       };
+
+      
       return {
         pageOption: {
           pageNum: 1,
@@ -98,7 +100,7 @@
         addRules: {
           rate: [
             { required: true, message: '请输入分成比例', trigger: 'change' },
-            {validator: rateRule, trigger: 'change' },
+            { validator: rateRule, trigger: 'change' },
           ],
           validPeriod: [
             { required: true, message: '请输入用户有效期', trigger: 'change' },
@@ -111,7 +113,7 @@
         }
       }
     },
-    
+
     filters: {
     },
     created() {
@@ -123,7 +125,7 @@
           <div>
             用户有效期（天）
             <el-tooltip class="item" effect="dark" placement="top">
-              <div slot="content">用户点击推广链接会和渠道绑定用户关系，在有效期内用户再次进入小程序下单，无论是再<br/>通过该渠道的推广链接还是直接进入小程序购买，都算渠道收入；若用户点击其他渠道的推<br/>广链接，则会与最新的渠道绑定用户关系，且收入都算最新绑定渠道。</div>
+              <div slot="content">用户点击推广链接会和渠道绑定用户关系，在有效期内用户再次进入小程序下单，无论是再<br />通过该渠道的推广链接还是直接进入小程序购买，都算渠道收入；若用户点击其他渠道的推<br />广链接，则会与最新的渠道绑定用户关系，且收入都算最新绑定渠道。</div>
               <i class="el-icon-question cp"></i>
             </el-tooltip>
           </div>

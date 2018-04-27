@@ -249,15 +249,15 @@
       showDialogHref() {
         this.dialogHref = true;
         this.selectValue = {
-          linkUrl: this.selectValue.linkUrl ? this.selectValue.linkUrl : "https://",
+          linkUrl: this.moduleForm.linkDataJson.linkUrl ? this.moduleForm.linkDataJson.linkUrl : "https://",
         }
       },
       showDialogWechat() {
         this.dialogWechat = true;
         this.selectValue = {
-          appId: this.selectValue.appId ? this.selectValue.appId : "",
-          linkUrl: this.selectValue.linkUrl ? this.selectValue.linkUrl : "",
-          courseType: this.selectValue.courseType ? this.selectValue.courseType : 1,
+          appId: this.moduleForm.linkDataJson.appId ? this.moduleForm.linkDataJson.appId : "",
+          linkUrl: this.moduleForm.linkDataJson.linkUrl ? this.moduleForm.linkDataJson.linkUrl : "",
+          courseType: this.moduleForm.linkDataJson.courseType ? this.moduleForm.linkDataJson.courseType : 1,
         };
       },
       changeSelectValue() {

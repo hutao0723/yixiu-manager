@@ -158,8 +158,9 @@
         }
         if (len > 10) {
           callback(new Error('最多输入5个汉字或10个英文数字'));
+        }else{
+          callback()
         }
-
       }
       return {
         textLength: textLength,
@@ -228,6 +229,7 @@
     methods: {
       examineForm() {
         let isValid;
+        console.log(111)
         this.$refs['moduleForm'].validate((valid) => {
           isValid = valid
         });

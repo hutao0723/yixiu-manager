@@ -77,7 +77,7 @@
         </template>
       </div>
       <div class="page-control">
-        <el-pagination background :page-size="20" :current-page.sync="columnSearchForm.pageNum"
+        <el-pagination background :page-size="10" :current-page.sync="columnSearchForm.pageNum"
                        @current-change="getColumnListData"
                        layout="total, prev, pager, next"
                        :total="totalSize"></el-pagination>

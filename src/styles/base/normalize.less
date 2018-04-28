@@ -1,4 +1,4 @@
-/* http://meyerweb.com/eric/tools/css/reset/ 
+/* http://meyerweb.com/eric/tools/css/reset/
    v2.0 | 20110126
    License: none (public domain)
 */
@@ -12,8 +12,8 @@ b, u, i, center,
 dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
 table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed, 
-figure, figcaption, footer, header, hgroup, 
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
 menu, nav, output, ruby, section, summary,
 time, mark, audio, video {
   margin: 0;
@@ -23,7 +23,7 @@ time, mark, audio, video {
   vertical-align: baseline;
 }
 /* HTML5 display-role reset for older browsers */
-article, aside, details, figcaption, figure, 
+article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
   display: block;
 }
@@ -75,4 +75,70 @@ body {
       white-space:pre-wrap;
     }
   }
+}
+
+.ql-container {
+  min-height: 200px!important;
+}
+.audio-list{
+  .el-upload-list__item,.el-upload-list__item:first-child{
+    line-height:40px;
+    margin-top:0}
+  .el-upload-list{
+    width: 300px;
+    height: 40px;
+    border: 1px solid #ccc;
+    line-height: 40px;
+    position: absolute;
+    top: 0;
+  }
+  .el-icon-close,.el-icon-close-tip{
+    top: 13px;
+  }
+  .el-button{
+    position: absolute;
+    top: 4px;
+    left: 320px;
+  }
+  #start_upload{
+    left: 430px;
+  }
+  .el-upload-list__tip{
+    position: absolute;
+    top: -5px;
+    left: 420px;
+  }
+  .el-upload-list__item-name{
+    text-align: center;
+  }
+}
+.el-select-dropdown{
+  z-index: 88888!important;
+}
+.el-loading-mask{
+  z-index: 2000000;
+}
+.lecturer-container{
+  .el-input.is-disabled .el-input__inner{
+    color: #606266;
+    border: 1px solid #dcdfe6;
+    text-align: center;
+  }
+}
+.el-table--enable-row-hover .el-table__body tr:hover>td{
+  background-color: #fff;
+}
+.el-table--enable-row-hover .el-table__body tr:hover.current-row>td{
+  background-color: #ecf5ff;
+}
+.el-submenu .el-menu-item{
+  min-width: auto;
+}
+.w-e-text-container,.w-e-text{
+  min-height: 300px!important;
+  max-height: 600px!important;
+  height: auto!important;
+}
+.el-checkbox__inner{
+  border: 1px solid #bbb!important
 }

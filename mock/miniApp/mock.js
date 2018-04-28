@@ -147,6 +147,48 @@ var setOnline = [
     name: 'export',
     type: 'post',
     url: '/content/detail/export'
+  },
+  // 小程序类型
+  {
+    name: 'miniType',
+    type: 'get',
+    url: '/content/type/appType/list'
+  },
+  // 新增小程序类型
+  {
+    name: 'save',
+    type: 'post',
+    url: '/content/type/insert'
+  },
+  // 删除小程序类型
+  {
+    name: 'delete',
+    type: 'post',
+    url: '/content/type/appType/delete'
+  },
+  //选择小程序类型
+  {
+    name: 'selectType',
+    type: 'get',
+    url: '/content/type/select'
+  },
+  // 绑定小程序类型
+  {
+    name: 'save',
+    type: 'post',
+    url: '/content/type/band'
+  },
+  // 获取单个小程序绑定的小程序类型
+  {
+    name: 'bandInfo',
+    type: 'get',
+    url: '/content/type/band/info'
+  },
+  // 获取全部列表
+  {
+    name: 'selectType',
+    type: 'get',
+    url: '/content/type/appType/all'
   }
 ];
 var fs = require('fs');

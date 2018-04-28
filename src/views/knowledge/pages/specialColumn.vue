@@ -469,7 +469,7 @@
           lecturerNickName: null,
           lecturerValue: null,
           pageNum: 1,
-          pageSize: 20,
+          pageSize: 10,
         },
 
         //新增编辑专栏form表单
@@ -1014,7 +1014,7 @@
         this.columnSearchForm.status='',
         this.columnSearchForm.searchTeacherType= 'lecturerNickName',
         this.columnSearchForm.pageNum=1,
-        this.columnSearchForm.pageSize= 20
+        this.columnSearchForm.pageSize= 10
       },
 
       clearLinkcolumnForm(){
@@ -1024,7 +1024,7 @@
         this.linkcolumnForm.selectType= 'title',
         this.linkcolumnForm.searchTeacherType= 'lecturerNickName',
         this.columnSearchForm.pageNum=1,
-        this.columnSearchForm.pageSize= 20
+        this.columnSearchForm.pageSize= 10
       },
     }
   }

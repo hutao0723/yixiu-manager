@@ -1,10 +1,9 @@
 <template>
   <div class="module-item" @click="changeDeploy">
     <div class="module-content" v-bind:style="{ 
-          height: moduleForm.blankHeight / 2 + 'px', 
-          lineHeight: moduleForm.blankHeight / 2 + 'px',
-          width: moduleForm.blankWidth / 2 + 'px',
-          backgroundColor: moduleForm.blankFillColor?moduleForm.blankFillColor:'inherit',
+          height: 25 + 'px', 
+          lineHeight: 25 + 'px',
+          width: 375 + 'px',
         }"> 
       空白
     </div>

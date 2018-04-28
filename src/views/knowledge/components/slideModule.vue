@@ -308,16 +308,19 @@
       showDialogHref(index) {
         this.dialogHref = true;
         this.selectValue = {
-          linkUrl: this.selectValue.linkUrl ? this.selectValue.linkUrl : "https://",
+          linkUrl: this.moduleForm.tabs[index].linkDataJson.linkUrl ? this.moduleForm.tabs[index].linkDataJson.linkUrl : "https://",
+          
         }
         this.selectIndex = index;
       },
       showDialogWechat(index) {
         this.dialogWechat = true;
         this.selectValue = {
-          appId: this.selectValue.appId ? this.selectValue.appId : "",
-          linkUrl: this.selectValue.linkUrl ? this.selectValue.linkUrl : "",
-          courseType: this.selectValue.courseType ? this.selectValue.courseType : 1,
+          
+
+          appId: this.moduleForm.tabs[index].linkDataJson.appId ? this.moduleForm.tabs[index].linkDataJson.appId : "",
+          linkUrl: this.moduleForm.tabs[index].linkDataJson.linkUrl ? this.moduleForm.tabs[index].linkDataJson.linkUrl : "",
+          courseType: this.moduleForm.tabs[index].linkDataJson.courseType ? this.moduleForm.tabs[index].linkDataJson.courseType : 1,
         };
         this.selectIndex = index;
       },

@@ -13,7 +13,8 @@
       <div class="search-bar">
         <template>
           <el-form :inline="true" :model="searchForm.data" class="demo-form-inline" size="mini">
-            <el-select v-model="searchForm.data.value" filterable remote reserve-keyword :remote-method="remoteMethod" :loading="loading" size="mini">
+            <el-select v-model="searchForm.data.value" filterable remote reserve-keyword :remote-method="remoteMethod" :loading="loading"
+              size="mini">
               <el-option v-for="item in officalAcountOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
             <el-form-item>
@@ -34,7 +35,8 @@
             </el-table-column>
             <el-table-column label="内容类型">
               <template slot-scope="scope">
-                <span>平铺</span>
+                <span v-if="scope.row.contentType == 1">平铺</span>
+                <span v-if="scope.row.contentType == 2">首屏</span>
               </template>
             </el-table-column>
             <el-table-column prop="contentName" label="内容名称"></el-table-column>
@@ -65,14 +67,31 @@
           <el-form-item label="内容类型" prop="contentType" :label-width="formLabelWidth">
             <el-select v-model="addForm.contentType">
               <el-option label="平铺" :value="1"></el-option>
+              <el-option label="首屏" :value="2"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="内容名称" prop="contentName" :label-width="formLabelWidth">
+          <el-form-item label="内容名称" :label-width="formLabelWidth" v-if="addForm.contentType == 1" prop="contentName" :rules="[
+            { required: true, message: '请输入内容名称', trigger: 'change' },
+            { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'change' }
+          ]">
             <el-input v-model="addForm.contentName"></el-input>
           </el-form-item>
+          <el-form-item label="跳转链接地址" :label-width="formLabelWidth" v-if="addForm.contentType == 2" prop="targetUrl" :rules="[
+            { required: true, message: '请输入跳转链接地址', trigger: 'change' },
+            { min: 1, max: 1000, message: '长度在 1 到 1000 个字符', trigger: 'change' }
+          ]">
+            <el-input v-model="addForm.targetUrl"></el-input>
+          </el-form-item>
           <el-form-item label="图片素材" prop="pictureUrl" :label-width="formLabelWidth">
+            <div class="image clearfix">
+                <div class="image-item" v-for="(item,index) in fileList"  :key="index" v-dragging="{ item: item, list: fileList}">
+                  <img :src="item.url" alt="" :draggable="false">
+                  <i class="image-item-delete el-icon-circle-close-outline" @click="deleteImage(index)"></i>
+                </div>
+              </div>
             <el-upload class="upload-demo" action="/upload/image" :on-success="submitImage" name="imageFile" :on-remove="removeImage"
-              :before-upload="beforeImage" :limit="10" :file-list="fileList" list-type="picture">
+              :before-upload="beforeImage" :limit="10" :file-list="fileList" list-type="picture" :show-file-list="false">
+              
               <el-button size="small" type="primary">点击上传</el-button>
               <div slot="tip" class="el-upload__tip">只能上传jpeg/jpg/png文件，且不超过100kb，图片宽度限制750px</div>
             </el-upload>
@@ -102,7 +121,7 @@
           },
         },
         totalSize: 50,
-        formLabelWidth: '100px',
+        formLabelWidth: '120px',
         dialogAddVisible: false,
         rules: putContentRules,
         addForm: {
@@ -132,6 +151,9 @@
       this.getPublicList();
     },
     methods: {
+      deleteImage(index) {
+        this.fileList.splice(index, 1);
+      },
       remoteMethod(query) {
         this.$http.get('/subscriptionInfo/all', { params: { subscriptionName: query } }).then(res => {
           if (res.data.success) {
@@ -283,7 +305,7 @@
           })
         } else {
           this.addForm = {
-            contentType: "",
+            contentType: 1,
             contentName: "",
             subscriptionName: "",
             subscriptionId: "",
@@ -314,29 +336,29 @@
             }
           }
         }
+        let validType = null;
         this.$refs['addForm'].validate((valid) => {
-          if (valid) {
-            let params = Object.assign(this.addForm)
-            this.$http.post('/put/content/save', qs.stringify(params)).then(res => {
-              if (res.data.success) {
-                if (res.data.data) {
-                  this.$message.success('创建成功')
-                  this.dialogAddVisible = false
-                  window.location.reload()
-                } else {
-                  this.$message.error('创建失败')
-                }
-              } else {
-                this.$message.error(`${res.data.desc || '网络错误'}`)
-              }
-            }, () => {
-              this.$message.error('网络错误')
-            })
-          } else {
-            console.log('error submit!!')
-            return false
-          }
+          console.log(valid)
+          validType = valid;
         })
+        if (validType) {
+          let params = Object.assign(this.addForm)
+          this.$http.post('/put/content/save', qs.stringify(params)).then(res => {
+            if (res.data.success) {
+              if (res.data.data) {
+                this.$message.success('创建成功')
+                this.dialogAddVisible = false
+                window.location.reload()
+              } else {
+                this.$message.error('创建失败')
+              }
+            } else {
+              this.$message.error(`${res.data.desc || '网络错误'}`)
+            }
+          }, () => {
+            this.$message.error('网络错误')
+          })
+        }
       },
 
       pageChange() {
@@ -447,20 +469,46 @@
       display: inline-block;
       vertical-align: middle;
     }
-    .el-upload-list--picture .el-upload-list__item{
+    .el-upload-list--picture .el-upload-list__item {
       padding: 20px 10px 20px 100px;
-      float: left;
-      // font-size: 0;
+      float: left; // font-size: 0;
       margin: 10px;
       width: auto;
       height: auto;
     }
-    .el-upload-list__item-name{
+    .el-upload-list__item-name {
       // margin-right: 0;
     }
-    .el-upload-list--picture .el-upload-list__item.is-success .el-upload-list__item-name{
+    .el-upload-list--picture .el-upload-list__item.is-success .el-upload-list__item-name {
       display: none;
     }
 
   }
+
+  .image-item {
+    border: 1px solid #c0ccda;
+    padding: 20px;
+    position: relative;
+    margin: 5px;
+    float: left;
+    border-radius: 4px;
+    img {
+      display: block;
+      width: 70px;
+      height: 70px;
+    }
+    .image-item-delete {
+      position: absolute;
+      right: 0;
+      top: 0;
+      height: 20px;
+      width: 20px;
+    }
+    .el-icon-circle-close-outline{
+      line-height: 20px;
+      text-align: center;
+      cursor: pointer;      
+    }
+  }
+  
 </style>

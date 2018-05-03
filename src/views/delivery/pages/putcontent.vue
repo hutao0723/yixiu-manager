@@ -286,6 +286,7 @@
                 subscriptionName,
                 id,
                 pictureUrl,
+                targetUrl,
               } = res.data.data;
 
               this.addForm = {
@@ -295,6 +296,7 @@
                 subscriptionId,
                 id,
                 pictureUrl,
+                targetUrl,
               }
               let arr = this.addForm.pictureUrl.split(',')
               for (let i = 0; i < arr.length; i++) {
@@ -311,6 +313,7 @@
             subscriptionId: "",
             id: "",
             pictureUrl: "",
+            targetUrl: "",
           }
         }
         this.dialogAddVisible = true

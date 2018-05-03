@@ -23,10 +23,10 @@
         </el-form-item>
         <el-form-item label="图片链接" v-show="moduleForm.tabs.length>0">
           <div class="shop">
-            <div class="shop-list" v-for="(item,index) in moduleForm.tabs" :key="index" v-dragging="{ item: item, list: moduleForm.tabs, group: 'item' }">
+            <div class="shop-list" v-for="(item,index) in moduleForm.tabs" :key="index" v-dragging="{ item: item, list: moduleForm.tabs, group: 'image' }">
               <el-form :model="item" label-width="100px">
                 <el-form-item label="图片">
-                  <img :src="item.pictureUrl" alt="" width="50" height="50" v-if="item.pictureUrl">
+                  <img :src="item.pictureUrl?item.pictureUrl:''" alt="" width="50" height="50" v-if="item.pictureUrl">
                   <el-upload class="shop-list-upload" action="/upload/image" :on-success="(res) => changeImage(res, index)" name="imageFile"
                     :before-upload="beforeImage" :show-file-list="false">
                     <i class="el-icon-edit"></i>

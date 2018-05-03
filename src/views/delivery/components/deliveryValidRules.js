@@ -144,16 +144,6 @@ export const putContentRules = {
     message: '请选择内容类型',
     trigger: 'change'
   }],
-  contentName: [{
-    required: true,
-    message: '请输入内容名称',
-    trigger: 'change'
-  }, {
-    min: 1,
-    max: 50,
-    message: '长度在 1 到 50 个字符',
-    trigger: 'blur'
-  }],
   pictureUrl: [{
     required: true,
     message: '请上传图片素材',

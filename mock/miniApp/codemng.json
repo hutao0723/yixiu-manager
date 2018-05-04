@@ -10,7 +10,7 @@
             "gmtCreate": 1519202014000
         },
         "audit": {
-            "templateStatus": 0,
+            "templateStatus": 3,
             "templateId": 2,
             "auditId": 222,
             "userVersion": "V2.0",

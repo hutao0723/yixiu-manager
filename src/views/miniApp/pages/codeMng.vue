@@ -41,7 +41,7 @@
           <el-form label-position="left" size="mini">
             <div class="action-bar">
               <div class="btn-wrap">
-                <el-button size="small" type="primary" :disabled="codeMngInfo.audit.templateStatus === 1 || codeMngInfo.audit.templateStatus === 2" @click="showVersion">选择版本</el-button>
+                <el-button size="small" type="primary" :disabled="codeMngInfo.audit.templateStatus === 1 || codeMngInfo.audit.templateStatus === 3" @click="showVersion">选择版本</el-button>
               </div>
               <div class="btn-wrap fr">
                 <el-button size="small" type="primary" @click="submitAudit" v-if="codeMngInfo.audit.templateStatus === 0">提交审核</el-button>
@@ -51,11 +51,11 @@
                 <el-button size="small" type="text" @click="recallAudit">撤回审核</el-button>
                 <el-button size="small" type="text" @click="updateAuditstatus" >刷新审核状态</el-button>
               </div>
-              <div class="btn-wrap fr" v-if="codeMngInfo.audit.templateStatus === 2">
+              <div class="btn-wrap fr" v-if="codeMngInfo.audit.templateStatus === 3">
                 <el-button size="small" type="text" disabled >审核通过</el-button>
                 <el-button size="small" type="text" @click="publish">发布到线上</el-button>
               </div>            
-              <div class="btn-wrap fr" v-if="codeMngInfo.audit.templateStatus === 3">
+              <div class="btn-wrap fr" v-if="codeMngInfo.audit.templateStatus === 2">
                 <el-button size="small" type="text" disabled>审核不通过</el-button>
               </div>
             </div>
@@ -74,7 +74,7 @@
             <el-form-item label="提交时间:" :label-width="formLabelWidth">
               <span>{{codeMngInfo.audit.gmtCreate | formatToMs}}</span>
             </el-form-item>
-            <el-form-item label="审核不通过原因:" :label-width="formLabelWidth" v-if="codeMngInfo.audit.templateStatus === 3">
+            <el-form-item label="审核不通过原因:" :label-width="formLabelWidth" v-if="codeMngInfo.audit.templateStatus === 2">
               <span>{{codeMngInfo.audit.failReason || '-'}}</span>
             </el-form-item>
           </el-form>
@@ -102,7 +102,7 @@
             </el-table>
           </template>  
         </div>
-        <div class="btn-wrap">
+        <div class="btn-wrap mt20">
           <el-button size="small" type="primary" @click="VersionCommit">保存</el-button>
         </div>
       </el-dialog>
@@ -111,7 +111,7 @@
 </template>
 
 <script>
-import { formatToMs } from '../../../utils/dateUtils';
+import { formatToMs } from '../../../utils/dateUtils'
 export default {
   data () {
     return {
@@ -119,21 +119,21 @@ export default {
       labelholder: '',
       formLabelWidth: '120px',
       codeMngInfo: {
-        appId: "",
+        appId: '',
         online: {
-            templateId: '',
-            auditId: '',
-            userVersion: '',
-            userDesc: '',
-            gmtCreate: ''
+          templateId: '',
+          auditId: '',
+          userVersion: '',
+          userDesc: '',
+          gmtCreate: ''
         },
         audit: {
-            templateStatus: '',
-            templateId: '',
-            auditId: '',
-            userVersion: '',
-            userDesc: '',
-            gmtCreate: ''
+          templateStatus: '',
+          templateId: '',
+          auditId: '',
+          userVersion: '',
+          userDesc: '',
+          gmtCreate: ''
         }
       },
       templateList: [
@@ -202,10 +202,10 @@ export default {
       })
     },
     showVersion () {
-      this.templateId = ""
+      this.templateId = ''
       this.versionDialog = {
         show: true
-      };
+      }
       this.getAllTemplate()
     },
     publish () {
@@ -230,7 +230,7 @@ export default {
                 message: '发布失败!'
               })
             }
-          } 
+          }
         })
       }).catch(() => {
         this.$message({
@@ -261,7 +261,7 @@ export default {
                 message: '提交审核失败!'
               })
             }
-          } 
+          }
         })
       }).catch(() => {
         this.$message({
@@ -308,7 +308,7 @@ export default {
                 message: '撤回审核失败!'
               })
             }
-          } 
+          }
         })
       }).catch(() => {
         this.$message({

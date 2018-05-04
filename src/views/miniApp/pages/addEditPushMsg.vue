@@ -109,7 +109,7 @@ export default {
       pushKeyList: [],
       options: [],
       msgTemplateId: ''
-    } 
+    }
   },
   computed: {
     dateRange () {
@@ -135,7 +135,7 @@ export default {
             if (!item.templateValue) flag = false
           })
         }
-      }    
+      }
       return flag
     }
   },
@@ -160,7 +160,7 @@ export default {
           this.pushKeyList = []
           msgTemplate.mpMsgTemplateKeyList.forEach(item => {
             let pushKey = {
-              color: "#6D6E70",
+              color: '#6D6E70',
               templateKey: item.templateKey,
               templateName: item.templateName,
               templateValue: item.example
@@ -171,7 +171,7 @@ export default {
           let msg = resp.desc || '请求失败'
           this.$message.error(msg)
         }
-      }) 
+      })
     },
     getTemplateList () {
       let appId = this.$route.params.appId
@@ -219,10 +219,10 @@ export default {
         templateId: this.templateId,
         jumpPage: this.jumpPage,
         emphasisKeyword: this.emphasisKeyword,
-        pushTime: this.pushNow === '0' ? pushTime : '' ,
+        pushTime: this.pushNow === '0' ? pushTime : '',
         pushNow: this.pushNow === '0' ? false : true,
         pushKeyList: this.pushKeyList
-      } 
+      }
       if (this.$route.params.id) params.id = this.$route.params.id
       if (this.valid) {
         this.$http.post('/miniapp/templatePushSave', params).then(res => {

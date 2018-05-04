@@ -4,11 +4,17 @@
     <el-aside :width="hiddenWith" >
       <div class="side-wrap" v-show="isShow">
         <p class="page-title" >公众号管理</p>
-        <el-menu :collapse="isCollapse" class="menu-collapse" default-active="1">
-          <el-menu-item index="1">
-            <i class="iconfont icon-msnui-weixin"></i>
-            <span slot="title" >公众号</span>
-          </el-menu-item>
+        <el-menu :collapse="isCollapse" class="menu-collapse" :default-active="pathIndex">
+          <router-link :to="{ path: '/manager/officalAcount' }">   
+            <el-menu-item index="1">
+              <span slot="title">公众号</span>
+            </el-menu-item>
+          </router-link> 
+          <router-link :to="{ path: '/manager/officalAcount/graphType' }">   
+            <el-menu-item index="2">
+              <span slot="title">图文类型</span>
+            </el-menu-item>
+          </router-link> 
         </el-menu>                
       </div>
     </el-aside>
@@ -38,9 +44,27 @@ export default {
     return {
       isCollapse: false,
       hiddenWith: '180px',
-      isShow: true
+      isShow: true,
+      pathIndex: '1',
     }
   },
+  created() {
+      console.log(this.$route.path)
+      let pathIndex;
+      let path = this.$route.path;
+      switch (path) {
+        case '/manager/officalAcount':
+          pathIndex = "1";
+          break;
+        case '/manager/officalAcount/graphType':
+          pathIndex = "2";
+          break;
+      
+        default:
+          break;
+      }
+      this.pathIndex = pathIndex;
+    },
   methods: {
     openCollapse () {
       console.log(1)
@@ -75,7 +99,8 @@ export default {
     }
     .page-title{
       width:100%;
-      text-align:center
+      text-align:center;
+      line-height: 60px;
     }
   }
   .el-menu{

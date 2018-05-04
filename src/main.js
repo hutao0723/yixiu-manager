@@ -5,16 +5,22 @@ import App from './App'
 import router from './router'
 import store from './store'
 import ElementUI from 'element-ui'
-import './assets/normalize.css'
 import 'element-ui/lib/theme-chalk/index.css'
+import './styles/main.less'
 import axios from 'axios'
 import qs from 'qs'
+import VueQuilEditor from 'vue-quill-editor'
 
 Vue.prototype.$http = axios
 
 Vue.use(ElementUI)
+Vue.use(VueQuilEditor)
 
 Vue.config.productionTip = false
+
+import VueDND from 'awe-dnd'
+
+Vue.use(VueDND)
 
 /* eslint-disable no-new */
 new Vue({

@@ -46,9 +46,27 @@ export const constantRouterMap = [
             }
           },
           {
+            path: 'skinMarket',
+            component: function (resolve) {
+              require(['../views/delivery/pages/skinMarket'], resolve)
+            }
+          },
+          {
+            path: 'editSkin',
+            component: function (resolve) {
+              require(['../views/delivery/pages/editSkin'], resolve)
+            }
+          },
+          {
             path: 'theme',
             component: function (resolve) {
               require(['../views/delivery/pages/subscriptionTheme'], resolve)
+            }
+          },
+          {
+            path: 'putcontent',
+            component: function (resolve) {
+              require(['../views/delivery/pages/putcontent'], resolve)
             }
           },
           {
@@ -75,6 +93,18 @@ export const constantRouterMap = [
             path: '/',
             component: function (resolve) {
               require(['../views/officalAcount/pages/officalAcountList'], resolve)
+            }
+          },
+          {
+            path: 'graphType',
+            component: function (resolve) {
+              require(['../views/officalAcount/pages/graphType'], resolve)
+            }
+          },
+          {
+            path: 'editGraphType/:id',
+            component: function (resolve) {
+              require(['../views/officalAcount/pages/editGraphType'], resolve)
             }
           },
           {
@@ -150,7 +180,111 @@ export const constantRouterMap = [
             component: function (resolve) {
               require(['../views/miniApp/pages/addWxTemplate'], resolve)
             }
+          },
+          {
+            path: 'contentManage',
+            component: function (resolve) {
+              require(['../views/miniApp/pages/contentManage'], resolve)
+            }
+          },
+          {
+            path: 'typeManage',
+            component: function (resolve) {
+              require(['../views/miniApp/pages/typeManage'], resolve)
+            }
+          },
+          {
+            path: 'miniType',
+            component: function (resolve) {
+              require(['../views/miniApp/pages/miniType'], resolve)
+            }
+          },
+          {
+            path: 'contentType/:id/:appId',
+            component: function (resolve) {
+              require(['../views/miniApp/pages/contentType'], resolve)
+            }
+          },
+          {
+            path: 'editContent/:parentId/:id',
+            component: function (resolve) {
+              require(['../views/miniApp/pages/editContent'], resolve)
+            }
           }
+        ]
+      },
+      {
+        path: 'knowledge',
+        component: function (resolve) {
+          require(['../views/knowledge/pages/sidebar'], resolve)
+        },
+        children: [
+          {
+            path: '/',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/page'], resolve)
+            }
+          },
+          {
+            path: 'add',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/addpage'], resolve)
+            }
+          },
+          {
+            path: 'channel',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/channel'], resolve)
+            }
+          },
+          {
+            path: 'extend',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/extend'], resolve)
+            }
+          },
+          {
+            path: 'curriculum',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/curriculum'], resolve)
+            }
+          },
+          {
+            path: 'specialColumn',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/specialColumn'], resolve)
+            }
+          },
+          {
+            path: 'goodsNumber/:id',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/goodsNumber'], resolve)
+            }
+          },
+          {
+            path: 'goodsGroup',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/goodsGroup'], resolve)
+            }
+          },
+          {
+            path: 'order',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/order'], resolve)
+            }
+          },
+          {
+            path: 'ordersDetail/:id',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/ordersDetail'], resolve)
+            }
+          },
+          {
+            path: 'lecturer',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/lecturer'], resolve)
+            }
+          },
         ]
       }
     ]

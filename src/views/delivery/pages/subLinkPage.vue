@@ -14,45 +14,51 @@
     <div class="conbtent">
       <div class="tabel-content">
         <template>
-          <el-table :data="tableData"  style="width: 100%">
-            <el-table-column prop="id" label="序号" width="50"></el-table-column>
-            <el-table-column prop="loadPageUrl" label="落地页"></el-table-column>
-            <el-table-column prop="subscriptionName" label="公众号" width="200"></el-table-column>
-            <el-table-column prop="thresholdNum" label="当日阈值" width="100"></el-table-column>
-            <el-table-column prop="todayFollowNum" label="当日新增关注" width="120"></el-table-column>
-            <el-table-column prop="status" label="状态" width="120">
-              <template slot-scope="scope">
-                <span v-if="scope.row.status === 0">
-                  不可使用
-                </span>
-                <span v-else-if="scope.row.status === 1">
-                  待使用
-                </span>
-                <span v-else-if="scope.row.status === 2">
-                  已使用
-                </span>
-              </template>              
-            </el-table-column>
-            <el-table-column  label="操作" width="150">
-              <template slot-scope="scope">
-                <el-button type="text" size="small" @click="cancelRelation(scope.row)">移除</el-button>               
-              </template>
-            </el-table-column>
-          </el-table>
+           <table class="" v-if="tableData" >
+              <thead>
+                <tr class="tr-header">
+                  <template v-for="column in columns">
+                    <th v-bind:class="column.className" v-bind:style="{width: column.width + '%'}">
+                      {{column.title}}
+                    </th>
+                  </template>
+                </tr>
+              </thead>
+              <draggable v-model="tableData" :element="'tbody'" @update="datadragEnd">
+                <tr class="tr-items" v-for="(item, index) in tableData" :key="item.id">
+                  <template v-for="column in columns">
+                    <template v-if="column.action">
+                      <td>
+                         <el-button type="text" size="small" @click="cancelRelation(item)">移除</el-button> 
+                      </td>
+                    </template>
+                    <template v-else>
+                      <td v-if="column.render" v-bind:style="{width: column.width + '%'}">
+                        {{column.render(item[column.dataIndex] || '', item, index)}}
+                      </td>
+                      <td v-else v-bind:style="{width: column.width + '%'}">
+                        {{item[column.dataIndex]}}
+                      </td>
+                    </template>
+                  </template>
+                </tr>
+              </draggable>
+            </table>
         </template>
       </div>
     </div>
     <div class="connect-loadPage-diolog">
-      <el-dialog title="新增公众号" :visible.sync="dialogVisible">
+      <el-dialog title="新增公众号" :visible.sync="dialogVisible" width="1200px">
         <el-form  :inline="true" :model="adSubscriptionsForm" :rules="rules">
         <el-form-item label="待选公众号">
           <el-select  v-model="subscriptionId"  filterable remote reserve-keyword placeholder="待选公众号" :remote-method="remoteMethod" :loading="loading">
-              <el-option v-for="item in subscriptionsList" :key="item.value" :label="item.label" :value="item.value"></el-option>
+              <el-option v-for="item in subscriptionsList" :key="item.value" :label="item.label + item.value" :value="item.value">
+              </el-option>
           </el-select>
           <el-button type="text"  size="mini" icon="el-icon-search" @click="getLoadPageBySubscription()">查询</el-button>
         </el-form-item> 
         <el-form-item label="待选落地页">
-          <el-transfer  :titles="['待选落地页', '已选落地页']" v-model="adSubscriptionsForm.loadPageIds" :data="loadpagesList"></el-transfer>
+          <el-transfer  :titles="['待选落地页', '已选落地页']" v-model="adSubscriptionsForm.loadPageIds" :data="loadpagesList" width="300px"></el-transfer>
         </el-form-item> 
         <div class="btn-wrap">
           <el-button size="small" :disabled="!adSubscriptionsForm.loadPageIds.length" type="primary" @click="boundRelation">保存</el-button>
@@ -66,11 +72,60 @@
 <script>
 import {rules} from '../components/deliveryValidRules'
 import { mapState } from 'vuex'
-
+import draggable from 'vuedraggable'
+const columns = [
+  {
+    title: '序号',
+    width: 10,
+    render: (text, record, index) => {
+      return index + 1
+    }
+  },
+  {
+    title: '落地页',
+    dataIndex: 'loadPageUrl',
+    width: 30
+  },
+  {
+    title: '公众号',
+    dataIndex: 'subscriptionName',
+    width: 20
+  },
+  {
+    title: '当日阈值',
+    dataIndex: 'thresholdNum',
+    width: 10
+  },
+  {
+    title: '当日新增关注',
+    dataIndex: 'todayFollowNum',
+    width: 10
+  },
+  {
+    title: '状态',
+    dataIndex: 'status',
+    width: 10,
+    render: (text, record, index) => {
+      if (record.status === 0) return '不可使用'
+      if (record.status === 1) return '待使用'
+      if (record.status === 2) return '已使用'
+    }
+  },
+  {
+    title: '操作',
+    dataIndex: 'id',
+    width: 20,
+    action: true
+  }
+]
 export default {
   name: 'delivery',
+  components: {
+    draggable
+  },
   data () {
     return {
+      columns: columns,
       themeId: null,
       dialogVisible: false,
       rules: rules,
@@ -132,6 +187,7 @@ export default {
       }
     },
     remoteMethod (query) {
+      console.log(query)
       this.$http.get('/subscriptionInfo/list', {params: {name: query}}).then(res => {
         if (res.data.success) {
           let list = res.data.data.lists
@@ -196,6 +252,23 @@ export default {
           type: 'info',
           message: '已取消删除'
         })
+      })
+    },
+    datadragEnd (e) {
+      let id = +this.tableData[e.newIndex].id
+      let themeId = +this.themeId
+      let start = +this.tableData[e.newIndex].sort
+      let end = e.newIndex > e.oldIndex ? +(this.tableData[e.newIndex - 1].sort) : +(this.tableData[e.newIndex + 1].sort)
+      this.$http.post('/subscriptionTheme/loadPage/sort', {start, end, id, themeId}).then(res => {
+        let resp = res.data
+        if (resp.success) {
+          this.$message.success('排序成功')
+          this.getList()
+        } else {
+          let msg = resp.desc || '请求失败'
+          this.$message.error(msg)
+          this.getList()
+        }
       })
     }
   }

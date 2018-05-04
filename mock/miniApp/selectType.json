@@ -1,0 +1,71 @@
+{
+	"success": true,
+	"data": [{
+			"id": 14,
+			"name": "测试类",
+			"parentId": 0,
+            "modelType": 1
+		},
+		{
+			"id": 1,
+			"name": "印象类",
+			"parentId": 0,
+            "modelType": 1
+		},
+		{
+			"id": 2,
+			"name": "星座类",
+			"parentId": 0,
+            "modelType": 1
+		},
+		{
+			"id": 3,
+			"name": "小说类",
+			"parentId": 0,
+            "modelType": 1
+		},
+		{
+			"id": 4,
+			"name": "精品类",
+			"parentId": 0,
+            "modelType": 1
+		},
+		{
+			"id": 5,
+			"name": "电商类",
+			"parentId": 0,
+            "modelType": 1
+		},
+		{
+			"id": 6,
+			"name": "精选类",
+			"parentId": 0,
+            "modelType": 1
+		},
+		{
+			"id": 7,
+			"name": "小说类",
+			"parentId": 0,
+            "modelType": 1
+		},
+		{
+			"id": 8,
+			"name": "精品类",
+			"parentId": 0,
+            "modelType": 1
+		},
+		{
+			"id": 9,
+			"name": "电商类",
+			"parentId": 0,
+            "modelType": 1
+		},
+		{
+			"id": 10,
+			"name": "精选类",
+			"parentId": 0,
+            "modelType": 1
+		}
+	]
+}
+

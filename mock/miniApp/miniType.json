@@ -1,0 +1,23 @@
+{
+    "success": true,
+    "data": {
+        "totalSize": 50,
+        "lists": [
+            {
+                "id": 74,
+                "name": "知识付费1",
+                "appNum": 0
+            },
+            {
+                "id": 73,
+                "name": "星座类",
+                "appNum": 0
+            },
+            {
+                "id": 72,
+                "name": "知识付费1",
+                "appNum": 1
+            }
+        ]
+    }
+}

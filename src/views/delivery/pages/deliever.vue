@@ -171,14 +171,16 @@
         planName: '',
         planId: null,
         themeId: null,
-        planPlatform: '推啊'
+        planPlatform: '推啊',
+        partnerId: null
       },
       themeList: [],
       planIndex: null,
       selectPlan: {
         advertId: null,
         advertName: '',
-        promoteURL: ''
+        promoteURL: '',
+        partnerId: ''
       },
       planList: [
         {
@@ -210,6 +212,7 @@
         this.adPlanForm.pushUrl = this.selectPlan.promoteURL
         this.adPlanForm.planName = this.selectPlan.advertName
         this.adPlanForm.planId = this.selectPlan.advertId
+        this.adPlanForm.partnerId = this.selectPlan.partnerId
       }
     }
   },
@@ -340,8 +343,6 @@
     },
     // 模糊查询 主题
     remoteMethod (query) {
-      console.log('触发了')
-      console.log(this.adPlanForm.themeId)
       this.$http.get('/subscriptionTheme/all', {
         params: {
           themeName: query

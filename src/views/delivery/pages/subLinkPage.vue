@@ -48,7 +48,7 @@
       </div>
     </div>
     <div class="connect-loadPage-diolog">
-      <el-dialog title="新增公众号" :visible.sync="dialogVisible" width="800px">
+      <el-dialog title="新增公众号" :visible.sync="dialogVisible" width="1200px">
         <el-form  :inline="true" :model="adSubscriptionsForm" :rules="rules">
         <el-form-item label="待选公众号">
           <el-select  v-model="subscriptionId"  filterable remote reserve-keyword placeholder="待选公众号" :remote-method="remoteMethod" :loading="loading">

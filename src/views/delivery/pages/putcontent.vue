@@ -57,7 +57,7 @@
 
     <!--投放内容编辑-->
     <div>
-      <el-dialog title="投放内容" :visible.sync="dialogAddVisible">
+      <el-dialog title="投放内容" :visible.sync="dialogAddVisible" width="1100px">
         <el-form ref="addForm" :model="addForm" :rules="rules">
           <el-form-item label="公众号" prop="subscriptionId" :label-width="formLabelWidth">
             <el-select v-model="addForm.subscriptionId" filterable remote reserve-keyword :remote-method="remoteMethod" :loading="loading">
@@ -490,15 +490,15 @@
 
   .image-item {
     border: 1px solid #c0ccda;
-    padding: 20px;
+    padding: 10px;
     position: relative;
     margin: 5px;
     float: left;
     border-radius: 4px;
     img {
       display: block;
-      width: 70px;
-      height: 70px;
+      width: 60px;
+      height: 60px;
     }
     .image-item-delete {
       position: absolute;

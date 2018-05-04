@@ -90,7 +90,7 @@
         <el-form :model="addLoadPage" ref="externalPage" :rules="externalRules" v-show="addLoadPage.loadPageType == 1">
           <el-form-item label="公众号" :label-width="formLabelWidth" prop="subscriptionId">
             <el-select v-model="addLoadPage.subscriptionId" filterable remote reserve-keyword :remote-method="remoteMethod" :loading="loading"
-              @change="getPutNameList">
+              @change="changeWechat">
               <el-option v-for="item in searchForm.officalAcountOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
           </el-form-item>
@@ -106,18 +106,24 @@
         <el-form :model="addLoadPage" ref="internalPage" :rules="internalRules" v-show="addLoadPage.loadPageType == 2">
           <el-form-item label="公众号" :label-width="formLabelWidth" prop="subscriptionId">
             <el-select v-model="addLoadPage.subscriptionId" filterable remote reserve-keyword :remote-method="remoteMethod" :loading="loading"
-              @change="getPutNameList">
+              @change="changeWechat">
               <el-option v-for="item in searchForm.officalAcountOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="内容类型" :label-width="formLabelWidth" v-show="addLoadPage.loadPageType==2">
-            <el-select v-model="addLoadPage.putContentType">
-              <el-option label="平铺" :value="0"></el-option>
+            <el-select v-model="addLoadPage.contentType" @change="changeContentType">
+              <el-option label="平铺" :value="1"></el-option>
+              <el-option label="首屏" :value="2"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="内容名称" :label-width="formLabelWidth" prop="putContentId" v-show="addLoadPage.loadPageType==2">
+          <el-form-item label="内容名称" :label-width="formLabelWidth" prop="putContentId" v-show="addLoadPage.loadPageType==2" v-if="addLoadPage.contentType==1">
             <el-select v-model="addLoadPage.putContentId">
               <el-option v-for="item in contentArr" :key="item.id" :label="item.contentName" :value="item.id"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="跳转链接地址" :label-width="formLabelWidth" prop="putContentId" v-show="addLoadPage.loadPageType==2" v-if="addLoadPage.contentType==2">
+            <el-select v-model="addLoadPage.putContentId">
+              <el-option v-for="item in urlArr" :key="item.id" :label="item.targetUrl" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="皮肤" :label-width="formLabelWidth" prop="skinId" v-show="addLoadPage.loadPageType==2">
@@ -211,7 +217,7 @@
         },
         loading: false,
         totalSize: 50,
-        formLabelWidth: '100px',
+        formLabelWidth: '120px',
         dialogLoadPageVisible: false,
         dialogLoadPageUrlVisible: false,
         dialogStatusVisible: false,
@@ -245,15 +251,25 @@
 
 
         contentArr: [], // 内容名称
+        urlArr: [], // 内容名称
+        
         dermaArr: [], // 皮肤
 
         isFormEdit: false,
+        contentType: 1,
       }
     },
     created() {
       this.getAllList()
     },
     methods: {
+      changeContentType(){
+        this.addLoadPage.putContentId = "";
+        // if(this.addLoadPage.subscriptionId){
+        //   this.getPutNameList(this.addLoadPage.subscriptionId);
+        //   this.getUrlList(this.addLoadPage.subscriptionId);
+        // }
+      },
       // 获取皮肤列表
       getDermaList() {
         this.$http.get('/skin/all').then(res => {
@@ -265,10 +281,15 @@
           this.$message.error('获取皮肤列表失败')
         })
       },
+      changeWechat(id){
+        this.getPutNameList(id);
+        this.getUrlList(id);
+      },
       // 获取内容名称列表
       getPutNameList(id) {
         let params = {
-          subscriptionId: id
+          subscriptionId: id,
+          contentType: 1,
         }
         this.$http.get('/put/content/all', { params: params }).then(res => {
           if (res.data.success) {
@@ -281,9 +302,34 @@
                 break;
               };
             }
-            if(ifClearId){
-              this.addLoadPage.putContentId = [];
+            // if(ifClearId){
+            //   this.addLoadPage.putContentId = "";
+            // }
+          }
+        }, () => {
+          this.$message.error('获取皮肤列表失败')
+        })
+      },
+      // 获取url列表
+      getUrlList(id) {
+        let params = {
+          subscriptionId: id,
+          contentType: 2,
+        }
+        this.$http.get('/put/content/all', { params: params }).then(res => {
+          if (res.data.success) {
+            this.urlArr = res.data.data;
+            let ifClearId = true;
+            for (let i = 0; i < this.urlArr.length; i++) {
+              const element = this.urlArr[i];
+              if(element.id == this.addLoadPage.putContentId){
+                ifClearId = false;
+                break;
+              };
             }
+            // if(ifClearId){
+            //   this.addLoadPage.putContentId = "";
+            // }
           }
         }, () => {
           this.$message.error('获取皮肤列表失败')
@@ -307,10 +353,12 @@
                 thresholdNum,
                 loadPageType,
                 skinId,
-                putContentId
+                putContentId,
+                contentType,
               } = res.data.data;
 
               this.getPutNameList(subscriptionId)
+              this.getUrlList(subscriptionId)
               
               this.addLoadPage = {
                 id,
@@ -320,7 +368,7 @@
                 loadPageType,
                 skinId,
                 putContentId,
-                putContentType: 0,
+                contentType,
               }
               this.isFormEdit = false;
             }
@@ -334,7 +382,7 @@
             loadPageType: 1,
             skinId: "",
             putContentId: "",
-            putContentType: 0,
+            contentType: 1,
           }
           this.isFormEdit = true;
         }

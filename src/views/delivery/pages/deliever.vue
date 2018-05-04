@@ -106,10 +106,9 @@
 						<el-input :disabled="adPlanForm.planPlatform == '推啊'" v-model="adPlanForm.pushUrl" auto-complete="off" placeholder="https://"></el-input>
 					</el-form-item>
 					<el-form-item label="公众号主题" :label-width="formLabelWidth" prop="themeId">
-						<el-select value-key="id" v-model="adPlanForm.themeId" placeholder="请选择" filterable>
-							<el-option v-for="item in themeList" :key="item.value" :label="item.label + item.value" :value="item.value">
-							</el-option>
-						</el-select>
+            <el-select v-model="adPlanForm.themeId" filterable remote reserve-keyword :remote-method="remoteMethod" :loading="loading">
+              <el-option v-for="item in themeList" :key="item.value" :label="item.label + item.value" :value="item.value"></el-option>
+            </el-select>
 					</el-form-item>
 					<div class="btn-wrap">
 						<el-button size="small" type="primary" @click="savePlan">保存</el-button>
@@ -128,6 +127,7 @@
 		name: 'delivery',
 		data() {
 			return {
+        loading: false,
 				searchForm: {
 					name: 'planName',
 					value: '',

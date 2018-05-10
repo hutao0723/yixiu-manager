@@ -147,7 +147,7 @@
   }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
   .no-content{text-align: center;color: #909399}
   .add-skin {
     color: #909399;

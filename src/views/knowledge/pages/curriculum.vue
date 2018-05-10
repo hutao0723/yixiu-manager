@@ -598,8 +598,8 @@
           if (valid) {
             this.loading = true;
             const params = Object.assign({},this.courseForm);
-            params.price = this.courseForm.price*100;
-            params.rate = this.courseForm.rate*100;
+            params.price = Math.round(this.courseForm.price*100);
+            params.rate = Math.round(this.courseForm.rate*100);
             if (this.courseForm.id) {
               updateCourse(params).then(res => {
                 if (res.success) {

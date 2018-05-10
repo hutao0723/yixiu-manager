@@ -106,10 +106,9 @@
 						<el-input :disabled="adPlanForm.planPlatform == '推啊'" v-model="adPlanForm.pushUrl" auto-complete="off" placeholder="https://"></el-input>
 					</el-form-item>
 					<el-form-item label="公众号主题" :label-width="formLabelWidth" prop="themeId">
-						<el-select value-key="id" v-model="adPlanForm.themeId" placeholder="请选择" filterable>
-							<el-option v-for="item in themeList" :key="item.value" :label="item.label + item.value" :value="item.value">
-							</el-option>
-						</el-select>
+            <el-select v-model="adPlanForm.themeId" filterable remote reserve-keyword :remote-method="remoteMethod" :loading="loading">
+              <el-option v-for="item in themeList" :key="item.value" :label="item.label + item.value" :value="item.value"></el-option>
+            </el-select>
 					</el-form-item>
 					<div class="btn-wrap">
 						<el-button size="small" type="primary" @click="savePlan">保存</el-button>
@@ -128,6 +127,7 @@
 		name: 'delivery',
 		data() {
 			return {
+        loading: false,
 				searchForm: {
 					name: 'planName',
 					value: '',
@@ -171,14 +171,16 @@
         planName: '',
         planId: null,
         themeId: null,
-        planPlatform: '推啊'
+        planPlatform: '推啊',
+        partnerId: null
       },
       themeList: [],
       planIndex: null,
       selectPlan: {
         advertId: null,
         advertName: '',
-        promoteURL: ''
+        promoteURL: '',
+        partnerId: ''
       },
       planList: [
         {
@@ -210,6 +212,7 @@
         this.adPlanForm.pushUrl = this.selectPlan.promoteURL
         this.adPlanForm.planName = this.selectPlan.advertName
         this.adPlanForm.planId = this.selectPlan.advertId
+        this.adPlanForm.partnerId = this.selectPlan.partnerId
       }
     }
   },
@@ -340,8 +343,6 @@
     },
     // 模糊查询 主题
     remoteMethod (query) {
-      console.log('触发了')
-      console.log(this.adPlanForm.themeId)
       this.$http.get('/subscriptionTheme/all', {
         params: {
           themeName: query

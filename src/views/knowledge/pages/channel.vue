@@ -69,7 +69,7 @@
   export default {
     data() {
       var rateRule = (rule, value, callback) => {
-        if (/^\d+\.\d+$/.test(String(value * 100))) {
+        if (/^\d+\.\d+$/.test(String(Math.round(value * 100)))) {
           callback(new Error('最多两位小数'));
         } else {
           if (value > 100) {
@@ -190,7 +190,7 @@
             this.addDialog = false;
             let params = {
               name: this.addForm.name,
-              rate: this.addForm.rate * 100,
+              rate: Math.round(this.addForm.rate * 100),
               validPeriod: this.addForm.validPeriod,
             }
             let _params = Object.assign(params)
@@ -209,7 +209,7 @@
             this.addDialog = false;
             let params = {
               name: this.addForm.name,
-              rate: this.addForm.rate * 100,
+              rate: Math.round(this.addForm.rate * 100),
               validPeriod: this.addForm.validPeriod,
               id: this.editId,
             }

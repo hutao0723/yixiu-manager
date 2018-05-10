@@ -650,8 +650,8 @@
           if (valid) {
             this.loading = true;
             const params = Object.assign({},this.columnForm);
-            params.price = this.columnForm.price*100;
-            params.rate = this.columnForm.rate*100;
+            params.price = Math.round(this.columnForm.price*100);
+            params.rate = Math.round(this.columnForm.rate*100);
             if (this.columnForm.id) {
               updateColumn(params).then(res => {
                 if (res.success) {

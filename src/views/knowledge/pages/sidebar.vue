@@ -58,7 +58,7 @@
                 <span>优惠券</span>
               </el-menu-item>
             </router-link>
-            <router-link :to="{ path: '/manager/knowledge/distribution' }">
+            <router-link :to="{ path: '/manager/knowledge/distribute' }">
               <el-menu-item index="6-2">
                 <span>分销</span>
               </el-menu-item>

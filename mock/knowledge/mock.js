@@ -124,6 +124,12 @@ var setOnline = [
     name: 'successExport',
     type: 'get',
     url: '/knowledge/order/checkExport'
+  },
+  // 分销人员列表
+  {
+    name: 'distributor',
+    type: 'get',
+    url: '/knowledge/distributor/getList'
   }
 ];
 var fs = require('fs');

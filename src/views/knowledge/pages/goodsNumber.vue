@@ -18,8 +18,8 @@
                 <tr class="tr-header">
                   <template v-for="column in columns">
                     <th v-bind:class="column.className" v-bind:style="{width: column.width + '%'}" >
-                      {{column.title}}<i class="el-tooltip el-icon-question cp item" aria-describedby="el-tooltip-2351" tabindex="0"  @mouseover="overShow" @mouseout="outHide"></i> 
-                      <span :class="{show:showText,hide:hideText}">批次信息</span>
+                      {{column.title}}
+                      <!-- <i class="el-tooltip el-icon-question cp item" aria-describedby="el-tooltip-2351" tabindex="0"  @mouseover="overShow" @mouseout="outHide"></i>  -->
                     </th>
                   </template>
                 </tr>
@@ -286,14 +286,14 @@ export default {
     this.goodsGroupId = this.$route.params.id
   },
   methods: {
-    overShow () {
-      this.showText = !this.showText
-      this.hideText = !this.hideText
-    },
-    outHide () {
-      this.showText = !this.showText
-      this.hideText = !this.hideText
-    },
+    // overShow () {
+    //   this.showText = !this.showText
+    //   this.hideText = !this.hideText
+    // },
+    // outHide () {
+    //   this.showText = !this.showText
+    //   this.hideText = !this.hideText
+    // },
     openDialogGoods () {
       this.arrClassStatus = []
       this.arrColumnStatus = []

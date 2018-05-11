@@ -274,6 +274,12 @@ export const constantRouterMap = [
             }
           },
           {
+            path: 'distribute',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/distribute'], resolve)
+            }
+          },
+          {
             path: 'ordersDetail/:id',
             component: function (resolve) {
               require(['../views/knowledge/pages/ordersDetail'], resolve)

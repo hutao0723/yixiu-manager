@@ -172,6 +172,10 @@ export default {
         {
           value: 'lecturerId',
           label: '讲师ID'
+        },
+        {
+          value: 'distributorId',
+          label: '分销员ID'
         }
       ],
       pageOption: {

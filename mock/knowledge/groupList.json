@@ -6,7 +6,8 @@
 			"id": 3,
 			"goodsNum": 2,
 			"goodsGroupName": "人气推荐王",
-			"gmtCreate": "2018-04-09 11:01:20"
+			"gmtCreate": "2018-04-09 11:01:20",
+			"distributionPage":1
 		},
 		{
 			"id": 4,

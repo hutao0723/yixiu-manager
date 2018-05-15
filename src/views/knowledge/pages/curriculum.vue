@@ -62,6 +62,9 @@
               <template slot-scope="scope">
                 <!--openDialogAdmin(scope.row.managerName,scope.row.id）-->
                 <el-button type="text" size="mini" @click="getCourseDetail(scope.row.id)">编辑</el-button>
+                <router-link :to="{ path: '/manager/knowledge/editDraft/' + scope.row.id }"> 
+                  <el-button type="text" size="mini">文稿</el-button>
+                </router-link>
                 <el-button type="text" size="mini" @click="changeStatus(scope.row.id,scope.row.status)">
                   {{scope.row.status == 1 ? '下线' : '上线'}}
                 </el-button>
@@ -201,9 +204,6 @@
 </template>
 <script>
   import {formatHourSec} from '../../../utils/dateUtils'
-  import 'quill/dist/quill.core.css'
-  import 'quill/dist/quill.snow.css'
-  import 'quill/dist/quill.bubble.css'
   import E from 'wangeditor'
   import plupload from 'plupload';
 

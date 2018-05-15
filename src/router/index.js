@@ -262,6 +262,12 @@ export const constantRouterMap = [
             }
           },
           {
+            path: 'editDraft/:id',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/editDraft'], resolve)
+            }
+          },
+          {
             path: 'goodsGroup',
             component: function (resolve) {
               require(['../views/knowledge/pages/goodsGroup'], resolve)
@@ -277,6 +283,18 @@ export const constantRouterMap = [
             path: 'ordersDetail/:id',
             component: function (resolve) {
               require(['../views/knowledge/pages/ordersDetail'], resolve)
+            }
+          },
+          {
+            path: 'option',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/option'], resolve)
+            }
+          },
+          {
+            path: 'optionOrder',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/optionOrder'], resolve)
             }
           },
           {

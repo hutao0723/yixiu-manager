@@ -124,6 +124,30 @@ var setOnline = [
     name: 'successExport',
     type: 'get',
     url: '/knowledge/order/checkExport'
+  },
+  // 课程
+  {
+    name: 'course',
+    type: 'get',
+    url: '/course/pageList'
+  },
+  // 上传图片
+  {
+    name: 'upload',
+    type: 'post',
+    url: '/upload/image'
+  },
+  // 获取文本编辑器内容
+  {
+    name: 'editor',
+    type: 'get',
+    url: '/editor/content'
+  },
+  // 获取文本编辑器内容
+  {
+    name: 'save',
+    type: 'post',
+    url: '/editor/save'
   }
 ];
 var fs = require('fs');

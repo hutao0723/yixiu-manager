@@ -216,6 +216,7 @@ export default {
       if(this.ids.length > 0){
 
         console.log(this.ids)
+        this.getOrdersList()
       }else{
         this.$message.error("请选择批量处理的数据")
       }
@@ -225,6 +226,7 @@ export default {
       if(this.ids.length > 0){
 
         console.log(this.ids)
+        this.getOrdersList()
       }else{
         this.$message.error("请选择批量处理的数据")
       }
@@ -234,6 +236,7 @@ export default {
       if(this.ids.length > 0){
 
         console.log(this.ids)
+        this.getOrdersList()
       }else{
         this.$message.error("请选择批量处理的数据")
       }

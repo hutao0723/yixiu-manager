@@ -2,7 +2,7 @@
   <section class="ofa-main-wrap" v-loading="loading">
     <div class="content">
       <div class="search-bar">
-        <el-button type="primary" @click="newcourseForm" size="small" class="fr">新建阅读计划</el-button>
+        <el-button type="primary" @click="newcourseForm(0)" size="small" class="fr">新建阅读计划</el-button>
         <template>
           <el-form :inline="true" :model="courseSearchForm" class="demo-form-inline" size="small">
               <el-form-item>
@@ -135,7 +135,7 @@
           specialState: '',
           id: null,
           title: null,
-          status: '',
+          status: null,
           pageNum: 1,
           pageSize: null,
         },
@@ -231,6 +231,9 @@
 
       //获取列表数据
       getData() {
+        console.log(this.courseSearchForm.selectType)
+        console.log(this.courseSearchForm.searchValue)
+        console.log(this.courseSearchForm.status)
         this.$http.get('/planList/list', {}).then(res => {
           let resp = res.data
           if (resp.success) {
@@ -242,8 +245,8 @@
           }
         })
       },
-      newcourseForm() {
-        this.$router.push("/manager/knowledge/readPlan");
+      newcourseForm(courseId) {
+        this.$router.push("/manager/knowledge/readPlan?courseId=" + courseId);
       },
       courseManagement() {
         this.$router.push("/manager/knowledge/coursePlan");

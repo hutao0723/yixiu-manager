@@ -8,7 +8,7 @@
     </div>
     <div class="content">
       <div class="search-bar">
-        <el-button type="primary"  size="small" class="fr" @click="buildNewCourse(null)">新建期数</el-button>
+        <el-button type="primary"  size="small" class="fr" @click="buildNewCourse(0)">新建期数</el-button>
       </div>
       <div class="tabel-wrap">
         <template>
@@ -20,7 +20,7 @@
             <el-table-column label="操作" width="300">
               <template slot-scope="edit">
 
-                <el-button type="text" size="mini" >编辑</el-button>
+                <el-button type="text" size="mini" @click="buildNewCourse(edit.row.number)">编辑</el-button>
 
               </template>
             </el-table-column>
@@ -113,9 +113,8 @@
           }
         })
       },
-      buildNewCourse(row) {
-        console.log(row)
-        this.$router.push("/manager/knowledge/numberEdit");
+      buildNewCourse(id) {
+         this.$router.push("/manager/knowledge/numberEdit?number=" + id);
       },
 
       editCourse(row) {

@@ -103,6 +103,7 @@
       return {
         editorContent:null,
         loading: false,
+        editType:null,
         //新增编辑专栏form表单
         columnForm: {
           id: null,
@@ -126,16 +127,18 @@
 
     },
     created() {
+      this.editType = this.$route.query.number;
     },
     methods: {
 
 
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
-          if (valid) {
+          if (!valid) {
             this.loading = true;
             const params = Object.assign({},this.columnForm);
-            if (this.columnForm.id) {
+            if (this.editType!=0) {
+              console.log('修改')
               updateColumn(params).then(res => {
                 if (res.success) {
                   this.$message.success('修改成功')
@@ -148,6 +151,7 @@
                 this.loading = false;
               })
             } else {
+              console.log('新增')
               addColumn(params).then(res => {
                 if (res.success) {
                   this.$message.success('新增成功')

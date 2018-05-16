@@ -108,6 +108,7 @@
 
       return {
         loading: false,
+        courseId:'',
         editorContent:null,
         directTransmissionSign: null, //上传签名
         pageOption: {
@@ -146,16 +147,10 @@
         courseForm: {
           id: null,
           title: null,
-          lateralCover:null,
-          verticalCover:null,
-          detail: null,
-          timeLength: null,
-          price: null,
-          uploadFile: {},
-          lecturerName: null,
-          rate: null,
-          explain:null,
+          explain: null,
           date:null,
+          price: null,
+          rate: null
         },
       }
     },
@@ -164,7 +159,9 @@
 
     },
     created() {
-      //this.getData();
+      if(this.$route.query.courseId){
+        this.courseId = this.$route.query.courseId;
+      }
     },
     methods: {
       priceFilter(data){
@@ -179,33 +176,20 @@
         }
       },
 
-
-      //获取列表数据
-      getData() {
-        this.$http.get('/planList/list', {}).then(res => {
-          let resp = res.data
-          if (resp.success) {
-            this.courseManageList = resp.data.list2 ;
-          } else {
-            let msg = resp.desc || '请求失败'
-            this.$message.error(msg)
-          }
-        })
-
-      },
       submitForm(formName) {
+        console.log(formName)
         this.$refs[formName].validate((valid) => {
+          console.log(valid)
           if (valid) {
             this.loading = true;
             const params = Object.assign({},this.courseForm);
             params.price = Math.round(this.courseForm.price*100);
             params.rate = Math.round(this.courseForm.rate*100);
-            if (this.courseForm.id) {
+            if (this.courseId!=0) {
+              console.log('修改')
               updateCourse(params).then(res => {
                 if (res.success) {
                   this.$message.success('修改成功');
-                  //this.getData();
-                  this.pageType = 0;
                 } else {
                   let msg = res.desc || '请求失败'
                   this.$message.error(msg);
@@ -215,10 +199,10 @@
                 this.loading = false;
               })
             } else {
+              console.log('新增')
               addCourse(params).then(res => {
                 if (res.success) {
                   this.$message.success('新增成功');
-                  //this.getData();
                 } else {
                   let msg = res.desc || '请求失败'
                   this.$message.error(msg);

@@ -1,6 +1,6 @@
 <template>
   <section class="order-container">
-    <div class="content">
+    <div class="lists">
       <div class="search-bar">
         <template>
           <el-form :inline="true" :model="optionForm" class="form" size="small">
@@ -55,18 +55,17 @@
       </div>
       <div class="tabel-wrap">
         <template>
-          <el-table :data="orderList" >
-            <el-table-column  label="选择">
-              <template slot-scope="scope">
-                  <el-checkbox @change="handleCheckedChange($event, scope.row)"  :checked="arrColumnStatus[scope.row.id]" v-model="scope.row.checked"></el-checkbox>
-              </template>
+          <el-table :data="orderList"  ref="multipleTable"  tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
+            <el-table-column
+              type="selection"
+              width="55">
             </el-table-column>
-            <el-table-column property="id" label="观点ID"></el-table-column>  
-            <el-table-column property="id" label="用户ID"></el-table-column>
-            <el-table-column property="id" label="课程"></el-table-column>
-            <el-table-column property="id" label="阅读计划"></el-table-column>
-            <el-table-column property="id" label="观点"></el-table-column> 
-            <el-table-column property="id" label="观点状态"></el-table-column>  
+            <el-table-column property="optionId" label="观点ID"></el-table-column>  
+            <el-table-column property="userId" label="用户ID"></el-table-column>
+            <el-table-column property="course" label="课程"></el-table-column>
+            <el-table-column property="readPlan" label="阅读计划"></el-table-column>
+            <el-table-column property="option" label="观点"></el-table-column> 
+            <el-table-column property="optionStatus" label="观点状态"></el-table-column>  
             <el-table-column  label="操作" >
               <template slot-scope="scope">
                 <el-button type="text" size="mini" >通过</el-button> 
@@ -77,8 +76,16 @@
           </el-table>
         </template>        
       </div>
-      <div class="page-control">
-        <el-pagination background  :page-size="20" :current-page.sync="pageOption.pageNum" @current-change="pageChange" layout="total, prev, pager, next" :total="totalSize"></el-pagination>
+      <div class="clearfix">
+        <div class="btn-left">
+          <el-button @click="chooseAll(orderList)">全选</el-button>
+          <el-button @click="hideAll()">批量隐藏</el-button>
+          <el-button @click="cancelHideAll()">批量取消隐藏</el-button>
+          <el-button @click="passAll()">批量通过</el-button>
+        </div>
+        <div class="page-control">
+          <el-pagination background  :page-size="20" :current-page.sync="pageOption.pageNum" @current-change="pageChange" layout="total, prev, pager, next" :total="totalSize"></el-pagination>
+        </div>
       </div>
     </div>
   </section>
@@ -102,13 +109,11 @@ export default {
         read: 'readTitle',
         inputThree: '',
         time: [],
-        orderStatus: '',
-        orderType: ''
+        orderStatus: ''
       },
-      arrClassStatus: [],
+      arrColumnStatus: [],
       startTime: '',
       endTime: '',
-      teacher: '',
       viewOptions: [
         {
           value: 'viewpoint',
@@ -139,6 +144,9 @@ export default {
           label: '阅读计划Id'
         }
       ],
+
+      allSelect: false,
+
       pageOption: {
         pageNum: 1,
         pageSize: 20
@@ -146,36 +154,59 @@ export default {
       currentPage: 1,
       totalSize: 0,
       orderList: [],
-
-      dialogVisible: false, // 弹框
-      downStatus: true, // 文字
-      disabled: true, // 按钮状态
-      downloadUrl: 'http://www.baidu.com',//链接
-      filename: ''
+      ids: []
     }
   },
   created () {
     this.getOrdersList()
   },
   methods: {
-    // 获取讲师列表
+    //多选
+    handleSelectionChange(val) {
+      // console.log(val)
+      this.ids = []
+      for(let i = 0;i < val.length;i++){
+        this.ids.push(val[i].id)
+      }
+      // console.log(val)
+    },
+    passAll() {
+      if(this.ids.length > 0){
+        console.log(this.ids)
+      }else{
+        this.$message.error("请选择批量处理的数据")
+      }
+      
+    },
+    hideAll() {
+      if(this.ids.length > 0){
+        console.log(this.ids)
+      }else{
+        this.$message.error("请选择批量处理的数据")
+      }
+    },
+    cancelHideAll() {
+      if(this.ids.length > 0){
+        console.log(this.ids)
+      }else{
+        this.$message.error("请选择批量处理的数据")
+      }
+    },
+
+    // handleRowClick(row) {
+    //   this.$refs.multipleTable.toggleRowSelection(row)
+    //   console.log(this.$refs.multipleTable)
+    // },
+    chooseAll(rows) {
+      if (rows) {
+        rows.forEach(row => {
+          this.$refs.multipleTable.toggleRowSelection(row, !this.allSelect)
+        })
+        this.allSelect = !this.allSelect
+      }
+    },
+    // 获取观点列表
     getOrdersList () {
-      this.$http.get('/knowledge/order/page', {}).then(res => {
-        let resp = res.data
-        if (resp.success) {
-          this.orderList = resp.data.content
-          // 算出有多少条数据
-          this.totalSize = resp.data.totalElements
-        } else {
-          let msg = resp.desc || '请求失败'
-          this.$message.error(msg)
-        }
-      })
-    },
-    handleCheckedChange(event,row){
-      this.arrClassStatus[row.id] = event
-    },
-    onSearch () {
       let valueArr = Object.values(this.optionForm)
       this.startTime = this.optionForm.time ? formatDateNew(this.optionForm.time[0]): ''
       this.endTime = this.optionForm.time ? formatDateNew(this.optionForm.time[1]): ''
@@ -183,84 +214,29 @@ export default {
         pageNum: 1,
         pageSize: 20,
         [valueArr[0]]: valueArr[1],
-        [valueArr[2]]: valueArr[3],
-        [valueArr[4]]: valueArr[5],
+        userId: valueArr[2],
+        [valueArr[3]]: valueArr[4],
+        [valueArr[5]]: valueArr[6],
         startTime: this.startTime,
         endTime: this.endTime,
-        orderStatus: this.optionForm.orderStatus,
-        orderType: this.optionForm.orderType
+        orderStatus: this.optionForm.orderStatus
       }
-      this.$http.get('/knowledge/order/page', {params}).then(res => {
+      this.$http.get('/option/list', {params}).then(res => {
         let resp = res.data
         if (resp.success) {
-          this.orderList = resp.data.content
+          this.orderList = resp.data.lists
           // 算出有多少条数据
-          this.totalSize = resp.data.totalElements
-          this.pageOption.pageNum = 1
-          this.currentPage = 1
+          this.totalSize = resp.data.totalSize
         } else {
           let msg = resp.desc || '请求失败'
           this.$message.error(msg)
-        } 
+        }
       }, () => {
         this.$message.error('网络错误')
       })
     },
-    // 导出
-    exportOrders () {
-      this.dialogVisible = true
-      this.disabled = true
-      this.downStatus = true
-      let valueArr = Object.values(this.optionForm)
-      console.log(valueArr)
-      this.startTime = this.optionForm.time ? formatDateNew(this.optionForm.time[0]): ''
-      this.endTime = this.optionForm.time ? formatDateNew(this.optionForm.time[1]): ''
-      let params = {
-        [valueArr[0]]: valueArr[1],
-        [valueArr[2]]: valueArr[3],
-        [valueArr[4]]: valueArr[5],
-        startTime: this.startTime,
-        endTime: this.endTime,
-        orderStatus: this.optionForm.orderStatus,
-        orderType: this.optionForm.orderType
-      }
-      this.$http.get('/knowledge/order/export', {params}).then(res => {
-        let resp = res.data
-        if (resp.success) {
-          this.filename = resp.data
-          let that = this
-          let orders = setInterval(function(){
-            let params = {
-              filename: that.filename
-            }
-            that.$http.get('/knowledge/order/checkExport', {params}).then(res => {
-              let resp = res.data
-              if (resp.success) {
-                if(resp.data.succeed){
-                  clearInterval(orders)
-                  that.disabled = false
-                  that.downStatus = false
-                  that.downloadUrl = resp.data.fileUrl
-                }else{
-                  // let msg = resp.data.message || '文件正在上传中'
-                  // that.$message.error(msg)
-                  console.log(resp.data.message)
-                }
-              } else {
-                let msg = resp.desc || '请求失败'
-                that.$message.error(msg)
-              } 
-            }, () => {
-              that.$message.error('网络错误')
-            })
-          }, 500)
-        } else {
-          let msg = resp.desc || '请求失败'
-          this.$message.error(msg)
-        } 
-      }, () => {
-        this.$message.error('网络错误')
-      })
+    onSearch () {
+      this.getOrdersList();
     },
     // 分页请求
     pageChange (currentPage) {
@@ -272,19 +248,19 @@ export default {
         pageNum: this.currentPage,
         pageSize:20,
         [valueArr[0]]: valueArr[1],
-        [valueArr[2]]: valueArr[3],
-        [valueArr[4]]: valueArr[5],
+        userId: valueArr[2],
+        [valueArr[3]]: valueArr[4],
+        [valueArr[5]]: valueArr[6],
         startTime: this.startTime,
         endTime: this.endTime,
-        orderStatus: this.optionForm.orderStatus,
-        orderType: this.optionForm.orderType
+        orderStatus: this.optionForm.orderStatus
       }
-      this.$http.get('/knowledge/order/page', {params: params}).then(res => {
+      this.$http.get('/option/list', {params: params}).then(res => {
         let resp = res.data
         if (resp.success) {
-          this.orderList = resp.data.content
+          this.orderList = resp.data.lists
           // 算出有多少条数据
-          this.totalSize = resp.data.totalElements
+          this.totalSize = resp.data.totalSize
         } else {
           let msg = resp.desc || '请求失败'
           this.$message.error(msg)
@@ -312,6 +288,10 @@ export default {
   .search-bar {
     margin-top: 20px;
   }
+  .btn-left{
+    float: left;
+    margin-top: 15px;
+  }
   .page-control {
     float: right;
     margin-top: 20px;
@@ -319,60 +299,12 @@ export default {
       clear: both;
     }
   }
-  .goods-mask{
-    right: 0;
-    bottom: 0;
-    width: 30px;
-    height: 20px;
-    line-height: 20px;
-    text-align: center;
-    background-color: #000;
-    opacity: 0.6;
-    color: #FFF;
-    position:absolute;
-  }
-  .goods-word{
-    margin-left: 10px;
-    line-height: 75px;
-  }
   .btn-disabled {
     color: #fff;
     background-color: #bdc5ce;
     border-color: #bdc5ce;
   }
-  .beat-ellipsis:after {
-    overflow: hidden;
-    display: inline-block;
-    vertical-align: bottom;
-    animation: ellipsis 2s infinite;
-    content: "\2026"; 
-  }
-  .twoLines{
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    float: left;
-    margin-left: 10px;
-  }
-  .ln75{
-    line-height:75px;
-  }
-  .ln37{
-    line-height:37px;
-  }
-  .w150{
-    width:150px;
-  }
-  .img-box{
-    overflow: hidden;
-    width: 75px;
-    height: 75px;
-    display: inline-block;
-    float: left;
-    background-repeat: no-repeat;
-  }
+  
   .por{
     position:relative;
   }

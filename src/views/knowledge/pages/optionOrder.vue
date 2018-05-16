@@ -4,15 +4,15 @@
     <div class="content">
       <div class="tabel-wrap">
         <template>
-          <el-table :data="groupList" style="width: 100%" >
+          <el-table :data="optionList" style="width: 100%" >
             <el-table-column prop="id" label="序号" ></el-table-column>
-            <el-table-column prop="id" label="权重值" ></el-table-column>
-            <el-table-column prop="id" label="观点ID"></el-table-column>
-            <el-table-column prop="id" label="用户ID" ></el-table-column>
-            <el-table-column prop="id" label="课程" ></el-table-column>
-            <el-table-column prop="id" label="阅读计划" ></el-table-column>
-            <el-table-column prop="id" label="观点" ></el-table-column>
-            <el-table-column prop="id" label="观点状态" ></el-table-column>
+            <el-table-column prop="weight" label="权重值" ></el-table-column>
+            <el-table-column prop="optionId" label="观点ID"></el-table-column>
+            <el-table-column prop="userId" label="用户ID" ></el-table-column>
+            <el-table-column prop="course" label="课程" ></el-table-column>
+            <el-table-column prop="readPlan" label="阅读计划" ></el-table-column>
+            <el-table-column prop="option" label="观点" ></el-table-column>
+            <el-table-column prop="optionStatus" label="观点状态" ></el-table-column>
             <el-table-column  label="操作" >
               <template slot-scope="scope">
                 <el-button type="text" size="mini" @click="openDialogTitle(scope.row)">权重</el-button>        
@@ -25,30 +25,16 @@
         <el-pagination background  :page-size="20" :current-page.sync="pageOption.pageNum" @current-change="pageChange" layout="total, prev, pager, next" :total="totalSize"></el-pagination>
       </div>    
     </div>
-    <!--添加类型-->
+    <!--编辑权重值-->
     <div class="add-type-diolog">
-      <el-dialog title="权重值配置" :visible.sync="dialogaddTitleVisible">
-        <el-form :model="titleForm" ref="titleForm" :rules="rules">
-          <el-form-item label="权重值" :label-width="formLabelWidth"  prop="goodsGroupName">
-            <el-input v-model="titleForm.goodsGroupName" auto-complete="off"></el-input>
+      <el-dialog title="权重值配置" :visible.sync="dialogWeightVisible">
+        <el-form :model="weightForm" ref="weightForm" :rules="rules">
+          <el-form-item label="权重值" :label-width="formLabelWidth"  prop="weightValue">
+            <el-input v-model="weightForm.weightValue" auto-complete="off"></el-input>
           </el-form-item>
         </el-form>
         <div class="btn-wrap">
-          <el-button size="small" @click="dialogaddTitleVisible = false">取 消</el-button>
-          <el-button size="small" type="primary" @click="addTitle">保存</el-button>
-        </div>
-      </el-dialog>
-    </div>
-    <!--编辑类型-->
-    <div class="add-type-diolog">
-      <el-dialog title="权重值配置" :visible.sync="dialogTitleVisible">
-        <el-form :model="titleForm" ref="titleForm" :rules="rules">
-          <el-form-item label="权重值" :label-width="formLabelWidth"  prop="goodsGroupName">
-            <el-input v-model="titleForm.goodsGroupName" auto-complete="off"></el-input>
-          </el-form-item>
-        </el-form>
-        <div class="btn-wrap">
-          <el-button size="small" @click="dialogTitleVisible = false">取 消</el-button>
+          <el-button size="small" @click="dialogWeightVisible = false">取 消</el-button>
           <el-button size="small" type="primary" @click="saveTitle">保存</el-button>
         </div>
       </el-dialog>
@@ -57,50 +43,59 @@
 </template>
 
 <script>
-import { formatDateNew } from '../../../utils/dateUtils'
 import qs from 'qs'
-import knowlwdgerules from '../components/knowledgeValidRules'
 export default {
   data () {
+    const rateRule = (rule, value, callback) => {
+      const res = /^[+]{0,1}(\d+)$/;
+      if (!res.test(value)) {
+        callback(new Error('请输入正整数'));
+      } else {
+        if (value > 9999 || value < 0) {
+          callback(new Error('请输入0-9999的正整数'));
+        } else {
+          callback()
+        }
+      }
+    };
     return {
-      rules: knowlwdgerules,
-      formLabelWidth: '100px',
-      titleForm: {
-        id: '',
-        goodsGroupName: '',
+      rules: {
+        weightValue: [
+          { required: true, message: '请输入权重值', trigger: 'blur' },
+          { validator: rateRule, trigger: 'blur' },
+        ]
       },
-      dialogTitleVisible: false,
-      dialogaddTitleVisible: false,
+      formLabelWidth: '100px',
+      weightForm: {
+        id: '',
+        weightValue: '',
+      },
+      dialogWeightVisible: false,
       pageOption: {
         pageNum: 1,
         pageSize: 20
       },
       totalSize: 0,
-      groupList: [],
+      optionList: [],
       currentPage: 1
     }
   },
   created () {
-    this.getGoodsGroupList()
+    this.getWeightList()
   },
   methods: {
     // 打开添加类型弹框
     openDialogTitle (row) {
-      this.dialogTitleVisible = true
-      this.titleForm.id = row.id
-      this.titleForm.goodsGroupName = row.goodsGroupName
-    },
-    // 打开添加类型弹框
-    openaddDialogTitle (row) {
-      this.dialogaddTitleVisible = true
-      this.titleForm.goodsGroupName = row.goodsGroupName
+      this.dialogWeightVisible = true
+      this.weightForm.id = row.id
+      this.weightForm.weightValue = row.weight
     },
     // 获取类型列表
-    getGoodsGroupList () {
-      this.$http.get('/goodsGroup/list', {}).then(res => {
+    getWeightList () {
+      this.$http.get('/weight/list', {}).then(res => {
         let resp = res.data
         if (resp.success) {
-          this.groupList = resp.data.lists
+          this.optionList = resp.data.lists
           // 算出有多少条数据
           this.totalSize = resp.data.totalSize
         } else {
@@ -111,46 +106,21 @@ export default {
     },
     // 保存
     saveTitle () {
-      this.$refs['titleForm'].validate((valid) => {
+      this.$refs['weightForm'].validate((valid) => {
         if (valid) {
           let params = {
-            goodsGroupName: this.titleForm.goodsGroupName,
-            id: this.titleForm.id
+            weightValue: this.weightForm.weightValue,
+            id: this.weightForm.id
           }
-          this.$http.post('/goodsGroup/insert', qs.stringify(params)).then(res => {
+          this.$http.post('/weight/insert', qs.stringify(params)).then(res => {
             if (res.data.data) {
-              this.dialogTitleVisible = false
+              this.dialogWeightVisible = false
               this.$message.success('保存成功')
-              this.getGoodsGroupList()
+              this.getWeightList()
             } else {
               let msg =res.data.desc || "保存失败"
               this.$message.error(msg)
-              this.dialogTitleVisible = false
-             
-            }
-          })
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
-    },
-    // 新增
-    addTitle () {
-      this.$refs['titleForm'].validate((valid) => {
-        if (valid) {
-          let params = {
-            goodsGroupName: this.titleForm.goodsGroupName
-          }
-          this.$http.post('/goodsGroup/insert', qs.stringify(params)).then(res => {
-            if (res.data.data) {
-              this.dialogaddTitleVisible = false
-              this.$message.success('保存成功')
-              this.getGoodsGroupList()
-            } else {
-              let msg =res.data.desc || "保存失败"
-              this.$message.error(msg)
-              this.dialogaddTitleVisible = false
+              this.dialogWeightVisible = false
              
             }
           })
@@ -167,80 +137,16 @@ export default {
         pageNum: this.currentPage,
         pageSize:20
       }
-      this.$http.get('/goodsGroup/list', {params: params}).then(res => {
+      this.$http.get('/weight/list', {params: params}).then(res => {
         let resp = res.data
         if (resp.success) {
-          this.groupList = resp.data.lists
+          this.optionList = resp.data.lists
           // 算出有多少条数据
           this.totalSize = resp.data.totalSize
         } else {
           let msg = resp.desc || '请求失败'
           this.$message.error(msg)
         }
-      })
-    },
-    // 删除
-    deleteTitle (row) {
-      let params ={
-        id : row.id
-      }
-      this.$confirm('确认删除本条记录吗?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.$http.post('/goodsGroup/delete', qs.stringify(params)).then(res => {
-          let msg = res.data.success
-          if (msg) {
-            if (res.data.data) {
-              this.$message.success('删除成功')
-              this.getGoodsGroupList()
-            } else {
-              let msg = res.data.desc || '删除失败'
-              this.$message.error(msg)
-            }
-          } else {
-            let msg = res.data.desc || '删除失败'
-            this.$message.error(msg)
-          }
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
-      })
-    },
-    // 复制
-    copy (row) {
-      let params ={
-        id : row.id
-      }
-      this.$confirm('确认复制本条记录吗?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'info'
-      }).then(() => {
-        this.$http.post('/goodsGroup/copy', qs.stringify(params)).then(res => {
-          let msg = res.data.success
-          if (msg) {
-            if (res.data.data) {
-              this.$message.success('复制成功')
-              this.getGoodsGroupList()
-            } else {
-              let msg = res.data.desc || '复制成功'
-              this.$message.error(msg)
-            }
-          } else {
-            let msg = res.data.desc || '复制成功'
-            this.$message.error(msg)
-          }
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消复制'
-        })
       })
     }
   }

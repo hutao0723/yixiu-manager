@@ -148,7 +148,38 @@ var setOnline = [
     name: 'save',
     type: 'post',
     url: '/editor/save'
+  },
+  // 获取权重值列表
+  {
+    name: 'weightList',
+    type: 'get',
+    url: '/weight/list'
+  },
+  // 修改权重
+  {
+    name: 'save',
+    type: 'post',
+    url: '/weight/insert'
+  },
+  // 获取观点列表
+  {
+    name: 'optionList',
+    type: 'get',
+    url: '/option/list'
+  },
+  // 通过观点审核
+  {
+    name: 'save',
+    type: 'post',
+    url: '/pass/option'
+  },
+  // 隐藏观点
+  {
+    name: 'save',
+    type: 'post',
+    url: '/hide/option'
   }
+
 ];
 var fs = require('fs');
 

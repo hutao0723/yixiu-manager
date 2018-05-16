@@ -70,6 +70,8 @@
               <template slot-scope="scope">
                 <el-button type="text" size="mini" @click="passOne(scope.row)">通过</el-button> 
                 <el-button type="text" size="mini" @click="hideOne(scope.row)">隐藏</el-button>  
+                <el-button type="text" size="mini" @click="cancelHideOne(scope.row)">取消隐藏</el-button>
+
                 <el-button type="text" size="mini" @click="openDialogWeight(scope.row)">权重</el-button>   
               </template>
             </el-table-column>      
@@ -264,6 +266,41 @@ export default {
       })
     },
 
+    // 单个隐藏
+    hideOne(row) {
+      let params = {
+        id : row.id
+      }
+      this.$http.post('/weight/insert', qs.stringify(params)).then(res => {
+        let resp = res.data
+        if (resp.success) {
+          this.$message.success('切换成功');
+          this.getOrdersList();
+        } else {
+          let msg = resp.desc || '请求失败'
+          this.$message.error(msg)
+        }
+      }).catch(() => {
+        this.$message.error("网络错误")
+      })
+    },
+    cancelHideOne(row) {
+      let params = {
+        id : row.id
+      }
+      this.$http.post('/weight/insert', qs.stringify(params)).then(res => {
+        let resp = res.data
+        if (resp.success) {
+          this.$message.success('切换成功');
+          this.getOrdersList();
+        } else {
+          let msg = resp.desc || '请求失败'
+          this.$message.error(msg)
+        }
+      }).catch(() => {
+        this.$message.error("网络错误")
+      })
+    },
     // 打开权值弹框
     openDialogWeight (row) {
       this.dialogWeightVisible = true

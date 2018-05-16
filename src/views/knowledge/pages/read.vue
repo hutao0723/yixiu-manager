@@ -39,10 +39,7 @@
                 {{scope.row.price}}
               </template>
             </el-table-column>
-            <el-table-column prop="status" label="计划状态" :formatter="getStatus">
-              <template slot-scope="scope">
-                {{scope.row.status == 1 ? '下线' : '上线'}}
-              </template>
+            <el-table-column prop="status" label="计划状态" :formatter="getStatus" >
 
             </el-table-column>
             <el-table-column label="操作" width="300">

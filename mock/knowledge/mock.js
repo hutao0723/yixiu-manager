@@ -5,6 +5,12 @@
  *         url   线上接口地址
  */
 var setOnline = [
+  // 计划课程列表
+  {
+    name: 'planList',
+    type: 'get',
+    url: '/planList/list'
+  },
   // 商品组列表
   {
     name: 'groupList',
@@ -110,7 +116,7 @@ var setOnline = [
   //订单详情
   {
     name: 'ordersDetail',
-    type: 'get',
+      type: 'get',
     url: '/knowledge/order/detail'
   },
   //订单导出

@@ -274,6 +274,36 @@ export const constantRouterMap = [
             }
           },
           {
+            path: 'read',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/read'], resolve)
+            }
+          },
+          {
+            path: 'readPlan',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/readPlan'], resolve)
+            }
+          },
+          {
+            path: 'coursePlan',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/coursePlan'], resolve)
+            }
+          },
+          {
+            path: 'courseGroup',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/courseGroup'], resolve)
+            }
+          },
+          {
+            path: 'numberEdit',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/numberEdit'], resolve)
+            }
+          },
+          {
             path: 'order',
             component: function (resolve) {
               require(['../views/knowledge/pages/order'], resolve)

@@ -68,9 +68,9 @@
             <el-table-column property="optionStatus" label="观点状态"></el-table-column>  
             <el-table-column  label="操作" >
               <template slot-scope="scope">
-                <el-button type="text" size="mini" >通过</el-button> 
-                <el-button type="text" size="mini" >隐藏</el-button>  
-                <el-button type="text" size="mini" >权重</el-button>   
+                <el-button type="text" size="mini" @click="passOne(scope.row)">通过</el-button> 
+                <el-button type="text" size="mini" @click="hideOne(scope.row)">隐藏</el-button>  
+                <el-button type="text" size="mini" @click="openDialogWeight(scope.row)">权重</el-button>   
               </template>
             </el-table-column>      
           </el-table>
@@ -88,17 +88,48 @@
         </div>
       </div>
     </div>
+    <!--编辑权重值-->
+    <div class="add-type-diolog">
+      <el-dialog title="权重值配置" :visible.sync="dialogWeightVisible">
+        <el-form :model="weightForm" ref="weightForm" :rules="rules">
+          <el-form-item label="权重值" :label-width="formLabelWidth"  prop="weightValue">
+            <el-input v-model="weightForm.weightValue" auto-complete="off"></el-input>
+          </el-form-item>
+        </el-form>
+        <div class="btn-wrap">
+          <el-button size="small" @click="dialogWeightVisible = false">取 消</el-button>
+          <el-button size="small" type="primary" @click="saveWeight">保存</el-button>
+        </div>
+      </el-dialog>
+    </div>
   </section>
 </template>
 
 <script>
-import knowlwdgerules from '../components/knowledgeValidRules'
 import { formatDateNew } from '../components/knowledgeValidRules'
 import qs from 'qs'
 export default {
   data () {
+    const rateRule = (rule, value, callback) => {
+      const res = /^[+]{0,1}(\d+)$/;
+      if (!res.test(value)) {
+        callback(new Error('请输入正整数'));
+      } else {
+        if (value > 9999 || value < 0) {
+          callback(new Error('请输入0-9999的正整数'));
+        } else {
+          callback()
+        }
+      }
+    };
     return {
-      rules: knowlwdgerules,
+      rules: {
+        weightValue: [
+          { required: true, message: '请输入权重值', trigger: 'blur' },
+          { validator: rateRule, trigger: 'blur' },
+        ]
+      },
+
       formLabelWidth: '100px',
       optionForm: {
         name: 'viewpoint',
@@ -111,7 +142,6 @@ export default {
         time: [],
         orderStatus: ''
       },
-      arrColumnStatus: [],
       startTime: '',
       endTime: '',
       viewOptions: [
@@ -151,10 +181,19 @@ export default {
         pageNum: 1,
         pageSize: 20
       },
+
       currentPage: 1,
       totalSize: 0,
+
       orderList: [],
-      ids: []
+      ids: [],
+
+      dialogWeightVisible: false,
+      weightForm: {
+        id: '',
+        weightValue: '',
+      },
+
     }
   },
   created () {
@@ -170,33 +209,34 @@ export default {
       }
       // console.log(val)
     },
+    // 批量通过
     passAll() {
       if(this.ids.length > 0){
+
         console.log(this.ids)
       }else{
         this.$message.error("请选择批量处理的数据")
       }
-      
     },
+    // 批量隐藏
     hideAll() {
       if(this.ids.length > 0){
+
         console.log(this.ids)
       }else{
         this.$message.error("请选择批量处理的数据")
       }
     },
+    // 取消批量隐藏
     cancelHideAll() {
       if(this.ids.length > 0){
+
         console.log(this.ids)
       }else{
         this.$message.error("请选择批量处理的数据")
       }
     },
-
-    // handleRowClick(row) {
-    //   this.$refs.multipleTable.toggleRowSelection(row)
-    //   console.log(this.$refs.multipleTable)
-    // },
+    // 全选
     chooseAll(rows) {
       if (rows) {
         rows.forEach(row => {
@@ -205,13 +245,64 @@ export default {
         this.allSelect = !this.allSelect
       }
     },
+    // 单个通过
+    passOne(row) {
+      let params = {
+        id : row.id
+      }
+      this.$http.post('/weight/insert', qs.stringify(params)).then(res => {
+        let resp = res.data
+        if (resp.success) {
+          this.$message.success('切换成功');
+          this.getOrdersList();
+        } else {
+          let msg = resp.desc || '请求失败'
+          this.$message.error(msg)
+        }
+      }).catch(() => {
+        this.$message.error("网络错误")
+      })
+    },
+
+    // 打开权值弹框
+    openDialogWeight (row) {
+      this.dialogWeightVisible = true
+      this.weightForm.id = row.id
+      this.weightForm.weightValue = row.weight
+    },
+     // 保存
+    saveWeight () {
+      this.$refs['weightForm'].validate((valid) => {
+        if (valid) {
+          let params = {
+            weightValue: this.weightForm.weightValue,
+            id: this.weightForm.id
+          }
+          this.$http.post('/weight/insert', qs.stringify(params)).then(res => {
+            if (res.data.data) {
+              this.dialogWeightVisible = false
+              this.$message.success('保存成功')
+              this.getOrdersList()
+            } else {
+              let msg =res.data.desc || "保存失败"
+              this.$message.error(msg)
+              this.dialogWeightVisible = false
+             
+            }
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
     // 获取观点列表
     getOrdersList () {
       let valueArr = Object.values(this.optionForm)
       this.startTime = this.optionForm.time ? formatDateNew(this.optionForm.time[0]): ''
       this.endTime = this.optionForm.time ? formatDateNew(this.optionForm.time[1]): ''
       let params = {
-        pageNum: 1,
+        pageNum: this.pageOption.pageNum,
         pageSize: 20,
         [valueArr[0]]: valueArr[1],
         userId: valueArr[2],
@@ -236,36 +327,13 @@ export default {
       })
     },
     onSearch () {
-      this.getOrdersList();
+      this.pageOption.pageNum = 1
+      this.getOrdersList()
     },
     // 分页请求
     pageChange (currentPage) {
-      let valueArr = Object.values(this.optionForm)
-      this.currentPage = currentPage
-      this.startTime = this.optionForm.time ? formatDateNew(this.optionForm.time[0]): ''
-      this.endTime = this.optionForm.time ? formatDateNew(this.optionForm.time[1]): ''
-      let params = {
-        pageNum: this.currentPage,
-        pageSize:20,
-        [valueArr[0]]: valueArr[1],
-        userId: valueArr[2],
-        [valueArr[3]]: valueArr[4],
-        [valueArr[5]]: valueArr[6],
-        startTime: this.startTime,
-        endTime: this.endTime,
-        orderStatus: this.optionForm.orderStatus
-      }
-      this.$http.get('/option/list', {params: params}).then(res => {
-        let resp = res.data
-        if (resp.success) {
-          this.orderList = resp.data.lists
-          // 算出有多少条数据
-          this.totalSize = resp.data.totalSize
-        } else {
-          let msg = resp.desc || '请求失败'
-          this.$message.error(msg)
-        }
-      })
+      this.pageOption.pageNum = currentPage
+      this.getOrdersList() 
     }
   }
 }

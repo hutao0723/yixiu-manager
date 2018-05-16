@@ -15,7 +15,7 @@
             <el-table-column prop="optionStatus" label="观点状态" ></el-table-column>
             <el-table-column  label="操作" >
               <template slot-scope="scope">
-                <el-button type="text" size="mini" @click="openDialogTitle(scope.row)">权重</el-button>        
+                <el-button type="text" size="mini" @click="openDialogWeight(scope.row)">权重</el-button>        
               </template>
             </el-table-column>
           </el-table>
@@ -35,7 +35,7 @@
         </el-form>
         <div class="btn-wrap">
           <el-button size="small" @click="dialogWeightVisible = false">取 消</el-button>
-          <el-button size="small" type="primary" @click="saveTitle">保存</el-button>
+          <el-button size="small" type="primary" @click="saveWeight">保存</el-button>
         </div>
       </el-dialog>
     </div>
@@ -85,7 +85,7 @@ export default {
   },
   methods: {
     // 打开添加类型弹框
-    openDialogTitle (row) {
+    openDialogWeight (row) {
       this.dialogWeightVisible = true
       this.weightForm.id = row.id
       this.weightForm.weightValue = row.weight
@@ -105,7 +105,7 @@ export default {
       })
     },
     // 保存
-    saveTitle () {
+    saveWeight () {
       this.$refs['weightForm'].validate((valid) => {
         if (valid) {
           let params = {

@@ -28,6 +28,11 @@
                 </el-menu-item>
               </router-link>
             </el-submenu>
+            <router-link :to="{ path: '/manager/knowledge/read' }">
+              <el-menu-item index="6">
+                <span>阅读</span>
+              </el-menu-item>
+            </router-link>
             <router-link :to="{ path: '/manager/knowledge/order' }">
               <el-menu-item index="3">
                 <span>订单</span>
@@ -116,7 +121,10 @@
           case '/manager/knowledge/add':
           pathIndex = "1";
           break;
-      
+        case '/manager/knowledge/read':
+          pathIndex = "6";
+          break;
+
         default:
           break;
       }

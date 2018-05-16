@@ -28,11 +28,20 @@
                 </el-menu-item>
               </router-link>
             </el-submenu>
-            <router-link :to="{ path: '/manager/knowledge/read' }">
-              <el-menu-item index="6">
-                <span>阅读</span>
-              </el-menu-item>
-            </router-link>
+
+             <el-submenu index="6">
+              <span slot="title">阅读</span>
+              <router-link :to="{ path: '/manager/knowledge/read' }">
+                <el-menu-item index="6-1">
+                  <span>阅读计划</span>
+                </el-menu-item>
+              </router-link>
+              <router-link :to="{ path: '/manager/knowledge/option' }">
+                <el-menu-item index="6-2">
+                  <span>观点</span>
+                </el-menu-item>
+              </router-link>
+            </el-submenu>
             <router-link :to="{ path: '/manager/knowledge/order' }">
               <el-menu-item index="3">
                 <span>订单</span>
@@ -121,8 +130,11 @@
           case '/manager/knowledge/add':
           pathIndex = "1";
           break;
-        case '/manager/knowledge/read':
-          pathIndex = "6";
+          case '/manager/knowledge/read':
+          pathIndex = "6-1";
+          break;
+          case '/manager/knowledge/option':
+          pathIndex = "6-2";
           break;
 
         default:

@@ -334,7 +334,7 @@ export default {
       this.$refs['typeName'].validate((valid) => {
         if (valid) {
           let params = {
-            typeId : this.changeForm.typeId,
+            authorizerTypeId : this.changeForm.typeId,
             appId : this.appId,
             authorizerId: this.changeForm.id
           }

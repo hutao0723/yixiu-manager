@@ -4,14 +4,22 @@
     <div class="content">
       <div class="tabel-wrap">
         <template>
-          <el-table :data="optionList" style="width: 100%" >
+          <el-table :data="optionList" style="width: 100%"  :default-expand-all="true">
+            <el-table-column type="expand" >
+              <template slot-scope="props">
+                <el-form label-position="left" inline class="demo-table-expand">
+                  <el-form-item>
+                    <span>观点:{{ props.row.option }}</span>
+                  </el-form-item>
+                </el-form>
+              </template>
+            </el-table-column>
             <el-table-column prop="id" label="序号" ></el-table-column>
             <el-table-column prop="weight" label="权重值" ></el-table-column>
             <el-table-column prop="optionId" label="观点ID"></el-table-column>
             <el-table-column prop="userId" label="用户ID" ></el-table-column>
             <el-table-column prop="course" label="课程" ></el-table-column>
             <el-table-column prop="readPlan" label="阅读计划" ></el-table-column>
-            <el-table-column prop="option" label="观点" ></el-table-column>
             <el-table-column prop="optionStatus" label="观点状态" ></el-table-column>
             <el-table-column  label="操作" >
               <template slot-scope="scope">
@@ -206,19 +214,17 @@ export default {
       clear: both;
     }
   }
-  
-  .input-width{
-    display: inline-block;
-    width: 80%;
+  .demo-table-expand {
+    font-size: 0;
   }
-  .upload-demo{
-    display: inline-block;
+  .demo-table-expand label {
+    width: 90px;
+    color: #99a9bf;
   }
-  .in-line{
-    display: inline-block;
-    margin-right: 10px;
-    color: #aaa;
-    margin-top: 8px;
+  .demo-table-expand .el-form-item {
+    margin-left: 10px;
+    margin-bottom: 0;
+    width: 100%;
   }
   .el-date-editor.el-input, .el-date-editor.el-input__inner{
     width:150px;

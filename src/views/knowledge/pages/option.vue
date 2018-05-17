@@ -55,7 +55,16 @@
       </div>
       <div class="tabel-wrap">
         <template>
-          <el-table :data="orderList"  ref="multipleTable"  tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
+          <el-table :data="orderList"  ref="multipleTable"  tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange"  :default-expand-all="true">
+            <el-table-column type="expand" >
+              <template slot-scope="props">
+                <el-form label-position="left" inline class="demo-table-expand">
+                  <el-form-item>
+                    <span>观点：{{ props.row.option }}</span>
+                  </el-form-item>
+                </el-form>
+              </template>
+            </el-table-column>
             <el-table-column
               type="selection"
               width="55">
@@ -64,7 +73,6 @@
             <el-table-column property="userId" label="用户ID"></el-table-column>
             <el-table-column property="course" label="课程"></el-table-column>
             <el-table-column property="readPlan" label="阅读计划"></el-table-column>
-            <el-table-column property="option" label="观点"></el-table-column> 
             <el-table-column property="optionStatus" label="观点状态"></el-table-column>  
             <el-table-column  label="操作" >
               <template slot-scope="scope">
@@ -79,16 +87,17 @@
         </template>        
       </div>
       <div class="clearfix">
-        <div class="btn-left">
-          <el-button @click="chooseAll(orderList)">全选</el-button>
-          <el-button @click="hideAll()">批量隐藏</el-button>
-          <el-button @click="cancelHideAll()">批量取消隐藏</el-button>
-          <el-button @click="passAll()">批量通过</el-button>
-        </div>
         <div class="page-control">
           <el-pagination background  :page-size="20" :current-page.sync="pageOption.pageNum" @current-change="pageChange" layout="total, prev, pager, next" :total="totalSize"></el-pagination>
         </div>
       </div>
+      <div class="btn-left">
+        <el-button type="primary" @click="chooseAll(orderList)">全选</el-button>
+        <el-button type="primary" @click="hideAll()">批量隐藏</el-button>
+        <el-button type="primary" @click="cancelHideAll()">批量取消隐藏</el-button>
+        <el-button type="primary" @click="passAll()">批量通过</el-button>
+      </div>
+      
     </div>
     <!--编辑权重值-->
     <div class="add-type-diolog">
@@ -393,11 +402,27 @@ export default {
       font-size: 16px;
     }
   }
+  .demo-table-expand {
+    font-size: 0;
+  }
+  .demo-table-expand label {
+    width: 90px;
+    color: #99a9bf;
+  }
+  .demo-table-expand .el-form-item {
+    margin-left: 60px;
+    margin-bottom: 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
   .search-bar {
     margin-top: 20px;
   }
   .btn-left{
     float: left;
+    position:fixed;
+    bottom: 10px;
+    z-index: 100;
     margin-top: 15px;
   }
   .page-control {

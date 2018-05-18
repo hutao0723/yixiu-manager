@@ -8,7 +8,7 @@
       </el-breadcrumb>
     </div>
     <div class="content ">
-      <el-form :model="columnForm" :rules="rules" ref="columnForm"  label-width="100px" class="column-uleForm">
+      <el-form :model="columnForm" :rules="rules" ref="columnForm"  label-width="100px" class="column-uleForm" label-position="left">
         <el-form-item prop="date1" label="开课日期">
           <el-col :span="6">
             <el-date-picker type="date" placeholder="选择日期" v-model="columnForm.date1" style="width: 100%;"></el-date-picker>
@@ -21,7 +21,7 @@
             </el-input>
           </el-col>
         </el-form-item>
-        <el-form-item label="老师微信">
+        <el-form-item class="is-required" label="老师微信" >
           <el-upload
             class="avatar-uploader"
             action="/upload/image"
@@ -47,6 +47,16 @@
             <div slot="tip" class="el-upload__tip">360*484,支持jpg、png、gif格式,最大5M</div>
           </el-upload>
         </el-form-item>
+
+        <div>
+          <el-upload class="upload-demo" action="" :auto-upload='false' :show-file-list='false' :on-change='changeUpload'>
+            <el-button size="small" type="primary">点击上传</el-button>
+          </el-upload>
+          <div style="height:200px;width:200px;border: 1px dashed #d9d9d9;position: relative">
+            <img width="100%" :src="imgSrc" alt="" style="position: absolute;top:50%;left:50%;transform: translate(-50%,-50%);">
+          </div>
+        </div>
+
         <el-form-item>
           <a href="javascript:;">新增老师微信</a>
         </el-form-item>
@@ -101,6 +111,7 @@
         }
       };
       return {
+        imgSrc:'',
         editorContent:null,
         loading: false,
         editType:null,
@@ -130,7 +141,13 @@
       this.editType = this.$route.query.number;
     },
     methods: {
-
+      changeUpload: function(file) {
+        this.$nextTick(
+          () => {
+            console.log(file)
+            this.imgSrc = file.url;
+          });
+      },
 
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {

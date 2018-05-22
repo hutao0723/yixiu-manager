@@ -1,38 +1,52 @@
 {
-	"success": true,
-	"data": {
-		"totalSize": 100,
-		"lists": [
-		{
-			"id": 1,
-			"weight": 9999,
-			"optionId": 742934,
-			"userId": 1314,
-			"course": "爆款推荐王人气推荐王人气推荐王人人气推荐王人气推荐王",
-			"readPlan": "月度计划月度计划阅读计划",
-			"option":"111哈哈哈哈观点内容显示在这哈哈哈哈观点内容显示在这呢观观点内容显示在这里呀观点内容",
-			"optionStatus":"待审核"
-		},
-		{
-			"id": 2,
-			"weight": 738,
-			"optionId": 3333839,
-			"userId": 8399,
-			"course": "爆款推荐王人气推荐王就发我卡了王人人气推荐王人气推荐王",
-			"readPlan": "月度计划月度计划阅读计划显示在这里",
-			"option":"222哈哈哈哈观点内容显示在这呢观哈哈哈哈观点内容显示在这呢观点内容显示在这里呀观点内容",
-			"optionStatus":"待审核"
-		},
-		{
-			"id": 3,
-			"weight": 374782782,
-			"optionId": 742934,
-			"userId": 424,
-			"course": "爆款推荐王人气推荐王人气推荐王人人气推荐王人气推荐王",
-			"readPlan": "月度计划月度计划阅读计划",
-			"option":"333哈哈哈哈观点内容显示在这呢观哈哈哈哈观点内容显示在这呢观点内容显示在这里呀观点内容",
-			"optionStatus":"待审核"
-		}]
-	}
+  "code": "string",
+  "data": [
+    {
+      "commentState": 1,
+      "content": "观点内容内容",
+      "courseAuthor": "作者",
+      "courseId": 1,
+      "courseSubTitle": "副标题",
+      "courseTitle": "标题",
+      "id": 1,
+      "relationId": 111,
+      "relationName": "阅读标题",
+      "releaseTime": "2018-05-22T08:10:54.202Z",
+      "sorted": 1,
+      "userId": 1,
+      "userNickname": "string"
+    },
+    {
+      "commentState": 2,
+      "content": "观点内容内容",
+      "courseAuthor": "作者",
+      "courseId": 2,
+      "courseSubTitle": "副标题",
+      "courseTitle": "标题",
+      "id": 2,
+      "relationId": 2,
+      "relationName": "阅读标题",
+      "releaseTime": "2018-05-22T08:10:54.202Z",
+      "sorted": 2,
+      "userId": 2,
+      "userNickname": "string"
+    },
+    {
+      "commentState": 3,
+      "content": "观点内容内容",
+      "courseAuthor": "作者",
+      "courseId": 30,
+      "courseSubTitle": "副标题",
+      "courseTitle": "标题",
+      "id": 30,
+      "relationId": 30,
+      "relationName": "阅读标题",
+      "releaseTime": "2018-05-22T08:10:54.202Z",
+      "sorted": 30,
+      "userId": 30,
+      "userNickname": "string"
+    }
+  ],
+  "desc": "成功",
+  "success": true
 }
-

@@ -194,9 +194,9 @@
             </el-input>
           </el-col>
         </el-form-item>
-         <el-form-item label="作者" prop="writor">
+         <el-form-item label="作者" prop="author">
           <el-col :span="6">
-            <el-input v-model="courseForm.writor" placeholder="1-30字，建议14字以内">
+            <el-input v-model="courseForm.author" placeholder="1-30字，建议14字以内">
             </el-input>
           </el-col>
         </el-form-item>
@@ -364,7 +364,7 @@
             {required: true, message: '请输入抽成比例', trigger: 'blur'},
             {validator: rateRule, trigger: 'blur' }
           ],
-          writor: [
+          author: [
             {min: 0, max: 30, message: '长度在 0 到 30 个字', trigger: 'blur'}
           ],
         },
@@ -385,7 +385,7 @@
           lecturerName: null,
           publishTime: null,
           rate: null,
-          writor: ''
+          author: ''
         },
         fileText: null,
         fileSrc: null

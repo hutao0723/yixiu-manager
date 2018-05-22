@@ -8,7 +8,7 @@
     </div>
     <div class="content">
       <el-form :model="draftForm" ref="draftForm" label-width="100px" class="column-uleForm">
-        <el-form-item label="文稿详情" prop="detail">
+        <el-form-item label="文稿详情" prop="sketch">
           <div id="editorElem" style="text-align:left"></div>
         </el-form-item>
         <el-form-item>
@@ -29,8 +29,8 @@
       return {
         //新增编辑课程form表单
         draftForm: {
-          id: null,
-          detail: null
+          courseId: null,
+          sketch: null
         },
         fileText: null,
         fileSrc: null
@@ -42,7 +42,6 @@
     },
     methods: {
       creatRichText(res){
-        console.log('editor')
         var editor = new E('#editorElem')
         /* 处理上传图片的controller路径 */
         editor.customConfig.uploadImgServer = '/upload/image'
@@ -84,7 +83,7 @@
         };
         editor.customConfig.onchange = (html) => {
           const content = html=='<p><br></p>'?'':html;
-          this.draftForm.detail = content;
+          this.draftForm.sketch = content;
         }
         editor.create()
         editor.txt.clear();
@@ -92,15 +91,18 @@
       },
 
       getDraftDetail() {
-        let id = this.$route.params.id;
+        let courseId = this.$route.params.id;
         let params = {
-          id: id
+          courseId: courseId
         }
-        this.$http.get('/editor/content', {params: params}).then(res => {
+        this.$http.get('/course/getSketch', {params: params}).then(res => {
           let resp = res.data
           if (resp.success) {
+            if(!resp.data){
+              return false
+            }
             this.draftForm = resp.data
-            this.creatRichText(this.draftForm.detail)
+            this.creatRichText(this.draftForm.sketch)
           } else {
             let msg = resp.desc || '请求失败'
             this.$message.error(msg)
@@ -109,7 +111,11 @@
       },
 
       submitForm() {
-        this.$http.post('/editor/save', qs.stringify(this.draftForm)).then(res => {
+        let params = {
+          courseId: this.$route.params.id,
+          sketch: this.draftForm.sketch
+        }
+        this.$http.post('/course/updateSketch', qs.stringify(params)).then(res => {
           let data = res.data
             if (data.success) {
               this.$message.success('保存成功')

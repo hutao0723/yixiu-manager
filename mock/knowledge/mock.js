@@ -143,35 +143,40 @@ var setOnline = [
     type: 'post',
     url: '/upload/image'
   },
-  // 获取文本编辑器内容
-  {
-    name: 'editor',
-    type: 'get',
-    url: '/editor/content'
-  },
-  // 获取文本编辑器内容
+  // 新增文本编辑器内容
   {
     name: 'save',
     type: 'post',
-    url: '/editor/save'
+    url: '/course/createSketch'
+  },
+  {
+    name: 'save',
+    type: 'post',
+    url: '/course/updateSketch'
+  },
+  // 新增文本编辑器内容
+  {
+    name: 'editor',
+    type: 'get',
+    url: '/course/getSketch'
   },
   // 获取权重值列表
   {
     name: 'weightList',
     type: 'get',
-    url: '/weight/list'
+    url: '/comment/topList'
   },
   // 修改权重
   {
     name: 'save',
     type: 'post',
-    url: '/weight/insert'
+    url: '/comment/changeSorted'
   },
   // 获取观点列表
   {
     name: 'optionList',
     type: 'get',
-    url: '/option/list'
+    url: '/comment/page'
   },
   // 通过观点审核
   {
@@ -184,8 +189,13 @@ var setOnline = [
     name: 'save',
     type: 'post',
     url: '/hide/option'
+  },
+  // 观点状态变更
+  {
+    name: 'save',
+    type: 'post',
+    url: '/comment/changeStatus'
   }
-
 ];
 var fs = require('fs');
 

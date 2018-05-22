@@ -25,7 +25,7 @@
             </el-form-item>
            
             <el-form-item label="观点状态">
-              <el-select v-model="optionForm.orderStatus" placeholder="全部" class="w150">
+              <el-select v-model="optionForm.commentState" placeholder="全部" class="w150">
                 <el-option label="全部" value=""></el-option>
                 <el-option label="待审核" value="TO_PAY"></el-option>
                 <el-option label="已通过" value="SUCCESS"></el-option>
@@ -60,7 +60,7 @@
               <template slot-scope="props">
                 <el-form label-position="left" inline class="demo-table-expand">
                   <el-form-item>
-                    <span>观点：{{ props.row.option }}</span>
+                    <span>观点：{{ props.row.content }}</span>
                   </el-form-item>
                 </el-form>
               </template>
@@ -69,16 +69,28 @@
               type="selection"
               width="55">
             </el-table-column>
-            <el-table-column property="optionId" label="观点ID"></el-table-column>  
+            <el-table-column label="观点ID">
+              <template slot-scope="scope">{{scope.row.id}}<br/>{{scope.row.releaseTime}}</template>
+            </el-table-column>  
             <el-table-column property="userId" label="用户ID"></el-table-column>
-            <el-table-column property="course" label="课程"></el-table-column>
-            <el-table-column property="readPlan" label="阅读计划"></el-table-column>
-            <el-table-column property="optionStatus" label="观点状态"></el-table-column>  
+            <el-table-column label="课程">
+              <template slot-scope="scope">{{scope.row.courseTitle}}<br/>{{scope.row.courseId}}</template>
+            </el-table-column>
+            <el-table-column label="阅读计划">
+              <template slot-scope="scope">{{scope.row.relationName}}<br/>{{scope.row.relationId}}</template>
+            </el-table-column>
+            <el-table-column  label="观点状态">
+              <template slot-scope="scope">
+                <span v-if="scope.row.commentState === 1">待审核</span>
+                <span v-if="scope.row.commentState === 2">已通过</span>
+                <span v-if="scope.row.commentState === 3">已隐藏</span>
+              </template>
+            </el-table-column>  
             <el-table-column  label="操作" >
               <template slot-scope="scope">
-                <el-button type="text" size="mini" @click="passOne(scope.row)">通过</el-button> 
-                <el-button type="text" size="mini" @click="hideOne(scope.row)">隐藏</el-button>  
-                <el-button type="text" size="mini" @click="cancelHideOne(scope.row)">取消隐藏</el-button>
+                <el-button v-if="scope.row.commentState === 1" type="text" size="mini" @click="hideOne(scope.row,2)">通过</el-button> 
+                <el-button v-if="scope.row.commentState === 1 || scope.row.commentState === 2" type="text" size="mini" @click="hideOne(scope.row,3)">隐藏</el-button>  
+                <el-button v-if="scope.row.commentState === 3" type="text" size="mini" @click="hideOne(scope.row,2)">取消隐藏</el-button>
 
                 <el-button type="text" size="mini" @click="openDialogWeight(scope.row)">权重</el-button>   
               </template>
@@ -93,9 +105,9 @@
       </div>
       <div class="btn-left">
         <el-button type="primary" @click="chooseAll(orderList)">全选</el-button>
-        <el-button type="primary" @click="hideAll()">批量隐藏</el-button>
-        <el-button type="primary" @click="cancelHideAll()">批量取消隐藏</el-button>
-        <el-button type="primary" @click="passAll()">批量通过</el-button>
+        <el-button type="primary" @click="passAll(3)">批量隐藏</el-button>
+        <el-button type="primary" @click="passAll(2)">批量取消隐藏</el-button>
+        <el-button type="primary" @click="passAll(2)">批量通过</el-button>
       </div>
       
     </div>
@@ -103,8 +115,8 @@
     <div class="add-type-diolog">
       <el-dialog title="权重值配置" :visible.sync="dialogWeightVisible">
         <el-form :model="weightForm" ref="weightForm" :rules="rules">
-          <el-form-item label="权重值" :label-width="formLabelWidth"  prop="weightValue">
-            <el-input v-model="weightForm.weightValue" auto-complete="off"></el-input>
+          <el-form-item label="权重值" :label-width="formLabelWidth"  prop="sorted">
+            <el-input v-model="weightForm.sorted" auto-complete="off"></el-input>
           </el-form-item>
         </el-form>
         <div class="btn-wrap">
@@ -118,6 +130,8 @@
 
 <script>
 import { formatDateNew } from '../components/knowledgeValidRules'
+import { formatToMs } from '../components/knowledgeValidRules'
+
 import qs from 'qs'
 export default {
   data () {
@@ -135,7 +149,7 @@ export default {
     };
     return {
       rules: {
-        weightValue: [
+        sorted: [
           { required: true, message: '请输入权重值', trigger: 'blur' },
           { validator: rateRule, trigger: 'blur' },
         ]
@@ -143,25 +157,25 @@ export default {
 
       formLabelWidth: '100px',
       optionForm: {
-        name: 'viewpoint',
+        name: 'content',
         inputOne: '',
         userId: '',
         course: 'courseTitle',
         inputTwo: '',
-        read: 'readTitle',
+        read: 'relationName',
         inputThree: '',
         time: [],
-        orderStatus: ''
+        commentState: ''
       },
       startTime: '',
       endTime: '',
       viewOptions: [
         {
-          value: 'viewpoint',
+          value: 'content',
           label: '观点'
         },
         {
-          value: 'viewpointId',
+          value: 'id',
           label: '观点ID'
         }
       ],
@@ -177,11 +191,11 @@ export default {
       ],
       readOptions: [
         {
-          value: 'readTitle',
+          value: 'relationName',
           label: '阅读计划标题'
         },
         {
-          value: 'readId',
+          value: 'relationId',
           label: '阅读计划Id'
         }
       ],
@@ -202,9 +216,10 @@ export default {
       dialogWeightVisible: false,
       weightForm: {
         id: '',
-        weightValue: '',
+        sorted: '',
       },
-
+      releaseTime: '' //时间
+      // 1.待审核 2.已通过 3.已隐藏
     }
   },
   created () {
@@ -221,35 +236,29 @@ export default {
       // console.log(val)
     },
     // 批量通过
-    passAll() {
-      if(this.ids.length > 0){
-
-        console.log(this.ids)
-        this.getOrdersList()
-      }else{
-        this.$message.error("请选择批量处理的数据")
+    passAll(status) {
+      if (this.ids.length > 0) {
+        let params = {
+          id : this.ids.join(','),
+          status: status
+        }
+        this.$http.post('/comment/changeStatus', qs.stringify(params)).then(res => {
+          let resp = res.data
+          if (resp.success) {
+            this.$message.success('切换成功');
+            this.getOrdersList();
+          } else {
+            let msg = resp.desc || '切换失败'
+            this.$message.error(msg)
+          }
+          this.ids = []
+        })
+      } else {
+        this.$message.error("请选择关联商品")
+        return false
       }
     },
-    // 批量隐藏
-    hideAll() {
-      if(this.ids.length > 0){
 
-        console.log(this.ids)
-        this.getOrdersList()
-      }else{
-        this.$message.error("请选择批量处理的数据")
-      }
-    },
-    // 取消批量隐藏
-    cancelHideAll() {
-      if(this.ids.length > 0){
-
-        console.log(this.ids)
-        this.getOrdersList()
-      }else{
-        this.$message.error("请选择批量处理的数据")
-      }
-    },
     // 全选
     chooseAll(rows) {
       if (rows) {
@@ -259,31 +268,13 @@ export default {
         this.allSelect = !this.allSelect
       }
     },
-    // 单个通过
-    passOne(row) {
-      let params = {
-        id : row.id
-      }
-      this.$http.post('/weight/insert', qs.stringify(params)).then(res => {
-        let resp = res.data
-        if (resp.success) {
-          this.$message.success('切换成功');
-          this.getOrdersList();
-        } else {
-          let msg = resp.desc || '请求失败'
-          this.$message.error(msg)
-        }
-      }).catch(() => {
-        this.$message.error("网络错误")
-      })
-    },
-
     // 单个隐藏
-    hideOne(row) {
+    hideOne(row,status) {
       let params = {
-        id : row.id
+        id : row.id,
+        status: status
       }
-      this.$http.post('/weight/insert', qs.stringify(params)).then(res => {
+      this.$http.post('/comment/changeStatus', qs.stringify(params)).then(res => {
         let resp = res.data
         if (resp.success) {
           this.$message.success('切换成功');
@@ -292,23 +283,7 @@ export default {
           let msg = resp.desc || '请求失败'
           this.$message.error(msg)
         }
-      }).catch(() => {
-        this.$message.error("网络错误")
-      })
-    },
-    cancelHideOne(row) {
-      let params = {
-        id : row.id
-      }
-      this.$http.post('/weight/insert', qs.stringify(params)).then(res => {
-        let resp = res.data
-        if (resp.success) {
-          this.$message.success('切换成功');
-          this.getOrdersList();
-        } else {
-          let msg = resp.desc || '请求失败'
-          this.$message.error(msg)
-        }
+        this.ids = []
       }).catch(() => {
         this.$message.error("网络错误")
       })
@@ -317,17 +292,17 @@ export default {
     openDialogWeight (row) {
       this.dialogWeightVisible = true
       this.weightForm.id = row.id
-      this.weightForm.weightValue = row.weight
+      this.weightForm.sorted = row.weight
     },
      // 保存
     saveWeight () {
       this.$refs['weightForm'].validate((valid) => {
         if (valid) {
           let params = {
-            weightValue: this.weightForm.weightValue,
+            sorted: this.weightForm.sorted,
             id: this.weightForm.id
           }
-          this.$http.post('/weight/insert', qs.stringify(params)).then(res => {
+          this.$http.post('/comment/changeSorted', qs.stringify(params)).then(res => {
             if (res.data.data) {
               this.dialogWeightVisible = false
               this.$message.success('保存成功')
@@ -359,14 +334,17 @@ export default {
         [valueArr[5]]: valueArr[6],
         startTime: this.startTime,
         endTime: this.endTime,
-        orderStatus: this.optionForm.orderStatus
+        commentState: this.optionForm.commentState
       }
-      this.$http.get('/option/list', {params}).then(res => {
+      this.$http.get('/comment/page', {params}).then(res => {
         let resp = res.data
         if (resp.success) {
-          this.orderList = resp.data.lists
+          this.orderList = resp.data.content
+          this.orderList.forEach((item,index)=>{
+            this.orderList[index].releaseTime = formatToMs(item.releaseTime)
+          })
           // 算出有多少条数据
-          this.totalSize = resp.data.totalSize
+          this.totalSize = resp.data.totalElements
         } else {
           let msg = resp.desc || '请求失败'
           this.$message.error(msg)

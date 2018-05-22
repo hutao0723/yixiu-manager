@@ -1,71 +1,62 @@
 {
-	"success": true,
-	"data": {
-		"totalSize": 100,
-		"lists": [
-		{
-			"id": 1833,
-			"optionId": 742934,
-			"userId": 1314,
-			"course": "爆款推荐王人气推荐王人气推荐王人人气推荐王人气推荐王",
-			"readPlan": "月度计划月度计划阅读计划",
-			"option":"哈哈哈哈观点内容显示在这呢观点内容显示在这里呀观点内容",
-			"optionStatus":"待审核"
-		},
-		{
-			"id": 2424,
-			"optionId": 3333839,
-			"userId": 8399,
-			"course": "爆款推荐王人气推荐王就发我卡了王人人气推荐王人气推荐王",
-			"readPlan": "月度计划月度计划阅读计划显示在这里",
-			"option":"哈哈哈哈观点内容显示在这呢观点内容显示在这里呀观点内容",
-			"optionStatus":"待审核"
-		},
-		{
-			"id": 34243,
-			"optionId": 742934,
-			"userId": 424,
-			"course": "爆款推荐王人气推荐王人气推荐王人人气推荐王人气推荐王",
-			"readPlan": "月度计划月度计划阅读计划",
-			"option":"哈哈哈哈观点内容显示在这呢观点内容显示在这里呀观点内容",
-			"optionStatus":"待审核"
-		},
-		{
-			"id": 2424,
-			"optionId": 3333839,
-			"userId": 8399,
-			"course": "爆款推荐王人气推荐王就发我卡了王人人气推荐王人气推荐王",
-			"readPlan": "月度计划月度计划阅读计划显示在这里",
-			"option":"哈哈哈哈观点内容显示在这呢观点内容显示在这里呀观点内容",
-			"optionStatus":"待审核"
-		},
-		{
-			"id": 34243,
-			"optionId": 742934,
-			"userId": 424,
-			"course": "爆款推荐王人气推荐王人气推荐王人人气推荐王人气推荐王",
-			"readPlan": "月度计划月度计划阅读计划",
-			"option":"哈哈哈哈观点内容显示在这呢观点内容显示在这里呀观点内容",
-			"optionStatus":"待审核"
-		},
-		{
-			"id": 2424,
-			"optionId": 3333839,
-			"userId": 8399,
-			"course": "爆款推荐王人气推荐王就发我卡了王人人气推荐王人气推荐王",
-			"readPlan": "月度计划月度计划阅读计划显示在这里",
-			"option":"哈哈哈哈观点内容显示在这呢观点内容显示在这里呀观点内容",
-			"optionStatus":"待审核"
-		},
-		{
-			"id": 34243,
-			"optionId": 742934,
-			"userId": 424,
-			"course": "爆款推荐王人气推荐王人气推荐王人人气推荐王人气推荐王",
-			"readPlan": "月度计划月度计划阅读计划",
-			"option":"哈哈哈哈观点内容显示在这呢观点内容显示在这里呀观点内容",
-			"optionStatus":"待审核"
-		}]
-	}
+  "code": "string",
+  "data": {
+    "content": [
+      {
+        "commentState": 1,
+        "content": "观点内容哈哈哈哈",
+        "courseAuthor": "作者",
+        "courseId": 2,
+        "courseSubTitle": "课程付标题一哈哈哈哈一一一",
+        "courseTitle": "课程标题哈哈哈",
+        "id": 3,
+        "relationId": 4,
+        "relationName": "阅读标题哈哈哈",
+        "releaseTime": "2018-05-22T08:10:54.193Z",
+        "sorted": 4,
+        "userId": 41,
+        "userNickname": "用户名"
+      },
+      {
+        "commentState": 2,
+        "content": "观点内容哈哈哈哈",
+        "courseAuthor": "作者",
+        "courseId": 55,
+        "courseSubTitle": "课程付标题一哈哈哈哈一一一",
+        "courseTitle": "课程标题哈哈哈",
+        "id": 55,
+        "relationId": 65,
+        "relationName": "阅读标题哈哈哈",
+        "releaseTime": "2018-05-22T08:10:54.193Z",
+        "sorted": 9,
+        "userId": 8,
+        "userNickname": "用户名"
+      },
+      {
+        "commentState": 3,
+        "content": "观点内容哈哈哈哈",
+        "courseAuthor": "作者",
+        "courseId": 6,
+        "courseSubTitle": "课程付标题一哈哈哈哈一一一",
+        "courseTitle": "课程标题哈哈哈",
+        "id": 7,
+        "relationId": 9,
+        "relationName": "阅读标题哈哈哈",
+        "releaseTime": "2018-05-22T08:10:54.193Z",
+        "sorted": 3,
+        "userId": 5,
+        "userNickname": "用户名"
+      }
+    ],
+    "firstPage": true,
+    "lastPage": true,
+    "number": 0,
+    "numberOfElements": 0,
+    "size": 0,
+    "sort": {},
+    "totalElements": 50,
+    "totalPages": 1
+  },
+  "desc": "成功",
+  "success": true
 }
-

@@ -9,18 +9,32 @@
               <template slot-scope="props">
                 <el-form label-position="left" inline class="demo-table-expand">
                   <el-form-item>
-                    <span>观点:{{ props.row.option }}</span>
+                    <span>观点:{{ props.row.content }}</span>
                   </el-form-item>
                 </el-form>
               </template>
             </el-table-column>
-            <el-table-column prop="id" label="序号" ></el-table-column>
-            <el-table-column prop="weight" label="权重值" ></el-table-column>
-            <el-table-column prop="optionId" label="观点ID"></el-table-column>
+            <el-table-column label="序号" >
+              <template slot-scope="scope">{{scope.$index + 1}}</template>
+            </el-table-column>
+            <el-table-column prop="sorted" label="权重值" ></el-table-column>
+            <el-table-column label="观点ID">
+              <template slot-scope="scope">{{scope.row.id}}<br/>{{scope.row.releaseTime}}</template>
+            </el-table-column>
             <el-table-column prop="userId" label="用户ID" ></el-table-column>
-            <el-table-column prop="course" label="课程" ></el-table-column>
-            <el-table-column prop="readPlan" label="阅读计划" ></el-table-column>
-            <el-table-column prop="optionStatus" label="观点状态" ></el-table-column>
+            <el-table-column label="课程" >
+              <template slot-scope="scope">{{scope.row.courseTitle}}<br/>{{scope.row.courseId}}</template>
+            </el-table-column>
+            <el-table-column label="阅读计划" >
+              <template slot-scope="scope">{{scope.row.relationName}}<br/>{{scope.row.relationId}}</template>
+            </el-table-column>
+            <el-table-column  label="观点状态">
+              <template slot-scope="scope">
+                <span v-if="scope.row.commentState === 1">待审核</span>
+                <span v-if="scope.row.commentState === 2">已通过</span>
+                <span v-if="scope.row.commentState === 3">已隐藏</span>
+              </template>
+            </el-table-column>
             <el-table-column  label="操作" >
               <template slot-scope="scope">
                 <el-button type="text" size="mini" @click="openDialogWeight(scope.row)">权重</el-button>        
@@ -28,10 +42,7 @@
             </el-table-column>
           </el-table>
         </template>        
-      </div>
-      <div class="page-control">
-        <el-pagination background  :page-size="20" :current-page.sync="pageOption.pageNum" @current-change="pageChange" layout="total, prev, pager, next" :total="totalSize"></el-pagination>
-      </div>    
+      </div>   
     </div>
     <!--编辑权重值-->
     <div class="add-type-diolog">
@@ -52,6 +63,7 @@
 
 <script>
 import qs from 'qs'
+import { formatToMs } from '../components/knowledgeValidRules'
 export default {
   data () {
     const rateRule = (rule, value, callback) => {
@@ -100,12 +112,14 @@ export default {
     },
     // 获取类型列表
     getWeightList () {
-      this.$http.get('/weight/list', {}).then(res => {
+      this.$http.get('/comment/topList', {}).then(res => {
         let resp = res.data
         if (resp.success) {
-          this.optionList = resp.data.lists
+          this.optionList = resp.data
+          this.optionList.forEach((item,index)=>{
+            this.optionList[index].releaseTime = formatToMs(item.releaseTime)
+          })
           // 算出有多少条数据
-          this.totalSize = resp.data.totalSize
         } else {
           let msg = resp.desc || '请求失败'
           this.$message.error(msg)
@@ -120,7 +134,7 @@ export default {
             weightValue: this.weightForm.weightValue,
             id: this.weightForm.id
           }
-          this.$http.post('/weight/insert', qs.stringify(params)).then(res => {
+          this.$http.post('/comment/changeSorted', qs.stringify(params)).then(res => {
             if (res.data.data) {
               this.dialogWeightVisible = false
               this.$message.success('保存成功')
@@ -135,25 +149,6 @@ export default {
         } else {
           console.log('error submit!!')
           return false
-        }
-      })
-    },
-    // 分页请求
-    pageChange (currentPage) {
-      this.currentPage = currentPage
-      let params = {
-        pageNum: this.currentPage,
-        pageSize:20
-      }
-      this.$http.get('/weight/list', {params: params}).then(res => {
-        let resp = res.data
-        if (resp.success) {
-          this.optionList = resp.data.lists
-          // 算出有多少条数据
-          this.totalSize = resp.data.totalSize
-        } else {
-          let msg = resp.desc || '请求失败'
-          this.$message.error(msg)
         }
       })
     }

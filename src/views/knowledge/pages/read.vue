@@ -46,7 +46,7 @@
               <template slot-scope="scope">
                 <!--openDialogAdmin(scope.row.managerName,scope.row.id）-->
                 <el-button type="text" size="mini" @click="newcourseForm(scope.row.id)">编辑</el-button>
-                <el-button type="text" size="mini" @click="courseManagement()">课程</el-button>
+                <el-button type="text" size="mini" @click="courseManagement()">书籍</el-button>
                 <el-button type="text" size="mini" @click="courseGroup()">期数</el-button>
                 <el-button type="text" size="mini" @click="changeStatus(scope.row.id,scope.row.status)">
                   {{scope.row.status == 1 ? '下线' : '上线'}}

@@ -3,14 +3,18 @@
     <div class="title-wrap">
       <el-breadcrumb separator=">">
         <el-breadcrumb-item :to="{ path: '/manager/knowledge/read' }">阅读计划</el-breadcrumb-item>
-        <el-breadcrumb-item>课程管理</el-breadcrumb-item>
+        <el-breadcrumb-item>书籍管理</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="content">
 
       <div class="tabel-wrap">
-        <template>
-          <el-table :data="courseManageList" style="width: 100%">
+        <template >
+          <el-table :data="courseManageList" border style="width: 100%" :span-method="arraySpanMethod">
+
+            <el-table-column prop="book" label="书籍标题">
+            </el-table-column>
+
             <el-table-column prop="time" label="解锁日期">
             </el-table-column>
 
@@ -89,6 +93,7 @@
   export default {
     data() {
       return {
+        arr:[],
         editDiolog:false,
         courseDay:null,
         loading: false,
@@ -147,6 +152,11 @@
         console.log(row)
         this.editDiolog = true ;
         this.courseDay = row.time;
+      },
+      arraySpanMethod({ row, column, rowIndex, columnIndex }){
+        if (columnIndex === 0) {
+
+        }
       }
 
     }

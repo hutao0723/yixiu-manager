@@ -98,6 +98,11 @@
                 message: '删除成功!'
               })
               this.getAppList()
+            } else {
+              this.$message({
+                type: 'error',
+                message: '删除失败!'
+              })
             }
           })
         }).catch(() => {
@@ -157,9 +162,14 @@
             let _params = Object.assign(params)
             this.$http.post(api.insert, qs.stringify(_params)).then(res => {
               if (res.data.success) {
-                this.$message.success('保存成功');
+                this.$message.success('保存成功!');
                 this.getAppList();
-              }
+              } else {
+              this.$message({
+                type: 'error',
+                message: '保存失败!'
+              })
+            }
             })
           }
         })
@@ -178,7 +188,12 @@
               if (res.data.success) {
                 this.$message.success('保存成功');
                 this.getAppList();
-              }
+              } else {
+              this.$message({
+                type: 'error',
+                message: '保存失败!'
+              })
+            }
             })
           }
         })

@@ -27,9 +27,9 @@
             <el-form-item label="观点状态">
               <el-select v-model="optionForm.commentState" placeholder="全部" class="w150">
                 <el-option label="全部" value=""></el-option>
-                <el-option label="待审核" value="TO_PAY"></el-option>
-                <el-option label="已通过" value="SUCCESS"></el-option>
-                <el-option label="已隐藏" value="FAILED"></el-option>
+                <el-option label="待审核" value="1"></el-option>
+                <el-option label="已通过" value="2"></el-option>
+                <el-option label="已隐藏" value="3"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item>
@@ -77,7 +77,7 @@
               <template slot-scope="scope">{{scope.row.courseTitle}}<br/>{{scope.row.courseId}}</template>
             </el-table-column>
             <el-table-column label="阅读计划">
-              <template slot-scope="scope">{{scope.row.relationName}}<br/>{{scope.row.relationId}}</template>
+              <template slot-scope="scope">{{scope.row.readName}}<br/>{{scope.row.readId}}</template>
             </el-table-column>
             <el-table-column  label="观点状态">
               <template slot-scope="scope">
@@ -94,7 +94,7 @@
 
                 <el-button type="text" size="mini" @click="openDialogWeight(scope.row)">权重</el-button>   
               </template>
-            </el-table-column>      
+            </el-table-column>     
           </el-table>
         </template>        
       </div>
@@ -162,7 +162,7 @@ export default {
         userId: '',
         course: 'courseTitle',
         inputTwo: '',
-        read: 'relationName',
+        read: 'readName',
         inputThree: '',
         time: [],
         commentState: ''
@@ -191,11 +191,11 @@ export default {
       ],
       readOptions: [
         {
-          value: 'relationName',
+          value: 'readName',
           label: '阅读计划标题'
         },
         {
-          value: 'relationId',
+          value: 'readId',
           label: '阅读计划Id'
         }
       ],
@@ -239,7 +239,7 @@ export default {
     passAll(status) {
       if (this.ids.length > 0) {
         let params = {
-          id : this.ids.join(','),
+          ids : this.ids.join(','),
           status: status
         }
         this.$http.post('/comment/changeStatus', qs.stringify(params)).then(res => {
@@ -268,10 +268,10 @@ export default {
         this.allSelect = !this.allSelect
       }
     },
-    // 单个隐藏
+    // 隐藏
     hideOne(row,status) {
       let params = {
-        id : row.id,
+        ids : row.id,
         status: status
       }
       this.$http.post('/comment/changeStatus', qs.stringify(params)).then(res => {
@@ -292,7 +292,7 @@ export default {
     openDialogWeight (row) {
       this.dialogWeightVisible = true
       this.weightForm.id = row.id
-      this.weightForm.sorted = row.weight
+      this.weightForm.sorted = row.sorted
     },
      // 保存
     saveWeight () {

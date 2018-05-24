@@ -48,8 +48,8 @@
     <div class="add-type-diolog">
       <el-dialog title="权重值配置" :visible.sync="dialogWeightVisible">
         <el-form :model="weightForm" ref="weightForm" :rules="rules">
-          <el-form-item label="权重值" :label-width="formLabelWidth"  prop="weightValue">
-            <el-input v-model="weightForm.weightValue" auto-complete="off"></el-input>
+          <el-form-item label="权重值" :label-width="formLabelWidth"  prop="sorted">
+            <el-input v-model="weightForm.sorted" auto-complete="off"></el-input>
           </el-form-item>
         </el-form>
         <div class="btn-wrap">
@@ -80,7 +80,7 @@ export default {
     };
     return {
       rules: {
-        weightValue: [
+        sorted: [
           { required: true, message: '请输入权重值', trigger: 'blur' },
           { validator: rateRule, trigger: 'blur' },
         ]
@@ -88,7 +88,7 @@ export default {
       formLabelWidth: '100px',
       weightForm: {
         id: '',
-        weightValue: '',
+        sorted: '',
       },
       dialogWeightVisible: false,
       pageOption: {
@@ -108,7 +108,7 @@ export default {
     openDialogWeight (row) {
       this.dialogWeightVisible = true
       this.weightForm.id = row.id
-      this.weightForm.weightValue = row.weight
+      this.weightForm.sorted = row.sorted
     },
     // 获取类型列表
     getWeightList () {
@@ -131,7 +131,7 @@ export default {
       this.$refs['weightForm'].validate((valid) => {
         if (valid) {
           let params = {
-            weightValue: this.weightForm.weightValue,
+            sorted: this.weightForm.sorted,
             id: this.weightForm.id
           }
           this.$http.post('/comment/changeSorted', qs.stringify(params)).then(res => {

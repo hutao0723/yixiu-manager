@@ -5,66 +5,78 @@
         <el-breadcrumb-item :to="{ path: '/manager/knowledge/read' }">阅读计划</el-breadcrumb-item>
         <el-breadcrumb-item>书籍管理</el-breadcrumb-item>
       </el-breadcrumb>
-      <el-button type="primary" @click="addBook()" size="small" class="fr">新增书籍</el-button>
+      <el-button type="primary" @click="addBook(1)" size="small" class="fr">新增书籍</el-button>
 
     </div>
     <div class="content">
 
       <div class="tabel-wrap">
         <template >
-          <el-table :data="courseManageList" border style="width: 100%;text-align: center" :span-method="arraySpanMethod">
+          <el-table :data="courseManageList" border style="width: 100%;text-align: center" > <!--:span-method="arraySpanMethod"-->
+              <el-table-column prop="title" label="书籍标题">
+              </el-table-column>
 
-            <el-table-column prop="courseTitle" label="书籍标题"style="text-align: center">
-            </el-table-column>
+              <el-table-column  label="解锁日期">
+                <template slot-scope="scope">
+                  <div v-for="(item,index) in scope.row.readBookCourseVOList">第{{item.dayNum}}天</div>
+                </template>
+              </el-table-column>
 
-            <el-table-column prop="dayNum" label="解锁日期">
-            </el-table-column>
+              <el-table-column  prop="id" label="课程id" >
+                <template slot-scope="scope" style="padding:0">
+                  <div v-for="(item,index) in scope.row.readBookCourseVOList">{{item.courseID}}</div>
+                </template>
+              </el-table-column>
 
-            <el-table-column prop="courseID" label="课程id">
-            </el-table-column>
+              <el-table-column prop="courseType" label="课程类型">
+                <template slot-scope="scope">
+                  <div v-for="(item,index) in scope.row.readBookCourseVOList">{{item.courseType==1?'音频':'其它'}}</div>
+                </template>
+              </el-table-column>
 
-            <el-table-column prop="courseType" label="课程类型">
-            </el-table-column>
-            <el-table-column prop="title" label="课程标题">
+              <el-table-column prop="title" label="课程标题">
+                <template slot-scope="scope">
+                  <div v-for="(item,index) in scope.row.readBookCourseVOList">{{item.courseTitle}}</div>
+                </template>
+              </el-table-column>
 
-            </el-table-column>
-            <el-table-column prop = "manageStatus"  label="课程状态">
-              <template slot-scope="manageScope">
-                {{manageScope.row.manageStatus == 1 ? '已上线' : '待上线'}}
-              </template>
-            </el-table-column>
-            <el-table-column label="操作" >
-              <template slot-scope="edit">
+              <el-table-column prop = "manageStatus"  label="课程状态">
+                <template slot-scope="scope">
+                  <div v-for="(item,index) in scope.row.readBookCourseVOList">{{item.courseStatus == 1 ? '已上线' : '待上线'}}</div>
+                </template>
+              </el-table-column>
 
-                <el-button type="text" size="mini" @click="editCourse(1,edit.row)">编辑课程</el-button>
-                <el-button type="text" size="mini" >移除</el-button>
-              </template>
-            </el-table-column>
-            <el-table-column label="操作" >
-              <template slot-scope="edit">
+              <el-table-column label="操作" >
+                <template slot-scope="edit">
+                  <div v-for="(item,index) in edit.row.readBookCourseVOList">
+                    <el-button type="text" size="mini" @click="editCourse(1,item)">编辑课程</el-button>
+                    <el-button type="text" size="mini" @click="removeCourse(item)">移除</el-button>
+                  </div>
+                </template>
+              </el-table-column>
 
-                <el-button type="text" size="mini" @click="editCourse(2,edit.row)">添加课程</el-button>
-                <el-button type="text" size="mini" @click="addBook()">编辑</el-button>
-                <el-button type="text" size="mini" >删除</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
+              <el-table-column label="操作" >
+                <template slot-scope="edit">
+                  <el-button type="text" size="mini" @click="editCourse(2,edit.row)">添加课程</el-button>
+                  <el-button type="text" size="mini" @click="addBook(2,edit.row)">编辑</el-button>
+                  <el-button type="text" size="mini" @click="deleteBook(edit.row.id)">删除</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+
         </template>
-      </div>
-      <div class="page-control">
-         <el-pagination background  :page-size="20" :current-page.sync="pageOption.pageNum" @current-change="pageChange" layout="total, prev, pager, next" :total="totalSize"></el-pagination>
       </div>
     </div>
     <!--弹窗-->
     <div class="add-type-diolog">
       <el-dialog :title="digTite + '课程'" :visible.sync="editDiolog">
-        <el-form >
+        <el-form :model="courseSearchForm" ref="courseSearchForm" :rules="rules">
           <el-form-item label="解锁日期：">
-            {{courseDay}}
+            第{{courseDay}}天
           </el-form-item>
           <el-form-item label="关联课程：">
             <el-select v-model="courseSearchForm.selectType" class="iptl w150">
-              <el-option v-for="(item,index) in courseList" :key="index" :label="item.label" :value="index">
+              <el-option v-for="(item,index) in courseList" :key="index" :label="item.title" :value="item.id">
               </el-option>
             </el-select>
           </el-form-item>
@@ -79,8 +91,8 @@
     <!--新增|编辑书籍 弹窗-->
     <div class="add-type-diolog">
       <el-dialog title="添加|编辑书籍" :visible.sync="bookDiolog">
-        <el-form >
-          <el-form-item label="计划标题" prop="bookTitle">
+        <el-form :model="courseForm" ref="courseForm" :rules="rules">
+          <el-form-item label="计划标题" prop="title">
             <el-col :span="8">
               <el-input v-model="courseForm.title" placeholder="1-30字，建议14字以内" :maxlength="30"></el-input>
 
@@ -94,9 +106,9 @@
               :show-file-list=false
               :on-success="firstSuccess"
               :before-upload="beforeAvatarUpload">
-              <img v-if="courseForm.lateralCover" :src="courseForm.lateralCover" class="avatar">
+              <img v-if="courseForm.imgUrl" :src="courseForm.imgUrl" class="avatar">
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-              <el-button size="small" type="primary">{{courseForm.lateralCover ? '修改文件' : '选择文件'}}</el-button>
+              <el-button size="small" type="primary">{{courseForm.imgUrl ? '修改文件' : '选择文件'}}</el-button>
               <div slot="tip" class="el-upload__tip">750*545,支持jpg、png、gif格式,最大5M</div>
             </el-upload>
           </el-form-item>
@@ -117,6 +129,7 @@
   import 'quill/dist/quill.bubble.css'
   import E from 'wangeditor'
   import plupload from 'plupload';
+  import qs from 'qs'
 
   import {
 
@@ -125,6 +138,14 @@
   export default {
     data() {
       return {
+        rules:{
+          title: [
+            {required: true, message: '请输入计划标题', trigger: 'blur'},
+            {min: 1, max: 30, message: '长度在 1 到 30 个字', trigger: 'blur'}
+          ]
+        },
+        courseEditId:null,
+        readId:null,
         spanArr:[],
         contactDot:0,
         editDiolog:false,
@@ -135,6 +156,8 @@
         editorContent:null,
         digTite:'编辑',
         digType:1,
+        bookType:1,
+        bookId:null,
         directTransmissionSign: null, //上传签名
         pageOption: {
           pageNum: 1,
@@ -152,41 +175,35 @@
         },
         //新增编辑课程form 表单
         courseForm: {
-          bookTitle: null,
-          lateralCover:null
+          title:null,
+          imgUrl:'',
         },
-        courseList:[
-          {
-            label: '西游记'
-          },
-          {
-            label: '红楼梦'
-          },
-          {
-            label: '水浒传'
-          }
-        ]
+        courseList:[]
       }
     },
 
     computed: {
 
     },
+    mounted(){
+
+    },
     created() {
+      this.readId = this.$route.query.readId;
       this.getData();
     },
     methods: {
       //获取列表数据
       getData() {
         let params ={
-          readId: this.$route.query.id,
+          readId: this.$route.query.readId,
           pageNum: this.pageOption.pageNum,
           pageSize: 20,
         }
         this.$http.get('/read/book/list', {params}).then(res => {
-          let resp = res.data
+          let resp = res.data;
           if (resp.success) {
-            this.courseManageList = resp.data.content ;
+            this.courseManageList = resp.data ;
             this.totalSize = resp.data.totalElements ;
             let arr = this.courseManageList;
             let spanArr = this.spanArr;
@@ -198,16 +215,13 @@
               item.index = index;
               if(index===0){
                 spanArr.push(1)
-                //console.log(spanArr)
               }else {
-                if(item.bookId === arr[index-1].bookId){
+                if(item.title === arr[index-1].title){
                   spanArr[contactDot] +=1
                   spanArr.push(0)
-                 // console.log(spanArr)
                 }else {
                   spanArr.push(1);
                   contactDot = index;
-                  console.log(spanArr)
                 }
               }
             })
@@ -217,6 +231,55 @@
             this.$message.error(msg)
           }
         })
+      },
+      removeCourse(item){
+        this.$confirm('确认移除阅读课程:'+item.courseTitle, '删除', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$http.post('/read/book/course/delete?id='+item.id).then(res => {
+            let resp = res.data
+            if (resp.success) {
+              this.$message.success('删除成功');
+              this.getData()
+            } else {
+              let msg = resp.desc || '删除失败'
+              this.$message.error(msg)
+            }
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
+
+      },
+      deleteBook(id){
+        let params = {
+          id:id
+        }
+        this.$confirm('确认删除','删除',{
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() =>{
+          this.$http.post('/read/book/delete',qs.stringify(params)).then(res =>{
+            let resp = res.data
+            if(resp.success){
+              this.$message.success('删除成功');
+              this.getData();
+            }else{
+              let msg = resp.desc || '请求失败';
+              this.$message.error(msg)
+            }
+            this.loading = false;
+          }).catch(() =>{
+            this.loading = false;
+          })
+        })
+
       },
       arraySpanMethod({ row, column, rowIndex, columnIndex }){
         if (columnIndex === 0||columnIndex === 7) {
@@ -229,8 +292,12 @@
           }
         }
       },
-      addBook(){
+      addBook(type,row){
+        if(row){
+          this.bookId= row.id;
+        }
         this.bookDiolog = true;
+        this.bookType = type;
       },
       beforeAvatarUpload(file) {
         const isJLtType = file.type === 'image/jpg' || file.type === 'image/png' || file.type === 'image/gif' || file.type ==='image/jpeg';
@@ -250,37 +317,124 @@
         image.onload = function () {
           const width = image.width;
           const height = image.height;
-          if (width == 750 && height == 545) {
-            self.courseForm.lateralCover = 'https:' + res.data.fileUrl;
-          } else {
-            self.$message.error('上传图片的尺寸必须为 750*545!')
-          }
+          self.courseForm.imgUrl = 'https:' + res.data.fileUrl;
+          // if (width == 750 && height == 545) {
+          //   self.courseForm.imgUrl = 'https:' + res.data.fileUrl;
+          // } else {
+          //   self.$message.error('上传图片的尺寸必须为 750*545!')
+          // }
         };
 
       },
+      getAllCourse(title){
+        let params ={
+          title:title
+        }
+        this.$http.get('/course/all',qs.stringify(params)).then(res =>{
+          let resp = res.data;
+          if (resp.success) {
+            this.courseList = resp.data;
+          } else {
+            let msg = resp.desc || '编辑失败'
+            this.$message.error(msg)
+          }
+        })
+      },
       editCourse(title,row) {
         console.log(row)
+        this.courseEditId = row.id;
         this.editDiolog = true ;
         this.digType = title;
         this.digTite = title == 1?'编辑':'添加' ;
-        this.courseDay = row.time;
+
+        if(title==1){
+          this.courseDay = row.dayNum;
+        }else{
+          this.courseDay = row.lastDayNum+1;
+        }
+        this.getAllCourse(row.courseTitle)
       },
       subCourse(){
+        let params = {
+          courseId:this.courseSearchForm.selectType
+        };
         if(this.digType==1){
-          console.log('编辑')
-
+          params.id = this.courseEditId
+          this.$http.post("/read/book/course/edit",qs.stringify(params)).then(res =>{
+            let resp = res.data;
+            if (resp.success) {
+              this.$message.success('编辑成功');
+              this.courseSearchForm.selectType = null;
+              this.editDiolog = false
+              this.getData();
+            } else {
+              let msg = resp.desc || '编辑失败'
+              this.$message.error(msg)
+            }
+          })
         }else{
-          console.log('添加')
+          params.readId = this.readId;
+          params.bookId =this.courseEditId;
+          this.$http.post("/read/book/course/add",qs.stringify(params)).then(res =>{
+            let resp = res.data;
+            if (resp.success) {
+              this.$message.success('编辑成功');
+              this.courseSearchForm.selectType = null;
+              this.editDiolog = false
+              this.getData();
+            } else {
+              let msg = resp.desc || '编辑失败'
+              this.$message.error(msg)
+            }
+          })
         }
       },
       // 分页请求
       pageChange (currentPage) {
         this.pageOption.pageNum = currentPage
-        this.getData() 
+        this.getData()
       },
       // 保存书籍
       saveBook () {
-        console.log()
+        let params =  this.courseForm;
+        params.readId = this.readId;
+        this.$refs['courseForm'].validate((valid)=>{
+          if (valid) {
+            this.loading = true;
+            if (this.bookType!=1) {
+              params.id = this.bookId;
+              this.$http.post('/read/book/save',qs.stringify(params)).then(res => {
+                let resp = res.data
+                if (resp.success) {
+                  this.$message.success('编辑成功');
+                  this.loading = false;
+                  this.bookDiolog = false;
+                  this.getData()
+                } else {
+                  this.loading = false;
+                  let msg = resp.desc || '编辑失败'
+                  this.$message.error(msg)
+                }
+              })
+            } else {
+              this.$http.post('/read/book/save',qs.stringify(params)).then(res => {
+                let resp = res.data
+                if (resp.success) {
+                  this.$message.success('新增成功');
+                  this.getData()
+                  this.loading = false;
+                  this.bookDiolog = false;
+                } else {
+                  this.loading = false;
+                  let msg = resp.desc || '新增失败'
+                  this.$message.error(msg)
+                }
+              })
+            }
+          } else {
+            return false;
+          }
+        })
       }
 
 

@@ -1,7 +1,7 @@
 {
 	"success": true,
 	"data": {
-    "totalSize": 50 ,
+    "totalSize": 50,
 		"lists": [{
 			"id": 123456,
       "title": "西游记",

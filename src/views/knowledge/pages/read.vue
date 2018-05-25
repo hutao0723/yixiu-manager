@@ -46,7 +46,7 @@
               <template slot-scope="scope">
                 <!--openDialogAdmin(scope.row.managerName,scope.row.id）-->
                 <el-button type="text" size="mini" @click="newcourseForm(scope.row.id)">编辑</el-button>
-                <el-button type="text" size="mini" @click="courseManagement()">书籍</el-button>
+                <el-button type="text" size="mini" @click="courseManagement(scope.row.id)">书籍</el-button>
                 <el-button type="text" size="mini" @click="courseGroup(scope.row.id)">期数</el-button>
                 <el-button type="text" size="mini" @click="openDialogWeight(scope.row)">权重</el-button>
                 <el-button type="text" size="mini" @click="changeStatus(scope.row.id,scope.row.readState)">
@@ -313,11 +313,11 @@
       newcourseForm(courseId) {
         this.$router.push("/manager/knowledge/readPlan?courseId=" + courseId);
       },
-      courseManagement() {
-        this.$router.push("/manager/knowledge/coursePlan");
+      courseManagement(readId) {
+        this.$router.push("/manager/knowledge/coursePlan?readId="+readId);
       },
-      courseGroup(id){
-        this.$router.push("/manager/knowledge/courseGroup?id="+id);
+      courseGroup(readId){
+        this.$router.push("/manager/knowledge/courseGroup?readId="+readId);
       },
       getStatus(row, column) {
         switch (row.readState) {
@@ -334,7 +334,7 @@
       // 分页请求
       pageChange (currentPage) {
         this.pageOption.pageNum = currentPage
-        this.getData() 
+        this.getData()
       }
 
     }

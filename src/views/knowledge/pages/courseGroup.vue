@@ -20,7 +20,7 @@
             <el-table-column label="操作" width="300">
               <template slot-scope="edit">
 
-                <el-button type="text" size="mini" @click="buildNewCourse(edit.row.readId)">编辑</el-button>
+                <el-button type="text" size="mini" @click="buildNewCourse(edit.row.id)">编辑</el-button>
 
               </template>
             </el-table-column>
@@ -47,6 +47,7 @@
     data() {
       return {
         loading: false,
+        id:'',
         pageOption: {
           pageNum: 1,
           pageSize: 20
@@ -61,13 +62,14 @@
 
     },
     created() {
+      this.readId = this.$route.query.readId;
       this.getData();
     },
     methods: {
       //获取列表数据
       getData() {
         let params ={
-          readId: this.$route.query.id,
+          readId: this.readId,
           pageNum: this.pageOption.pageNum,
           pageSize: 20,
         }
@@ -82,13 +84,13 @@
           }
         })
       },
-      buildNewCourse(id) {
-         this.$router.push("/manager/knowledge/numberEdit?number=" + id);
+      buildNewCourse(numId) {
+         this.$router.push("/manager/knowledge/numberEdit?readId=" + this.readId+'&&numId='+ numId);
       },
       // 分页请求
       pageChange (currentPage) {
         this.pageOption.pageNum = currentPage
-        this.getData() 
+        this.getData()
       }
 
     }

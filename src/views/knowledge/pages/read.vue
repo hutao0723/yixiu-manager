@@ -5,7 +5,7 @@
         <el-button type="primary" @click="newcourseForm(0)" size="small" class="fr">新建阅读计划</el-button>
         <template>
           <el-form :inline="true" :model="courseSearchForm" class="demo-form-inline" size="small">
-              <el-form-item>
+              <el-form-item >
                 <el-select v-model="courseSearchForm.selectType" class="iptl w150">
                   <el-option v-for="item in searchOptions" :key="item.value" :label="item.label" :value="item.value">
                   </el-option>
@@ -15,7 +15,7 @@
                 <el-input v-model="courseSearchForm.searchValue" class="iptr"></el-input>
               </el-form-item>
               <el-form-item>
-                <el-select v-model="courseSearchForm.status" class="w150">
+                <el-select v-model="courseSearchForm.readState" class="w150">
                   <el-option v-for="item in specialStateOptions" :key="item.value" :label="item.label"
                              :value="item.value">
                   </el-option>
@@ -36,7 +36,7 @@
             </el-table-column>
             <el-table-column prop="price" label="计划价格">
               <template slot-scope="scope">
-                {{scope.row.price}}
+                {{scope.row.costPrice}}
               </template>
             </el-table-column>
             <el-table-column prop="status" label="计划状态" :formatter="getStatus" >
@@ -48,6 +48,7 @@
                 <el-button type="text" size="mini" @click="newcourseForm(scope.row.id)">编辑</el-button>
                 <el-button type="text" size="mini" @click="courseManagement()">书籍</el-button>
                 <el-button type="text" size="mini" @click="courseGroup()">期数</el-button>
+                <el-button type="text" size="mini" @click="openDialogWeight(scope.row)">权重</el-button>
                 <el-button type="text" size="mini" @click="changeStatus(scope.row.id,scope.row.status)">
                   {{scope.row.status == 1 ? '下线' : '上线'}}
                 </el-button>
@@ -64,6 +65,25 @@
                        :total="totalSize"></el-pagination>
       </div>
     </div>
+
+    <!--弹窗-->
+    <div class="add-type-diolog">
+      <el-dialog title="权重值配置" :visible.sync="editDiolog">
+        <el-form :rules="rules" ref="weightForm">
+
+          <el-form-item label="权重值："  prop="weight">
+            <el-col :span="6">
+              <el-input v-model="weightForm.weightValue"    placeholder="0-99999">
+              </el-input>
+            </el-col>
+          </el-form-item>
+        </el-form>
+        <div class="btn-wrap">
+          <el-button size="small" @click="editDiolog = false">取 消</el-button>
+          <el-button size="small" type="primary" @click="changeSorted()">保存</el-button>
+        </div>
+      </el-dialog>
+    </div>
   </section>
 
 </template>
@@ -74,25 +94,41 @@
   import 'quill/dist/quill.bubble.css'
   import E from 'wangeditor'
   import plupload from 'plupload';
+  import qs from 'qs'
 
   import {
-    addCourse,
-    deleteCourse,
-    updateCourse,
-    getCourse,
-    pageListCourse,
-    updateStatusCourse,
-    lecturerList,
-    getCdnFileUrl
+    bookPage,
+    deleteBook,
+    changeBookStatus,
+    changeBookSorted,
   } from '@/api/index'
 
   export default {
     data() {
+      var rateRule = (rule, value, callback) => {
+        const res = /^[+]{0,1}(\d+)$/;
+        if (!res.test(value)) {
+          callback(new Error('请输入正整数'));
+        } else {
+          if (value > 9999 || value < 0) {
+            callback(new Error('请输入0-9999的正整数'));
+          } else {
+            callback()
+          }
+        }
+      }
+
       return {
         loading: false,
+        editDiolog:false,
         editorContent:null,
         directTransmissionSign: null, //上传签名
-
+        rules: {
+          weight: [
+            { required: true, message: '请输入权重值', trigger: 'blur' },
+            { validator: rateRule, trigger: 'blur' },
+          ]
+        },
         searchOptions: [
           {
             value: 'title',
@@ -104,17 +140,17 @@
         specialStateOptions: [
 //          计划状态|待上线|已上线|已下线
           {
-            value: '',
+            value: 0,
             label: '计划状态'
           }, {
-            value: 0,
+            value: 1,
             label: '待上线'
           },
           {
-            value: 1,
+            value: 2,
             label: '已上线'
           }, {
-            value: 2,
+            value: 3,
             label: '已下线'
           }
         ],
@@ -132,7 +168,7 @@
           specialState: '',
           id: null,
           title: null,
-          status: null,
+          readState: 0,
           pageNum: 1,
           pageSize: null,
         },
@@ -154,7 +190,11 @@
           date:null,
         },
         fileText: null,
-        fileSrc: null
+        fileSrc: null,
+        weightForm: {
+          id: '',
+          weightValue: '',
+        },
       }
     },
 
@@ -165,6 +205,31 @@
       this.getData();
     },
     methods: {
+      openDialogWeight (row) {
+        this.editDiolog = true
+        this.weightForm.id = row.id
+        this.weightForm.weightValue = row.weight
+      },
+      /*保存修改权重*/
+      changeSorted(){
+        let _this = this;
+        let params = {
+          id:this.weightForm.id,
+          sorted:this.weightForm.weightValue
+        }
+        _this.$http.post('/read/changeSorted',qs.stringify(params)).then(res => {
+          let resp = res.data
+          if (resp.success) {
+            _this.$message.success('修改成功');
+            _this.editDiolog = false;
+            _this.getData()
+          } else {
+            let msg = resp.desc || '修改失败'
+            _this.$message.error(msg)
+          }
+        })
+
+      },
       priceFilter(data){
         if(/^\d+\.\d+$/.test(String(data.courseForm.price))) {
           this.courseForm.price = Number(String(this.courseForm.price).split('.')[0])
@@ -180,7 +245,7 @@
       changeStatus(id, changeStatus) {
         this.loading = true;
         const status = changeStatus % 2 == 0 ? 1 : 2;
-        updateStatusCourse({
+        changeBookStatus({
           id,
           status
         }).then(res => {
@@ -204,19 +269,16 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.loading = true;
+          this.$http.post('/read/delete?id='+id).then(res => {
+            let resp = res.data
 
-          deleteCourse({id}).then(res => {
-            if (res.success) {
+            if (resp.success) {
               this.$message.success('删除成功');
-              this.getData();
+              this.getData()
             } else {
-              let msg = res.desc || '删除失败'
+              let msg = resp.desc || '删除失败'
               this.$message.error(msg)
             }
-            this.loading = false;
-          }).catch(() => {
-            this.loading = false;
           })
         }).catch(() => {
           this.$message({
@@ -228,17 +290,25 @@
 
       //获取列表数据
       getData() {
-        console.log(this.courseSearchForm.selectType)
-        console.log(this.courseSearchForm.searchValue)
-        console.log(this.courseSearchForm.status)
-        this.$http.get('/planList/list', {}).then(res => {
+        this.loading = true;
+        let data = {
+          readState:this.courseSearchForm.readState
+        };
+        if(this.courseSearchForm.selectType=="title"){
+          data.title = this.courseSearchForm.searchValue
+        }else{
+          data.id = this.courseSearchForm.searchValue
+        }
+        this.$http.get('/read/page', {params:data}).then(res => {
           let resp = res.data
           if (resp.success) {
-            this.courseList = resp.data.lists ;
+            this.courseList = resp.data.content ;
             this.totalSize = resp.data.totalSize ;
+            this.loading = false;
           } else {
             let msg = resp.desc || '请求失败'
             this.$message.error(msg)
+            this.loading = false;
           }
         })
       },
@@ -252,14 +322,14 @@
         this.$router.push("/manager/knowledge/courseGroup");
       },
       getStatus(row, column) {
-        switch (row.status) {
-          case '':
-            return '课程状态';
+        switch (row.readState) {
           case 0:
-            return '待上线';
+            return '课程状态';
           case 1:
-            return '已上线';
+            return '待上线';
           case 2:
+            return '已上线';
+          case 3:
             return '已下线';
         }
       }

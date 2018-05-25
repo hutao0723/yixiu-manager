@@ -5,14 +5,16 @@
         <el-breadcrumb-item :to="{ path: '/manager/knowledge/read' }">阅读计划</el-breadcrumb-item>
         <el-breadcrumb-item>书籍管理</el-breadcrumb-item>
       </el-breadcrumb>
+      <el-button type="primary" @click="addBook()" size="small" class="fr">新增书籍</el-button>
+
     </div>
     <div class="content">
 
       <div class="tabel-wrap">
         <template >
-          <el-table :data="courseManageList" border style="width: 100%" :span-method="arraySpanMethod">
+          <el-table :data="courseManageList" border style="width: 100%;text-align: center" :span-method="arraySpanMethod">
 
-            <el-table-column prop="book" label="书籍标题">
+            <el-table-column prop="book" label="书籍标题"style="text-align: center">
             </el-table-column>
 
             <el-table-column prop="time" label="解锁日期">
@@ -31,11 +33,19 @@
                 {{manageScope.row.manageStatus == 1 ? '已上线' : '待上线'}}
               </template>
             </el-table-column>
-            <el-table-column label="操作" width="300">
+            <el-table-column label="操作" >
               <template slot-scope="edit">
 
-                <el-button type="text" size="mini" @click="editCourse(edit.row)">编辑</el-button>
+                <el-button type="text" size="mini" @click="editCourse(1,edit.row)">编辑课程</el-button>
+                <el-button type="text" size="mini" >移除</el-button>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" >
+              <template slot-scope="edit">
 
+                <el-button type="text" size="mini" @click="editCourse(2,edit.row)">添加课程</el-button>
+                <el-button type="text" size="mini" @click="addBook()">编辑</el-button>
+                <el-button type="text" size="mini" >删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -50,7 +60,7 @@
     </div>
     <!--弹窗-->
     <div class="add-type-diolog">
-      <el-dialog title="编辑|添加课程" :visible.sync="editDiolog">
+      <el-dialog :title="digTite + '课程'" :visible.sync="editDiolog">
         <el-form >
           <el-form-item label="解锁日期：">
             {{courseDay}}
@@ -64,6 +74,38 @@
         </el-form>
         <div class="btn-wrap">
           <el-button size="small" @click="editDiolog = false">取 消</el-button>
+          <el-button size="small" type="primary" @click="subCourse()">保存</el-button>
+        </div>
+      </el-dialog>
+    </div>
+
+    <!--新增|编辑书籍 弹窗-->
+    <div class="add-type-diolog">
+      <el-dialog title="添加|编辑书籍" :visible.sync="bookDiolog">
+        <el-form >
+          <el-form-item label="计划标题" prop="bookTitle">
+            <el-col :span="8">
+              <el-input v-model="courseForm.title" placeholder="1-30字，建议14字以内" :maxlength="30"></el-input>
+
+            </el-col>
+          </el-form-item>
+          <el-form-item class="is-required" label="书籍封面" >
+            <el-upload
+              class="avatar-uploader"
+              action="/upload/image"
+              name="imageFile"
+              :show-file-list=false
+              :on-success="firstSuccess"
+              :before-upload="beforeAvatarUpload">
+              <img v-if="courseForm.lateralCover" :src="courseForm.lateralCover" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+              <el-button size="small" type="primary">{{courseForm.lateralCover ? '修改文件' : '选择文件'}}</el-button>
+              <div slot="tip" class="el-upload__tip">750*545,支持jpg、png、gif格式,最大5M</div>
+            </el-upload>
+          </el-form-item>
+        </el-form>
+        <div class="btn-wrap">
+          <el-button size="small" @click="bookDiolog = false">取 消</el-button>
           <el-button size="small" type="primary" >保存</el-button>
         </div>
       </el-dialog>
@@ -80,24 +122,23 @@
   import plupload from 'plupload';
 
   import {
-    addCourse,
-    deleteCourse,
-    updateCourse,
-    getCourse,
-    pageListCourse,
-    updateStatusCourse,
-    lecturerList,
-    getCdnFileUrl
+    courseAdd,
+    courseEdit
   } from '@/api/index'
 
   export default {
     data() {
       return {
-        arr:[],
+        spanArr:[],
+        contactDot:0,
         editDiolog:false,
+        bookDiolog:false,
         courseDay:null,
         loading: false,
+        contactDot:null,
         editorContent:null,
+        digTite:'编辑',
+        digType:1,
         directTransmissionSign: null, //上传签名
         pageOption: {
           pageNum: 1,
@@ -112,6 +153,11 @@
           status: '',
           pageNum: 1,
           pageSize: null,
+        },
+        //新增编辑课程form 表单
+        courseForm: {
+          bookTitle: null,
+          lateralCover:null
         },
         courseList:[
           {
@@ -141,23 +187,89 @@
           if (resp.success) {
             this.courseManageList = resp.data.list2 ;
             this.totalSize = resp.data.totalSize ;
-
+            let arr = this.courseManageList;
+            let spanArr = this.spanArr;
+            let contactDot = 0;//占几格
+            arr.forEach(function (item,index) {
+              item.index = index;
+              if(index===0){
+                spanArr.push(1)
+                //console.log(spanArr)
+              }else {
+                if(item.bookId === arr[index-1].bookId){
+                  spanArr[contactDot] +=1
+                  spanArr.push(0)
+                 // console.log(spanArr)
+                }else {
+                  spanArr.push(1);
+                  contactDot = index;
+                  console.log(spanArr)
+                }
+              }
+            })
+          this.contactDot = contactDot;
           } else {
             let msg = resp.desc || '请求失败'
             this.$message.error(msg)
           }
         })
       },
-      editCourse(row) {
+      arraySpanMethod({ row, column, rowIndex, columnIndex }){
+        if (columnIndex === 0||columnIndex === 7) {
+
+          const _row = this.spanArr[rowIndex]
+          const _col = _row>0?1:0;
+          return{
+            rowspan:_row,
+            colspan:_col
+          }
+        }
+      },
+      addBook(){
+        this.bookDiolog = true;
+      },
+      beforeAvatarUpload(file) {
+        const isJLtType = file.type === 'image/jpg' || file.type === 'image/png' || file.type === 'image/gif' || file.type ==='image/jpeg';
+        const isLtSize = file.size / 1024 <= 5000;
+        if (!isJLtType) {
+          this.$message.error('上传图片只能是 JPG/PNG/GIF 格式!');
+        }
+        if (!isLtSize) {
+          this.$message.error('上传图片大小不能超过 5M!');
+        }
+        return isJLtType && isLtSize;
+      },
+      firstSuccess(res, file) {
+        const self = this;
+        const image = new Image();
+        image.src = 'https:' + res.data.fileUrl;
+        image.onload = function () {
+          const width = image.width;
+          const height = image.height;
+          if (width == 750 && height == 545) {
+            self.courseForm.lateralCover = 'https:' + res.data.fileUrl;
+          } else {
+            self.$message.error('上传图片的尺寸必须为 750*545!')
+          }
+        };
+
+      },
+      editCourse(title,row) {
         console.log(row)
         this.editDiolog = true ;
+        this.digType = title;
+        this.digTite = title == 1?'编辑':'添加' ;
         this.courseDay = row.time;
       },
-      arraySpanMethod({ row, column, rowIndex, columnIndex }){
-        if (columnIndex === 0) {
+      subCourse(){
+        if(this.digType==1){
+          console.log('编辑')
 
+        }else{
+          console.log('添加')
         }
       }
+
 
     }
   }
@@ -270,7 +382,7 @@
       }
       .el-upload__tip, .el-button {
         position: absolute;
-        left: 200px;
+        left: 280px;
         top: 0;
       }
       .el-upload__tip {

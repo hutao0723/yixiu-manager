@@ -11,26 +11,47 @@
         <el-form-item label="计划标题" prop="title">
           <el-input v-model="courseForm.title" placeholder="1-30字，建议14字以内" :maxlength="30"></el-input>
         </el-form-item>
-        <el-form-item label="计划简介" prop="explain">
-          <el-input v-model="courseForm.explain" placeholder="1-30字，建议14字以内" :maxlength="30"></el-input>
+        <el-form-item label="计划简介" prop="briefer">
+          <div id="editorElem" style="text-align:left"></div>
         </el-form-item>
-        <el-form-item label="计划周期" prop="date">
+        <el-form-item class="is-required" label="背景图" >
+          <el-upload
+            class="avatar-uploader"
+            action="/upload/image"
+            name="imageFile"
+            :show-file-list=false
+            :on-success="firstSuccess"
+            :before-upload="beforeAvatarUpload">
+            <img v-if="courseForm.bgImgUrl" :src="courseForm.bgImgUrl" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            <el-button size="small" type="primary">{{courseForm.bgImgUrl ? '修改文件' : '选择文件'}}</el-button>
+            <div slot="tip" class="el-upload__tip">750*545,支持jpg、png、gif格式,最大5M</div>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="计划周期" prop="days">
           <el-col :span="6">
-            <el-input v-model="courseForm.date" placeholder="1-999" type="number" :maxlength="8">
+            <el-input v-model="courseForm.days" placeholder="1-999" type="number" :maxlength="8">
               <template slot="append">天</template>
             </el-input>
           </el-col>
         </el-form-item>
-        <el-form-item label="计划价格" prop="price">
+        <el-form-item label="计划价格" prop="presentPrice">
           <el-col :span="6">
-            <el-input v-model="courseForm.price" placeholder="0.01-99999.99" type="number" :maxlength="8">
+            <el-input v-model="courseForm.presentPrice" placeholder="0.01-99999.99" type="number" :maxlength="8">
               <template slot="append">元</template>
             </el-input>
           </el-col>
         </el-form-item>
-        <el-form-item label="分销抽成" prop="rate">
+        <el-form-item label="计划原价" prop="costPrice">
           <el-col :span="6">
-            <el-input v-model="courseForm.rate" placeholder="0.00-100.00" type="number" :maxlength="5">
+            <el-input v-model="courseForm.costPrice" placeholder="0.01-99999.99" type="number" :maxlength="8">
+              <template slot="append">元</template>
+            </el-input>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="分销抽成" prop="distRate">
+          <el-col :span="6">
+            <el-input v-model="courseForm.distRate" placeholder="0.00-100.00" type="number" :maxlength="5">
               <template slot="append">%</template>
             </el-input>
           </el-col>
@@ -38,7 +59,7 @@
         <el-form-item>
 
           <el-button @click="cancelForm()">取消</el-button>
-          <el-button type="primary" @click="submitForm('courseForm')">保存</el-button>
+          <el-button type="primary" @click="submitForm()">保存</el-button>
 
         </el-form-item>
       </el-form>
@@ -55,18 +76,13 @@
   import plupload from 'plupload';
 
   import {
+    bookSave,//保存
     addCourse,
-    deleteCourse,
-    updateCourse,
-    getCourse,
-    pageListCourse,
-    updateStatusCourse,
-    lecturerList,
-    getCdnFileUrl
   } from '@/api/index'
 
   export default {
     data() {
+
       var dateRule = (rule, value, callback) => {
         if(String(value).indexOf('.') !=-1){
           callback(new Error('周期需要为整数'));
@@ -126,101 +142,190 @@
             {required: true, message: '请输入计划标题', trigger: 'blur'},
             {min: 1, max: 30, message: '长度在 1 到 30 个字', trigger: 'blur'}
           ],
-          explain: [
+          briefer: [
             {required: true, message: '请输入计划简介', trigger: 'blur'},
             {min: 1, max: 30, message: '长度在 1 到 30 个字', trigger: 'blur'}
           ],
-          date: [
+          days: [
             {required: true, message: '请输入计划周期', trigger: 'blur'},
             {validator: dateRule, trigger: 'blur'}
           ],
-          price: [
+          presentPrice: [
             {required: true, message: '请输入计划价格', trigger: 'blur'},
             {validator: priceRule, trigger: 'blur' }
           ],
-          rate: [
+          costPrice:[
+            {required: true, message: '请输入计划原价', trigger: 'blur'},
+            {validator: priceRule, trigger: 'blur' }
+          ],
+          distRate: [
             {required: true, message: '请输入抽成比例', trigger: 'blur'},
             {validator: rateRule, trigger: 'blur' }
+          ],
+          briefer:[
+            {required: true, message: '请输入阅读简介', trigger: 'blur'},
+            {min: 1, max: 30, message: '长度在 1 到 30 个字', trigger: 'blur'}
           ]
         },
         //新增编辑课程form 表单
         courseForm: {
-          id: null,
-          title: null,
-          explain: null,
-          date:null,
-          price: null,
-          rate: null
+          title: null,//标题
+          briefer:null,//简介
+          days:null,//周期
+          costPrice:null,//原价
+          presentPrice:null,//现价
+          distRate:null,//分销
+          bgImgUrl:null,//背景
+          detail:null
         },
       }
     },
-
-    computed: {
-
-    },
+   mounted(){
+     this.creatRichText();
+   },
     created() {
       if(this.$route.query.courseId){
         this.courseId = this.$route.query.courseId;
       }
+
     },
     methods: {
+      creatRichText(res){
+        var editor = new E('#editorElem')
+        /* 处理上传图片的controller路径 */
+        editor.customConfig.uploadImgServer = '/upload/image'
+        /* 定义上传图片的默认名字 */
+        editor.customConfig.uploadFileName = 'imageFile'
+        editor.customConfig.withCredentials = false;
+        editor.customConfig.debug=true;
+        editor.customConfig.menus = [
+          'head',  // 标题
+          'bold',  // 粗体
+          'fontSize',  // 字号
+          // 'fontName',  // 字体
+          'italic',  // 斜体
+          'underline',  // 下划线
+          'strikeThrough',  // 删除线
+          'foreColor',  // 文字颜色
+          'backColor',  // 背景颜色
+          // 'link',  // 插入链接
+          // 'list',  // 列表
+          'justify',  // 对齐方式
+          // 'quote',  // 引用
+          // 'emoticon',  // 表情
+          'image',  // 插入图片
+          // 'table',  // 表格
+//          'video',  // 插入视频
+          // 'code',  // 插入代码
+          'undo',  // 撤销
+          'redo'  // 重复
+        ];
+        editor.customConfig.uploadImgHooks = {
+          customInsert: function (insertImg, result, editor) {
+            // 图片上传并返回结果，自定义插入图片的事件（而不是编辑器自动插入图片！！！）
+            // insertImg 是插入图片的函数，editor 是编辑器对象，result 是服务器端返回的结果
+            // 举例：假如上传图片成功后，服务器端返回的是 {url:'....'} 这种格式，即可这样插入图片：
+            var url = result.data.fileUrl
+            insertImg(url)
+            // result 必须是一个 JSON 格式字符串！！！否则报错
+          }
+        };
+        editor.customConfig.onchange = (html) => {
+          const content = html=='<p><br></p>'?'':html;
+          this.courseForm.detail = content;
+        }
+        editor.create()
+        editor.txt.clear();
+        editor.txt.html(res || null)
+      },
+
+
+
       priceFilter(data){
-        if(/^\d+\.\d+$/.test(String(data.courseForm.price))) {
-          this.courseForm.price = Number(String(this.courseForm.price).split('.')[0])
+        if(/^\d+\.\d+$/.test(String(data.courseForm.presentPrice))) {
+          this.courseForm.presentPrice = Number(String(this.courseForm.presentPrice).split('.')[0])
         }
       },
 
       rateFilter(data){
-        if(/^\d+\.\d+$/.test(String(data.courseForm.rate))) {
-          this.courseForm.rate = Number(String(this.courseForm.rate).split('.')[0])
+        if(/^\d+\.\d+$/.test(String(data.courseForm.distRate))) {
+          this.courseForm.distRate = Number(String(this.courseForm.distRate).split('.')[0])
         }
       },
 
-      submitForm(formName) {
-        console.log(formName)
-        this.$refs[formName].validate((valid) => {
-          console.log(valid)
+      submitForm() {
+        let params =  this.courseForm;
+        console.log(params)
+        return
+        this.$refs['courseForm'].validate((valid)=>{
           if (valid) {
             this.loading = true;
-            const params = Object.assign({},this.courseForm);
-            params.price = Math.round(this.courseForm.price*100);
-            params.rate = Math.round(this.courseForm.rate*100);
+
+            //const params = Object.assign({},this.courseForm);
+           // params.presentPrice = Math.round(this.courseForm.presentPrice*100);
+           // params.distRate = Math.round(this.courseForm.distRate*100);
             if (this.courseId!=0) {
               console.log('修改')
-              updateCourse(params).then(res => {
-                if (res.success) {
-                  this.$message.success('修改成功');
+              params.id = this.courseId;
+              this.$http.post('/read/save',qs.stringify(params)).then(res => {
+                let resp = res.data
+                if (resp.success) {
+                  this.$message.success('编辑成功');
+                  this.$router.go(-1);
                 } else {
-                  let msg = res.desc || '请求失败'
-                  this.$message.error(msg);
+                  let msg = resp.desc || '编辑失败'
+                  this.$message.error(msg)
                 }
-                this.loading = false;
-              }).catch(() => {
-                this.loading = false;
               })
             } else {
               console.log('新增')
-              addCourse(params).then(res => {
-                if (res.success) {
+              this.$http.post('/read/save',qs.stringify(params)).then(res => {
+                let resp = res.data
+                if (resp.success) {
                   this.$message.success('新增成功');
+                  this.$router.go(-1);
                 } else {
-                  let msg = res.desc || '请求失败'
-                  this.$message.error(msg);
+                  let msg = resp.desc || '新增失败'
+                  this.$message.error(msg)
                 }
-                this.loading = false;
-              }).catch(() => {
-                this.loading = false;
               })
             }
           } else {
             console.log('数据未填写完整');
             return false;
           }
-        });
+        })
+
       },
       cancelForm() {
         this.$router.go(-1);
-      }
+      },
+      beforeAvatarUpload(file) {
+        const isJLtType = file.type === 'image/jpg' || file.type === 'image/png' || file.type === 'image/gif' || file.type ==='image/jpeg';
+        const isLtSize = file.size / 1024 <= 5000;
+        if (!isJLtType) {
+          this.$message.error('上传图片只能是 JPG/PNG/GIF 格式!');
+        }
+        if (!isLtSize) {
+          this.$message.error('上传图片大小不能超过 5M!');
+        }
+        return isJLtType && isLtSize;
+      },
+      firstSuccess(res, file) {
+        const self = this;
+        const image = new Image();
+        image.src = 'https:' + res.data.fileUrl;
+        image.onload = function () {
+          const width = image.width;
+          const height = image.height;
+          if (width == 750 && height == 545) {
+            self.courseForm.bgImgUrl = 'https:' + res.data.fileUrl;
+          } else {
+            self.$message.error('上传图片的尺寸必须为 750*545!')
+          }
+        };
+
+      },
     }
   }
 

@@ -23,7 +23,7 @@
               </el-table-column>
 
               <el-table-column  prop="id" label="课程id" >
-                <template slot-scope="scope" style="padding:0">
+                <template slot-scope="scope" >
                   <div v-for="(item,index) in scope.row.readBookCourseVOList">{{item.courseID}}</div>
                 </template>
               </el-table-column>

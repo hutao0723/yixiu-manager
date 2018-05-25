@@ -21,22 +21,34 @@
             </el-input>
           </el-col>
         </el-form-item>
-        <el-form-item class="is-required" label="老师微信" >
-          <el-upload
-            class="avatar-uploader"
-            action="/upload/image"
-            name="imageFile"
-            :show-file-list=false
-            :on-success="firstSuccess"
-            :before-upload="beforeAvatarUpload">
-            <img v-if="columnForm.wxQrcodeUrl" :src="columnForm.wxQrcodeUrl" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            <el-button size="small" type="primary">{{columnForm.wxQrcodeUrl ? '修改文件' : '选择文件'}}</el-button>
-            <div slot="tip" class="el-upload__tip">750*545,支持jpg、png、gif格式,最大5M</div>
-          </el-upload>
+        <el-form-item class="is-required" label="老师微信">
+          <div v-for="(item,index) in teachterArr">
+            <div style="color:#606266">第{{item.startNum}}~{{item.startEnd}}单</div>
+            <el-upload
+                       class="avatar-uploader"
+                       action="/upload/image"
+                       name="imageFile"
+                       :show-file-list=false
+                       :on-success="firstSuccess"
+                       :before-upload="beforeAvatarUpload"
+                       ref="index"
+            >
+              <img v-if="columnForm.wxQrcodeUrl" :src="item.teacherWxQrcodeUrl" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+              <el-button size="small" type="primary">{{columnForm.teacherWxQrcodeUrl ? '修改文件' : '选择文件'}}</el-button>
+              <div slot="tip" class="el-upload__tip">750*545,支持jpg、png、gif格式,最大5M</div>
+            </el-upload>
+            <!--<el-form-item label="微信号" style="padding:30px 0">-->
+              <!--<el-col :span="6">-->
+                <!--<el-input>-->
+                <!---->
+                <!--</el-input>-->
+              <!--</el-col>-->
+            <!--</el-form-item>-->
+          </div>
         </el-form-item>
         <el-form-item>
-          <a href="javascript:;">新增老师微信</a>
+          <a href="javascript:;" @click="addTeach()">新增老师微信</a>
         </el-form-item>
         <el-form-item>
           <el-button @click="cancelForm()">取消</el-button>
@@ -90,17 +102,23 @@
         }
       };
       return {
+        teachterArr:[
+          {code:"1-3000",startNum:1,startEnd:3000,teacherWxNumber:'ssss',teacherWxQrcodeUrl:''}
+        ],
+        imgIndex:0,
+        startEnd:'',
+        startNum:'',
         imgSrc:'',
         editorContent:null,
         loading: false,
         readId:null,
         numId:null,
+        imgArr:[],
         //新增编辑专栏form表单
         columnForm: {
-
           beginDate:'',
           stageNum:'',
-          wxQrcodeUrl:'',
+          wxQrcodeUrl:null,
           //readId:'',
 
         },
@@ -121,7 +139,6 @@
     created() {
       this.numId = this.$route.query.numId
       this.readId = this.$route.query.readId;
-      console.log(this.readId)
     },
     methods: {
       changeUpload: function(file) {
@@ -131,19 +148,35 @@
             this.imgSrc = file.url;
           });
       },
-
+      addTeach(){
+        for(let i=0;i<this.teachterArr.length;i++){
+          this.startNum = this.teachterArr[i].startNum
+          this.startEnd = this.teachterArr[i].startEnd
+        }
+        let aa = {
+          startNum:this.startEnd+1,
+          startEnd:this.startEnd + 3000,
+          code:(this.startEnd+1) +'-'+ (this.startEnd+3000),
+          teacherWxNumber:"ssssssss"
+        }
+        this.teachterArr.push(aa)
+        console.log(this.teachterArr)
+      },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.loading = true;
             const params = Object.assign({},this.columnForm);
             params.readId = this.readId;
-            params.beginDate = formatDateNew(params.beginDate)
+            params.beginDate = formatDateNew(params.beginDate);
+            params.stageNum = this.columnForm.stageNum;
+            params.wxQrcodeUrl = this.teachterArr;
+            console.log(params)
             if (this.numId!=0) {
               console.log('修改')
               params.id = this.numId;
               console.log(params)
-              this.$http.post('/read/stage/save',qs.stringify(params)).then(res =>{
+              this.$http.post('/read/stage/save',params).then(res =>{
                 let resp = res.data
                 if(resp.success){
                   this.$message.success('修改成功');
@@ -159,7 +192,7 @@
               })
             } else {
               console.log('新增')
-              this.$http.post('/read/stage/save',qs.stringify(params)).then(res =>{
+              this.$http.post('/read/stage/save',params).then(res =>{
                 let resp = res.data
                 if(resp.success){
                   this.$message.success('新增成功');
@@ -186,10 +219,6 @@
         this.$router.go(-1);
       },
 
-
-
-
-
       beforeAvatarUpload(file) {
         const isJLtType = file.type === 'image/jpg' || file.type === 'image/png' || file.type === 'image/gif' || file.type ==='image/jpeg';
         const isLtSize = file.size / 1024 <= 5000;
@@ -203,6 +232,8 @@
       },
 
       firstSuccess(res, file) {
+        console.log(res)
+        this.imgIndex = this.$refs.index.length-1;
         const self = this;
         const image = new Image();
         image.src = 'https:' + res.data.fileUrl;
@@ -210,6 +241,9 @@
           const width = image.width;
           const height = image.height;
           self.columnForm.wxQrcodeUrl = 'https:' + res.data.fileUrl;
+          self.teachterArr[self.imgIndex].teacherWxQrcodeUrl = self.columnForm.wxQrcodeUrl
+          //self.imgArr.push(self.columnForm.wxQrcodeUrl)
+          console.log(self.teachterArr)
           // if (width == 750 && height == 545) {
           //   self.columnForm.wxQrcodeUrl = 'https:' + res.data.fileUrl;
           // } else {

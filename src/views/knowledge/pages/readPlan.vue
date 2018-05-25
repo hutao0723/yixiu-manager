@@ -74,6 +74,7 @@
   import 'quill/dist/quill.bubble.css'
   import E from 'wangeditor'
   import plupload from 'plupload';
+  import qs from 'qs'
 
   import {
 
@@ -143,7 +144,7 @@
           ],
           briefer: [
             {required: true, message: '请输入计划简介', trigger: 'blur'},
-            {min: 1, max: 30, message: '长度在 1 到 30 个字', trigger: 'blur'}
+            //{min: 1, max: 30, message: '长度在 1 到 30 个字', trigger: 'blur'}
           ],
           days: [
             {required: true, message: '请输入计划周期', trigger: 'blur'},
@@ -160,10 +161,6 @@
           distRate: [
             {required: true, message: '请输入抽成比例', trigger: 'blur'},
             {validator: rateRule, trigger: 'blur' }
-          ],
-          briefer:[
-            {required: true, message: '请输入阅读简介', trigger: 'blur'},
-            {min: 1, max: 30, message: '长度在 1 到 30 个字', trigger: 'blur'}
           ]
         },
         //新增编辑课程form 表单
@@ -175,7 +172,7 @@
           presentPrice:null,//现价
           distRate:null,//分销
           bgImgUrl:null,//背景
-          detail:null
+          //detail:null
         },
       }
     },
@@ -231,7 +228,7 @@
         };
         editor.customConfig.onchange = (html) => {
           const content = html=='<p><br></p>'?'':html;
-          this.courseForm.detail = content;
+          this.courseForm.briefer = content;
         }
         editor.create()
         editor.txt.clear();
@@ -255,14 +252,13 @@
       submitForm() {
         let params =  this.courseForm;
         console.log(params)
-        return
         this.$refs['courseForm'].validate((valid)=>{
           if (valid) {
             this.loading = true;
-
             //const params = Object.assign({},this.courseForm);
-           // params.presentPrice = Math.round(this.courseForm.presentPrice*100);
-           // params.distRate = Math.round(this.courseForm.distRate*100);
+           params.costPrice = Math.round(this.courseForm.costPrice*100);
+           params.presentPrice = Math.round(this.courseForm.presentPrice*100);
+           //params.distRate = Math.round(this.courseForm.distRate*100);
             if (this.courseId!=0) {
               console.log('修改')
               params.id = this.courseId;
@@ -317,11 +313,12 @@
         image.onload = function () {
           const width = image.width;
           const height = image.height;
-          if (width == 750 && height == 545) {
-            self.courseForm.bgImgUrl = 'https:' + res.data.fileUrl;
-          } else {
-            self.$message.error('上传图片的尺寸必须为 750*545!')
-          }
+          self.courseForm.bgImgUrl = 'https:' + res.data.fileUrl;
+          // if (width == 750 && height == 545) {
+          //
+          // } else {
+          //   self.$message.error('上传图片的尺寸必须为 750*545!')
+          // }
         };
 
       },

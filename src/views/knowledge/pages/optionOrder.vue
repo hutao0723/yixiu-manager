@@ -26,7 +26,7 @@
               <template slot-scope="scope">{{scope.row.courseTitle}}<br/>{{scope.row.courseId}}</template>
             </el-table-column>
             <el-table-column label="阅读计划" >
-              <template slot-scope="scope">{{scope.row.relationName}}<br/>{{scope.row.relationId}}</template>
+              <template slot-scope="scope">{{scope.row.readName}}<br/>{{scope.row.readId}}</template>
             </el-table-column>
             <el-table-column  label="观点状态">
               <template slot-scope="scope">

@@ -47,14 +47,6 @@
   import plupload from 'plupload';
 
   import {
-    addCourse,
-    deleteCourse,
-    updateCourse,
-    getCourse,
-    pageListCourse,
-    updateStatusCourse,
-    lecturerList,
-    getCdnFileUrl
   } from '@/api/index'
 
   export default {

@@ -122,8 +122,7 @@
   import plupload from 'plupload';
 
   import {
-    courseAdd,
-    courseEdit
+
   } from '@/api/index'
 
   export default {

@@ -170,7 +170,7 @@
             params.readId = this.readId;
             params.beginDate = formatDateNew(params.beginDate);
             params.stageNum = this.columnForm.stageNum;
-            params.wxQrcodeUrl = this.teachterArr;
+            params.wxQrcodeUrl =JSON.stringify(this.teachterArr)
             console.log(params)
             if (this.numId!=0) {
               console.log('修改')

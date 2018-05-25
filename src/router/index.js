@@ -102,6 +102,12 @@ export const constantRouterMap = [
             }
           },
           {
+            path: 'publicType',
+            component: function (resolve) {
+              require(['../views/officalAcount/pages/publicType'], resolve)
+            }
+          },
+          {
             path: 'editGraphType/:id',
             component: function (resolve) {
               require(['../views/officalAcount/pages/editGraphType'], resolve)

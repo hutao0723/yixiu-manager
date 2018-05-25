@@ -2,7 +2,13 @@
   <section class="app-main-wrap">
     <el-row class="tar">
       <el-select v-model="appId" placeholder="请选择" size="small" @change="changeAppId">
-        <el-option v-for="item in wechatList" :key="item.id" :label="item.nickName" :value="item.id"></el-option>
+        <!-- <el-option v-for="item in wechatList" :key="item.id" :label="item.nickName" :value="item.id"></el-option> -->
+
+        <el-option v-for="item in wechatList" :key="item.id" :label="item.nickName" :value="item.id">
+          <span style="float: left">{{ item.nickName }}</span>
+          <span style="float: right; color: #8492a6; font-size: 13px" v-if="item.authorizerType==0">公众号</span>
+          <span style="float: right; color: #8492a6; font-size: 13px" v-if="item.authorizerType==1">小程序</span>
+        </el-option>
       </el-select>
     </el-row>
     <el-row class="home-page mt10" v-show="homePage.pageTitle">
@@ -31,10 +37,10 @@
         <template>
           <el-table :data="appList" style="width: 100%">
             <el-table-column prop="id" label="ID" width="150">
-                <template slot-scope="scope">
-                    {{scope.row.id}}
-                    <el-tag v-show="scope.row.homePage == 1" size="small">小程序主页</el-tag>
-                  </template>
+              <template slot-scope="scope">
+                {{scope.row.id}}
+                <el-tag v-show="scope.row.homePage == 1" size="small">小程序主页</el-tag>
+              </template>
             </el-table-column>
             <el-table-column prop="pageTitle" label="页面标题"></el-table-column>
             <el-table-column label="创建时间">
@@ -62,7 +68,9 @@
 </template>
 
 <script>
-  import { formatToMs } from '../../../utils/dateUtils'
+  import {
+    formatToMs
+  } from '../../../utils/dateUtils'
   import qs from 'qs'
 
   const url = '';
@@ -73,7 +81,7 @@
     insert: url + '/knowledgepage/insert',
     update: url + '/knowledgepage/update',
     copy: url + '/knowledgepage/copy',
-    appList: url + '/content/type/authorizer/info'
+    appList: url + '/content/type/authorizer/info?modelType=2'
   }
   export default {
     data() {
@@ -88,7 +96,7 @@
         homePage: {},
         wechatList: [],
         appId: null,
-        headImg:'',
+        headImg: '',
       }
     },
     filters: {
@@ -111,14 +119,18 @@
         this.getAppList();
       },
       getWechatList() {
-        this.$http.get(api.appList,{params: {authorizerType: 1}}).then(res => {
+        this.$http.get(api.appList, {
+          params: {
+            // authorizerType: 1
+          }
+        }).then(res => {
           let resp = res.data
           if (resp.success) {
             this.wechatList = resp.data;
 
             this.appId = this.appId ? Number(this.appId) : resp.data[0].id;
 
-            
+
             this.getAppList()
           } else {
             let msg = resp.desc || '请求失败'
@@ -133,7 +145,9 @@
           pageNum: this.pageOption.pageNum,
           pageSize: this.pageOption.pageSize,
         }
-        this.$http.get(api.list, { params: params }).then(res => {
+        this.$http.get(api.list, {
+          params: params
+        }).then(res => {
           let resp = res.data
           if (resp.success) {
             this.appList = resp.data.lists;
@@ -141,8 +155,8 @@
             for (let i = 0; i < this.wechatList.length; i++) {
               const element = this.wechatList[i];
               console.log(element.id)
-              if(element.id == this.appId){
-                this.headImg = element.headImg?element.headImg:'';
+              if (element.id == this.appId) {
+                this.headImg = element.headImg ? element.headImg : '';
               }
             }
             console.log(this.headImg)
@@ -179,8 +193,7 @@
               this.getAppList()
             }
           })
-        }).catch(() => {
-        })
+        }).catch(() => {})
       },
       indexApp(id) {
         this.$confirm('确定设置为主页？', '提示', {
@@ -202,8 +215,7 @@
               this.getAppList()
             }
           })
-        }).catch(() => {
-        })
+        }).catch(() => {})
       },
       copyApp(id) {
         this.$confirm('确定复制该页面？', '提示', {
@@ -231,6 +243,7 @@
       },
     }
   }
+
 </script>
 <style lang="less" scoped>
   .app-main-wrap {
@@ -318,4 +331,5 @@
       font-size: 0;
     }
   }
+
 </style>

@@ -28,10 +28,7 @@
         </template>
       </div>
       <div class="page-control">
-        <el-pagination background :page-size="20" :current-page.sync="courseSearchForm.pageNum"
-                       @current-change="getData"
-                       layout="total, prev, pager, next"
-                       :total="totalSize"></el-pagination>
+       <el-pagination background  :page-size="20" :current-page.sync="pageOption.pageNum" @current-change="pageChange" layout="total, prev, pager, next" :total="totalSize"></el-pagination>
       </div>
     </div>
 
@@ -46,16 +43,16 @@
   import E from 'wangeditor'
   import plupload from 'plupload';
 
-  import {
-    addCourse,
-    deleteCourse,
-    updateCourse,
-    getCourse,
-    pageListCourse,
-    updateStatusCourse,
-    lecturerList,
-    getCdnFileUrl
-  } from '@/api/index'
+  // import {
+  //   addCourse,
+  //   deleteCourse,
+  //   updateCourse,
+  //   getCourse,
+  //   pageListCourse,
+  //   updateStatusCourse,
+  //   lecturerList,
+  //   getCdnFileUrl
+  // } from '@/api/index'
 
   export default {
     data() {
@@ -64,9 +61,10 @@
         loading: false,
         editorContent:null,
         directTransmissionSign: null, //上传签名
+
         pageOption: {
           pageNum: 1,
-          size: 20
+          pageSize: 20
         },
         totalSize: 0,
         courseGroup:[],
@@ -101,12 +99,14 @@
     methods: {
       //获取列表数据
       getData() {
-        this.$http.get('/planList/list', {}).then(res => {
+        let params ={
+          readId: this.$route.query.id
+        }
+        this.$http.get('/read/stage/page', {params}).then(res => {
           let resp = res.data
           if (resp.success) {
-            this.courseGroup = resp.data.list3 ;
-            this.totalSize = resp.data.totalSize ;
-
+            this.courseGroup = resp.data.content ;
+            this.totalSize = resp.data.totalElements ;
           } else {
             let msg = resp.desc || '请求失败'
             this.$message.error(msg)
@@ -116,7 +116,11 @@
       buildNewCourse(id) {
          this.$router.push("/manager/knowledge/numberEdit?number=" + id);
       },
-
+      // 分页请求
+      pageChange (currentPage) {
+        this.pageOption.pageNum = currentPage
+        this.getOrdersList() 
+      },
       editCourse(row) {
         console.log(row)
       }

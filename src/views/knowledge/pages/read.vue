@@ -59,10 +59,7 @@
         </template>
       </div>
       <div class="page-control">
-        <el-pagination background :page-size="20" :current-page.sync="courseSearchForm.pageNum"
-                       @current-change="getData"
-                       layout="total, prev, pager, next"
-                       :total="totalSize"></el-pagination>
+        <el-pagination background  :page-size="20" :current-page.sync="pageOption.pageNum" @current-change="pageChange" layout="total, prev, pager, next" :total="totalSize"></el-pagination>
       </div>
     </div>
 
@@ -291,7 +288,9 @@
       getData() {
         this.loading = true;
         let data = {
-          readState:this.courseSearchForm.readState
+          readState:this.courseSearchForm.readState,
+          pageNum: this.pageOption.pageNum,
+          pageSize: 20
         };
         if(this.courseSearchForm.selectType=="title"){
           data.title = this.courseSearchForm.searchValue
@@ -302,7 +301,7 @@
           let resp = res.data
           if (resp.success) {
             this.courseList = resp.data.content ;
-            this.totalSize = resp.data.totalSize ;
+            this.totalSize = resp.data.totalElements ;
             this.loading = false;
           } else {
             let msg = resp.desc || '请求失败'
@@ -331,6 +330,11 @@
           case 3:
             return '已下线';
         }
+      },
+      // 分页请求
+      pageChange (currentPage) {
+        this.pageOption.pageNum = currentPage
+        this.getData() 
       }
 
     }

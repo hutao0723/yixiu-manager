@@ -14,16 +14,16 @@
         <template >
           <el-table :data="courseManageList" border style="width: 100%;text-align: center" :span-method="arraySpanMethod">
 
-            <el-table-column prop="book" label="书籍标题"style="text-align: center">
+            <el-table-column prop="courseTitle" label="书籍标题"style="text-align: center">
             </el-table-column>
 
-            <el-table-column prop="time" label="解锁日期">
+            <el-table-column prop="dayNum" label="解锁日期">
             </el-table-column>
 
-            <el-table-column prop="id" label="课程id">
+            <el-table-column prop="courseID" label="课程id">
             </el-table-column>
 
-            <el-table-column prop="type" label="课程类型">
+            <el-table-column prop="courseType" label="课程类型">
             </el-table-column>
             <el-table-column prop="title" label="课程标题">
 
@@ -52,10 +52,7 @@
         </template>
       </div>
       <div class="page-control">
-        <el-pagination background :page-size="20" :current-page.sync="courseSearchForm.pageNum"
-                       @current-change="getData"
-                       layout="total, prev, pager, next"
-                       :total="totalSize"></el-pagination>
+         <el-pagination background  :page-size="20" :current-page.sync="pageOption.pageNum" @current-change="pageChange" layout="total, prev, pager, next" :total="totalSize"></el-pagination>
       </div>
     </div>
     <!--弹窗-->
@@ -106,7 +103,7 @@
         </el-form>
         <div class="btn-wrap">
           <el-button size="small" @click="bookDiolog = false">取 消</el-button>
-          <el-button size="small" type="primary" >保存</el-button>
+          <el-button size="small" type="primary" @click="saveBook()">保存</el-button>
         </div>
       </el-dialog>
     </div>
@@ -181,14 +178,22 @@
     methods: {
       //获取列表数据
       getData() {
-        this.$http.get('/planList/list', {}).then(res => {
+        let params ={
+          readId: this.$route.query.id,
+          pageNum: this.pageOption.pageNum,
+          pageSize: 20,
+        }
+        this.$http.get('/read/book/list', {params}).then(res => {
           let resp = res.data
           if (resp.success) {
-            this.courseManageList = resp.data.list2 ;
-            this.totalSize = resp.data.totalSize ;
+            this.courseManageList = resp.data.content ;
+            this.totalSize = resp.data.totalElements ;
             let arr = this.courseManageList;
             let spanArr = this.spanArr;
             let contactDot = 0;//占几格
+            if(!arr){
+              return false;
+            }
             arr.forEach(function (item,index) {
               item.index = index;
               if(index===0){
@@ -267,6 +272,15 @@
         }else{
           console.log('添加')
         }
+      },
+      // 分页请求
+      pageChange (currentPage) {
+        this.pageOption.pageNum = currentPage
+        this.getData() 
+      },
+      // 保存书籍
+      saveBook () {
+        console.log()
       }
 
 

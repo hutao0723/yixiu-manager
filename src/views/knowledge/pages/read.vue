@@ -39,7 +39,7 @@
                 {{scope.row.costPrice}}
               </template>
             </el-table-column>
-            <el-table-column prop="status" label="计划状态" :formatter="getStatus" >
+            <el-table-column  label="计划状态" :formatter="getStatus" >
 
             </el-table-column>
             <el-table-column label="操作" width="300">
@@ -47,10 +47,10 @@
                 <!--openDialogAdmin(scope.row.managerName,scope.row.id）-->
                 <el-button type="text" size="mini" @click="newcourseForm(scope.row.id)">编辑</el-button>
                 <el-button type="text" size="mini" @click="courseManagement()">书籍</el-button>
-                <el-button type="text" size="mini" @click="courseGroup()">期数</el-button>
+                <el-button type="text" size="mini" @click="courseGroup(scope.row.id)">期数</el-button>
                 <el-button type="text" size="mini" @click="openDialogWeight(scope.row)">权重</el-button>
-                <el-button type="text" size="mini" @click="changeStatus(scope.row.id,scope.row.status)">
-                  {{scope.row.status == 1 ? '下线' : '上线'}}
+                <el-button type="text" size="mini" @click="changeStatus(scope.row.id,scope.row.readState)">
+                  {{scope.row.readState == 2 ? '下线' : '上线'}}
                 </el-button>
                 <el-button type="text" size="mini" @click="deleteItem(scope.row.title,scope.row.id)" :disabled="false">删除</el-button>
               </template>
@@ -97,10 +97,7 @@
   import qs from 'qs'
 
   import {
-    bookPage,
-    deleteBook,
-    changeBookStatus,
-    changeBookSorted,
+
   } from '@/api/index'
 
   export default {
@@ -245,19 +242,21 @@
       changeStatus(id, changeStatus) {
         this.loading = true;
         const status = changeStatus % 2 == 0 ? 1 : 2;
-        changeBookStatus({
-          id,
-          status
-        }).then(res => {
-          if (res.success) {
+        let params = {
+          id:id,
+          readState:status
+        }
+        this.$http.post('/read/changeStatus',qs.stringify(params)).then(res =>{
+          let resp = res.data
+          if(resp.success){
             this.$message.success('切换成功');
             this.getData();
-          } else {
-            let msg = res.desc || '请求失败'
+          }else{
+            let msg = resp.desc || '请求失败';
             this.$message.error(msg)
           }
           this.loading = false;
-        }).catch(() => {
+        }).catch(() =>{
           this.loading = false;
         })
       },
@@ -318,8 +317,8 @@
       courseManagement() {
         this.$router.push("/manager/knowledge/coursePlan");
       },
-      courseGroup(){
-        this.$router.push("/manager/knowledge/courseGroup");
+      courseGroup(id){
+        this.$router.push("/manager/knowledge/courseGroup?id="+id);
       },
       getStatus(row, column) {
         switch (row.readState) {

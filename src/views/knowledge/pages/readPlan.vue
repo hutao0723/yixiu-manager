@@ -76,8 +76,7 @@
   import plupload from 'plupload';
 
   import {
-    bookSave,//保存
-    addCourse,
+
   } from '@/api/index'
 
   export default {

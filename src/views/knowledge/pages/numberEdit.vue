@@ -75,15 +75,14 @@
   import 'quill/dist/quill.bubble.css'
 
   import {
-    getColumn,
-    updateStatusColumn,
-    pageListColumn,
-    getLinkCourse,
+    //updateStatusColumn,
+    //pageListColumn,
+    //getLinkCourse,
     updateColumn,
-    deleteColumn,
+    //deleteColumn,
     addColumn,
-    removeColumn,
-    updateWatchStatus,
+    //removeColumn,
+    //updateWatchStatus,
     relateCourse,
     coursePageList,
     lecturerList,

@@ -13,14 +13,14 @@
       <div class="tabel-wrap">
         <template>
           <el-table :data="courseGroup" style="width: 100%">
-            <el-table-column prop="time" label="开课日期">
+            <el-table-column prop="beginDate" label="开课日期">
             </el-table-column>
-            <el-table-column prop="number" label="第几期">
+            <el-table-column prop="stageNum" label="第几期">
             </el-table-column>
             <el-table-column label="操作" width="300">
               <template slot-scope="edit">
 
-                <el-button type="text" size="mini" @click="buildNewCourse(edit.row.number)">编辑</el-button>
+                <el-button type="text" size="mini" @click="buildNewCourse(edit.row.readId)">编辑</el-button>
 
               </template>
             </el-table-column>
@@ -46,36 +46,14 @@
   export default {
     data() {
       return {
-        courseDay:null,
         loading: false,
-        editorContent:null,
-        directTransmissionSign: null, //上传签名
-
         pageOption: {
           pageNum: 1,
           pageSize: 20
         },
         totalSize: 0,
-        courseGroup:[],
+        courseGroup:[]
         //分页查询课程信息
-        courseSearchForm: {
-          id: null,
-          title: null,
-          status: '',
-          pageNum: 1,
-          pageSize: null,
-        },
-        courseList:[
-          {
-            label: '西游记'
-          },
-          {
-            label: '红楼梦'
-          },
-          {
-            label: '水浒传'
-          }
-        ]
       }
     },
 
@@ -89,7 +67,9 @@
       //获取列表数据
       getData() {
         let params ={
-          readId: this.$route.query.id
+          readId: this.$route.query.id,
+          pageNum: this.pageOption.pageNum,
+          pageSize: 20,
         }
         this.$http.get('/read/stage/page', {params}).then(res => {
           let resp = res.data
@@ -108,10 +88,7 @@
       // 分页请求
       pageChange (currentPage) {
         this.pageOption.pageNum = currentPage
-        this.getOrdersList() 
-      },
-      editCourse(row) {
-        console.log(row)
+        this.getData() 
       }
 
     }

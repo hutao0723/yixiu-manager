@@ -66,9 +66,8 @@
     <!--弹窗-->
     <div class="add-type-diolog">
       <el-dialog title="权重值配置" :visible.sync="editDiolog">
-        <el-form :rules="rules" ref="weightForm">
-
-          <el-form-item label="权重值："  prop="weight">
+        <el-form :model="weightForm" ref="weightForm" :rules="rules">
+          <el-form-item label="权重值："  prop="weightValue">
             <el-col :span="6">
               <el-input v-model="weightForm.weightValue"    placeholder="0-99999">
               </el-input>
@@ -111,16 +110,15 @@
           }
         }
       }
-
       return {
         loading: false,
         editDiolog:false,
         editorContent:null,
         directTransmissionSign: null, //上传签名
         rules: {
-          weight: [
+          weightValue: [
             { required: true, message: '请输入权重值', trigger: 'blur' },
-            { validator: rateRule, trigger: 'blur' },
+            { validator: rateRule, trigger: 'blur' }
           ]
         },
         searchOptions: [
@@ -202,7 +200,7 @@
       openDialogWeight (row) {
         this.editDiolog = true
         this.weightForm.id = row.id
-        this.weightForm.weightValue = row.weight
+        this.weightForm.weightValue = row.weightValue
       },
       /*保存修改权重*/
       changeSorted(){

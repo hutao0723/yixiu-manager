@@ -292,9 +292,17 @@
           }
         }
       },
+      getDetail(id){
+        this.$http.post('/read/book/detail?id='+id).then(res =>{
+          let resp = res.data;
+          this.courseForm = resp.data;
+          console.log(resp.data)
+        })
+      },
       addBook(type,row){
         if(row){
-          this.bookId= row.id;
+          this.bookId = row.id;
+          this.getDetail(this.bookId)
         }
         this.bookDiolog = true;
         this.bookType = type;

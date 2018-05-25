@@ -38,13 +38,13 @@
               <el-button size="small" type="primary">{{columnForm.teacherWxQrcodeUrl ? '修改文件' : '选择文件'}}</el-button>
               <div slot="tip" class="el-upload__tip">750*545,支持jpg、png、gif格式,最大5M</div>
             </el-upload>
-            <!--<el-form-item label="微信号" style="padding:30px 0">-->
-              <!--<el-col :span="6">-->
-                <!--<el-input>-->
-                <!---->
-                <!--</el-input>-->
-              <!--</el-col>-->
-            <!--</el-form-item>-->
+            <el-form-item label="微信号" style="padding:30px 0">
+              <el-col :span="6">
+                <el-input>
+
+                </el-input>
+              </el-col>
+            </el-form-item>
           </div>
         </el-form-item>
         <el-form-item>
@@ -175,7 +175,6 @@
             if (this.numId!=0) {
               console.log('修改')
               params.id = this.numId;
-              console.log(params)
               this.$http.post('/read/stage/save',params).then(res =>{
                 let resp = res.data
                 if(resp.success){

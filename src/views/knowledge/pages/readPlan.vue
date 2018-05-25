@@ -12,7 +12,9 @@
           <el-input v-model="courseForm.title" placeholder="1-30字，建议14字以内" :maxlength="30"></el-input>
         </el-form-item>
         <el-form-item label="计划简介" prop="briefer">
-          <div id="editorElem" style="text-align:left"></div>
+          <div id="editorElem" style="text-align:left" >
+
+          </div>
         </el-form-item>
         <el-form-item class="is-required" label="背景图" >
           <el-upload
@@ -182,10 +184,20 @@
     created() {
       if(this.$route.query.courseId){
         this.courseId = this.$route.query.courseId;
+        if(this.courseId!=0){
+          this.getDetail(this.courseId)
+        }
       }
 
     },
     methods: {
+      getDetail(id){
+        this.$http.get('/read/detail?id='+id).then(res =>{
+          let resp = res.data;
+          this.courseForm = resp.data;
+          console.log(resp.data)
+        })
+      },
       creatRichText(res){
         var editor = new E('#editorElem')
         /* 处理上传图片的controller路径 */
@@ -227,6 +239,7 @@
           }
         };
         editor.customConfig.onchange = (html) => {
+          console.log('aaa')
           const content = html=='<p><br></p>'?'':html;
           this.courseForm.briefer = content;
         }
@@ -255,10 +268,8 @@
         this.$refs['courseForm'].validate((valid)=>{
           if (valid) {
             this.loading = true;
-            //const params = Object.assign({},this.courseForm);
            params.costPrice = Math.round(this.courseForm.costPrice*100);
            params.presentPrice = Math.round(this.courseForm.presentPrice*100);
-           //params.distRate = Math.round(this.courseForm.distRate*100);
             if (this.courseId!=0) {
               console.log('修改')
               params.id = this.courseId;

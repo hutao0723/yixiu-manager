@@ -21,9 +21,9 @@
             </el-input>
           </el-col>
         </el-form-item>
-        <el-form-item class="is-required" label="老师微信">
-          <div v-for="(item,index) in teachterArr" @click="getImgIndex(index)">
-            <div style="color:#606266">第{{item.startNum}}~{{item.startEnd}}单</div>
+        <el-form-item class="is-required" label="老师微信" >
+          <el-form-item style="margin-bottom: 10px" v-for="(item,index) in teachterArr" v-on:click.native="getImgIndex(index)" prop="wxQrcodeUrl">
+            <div style="color:#606266;">第{{item.startNum}}~{{item.startEnd}}单</div>
             <el-upload
                        class="avatar-uploader"
                        action="/upload/image"
@@ -32,7 +32,7 @@
                        :on-success="firstSuccess"
                        :before-upload="beforeAvatarUpload"
             >
-              <img v-if="columnForm.wxQrcodeUrl" :src="item.teacherWxQrcodeUrl" class="avatar">
+              <img v-if="item.teacherWxQrcodeUrl" :src="item.teacherWxQrcodeUrl" class="avatar">
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
               <el-button size="small" type="primary">{{columnForm.teacherWxQrcodeUrl ? '修改文件' : '选择文件'}}</el-button>
               <div slot="tip" class="el-upload__tip">750*545,支持jpg、png、gif格式,最大5M</div>
@@ -47,7 +47,7 @@
                 <!--</el-input>-->
               <!--</el-col>-->
             <!--</el-form-item>-->
-          </div>
+          </el-form-item>
         </el-form-item>
         <el-form-item>
           <a href="javascript:;" @click="addTeach()">新增老师微信</a>
@@ -142,6 +142,9 @@
           ],
           wxNum: [
             { type: 'date', required: true, message: '请填写微信号', trigger: 'blur' }
+          ],
+          wxQrcodeUrl:[
+            {required: true, message: '请上传至少一张背景图', trigger: 'blur'},
           ]
         }
       }
@@ -151,18 +154,24 @@
     },
     created() {
       this.numId = this.$route.query.numId
+      if(this.numId!=0){
+        this.getDetail(this.numId)
+      }
       this.readId = this.$route.query.readId;
     },
     methods: {
       getWxnumber(index){
         this.teachterArr[index].teacherWxNumber = this.wxNumArr[index]
-        console.log(this.wxNumArr)
-        console.log(this.teachterArr)
       },
       getDetail(id){
         this.$http.get('/read/stage/detail?id='+id).then(res =>{
           let resp = res.data;
-          console.log(resp)
+          this.columnForm = resp.data;
+          this.columnForm.beginDate = new Date(resp.data.beginDate)
+          if(JSON.parse(this.columnForm.wxQrcodeUrl).length>0){
+            this.teachterArr = JSON.parse(this.columnForm.wxQrcodeUrl)
+          }
+
         })
       },
       addTeach(){
@@ -170,14 +179,14 @@
           this.startNum = this.teachterArr[i].startNum
           this.startEnd = this.teachterArr[i].startEnd
         }
-        let aa = {
+        let teachObj = {
           startNum:this.startEnd+1,
           startEnd:this.startEnd + 3000,
           code:(this.startEnd+1) +'-'+ (this.startEnd+3000),
-          teacherWxNumber:""
+          teacherWxNumber:"",
+          teacherWxQrcodeUrl:""
         }
-        this.teachterArr.push(aa)
-        console.log(this.teachterArr)
+        this.teachterArr.push(teachObj)
       },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
@@ -188,7 +197,6 @@
             params.beginDate = formatDateNew(params.beginDate);
             params.stageNum = this.columnForm.stageNum;
             params.wxQrcodeUrl =JSON.stringify(this.teachterArr)
-            console.log(params)
             if (this.numId!=0) {
               console.log('修改')
               params.id = this.numId;
@@ -248,6 +256,7 @@
       },
       getImgIndex(index){
         this.imgIndex = index;
+
       },
       firstSuccess(res, file) {
         const self = this;
@@ -258,8 +267,9 @@
           const height = image.height;
           if (width == 750 && height == 545) {
             self.columnForm.wxQrcodeUrl = 'https:' + res.data.fileUrl;
-            self.teachterArr[self.imgIndex].teacherWxQrcodeUrl = self.columnForm.wxQrcodeUrl
-            self.columnForm.wxQrcodeUrl = 'https:' + res.data.fileUrl;
+            self.teachterArr[self.imgIndex].teacherWxQrcodeUrl = 'https:' + res.data.fileUrl;
+            console.log(self.teachterArr)
+            self.$set(self.teachterArr, self.imgIndex,self.teachterArr[self.imgIndex] );
           } else {
             self.$message.error('上传图片的尺寸必须为 720*545!')
           }

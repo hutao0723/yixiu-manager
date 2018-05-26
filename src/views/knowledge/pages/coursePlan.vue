@@ -10,7 +10,7 @@
     </div>
     <div class="content">
 
-      <div class="tabel-wrap">
+      <div class="tabel-wrap removeDefStyle">
         <template >
           <el-table :data="courseManageList" border style="width: 100%;text-align: center" > <!--:span-method="arraySpanMethod"-->
               <el-table-column prop="title" label="书籍标题">
@@ -18,31 +18,31 @@
 
               <el-table-column  label="解锁日期">
                 <template slot-scope="scope">
-                  <div v-for="(item,index) in scope.row.readBookCourseVOList">第{{item.dayNum}}天</div>
+                  <div  class="itemStyle"  v-for="(item,index) in scope.row.readBookCourseVOList">第{{item.dayNum}}天</div>
                 </template>
               </el-table-column>
 
               <el-table-column  prop="id" label="课程id" >
                 <template slot-scope="scope" >
-                  <div v-for="(item,index) in scope.row.readBookCourseVOList">{{item.courseID}}</div>
+                  <div class="itemStyle" v-for="(item,index) in scope.row.readBookCourseVOList">{{item.courseID}}</div>
                 </template>
               </el-table-column>
 
               <el-table-column prop="courseType" label="课程类型">
                 <template slot-scope="scope">
-                  <div v-for="(item,index) in scope.row.readBookCourseVOList">{{item.courseType==1?'音频':'其它'}}</div>
+                  <div class="itemStyle" v-for="(item,index) in scope.row.readBookCourseVOList">{{item.courseType==1?'音频':'其它'}}</div>
                 </template>
               </el-table-column>
 
               <el-table-column prop="title" label="课程标题">
                 <template slot-scope="scope">
-                  <div v-for="(item,index) in scope.row.readBookCourseVOList">{{item.courseTitle}}</div>
+                  <div class="itemStyle" v-for="(item,index) in scope.row.readBookCourseVOList">{{item.courseTitle}}</div>
                 </template>
               </el-table-column>
 
               <el-table-column prop = "manageStatus"  label="课程状态">
                 <template slot-scope="scope">
-                  <div v-for="(item,index) in scope.row.readBookCourseVOList">
+                  <div class="itemStyle" v-for="(item,index) in scope.row.readBookCourseVOList">
                     <template v-if="item.courseStatus==0">待上线</template>
                     <template v-if="item.courseStatus==1">已上线</template>
                     <template v-if="item.courseStatus==2">已下线</template>
@@ -52,7 +52,7 @@
 
               <el-table-column label="操作" >
                 <template slot-scope="edit">
-                  <div v-for="(item,index) in edit.row.readBookCourseVOList">
+                  <div class="itemStyle" v-for="(item,index) in edit.row.readBookCourseVOList">
                     <el-button type="text" size="mini" @click="editCourse(1,item)">编辑课程</el-button>
                     <el-button type="text" size="mini" @click="removeCourse(item)">移除</el-button>
                   </div>
@@ -456,6 +456,16 @@
 </script>
 <style lang="less" scoped>
   .ofa-main-wrap {
+    .removeDefStyle{
+      .itemStyle{
+        padding:10px 0;
+        border-bottom:1px solid #ebeef5;
+      }
+      .itemStyle:last-child{
+        border:0
+      }
+    }
+
     width: 100%;
     .totle-time {
       color: #333;

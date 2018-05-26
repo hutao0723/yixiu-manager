@@ -205,7 +205,7 @@
                 if(resp.success){
                   this.$message.success('修改成功');
                   this.getData();
-                  this.$router.go(-1);
+                  //this.$router.go(-1);
                 }else{
                   let msg = resp.desc || '请求失败';
                   this.$message.error(msg)
@@ -213,6 +213,7 @@
                 this.loading = false;
               }).catch(() =>{
                 this.loading = false;
+                this.$router.go(-1);
               })
             } else {
               console.log('新增')
@@ -229,6 +230,7 @@
                 this.loading = false;
               }).catch(() =>{
                 this.loading = false;
+                this.$router.go(-1);
               })
             }
 

@@ -113,7 +113,7 @@
       // }
       return {
         teachterArr:[
-          {code:"1-3000",startNum:1,startEnd:3000,teacherWxNumber:'',teacherWxQrcodeUrl:''}
+          {markCode:"1-3000",startNum:1,startEnd:3000,teacherWxNumber:'',teacherWxQrcodeUrl:''}
         ],
         wxNumArr:[],
         imgIndex:0,
@@ -182,7 +182,7 @@
         let teachObj = {
           startNum:this.startEnd+1,
           startEnd:this.startEnd + 3000,
-          code:(this.startEnd+1) +'-'+ (this.startEnd+3000),
+          markCode:(this.startEnd+1) +'-'+ (this.startEnd+3000),
           teacherWxNumber:"",
           teacherWxQrcodeUrl:""
         }
@@ -268,10 +268,9 @@
           if (width == 750 && height == 545) {
             self.columnForm.wxQrcodeUrl = 'https:' + res.data.fileUrl;
             self.teachterArr[self.imgIndex].teacherWxQrcodeUrl = 'https:' + res.data.fileUrl;
-            console.log(self.teachterArr)
             self.$set(self.teachterArr, self.imgIndex,self.teachterArr[self.imgIndex] );
           } else {
-            self.$message.error('上传图片的尺寸必须为 720*545!')
+            self.$message.error('上传图片的尺寸必须为 750*545!')
           }
       };
 
@@ -379,3 +378,4 @@
     }
   }
 </style>
+

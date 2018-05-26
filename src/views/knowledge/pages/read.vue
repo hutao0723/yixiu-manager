@@ -11,9 +11,12 @@
                   </el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item>
-                <el-input v-model="courseSearchForm.searchValue" class="iptr"></el-input>
+              <el-form-item v-if="courseSearchForm.selectType == 'title'">
+                <el-input  v-model="courseSearchForm.searchValue" class="iptr" ></el-input>
               </el-form-item>
+            <el-form-item v-if="courseSearchForm.selectType == 'id'">
+              <el-input  type="number" v-model="courseSearchForm.searchValue" class="iptr" ></el-input>
+            </el-form-item>
               <el-form-item>
                 <el-select v-model="courseSearchForm.readState" class="w150">
                   <el-option v-for="item in specialStateOptions" :key="item.value" :label="item.label"

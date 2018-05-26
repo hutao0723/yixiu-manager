@@ -36,7 +36,17 @@
             </el-table-column>
             <el-table-column prop="price" label="计划价格">
               <template slot-scope="scope">
+                {{scope.row.presentPrice}}
+              </template>
+            </el-table-column>
+            <el-table-column prop="price" label="计划原价">
+              <template slot-scope="scope">
                 {{scope.row.costPrice}}
+              </template>
+            </el-table-column>
+            <el-table-column label="权重">
+              <template slot-scope="scope">
+                {{scope.row.sorted}}
               </template>
             </el-table-column>
             <el-table-column  label="计划状态" :formatter="getStatus" >
@@ -69,7 +79,7 @@
         <el-form :model="weightForm" ref="weightForm" :rules="rules">
           <el-form-item label="权重值："  prop="weightValue">
             <el-col :span="6">
-              <el-input v-model="weightForm.weightValue"    placeholder="0-99999">
+              <el-input v-model="weightForm.weightValue"    placeholder="0-9999">
               </el-input>
             </el-col>
           </el-form-item>
@@ -205,22 +215,27 @@
       /*保存修改权重*/
       changeSorted(){
         let _this = this;
-        let params = {
-          id:this.weightForm.id,
-          sorted:this.weightForm.weightValue
-        }
-        _this.$http.post('/read/changeSorted',qs.stringify(params)).then(res => {
-          let resp = res.data
-          if (resp.success) {
-            _this.$message.success('修改成功');
-            _this.editDiolog = false;
-            _this.getData()
-          } else {
-            let msg = resp.desc || '修改失败'
-            _this.$message.error(msg)
+        _this.$refs['weightForm'].validate((valid) =>{
+          if(valid){
+            let params = {
+              id:this.weightForm.id,
+              sorted:this.weightForm.weightValue
+            }
+            _this.$http.post('/read/changeSorted',qs.stringify(params)).then(res => {
+              let resp = res.data
+              if (resp.success) {
+                _this.$message.success('修改成功');
+                _this.editDiolog = false;
+                _this.getData()
+              } else {
+                let msg = resp.desc || '修改失败'
+                _this.$message.error(msg)
+              }
+            })
+          }else{
+            return false;
           }
         })
-
       },
       priceFilter(data){
         if(/^\d+\.\d+$/.test(String(data.courseForm.price))) {
@@ -236,7 +251,8 @@
       //上下线
       changeStatus(id, changeStatus) {
         this.loading = true;
-        const status = changeStatus % 2 == 0 ? 1 : 2;
+        console.log(changeStatus)
+        const status = changeStatus== 2 ? 3 : 2;
         let params = {
           id:id,
           readState:status

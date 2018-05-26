@@ -42,7 +42,11 @@
 
               <el-table-column prop = "manageStatus"  label="课程状态">
                 <template slot-scope="scope">
-                  <div v-for="(item,index) in scope.row.readBookCourseVOList">{{item.courseStatus == 1 ? '已上线' : '待上线'}}</div>
+                  <div v-for="(item,index) in scope.row.readBookCourseVOList">
+                    <template v-if="item.courseStatus==0">待上线</template>
+                    <template v-if="item.courseStatus==1">已上线</template>
+                    <template v-if="item.courseStatus==2">已下线</template>
+                  </div>
                 </template>
               </el-table-column>
 
@@ -109,7 +113,7 @@
               <img v-if="courseForm.imgUrl" :src="courseForm.imgUrl" class="avatar">
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
               <el-button size="small" type="primary">{{courseForm.imgUrl ? '修改文件' : '选择文件'}}</el-button>
-              <div slot="tip" class="el-upload__tip">750*545,支持jpg、png、gif格式,最大5M</div>
+              <div slot="tip" class="el-upload__tip">360*484,支持jpg、png、gif格式,最大5M</div>
             </el-upload>
           </el-form-item>
         </el-form>
@@ -325,12 +329,12 @@
         image.onload = function () {
           const width = image.width;
           const height = image.height;
-          self.courseForm.imgUrl = 'https:' + res.data.fileUrl;
-          // if (width == 750 && height == 545) {
-          //   self.courseForm.imgUrl = 'https:' + res.data.fileUrl;
-          // } else {
-          //   self.$message.error('上传图片的尺寸必须为 750*545!')
-          // }
+
+          if (width == 360 && height == 484) {
+            self.courseForm.imgUrl = 'https:' + res.data.fileUrl;
+          } else {
+            self.$message.error('上传图片的尺寸必须为 360*484!')
+          }
         };
 
       },

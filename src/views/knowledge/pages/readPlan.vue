@@ -9,14 +9,14 @@
     <div class="content ">
       <el-form :model="courseForm" :rules="rules" ref="courseForm" label-width="100px" class="column-uleForm">
         <el-form-item label="计划标题" prop="title">
-          <el-input v-model="courseForm.title" placeholder="1-30字，建议14字以内" :maxlength="30"></el-input>
+          <el-input v-model="courseForm.title" placeholder="1-30字，建议14字以内" :maxlength="30" autofocus></el-input>
         </el-form-item>
         <el-form-item label="计划简介" prop="briefer">
           <div id="editorElem" style="text-align:left" >
 
           </div>
         </el-form-item>
-        <el-form-item class="is-required" label="背景图" >
+        <el-form-item class="is-required" label="背景图" prop="bgImgUrl">
           <el-upload
             class="avatar-uploader"
             action="/upload/image"
@@ -27,7 +27,7 @@
             <img v-if="courseForm.bgImgUrl" :src="courseForm.bgImgUrl" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             <el-button size="small" type="primary">{{courseForm.bgImgUrl ? '修改文件' : '选择文件'}}</el-button>
-            <div slot="tip" class="el-upload__tip">750*545,支持jpg、png、gif格式,最大5M</div>
+            <div slot="tip" class="el-upload__tip">720*545,支持jpg、png、gif格式,最大5M</div>
           </el-upload>
         </el-form-item>
         <el-form-item label="计划周期" prop="days">
@@ -115,8 +115,8 @@
         if(String(value).indexOf('.') !=-1 && String(value).split('.')[1].length >2){
           callback(new Error('最多两位小数'));
         }else{
-          if(value > 100 || value <0){
-            callback(new Error('抽成比例在0.00-100.00之间'));
+          if(value > 1 || value <0){
+            callback(new Error('抽成比例在0.00-1.00之间'));
           }else{
             callback()
           }
@@ -137,9 +137,6 @@
 
 
         rules: {
-          uploadFile: [
-            {required: true},
-          ],
           title: [
             {required: true, message: '请输入计划标题', trigger: 'blur'},
             {min: 1, max: 30, message: '长度在 1 到 30 个字', trigger: 'blur'}
@@ -160,6 +157,9 @@
             {required: true, message: '请输入计划原价', trigger: 'blur'},
             {validator: priceRule, trigger: 'blur' }
           ],
+          bgImgUrl:[
+            {required: true, message: '请上传背景图', trigger: 'blur'},
+          ],
           distRate: [
             {required: true, message: '请输入抽成比例', trigger: 'blur'},
             {validator: rateRule, trigger: 'blur' }
@@ -178,9 +178,9 @@
         },
       }
     },
-   mounted(){
-     this.creatRichText();
-   },
+     mounted(){
+       this.creatRichText();
+     },
     created() {
       if(this.$route.query.courseId){
         this.courseId = this.$route.query.courseId;
@@ -195,6 +195,7 @@
         this.$http.get('/read/detail?id='+id).then(res =>{
           let resp = res.data;
           this.courseForm = resp.data;
+          document.getElementsByClassName('w-e-text')[0].innerHTML = this.courseForm.briefer
           console.log(resp.data)
         })
       },
@@ -239,7 +240,6 @@
           }
         };
         editor.customConfig.onchange = (html) => {
-          console.log('aaa')
           const content = html=='<p><br></p>'?'':html;
           this.courseForm.briefer = content;
         }
@@ -268,8 +268,6 @@
         this.$refs['courseForm'].validate((valid)=>{
           if (valid) {
             this.loading = true;
-           params.costPrice = Math.round(this.courseForm.costPrice*100);
-           params.presentPrice = Math.round(this.courseForm.presentPrice*100);
             if (this.courseId!=0) {
               console.log('修改')
               params.id = this.courseId;
@@ -324,12 +322,12 @@
         image.onload = function () {
           const width = image.width;
           const height = image.height;
-          self.courseForm.bgImgUrl = 'https:' + res.data.fileUrl;
-          // if (width == 750 && height == 545) {
-          //
-          // } else {
-          //   self.$message.error('上传图片的尺寸必须为 750*545!')
-          // }
+          //self.courseForm.bgImgUrl = 'https:' + res.data.fileUrl;
+          if (width == 750 && height == 545) {
+            self.courseForm.bgImgUrl = 'https:' + res.data.fileUrl;
+          } else {
+            self.$message.error('上传图片的尺寸必须为 750*545!')
+          }
         };
 
       },

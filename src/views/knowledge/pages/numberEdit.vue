@@ -22,7 +22,7 @@
           </el-col>
         </el-form-item>
         <el-form-item class="is-required" label="老师微信">
-          <div v-for="(item,index) in teachterArr">
+          <div v-for="(item,index) in teachterArr" @click="getImgIndex(index)">
             <div style="color:#606266">第{{item.startNum}}~{{item.startEnd}}单</div>
             <el-upload
                        class="avatar-uploader"
@@ -31,20 +31,22 @@
                        :show-file-list=false
                        :on-success="firstSuccess"
                        :before-upload="beforeAvatarUpload"
-                       ref="index"
             >
               <img v-if="columnForm.wxQrcodeUrl" :src="item.teacherWxQrcodeUrl" class="avatar">
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
               <el-button size="small" type="primary">{{columnForm.teacherWxQrcodeUrl ? '修改文件' : '选择文件'}}</el-button>
               <div slot="tip" class="el-upload__tip">750*545,支持jpg、png、gif格式,最大5M</div>
             </el-upload>
-            <el-form-item label="微信号" style="padding:30px 0">
-              <el-col :span="6">
-                <el-input>
+            <!--<el-form-item label="微信号" style="padding:30px 0" >-->
+              <!--<el-col :span="6">-->
+                <!--<el-input @input="getWxnumber(index)" :rules="[-->
+            <!--{ required: true, message: '请输入分组名称', trigger: 'change' },-->
+            <!--{ validator: textLength, trigger: 'change' }-->
+          <!--]" :value="item.teacherWxNumber" v-model="wxNumArr[index]">-->
 
-                </el-input>
-              </el-col>
-            </el-form-item>
+                <!--</el-input>-->
+              <!--</el-col>-->
+            <!--</el-form-item>-->
           </div>
         </el-form-item>
         <el-form-item>
@@ -101,10 +103,19 @@
           }
         }
       };
+      // var textLength = (rule, value, callback) => {
+      //   if (value) {
+      //     console.log(value)
+      //     callback()
+      //   }else{
+      //     callback(new Error('微信号不能为空'));
+      //   }
+      // }
       return {
         teachterArr:[
-          {code:"1-3000",startNum:1,startEnd:3000,teacherWxNumber:'ssss',teacherWxQrcodeUrl:''}
+          {code:"1-3000",startNum:1,startEnd:3000,teacherWxNumber:'',teacherWxQrcodeUrl:''}
         ],
+        wxNumArr:[],
         imgIndex:0,
         startEnd:'',
         startNum:'',
@@ -114,13 +125,12 @@
         readId:null,
         numId:null,
         imgArr:[],
+        wxNum:null,
         //新增编辑专栏form表单
         columnForm: {
           beginDate:'',
           stageNum:'',
-          wxQrcodeUrl:null,
-          //readId:'',
-
+          wxQrcodeUrl:null
         },
         rules: {
           stageNum: [
@@ -129,6 +139,9 @@
           ],
           beginDate: [
             { type: 'date', required: true, message: '请选择日期', trigger: 'blur' }
+          ],
+          wxNum: [
+            { type: 'date', required: true, message: '请填写微信号', trigger: 'blur' }
           ]
         }
       }
@@ -141,12 +154,16 @@
       this.readId = this.$route.query.readId;
     },
     methods: {
-      changeUpload: function(file) {
-        this.$nextTick(
-          () => {
-            console.log(file)
-            this.imgSrc = file.url;
-          });
+      getWxnumber(index){
+        this.teachterArr[index].teacherWxNumber = this.wxNumArr[index]
+        console.log(this.wxNumArr)
+        console.log(this.teachterArr)
+      },
+      getDetail(id){
+        this.$http.get('/read/stage/detail?id='+id).then(res =>{
+          let resp = res.data;
+          console.log(resp)
+        })
       },
       addTeach(){
         for(let i=0;i<this.teachterArr.length;i++){
@@ -157,7 +174,7 @@
           startNum:this.startEnd+1,
           startEnd:this.startEnd + 3000,
           code:(this.startEnd+1) +'-'+ (this.startEnd+3000),
-          teacherWxNumber:"ssssssss"
+          teacherWxNumber:""
         }
         this.teachterArr.push(aa)
         console.log(this.teachterArr)
@@ -229,43 +246,26 @@
         }
         return isJLtType && isLtSize;
       },
-
+      getImgIndex(index){
+        this.imgIndex = index;
+      },
       firstSuccess(res, file) {
-        console.log(res)
-        this.imgIndex = this.$refs.index.length-1;
         const self = this;
         const image = new Image();
         image.src = 'https:' + res.data.fileUrl;
         image.onload = function () {
           const width = image.width;
           const height = image.height;
-          self.columnForm.wxQrcodeUrl = 'https:' + res.data.fileUrl;
-          self.teachterArr[self.imgIndex].teacherWxQrcodeUrl = self.columnForm.wxQrcodeUrl
-          //self.imgArr.push(self.columnForm.wxQrcodeUrl)
-          console.log(self.teachterArr)
-          // if (width == 750 && height == 545) {
-          //   self.columnForm.wxQrcodeUrl = 'https:' + res.data.fileUrl;
-          // } else {
-          //   self.$message.error('上传图片的尺寸必须为 750*545!')
-          // }
+          if (width == 750 && height == 545) {
+            self.columnForm.wxQrcodeUrl = 'https:' + res.data.fileUrl;
+            self.teachterArr[self.imgIndex].teacherWxQrcodeUrl = self.columnForm.wxQrcodeUrl
+            self.columnForm.wxQrcodeUrl = 'https:' + res.data.fileUrl;
+          } else {
+            self.$message.error('上传图片的尺寸必须为 720*545!')
+          }
       };
 
-  },
-  // secondSuccess(res, file) {
-  //     const self = this;
-  //     const image = new Image();
-  //     image.src = 'https:' + res.data.fileUrl;
-  //     image.onload = function () {
-  //       const width = image.width;
-  //       const height = image.height;
-  //
-  //       if (width == 360 && height ==484) {
-  //         self.columnForm.verticalCover = 'https:' + res.data.fileUrl
-  //       } else {
-  //         self.$message.error('上传图片的尺寸必须为 360*484!')
-  //       }
-  //     };
-  // }
+  }
     }
   }
 

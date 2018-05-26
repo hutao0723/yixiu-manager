@@ -325,12 +325,12 @@
         image.onload = function () {
           const width = image.width;
           const height = image.height;
-          self.courseForm.imgUrl = 'https:' + res.data.fileUrl;
-          // if (width == 750 && height == 545) {
-          //   self.courseForm.imgUrl = 'https:' + res.data.fileUrl;
-          // } else {
-          //   self.$message.error('上传图片的尺寸必须为 750*545!')
-          // }
+
+          if (width == 750 && height == 545) {
+            self.courseForm.imgUrl = 'https:' + res.data.fileUrl;
+          } else {
+            self.$message.error('上传图片的尺寸必须为 750*545!')
+          }
         };
 
       },

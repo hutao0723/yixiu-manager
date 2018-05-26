@@ -27,7 +27,7 @@
             <img v-if="courseForm.bgImgUrl" :src="courseForm.bgImgUrl" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             <el-button size="small" type="primary">{{courseForm.bgImgUrl ? '修改文件' : '选择文件'}}</el-button>
-            <div slot="tip" class="el-upload__tip">720*545,支持jpg、png、gif格式,最大5M</div>
+            <div slot="tip" class="el-upload__tip">750*545,支持jpg、png、gif格式,最大5M</div>
           </el-upload>
         </el-form-item>
         <el-form-item label="计划周期" prop="days">

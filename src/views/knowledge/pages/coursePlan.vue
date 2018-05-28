@@ -10,7 +10,7 @@
     </div>
     <div class="content">
 
-      <div class="tabel-wrap">
+      <div class="tabel-wrap removeDefStyle">
         <template >
           <el-table :data="courseManageList" border style="width: 100%;text-align: center" > <!--:span-method="arraySpanMethod"-->
               <el-table-column prop="title" label="书籍标题">
@@ -18,31 +18,31 @@
 
               <el-table-column  label="解锁日期">
                 <template slot-scope="scope">
-                  <div v-for="(item,index) in scope.row.readBookCourseVOList">第{{item.dayNum}}天</div>
+                  <div  class="itemStyle"  v-for="(item,index) in scope.row.readBookCourseVOList">第{{item.dayNum}}天</div>
                 </template>
               </el-table-column>
 
               <el-table-column  prop="id" label="课程id" >
                 <template slot-scope="scope" >
-                  <div v-for="(item,index) in scope.row.readBookCourseVOList">{{item.courseID}}</div>
+                  <div class="itemStyle" v-for="(item,index) in scope.row.readBookCourseVOList">{{item.courseID}}</div>
                 </template>
               </el-table-column>
 
               <el-table-column prop="courseType" label="课程类型">
                 <template slot-scope="scope">
-                  <div v-for="(item,index) in scope.row.readBookCourseVOList">{{item.courseType==1?'音频':'其它'}}</div>
+                  <div class="itemStyle" v-for="(item,index) in scope.row.readBookCourseVOList">{{item.courseType==1?'音频':'其它'}}</div>
                 </template>
               </el-table-column>
 
               <el-table-column prop="title" label="课程标题">
                 <template slot-scope="scope">
-                  <div v-for="(item,index) in scope.row.readBookCourseVOList">{{item.courseTitle}}</div>
+                  <div class="itemStyle" v-for="(item,index) in scope.row.readBookCourseVOList">{{item.courseTitle}}</div>
                 </template>
               </el-table-column>
 
               <el-table-column prop = "manageStatus"  label="课程状态">
                 <template slot-scope="scope">
-                  <div v-for="(item,index) in scope.row.readBookCourseVOList">
+                  <div class="itemStyle" v-for="(item,index) in scope.row.readBookCourseVOList">
                     <template v-if="item.courseStatus==0">待上线</template>
                     <template v-if="item.courseStatus==1">已上线</template>
                     <template v-if="item.courseStatus==2">已下线</template>
@@ -52,7 +52,7 @@
 
               <el-table-column label="操作" >
                 <template slot-scope="edit">
-                  <div v-for="(item,index) in edit.row.readBookCourseVOList">
+                  <div class="itemStyle" v-for="(item,index) in edit.row.readBookCourseVOList">
                     <el-button type="text" size="mini" @click="editCourse(1,item)">编辑课程</el-button>
                     <el-button type="text" size="mini" @click="removeCourse(item)">移除</el-button>
                   </div>
@@ -79,7 +79,7 @@
             第{{courseDay}}天
           </el-form-item>
           <el-form-item label="关联课程：">
-            <el-select v-model="courseSearchForm.selectType" class="iptl w150">
+            <el-select filterable v-model="courseSearchForm.selectType" class="iptl w150">
               <el-option v-for="(item,index) in courseList" :key="index" :label="item.title" :value="item.id">
               </el-option>
             </el-select>
@@ -102,7 +102,7 @@
 
             </el-col>
           </el-form-item>
-          <el-form-item class="is-required" label="书籍封面" >
+          <el-form-item class="is-required" label="书籍封面" prop="imgUrl">
             <el-upload
               class="avatar-uploader"
               action="/upload/image"
@@ -146,6 +146,9 @@
           title: [
             {required: true, message: '请输入计划标题', trigger: 'blur'},
             {min: 1, max: 30, message: '长度在 1 到 30 个字', trigger: 'blur'}
+          ],
+          imgUrl:[
+            {required: true, message: '请上传书籍封面', trigger: 'blur'},
           ]
         },
         courseEditId:null,
@@ -307,6 +310,9 @@
         if(row){
           this.bookId = row.id;
           this.getDetail(this.bookId)
+        }else{
+          this.courseForm.title = null;
+          this.courseForm.imgUrl = '';
         }
         this.bookDiolog = true;
         this.bookType = type;
@@ -372,11 +378,11 @@
         };
         if(this.digType==1){
           params.id = this.courseEditId
+          console.log('编辑')
           this.$http.post("/read/book/course/edit",qs.stringify(params)).then(res =>{
             let resp = res.data;
             if (resp.success) {
               this.$message.success('编辑成功');
-              this.courseSearchForm.selectType = null;
               this.editDiolog = false
               this.getData();
             } else {
@@ -385,13 +391,13 @@
             }
           })
         }else{
+          console.log('新增')
           params.readId = this.readId;
           params.bookId =this.courseEditId;
           this.$http.post("/read/book/course/add",qs.stringify(params)).then(res =>{
             let resp = res.data;
             if (resp.success) {
               this.$message.success('编辑成功');
-              this.courseSearchForm.selectType = null;
               this.editDiolog = false
               this.getData();
             } else {
@@ -456,6 +462,16 @@
 </script>
 <style lang="less" scoped>
   .ofa-main-wrap {
+    .removeDefStyle{
+      .itemStyle{
+        padding:10px 0;
+        border-bottom:1px solid #ebeef5;
+      }
+      .itemStyle:last-child{
+        border:0
+      }
+    }
+
     width: 100%;
     .totle-time {
       color: #333;

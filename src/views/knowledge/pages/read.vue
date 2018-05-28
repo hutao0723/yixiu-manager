@@ -1,5 +1,11 @@
 <template>
   <section class="ofa-main-wrap" v-loading="loading">
+    <div class="title-wrap">
+      <el-breadcrumb separator="/">
+        <el-breadcrumb-item :to="{ path: '/manager/knowledge/read' }"><span @click="pageType = 0">阅读计划</span>
+        </el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
     <div class="content">
       <div class="search-bar">
         <el-button type="primary" @click="newcourseForm(0)" size="small" class="fr">新建阅读计划</el-button>

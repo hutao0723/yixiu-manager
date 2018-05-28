@@ -79,7 +79,7 @@
             第{{courseDay}}天
           </el-form-item>
           <el-form-item label="关联课程：">
-            <el-select v-model="courseSearchForm.selectType" class="iptl w150">
+            <el-select filterable v-model="courseSearchForm.selectType" class="iptl w150">
               <el-option v-for="(item,index) in courseList" :key="index" :label="item.title" :value="item.id">
               </el-option>
             </el-select>
@@ -102,7 +102,7 @@
 
             </el-col>
           </el-form-item>
-          <el-form-item class="is-required" label="书籍封面" >
+          <el-form-item class="is-required" label="书籍封面" prop="imgUrl">
             <el-upload
               class="avatar-uploader"
               action="/upload/image"
@@ -146,6 +146,9 @@
           title: [
             {required: true, message: '请输入计划标题', trigger: 'blur'},
             {min: 1, max: 30, message: '长度在 1 到 30 个字', trigger: 'blur'}
+          ],
+          imgUrl:[
+            {required: true, message: '请上传书籍封面', trigger: 'blur'},
           ]
         },
         courseEditId:null,
@@ -307,6 +310,9 @@
         if(row){
           this.bookId = row.id;
           this.getDetail(this.bookId)
+        }else{
+          this.courseForm.title = null;
+          this.courseForm.imgUrl = '';
         }
         this.bookDiolog = true;
         this.bookType = type;
@@ -372,11 +378,11 @@
         };
         if(this.digType==1){
           params.id = this.courseEditId
+          console.log('编辑')
           this.$http.post("/read/book/course/edit",qs.stringify(params)).then(res =>{
             let resp = res.data;
             if (resp.success) {
               this.$message.success('编辑成功');
-              this.courseSearchForm.selectType = null;
               this.editDiolog = false
               this.getData();
             } else {
@@ -385,13 +391,13 @@
             }
           })
         }else{
+          console.log('新增')
           params.readId = this.readId;
           params.bookId =this.courseEditId;
           this.$http.post("/read/book/course/add",qs.stringify(params)).then(res =>{
             let resp = res.data;
             if (resp.success) {
               this.$message.success('编辑成功');
-              this.courseSearchForm.selectType = null;
               this.editDiolog = false
               this.getData();
             } else {

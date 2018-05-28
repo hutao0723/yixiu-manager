@@ -112,12 +112,12 @@
       };
 
       var rateRule = (rule, value, callback) => {
-        if(String(value).indexOf('.') !=-1 && String(value).split('.')[1].length >2){
-          callback(new Error('最多两位小数'));
+        if(String(value).indexOf('.') !=-1){
+          callback(new Error('抽成需要为整数'));
         }else{
-          if(value > 1 || value <0){
-            callback(new Error('抽成比例在0.00-1.00之间'));
-          }else{
+          if(value> 100 || value <=0){
+            callback(new Error('抽成比例在0-100之间'));
+          } else{
             callback()
           }
         }

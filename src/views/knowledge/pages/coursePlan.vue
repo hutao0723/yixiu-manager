@@ -96,7 +96,7 @@
     <div class="add-type-diolog">
       <el-dialog title="添加|编辑书籍" :visible.sync="bookDiolog">
         <el-form :model="courseForm" ref="courseForm" :rules="rules">
-          <el-form-item label="计划标题" prop="title">
+          <el-form-item label="书籍标题" prop="title">
             <el-col :span="8">
               <el-input v-model="courseForm.title" placeholder="1-30字，建议14字以内" :maxlength="30"></el-input>
 

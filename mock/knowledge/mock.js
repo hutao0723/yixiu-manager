@@ -5,6 +5,12 @@
  *         url   线上接口地址
  */
 var setOnline = [
+  // 计划课程列表
+  {
+    name: 'planList',
+    type: 'get',
+    url: '/planList/list'
+  },
   // 商品组列表
   {
     name: 'groupList',
@@ -110,7 +116,7 @@ var setOnline = [
   //订单详情
   {
     name: 'ordersDetail',
-    type: 'get',
+      type: 'get',
     url: '/knowledge/order/detail'
   },
   //订单导出
@@ -124,6 +130,71 @@ var setOnline = [
     name: 'successExport',
     type: 'get',
     url: '/knowledge/order/checkExport'
+  },
+  // 课程
+  {
+    name: 'course',
+    type: 'get',
+    url: '/course/pageList'
+  },
+  // 上传图片
+  {
+    name: 'upload',
+    type: 'post',
+    url: '/upload/image'
+  },
+  // 新增文本编辑器内容
+  {
+    name: 'save',
+    type: 'post',
+    url: '/course/createSketch'
+  },
+  {
+    name: 'save',
+    type: 'post',
+    url: '/course/updateSketch'
+  },
+  // 新增文本编辑器内容
+  {
+    name: 'editor',
+    type: 'get',
+    url: '/course/getSketch'
+  },
+  // 获取权重值列表
+  {
+    name: 'weightList',
+    type: 'get',
+    url: '/comment/topList'
+  },
+  // 修改权重
+  {
+    name: 'save',
+    type: 'post',
+    url: '/comment/changeSorted'
+  },
+  // 获取观点列表
+  {
+    name: 'optionList',
+    type: 'get',
+    url: '/comment/page'
+  },
+  // 通过观点审核
+  {
+    name: 'save',
+    type: 'post',
+    url: '/pass/option'
+  },
+  // 隐藏观点
+  {
+    name: 'save',
+    type: 'post',
+    url: '/hide/option'
+  },
+  // 观点状态变更
+  {
+    name: 'save',
+    type: 'post',
+    url: '/comment/changeStatus'
   }
 ];
 var fs = require('fs');

@@ -16,20 +16,20 @@
 
           </div>
         </el-form-item>
-        <el-form-item class="is-required" label="背景图" prop="bgImgUrl">
-          <el-upload
-            class="avatar-uploader"
-            action="/upload/image"
-            name="imageFile"
-            :show-file-list=false
-            :on-success="firstSuccess"
-            :before-upload="beforeAvatarUpload">
-            <img v-if="courseForm.bgImgUrl" :src="courseForm.bgImgUrl" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            <el-button size="small" type="primary">{{courseForm.bgImgUrl ? '修改文件' : '选择文件'}}</el-button>
-            <div slot="tip" class="el-upload__tip">750*545,支持jpg、png、gif格式,最大5M</div>
-          </el-upload>
-        </el-form-item>
+        <!--<el-form-item class="is-required" label="背景图" prop="bgImgUrl">-->
+          <!--<el-upload-->
+            <!--class="avatar-uploader"-->
+            <!--action="/upload/image"-->
+            <!--name="imageFile"-->
+            <!--:show-file-list=false-->
+            <!--:on-success="firstSuccess"-->
+            <!--:before-upload="beforeAvatarUpload">-->
+            <!--<img v-if="courseForm.bgImgUrl" :src="courseForm.bgImgUrl" class="avatar">-->
+            <!--<i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
+            <!--<el-button size="small" type="primary">{{courseForm.bgImgUrl ? '修改文件' : '选择文件'}}</el-button>-->
+            <!--<div slot="tip" class="el-upload__tip">750*545,支持jpg、png、gif格式,最大5M</div>-->
+          <!--</el-upload>-->
+        <!--</el-form-item>-->
         <el-form-item label="计划周期" prop="days">
           <el-col :span="6">
             <el-input v-model="courseForm.days" placeholder="1-999" type="number" :maxlength="8">
@@ -173,7 +173,7 @@
           costPrice:null,//原价
           presentPrice:null,//现价
           distRate:null,//分销
-          bgImgUrl:null,//背景
+          // bgImgUrl:null,//背景
           //detail:null
         },
       }

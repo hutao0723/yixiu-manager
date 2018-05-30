@@ -1,0 +1,49 @@
+{
+    "code": "string",
+    "data": {
+        "content": [
+            {
+                "bindStatus": 0,
+                "bindTime": "2018-05-25",
+                "consumerId": 0,
+                "distributionType": "string",
+                "gmtCreate": "2018-05-25T02:47:17.776Z",
+                "gmtModified": "2018-05-25T02:47:17.776Z",
+                "headImgurl": "https://yun.dui88.com/youfen/images/cexj17cqq8.jpg",
+                "id": 3,
+                "nickName": "张老师",
+                "overdueTime": "2018-05-25T02:47:17.776Z",
+                "remainingBindTime": 24,
+                "superiorId": 0,
+                "totalTradeMoney": 11,
+                "totalTradeNum": 221
+            },
+            {
+                "bindStatus": 0,
+                "bindTime": "2018-05-25",
+                "consumerId": 0,
+                "distributionType": "string",
+                "gmtCreate": "2018-05-25T02:47:17.776Z",
+                "gmtModified": "2018-05-25T02:47:17.776Z",
+                "headImgurl": "",
+                "id": 4,
+                "nickName": "张老师",
+                "overdueTime": "2018-05-25T02:47:17.776Z",
+                "remainingBindTime": 24,
+                "superiorId": 0,
+                "totalTradeMoney": 11,
+                "totalTradeNum": 221
+            }
+        ],
+        "firstPage": true,
+        "lastPage": true,
+        "number": 0,
+        "numberOfElements": 0,
+        "size": 0,
+        "sort": {},
+        "totalElements": 100,
+        "totalPages": 0
+    },
+    "desc": "string",
+    "success": true
+}

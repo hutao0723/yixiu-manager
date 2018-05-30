@@ -11,7 +11,8 @@
 				"authorized": true,
 				"todayNewFollow": 0,
 				"todayNewUnFollow": 0,
-				"gmtCreate": 1518168271000
+				"gmtCreate": 1518168271000,
+				"serviceTypeInfo": 0
 			},
 			{
 				"id": 71,
@@ -22,7 +23,8 @@
 				"authorized": true,
 				"todayNewFollow": 0,
 				"todayNewUnFollow": 0,
-				"gmtCreate": 1518168168000
+				"gmtCreate": 1518168168000,
+				"serviceTypeInfo": 2
 			}
 		]
 	}

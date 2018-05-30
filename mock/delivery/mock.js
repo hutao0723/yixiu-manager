@@ -44,6 +44,18 @@ var setOnline = [
     name: 'themeLoadPage',
     type: 'get',
     url: '/subscriptionTheme/getLoadPage'
+  },
+  //根据公众号id查询模板数据列表
+  {
+    name: 'templateList',
+    type: 'get',
+    url: '/authorizerMpTemplate/list'
+  },
+  //根据模板id查询模板数据详情
+  {
+    name: 'templateDetail',
+    type: 'get',
+    url: '/authorizerMpTemplate/details'
   }
 ];
 var fs = require('fs');

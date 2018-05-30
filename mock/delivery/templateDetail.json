@@ -1,0 +1,26 @@
+{
+    "success": true,
+    "data": {
+        "id": 1,
+        "authorizerId": 41,
+        "templateId": "6h-t80YdNVZB_IFP1N_aEZKysPLyRJvXrjUMBhtIyBs",
+        "templateType": 5,
+        "pushStatus": 0,
+        "firstData": "恭喜您绑定一位新用户",
+        "remarkData": "查看详情",
+        "colorContent": {
+            "keyword1": "#173177",
+            "keyword2": "#173177",
+            "keyword3": "#173177",
+            "keyword4": "#173177",
+            "first": "#000",
+            "remark": "#000"
+        },
+        "linkType": 0,
+        "miniappId": "",
+        "linkAddress": "www.baidu.com",
+        "pagePath": "",
+        "gmtCreate": 1526265495000,
+        "gmtModified": 1526373055000
+    }
+}

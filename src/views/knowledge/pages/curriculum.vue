@@ -57,6 +57,11 @@
                 {{scope.row.price / 100}}
               </template>
             </el-table-column>
+            <!-- <el-table-column prop="distributorIncome + '/' + distributeRate" label="分销/抽成" :render-header="renderHeaderDistribute">
+              <template slot-scope="scope">
+                {{scope.row.distributorIncome / 100}}/{{scope.row.distributeRate / 100}}
+              </template>
+            </el-table-column> -->
             <el-table-column prop="status" label="课程状态" :formatter="getStatus"></el-table-column>
             <el-table-column label="操作" width="300">
               <template slot-scope="scope">
@@ -66,8 +71,15 @@
                   {{scope.row.status == 1 ? '下线' : '上线'}}
                 </el-button>
                 <el-button type="text" size="mini" @click="deleteItem(scope.row.id)" :disabled="false">删除</el-button>
+                <!-- <el-button type="text" size="mini" @click="poster
+                (scope.row.id)" :disabled="false">海报</el-button> -->
               </template>
             </el-table-column>
+            <!-- <el-table-column prop="lecturerIncome + '/' + rate" label="讲师/抽成" :render-header="renderHeaderLcturer">
+              <template slot-scope="scope">
+                {{scope.row.lecturerIncome / 100}}/{{scope.row.rate / 100}}
+              </template>
+            </el-table-column> -->
           </el-table>
         </template>
       </div>
@@ -201,9 +213,7 @@
 </template>
 <script>
   import {formatHourSec} from '../../../utils/dateUtils'
-  import 'quill/dist/quill.core.css'
-  import 'quill/dist/quill.snow.css'
-  import 'quill/dist/quill.bubble.css'
+
   import E from 'wangeditor'
   import plupload from 'plupload';
 
@@ -408,6 +418,28 @@
       this.getData();
     },
     methods: {
+      // renderHeaderDistribute(h) {
+      //   return (
+      //     <div>
+      //       分销/抽成
+      //       <el-tooltip class="item" effect="dark" placement="top">
+      //         <div slot="content">分销为分销员获得的金额，等于订单金额x分销抽成</div>
+      //         <i class="el-icon-question cp"></i>
+      //       </el-tooltip>
+      //     </div>
+      //   )
+      // },
+      // renderHeaderLcturer(h) {
+      //   return (
+      //     <div>
+      //       讲师/抽成
+      //       <el-tooltip class="item" effect="dark" placement="top">
+      //         <div slot="content">讲师为讲师获得的金额，等于订单金额x0.994x讲师抽成</div>
+      //         <i class="el-icon-question cp"></i>
+      //       </el-tooltip>
+      //     </div>
+      //   )
+      // },
       creatRichText(res){
         var editor = new E('#editorElem')
         /* 处理上传图片的controller路径 */
@@ -527,6 +559,10 @@
           })
         })
       },
+      //跳转海报
+      // poster(id) {
+      //   console.log(id)
+      // },
 
       //获取列表数据
       getData() {

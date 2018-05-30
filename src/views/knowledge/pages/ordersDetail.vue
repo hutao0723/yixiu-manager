@@ -65,7 +65,7 @@
                       <td>{{orderItems.itemNum ? orderItems.itemNum: ''}}</td>
                       <td>{{totalPrice ? totalPrice: ''}}</td>
                       <td>{{orderItems.lecturerRate ? (orderItems.lecturerRate / 100).toFixed(2) : ''}}</td>
-                      <td>{{orderItems.distributorRate ? (orderItems.distributorRate / 100).toFixed(2) : ''}}</td>
+                      <td>{{detailList.distributeRate ? (detailList.distributeRate / 100).toFixed(2) : ''}}</td>
                       <td>{{orderItems.type}}</td>
                     </tr>
                   </tbody>

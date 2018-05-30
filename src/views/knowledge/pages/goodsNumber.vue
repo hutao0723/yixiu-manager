@@ -224,18 +224,18 @@ const columns = [
     width: 8,
     price: true
   },
-  {
-    title: '分销/抽成',
-    dataIndex: 'price',
-    width: 8,
-    distribute: true
-  },
-  {
-    title: '讲师/抽成',
-    dataIndex: 'price',
-    width: 8,
-    lecturer: true
-  },
+  // {
+  //   title: '分销/抽成',
+  //   dataIndex: 'price',
+  //   width: 8,
+  //   distribute: true
+  // },
+  // {
+  //   title: '讲师/抽成',
+  //   dataIndex: 'price',
+  //   width: 8,
+  //   lecturer: true
+  // },
   {
     title: '操作',
     dataIndex: 'id',

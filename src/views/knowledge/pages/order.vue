@@ -11,7 +11,7 @@
           <el-form :inline="true" :model="searchForm" class="form" size="small">
             <el-form-item>
               <el-select v-model="searchForm.name" placeholder="商品标题" class="w150 iptl">
-                <el-option v-for="(item,index) in goodsOptions" :key="item.id" :label="item.label" :value="item.value"></el-option>
+                <el-option v-for="(item) in goodsOptions" :key="item.id" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item>
@@ -19,7 +19,7 @@
             </el-form-item>
             <el-form-item>
               <el-select v-model="searchForm.orderNumber" placeholder="订单号" class="w150 iptl">
-                <el-option v-for="(item,index) in ordersOptions" :key="item.id" :label="item.label" :value="item.value"></el-option>
+                <el-option v-for="(item) in ordersOptions" :key="item.id" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item>
@@ -27,7 +27,7 @@
             </el-form-item>
             <el-form-item>
               <el-select v-model="searchForm.ids" placeholder="商品标题" class="w150 iptl">
-                <el-option v-for="(item,index) in idsOptions" :key="item.id" :label="item.label" :value="item.value"></el-option>
+                <el-option v-for="(item) in idsOptions" :key="item.id" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item>
@@ -216,8 +216,8 @@ export default {
       this.startTime = this.searchForm.time ? formatDateNew(this.searchForm.time[0]): ''
       this.endTime = this.searchForm.time ? formatDateNew(this.searchForm.time[1]): ''
       let params = {
-        pageNum: 1,
-        pageSize: 20,
+        pageNum: this.pageOption.pageNum,
+        pageSize: this.pageOption.pageSize,
         [valueArr[0]]: valueArr[1],
         [valueArr[2]]: valueArr[3],
         [valueArr[4]]: valueArr[5],

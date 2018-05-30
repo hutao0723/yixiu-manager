@@ -2,7 +2,7 @@
   <div class="">
     <div class="module-content" @click="changeDeploy">
       <ul class="module-tabs clearfix" v-show="moduleForm.tabs.length > 1">
-        <li v-for="(item,index) in moduleForm.tabs" :class="{item_three: moduleForm.tabs.length == 3,item_two: moduleForm.tabs.length == 2}">
+        <li v-for="(item,index) in moduleForm.tabs" :class="{item_three: moduleForm.tabs.length == 3,item_two: moduleForm.tabs.length == 2}" :key="index">
           <span :class="{active: index==0}">{{item.groupName}}</span>
         </li>
       </ul>
@@ -229,7 +229,6 @@
     methods: {
       examineForm() {
         let isValid;
-        console.log(111)
         this.$refs['moduleForm'].validate((valid) => {
           isValid = valid
         });

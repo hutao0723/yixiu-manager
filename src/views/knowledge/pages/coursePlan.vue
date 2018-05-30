@@ -96,7 +96,7 @@
     <div class="add-type-diolog">
       <el-dialog title="添加|编辑书籍" :visible.sync="bookDiolog">
         <el-form :model="courseForm" ref="courseForm" :rules="rules">
-          <el-form-item label="计划标题" prop="title">
+          <el-form-item label="书籍标题" prop="title">
             <el-col :span="8">
               <el-input v-model="courseForm.title" placeholder="1-30字，建议14字以内" :maxlength="30"></el-input>
 
@@ -114,6 +114,21 @@
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
               <el-button size="small" type="primary">{{courseForm.imgUrl ? '修改文件' : '选择文件'}}</el-button>
               <div slot="tip" class="el-upload__tip">360*484,支持jpg、png、gif格式,最大5M</div>
+            </el-upload>
+          </el-form-item>
+
+          <el-form-item label="海报背景图">
+            <el-upload
+              class="avatar-uploader"
+              action="/upload/image"
+              name="imageFile"
+              :show-file-list=false
+              :on-success="firstSuccess2"
+              :before-upload="beforeAvatarUpload">
+              <img v-if="courseForm.backGroundUrl" :src="courseForm.backGroundUrl" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+              <el-button size="small" type="primary">{{courseForm.backGroundUrl ? '修改文件' : '选择文件'}}</el-button>
+              <div slot="tip" class="el-upload__tip">???*???,支持jpg、png、gif格式,最大5M</div>
             </el-upload>
           </el-form-item>
         </el-form>
@@ -184,6 +199,7 @@
         courseForm: {
           title:null,
           imgUrl:'',
+          backGroundUrl:''
         },
         courseList:[]
       }
@@ -335,14 +351,27 @@
         image.onload = function () {
           const width = image.width;
           const height = image.height;
-
           if (width == 360 && height == 484) {
             self.courseForm.imgUrl = 'https:' + res.data.fileUrl;
           } else {
             self.$message.error('上传图片的尺寸必须为 360*484!')
           }
         };
+      },
+      firstSuccess2(res, file) {
+        const self = this;
+        const image = new Image();
+        image.src = 'https:' + res.data.fileUrl;
+        image.onload = function () {
+          const width = image.width;
+          const height = image.height;
+          self.courseForm.backGroundUrl = 'https:' + res.data.fileUrl;
 
+          // if (width == 360 && height == 484) {
+          // } else {
+          //   self.$message.error('上传图片的尺寸必须为 360*484!')
+          // }
+        };
       },
       getAllCourse(title){
         let params ={

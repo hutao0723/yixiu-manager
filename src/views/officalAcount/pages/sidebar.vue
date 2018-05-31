@@ -15,6 +15,11 @@
               <span slot="title">图文类型</span>
             </el-menu-item>
           </router-link> 
+          <router-link :to="{ path: '/manager/officalAcount/publicType' }">   
+            <el-menu-item index="3">
+              <span slot="title">公众号类型</span>
+            </el-menu-item>
+          </router-link> 
         </el-menu>                
       </div>
     </el-aside>
@@ -58,6 +63,9 @@ export default {
           break;
         case '/manager/officalAcount/graphType':
           pathIndex = "2";
+          break;
+        case '/manager/officalAcount/publicType':
+          pathIndex = "3";
           break;
       
         default:

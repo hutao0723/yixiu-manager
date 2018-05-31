@@ -1,0 +1,14 @@
+
+{
+  "code": "string",
+  "data": {
+    "courseId": 1,
+    "deleted": true,
+    "gmtCreate": "2018-05-22T11:37:18.302Z",
+    "gmtModified": "2018-05-22T11:37:18.302Z",
+    "id": 1,
+    "sketch": "<p><img src='http://yun.dui88.com/youfen/images/qpydf3966y.jpeg' style='max-width:100%;'><p>好好玩哈</p><br></p>"
+  },
+  "desc": "string",
+  "success": true
+}

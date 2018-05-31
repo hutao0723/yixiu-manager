@@ -293,7 +293,6 @@
   </section>
 </template>
 <script>
-
   import draggable from 'vuedraggable'
   import E from 'wangeditor'
 

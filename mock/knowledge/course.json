@@ -1,0 +1,37 @@
+{
+	"success": true,
+	"data": {
+		"firstPage":true,
+		"lastPage":false,
+		"number":0,
+		"numberOfElements":20,
+		"size":20,
+		"totalElements":135,
+		"content":[
+			{
+				"id":173,
+				"deleted":false,
+				"gmtCreate":"2018-04-26 16:51:35",
+				"gmtModified":"2018-04-26 16:51:35",
+				"title":"课程价格m",
+				"subTitle":"课程价格m",
+				"courseType":1,
+				"lateralCover":"",
+				"verticalCover":"",
+				"price":9999,
+				"status":0,
+				"address":"{\"name\":\"Alan Walker - Faded.mp3\",\"url\":\"knowledge/1524732597785\"}",
+				"timeLength":213,
+				"freeTime":120,
+				"rate":99,
+				"lecturerId":2,
+				"publishTime":"2018-04-25 12:00:00",
+				"playTimes":0,
+				"buyTimes":0
+			}
+		]
+	}
+}
+
+
+

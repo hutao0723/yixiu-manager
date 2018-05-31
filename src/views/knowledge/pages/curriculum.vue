@@ -67,6 +67,9 @@
               <template slot-scope="scope">
                 <!--openDialogAdmin(scope.row.managerName,scope.row.id）-->
                 <el-button type="text" size="mini" @click="getCourseDetail(scope.row.id)">编辑</el-button>
+                <router-link :to="{ path: '/manager/knowledge/editDraft/' + scope.row.id }"> 
+                  <el-button type="text" size="mini">文稿</el-button>
+                </router-link>
                 <el-button type="text" size="mini" @click="changeStatus(scope.row.id,scope.row.status)">
                   {{scope.row.status == 1 ? '下线' : '上线'}}
                 </el-button>
@@ -203,6 +206,12 @@
             </el-input>
           </el-col>
         </el-form-item>
+         <el-form-item label="作者" prop="author">
+          <el-col :span="6">
+            <el-input v-model="courseForm.author" placeholder="1-30字，建议14字以内">
+            </el-input>
+          </el-col>
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitForm('courseForm')">保存</el-button>
           <el-button @click="cancelForm('courseForm')">取消</el-button>
@@ -213,7 +222,6 @@
 </template>
 <script>
   import {formatHourSec} from '../../../utils/dateUtils'
-
   import E from 'wangeditor'
   import plupload from 'plupload';
 
@@ -367,7 +375,10 @@
           rate: [
             {required: true, message: '请输入抽成比例', trigger: 'blur'},
             {validator: rateRule, trigger: 'blur' }
-          ]
+          ],
+          author: [
+            {min: 0, max: 30, message: '长度在 0 到 30 个字', trigger: 'blur'}
+          ],
         },
         //新增编辑课程form表单
         courseForm: {
@@ -385,7 +396,8 @@
           lecturerId: null,
           lecturerName: null,
           publishTime: null,
-          rate: null
+          rate: null,
+          author: ''
         },
         fileText: null,
         fileSrc: null

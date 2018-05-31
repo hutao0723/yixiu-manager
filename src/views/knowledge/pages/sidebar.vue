@@ -53,11 +53,6 @@
             </el-submenu>
             <el-submenu index="6">
             <span slot="title">营销</span>
-            <router-link :to="{ path: '' }">
-              <el-menu-item index="6-1">
-                <span>优惠券</span>
-              </el-menu-item>
-            </router-link>
             <router-link :to="{ path: '/manager/knowledge/distribute' }">
               <el-menu-item index="6-2">
                 <span>分销</span>

@@ -17,8 +17,9 @@
               <thead>
                 <tr class="tr-header">
                   <template v-for="column in columns">
-                    <th v-bind:class="column.className" v-bind:style="{width: column.width + '%'}">
+                    <th v-bind:class="column.className" v-bind:style="{width: column.width + '%'}" >
                       {{column.title}}
+                      <!-- <i class="el-tooltip el-icon-question cp item" aria-describedby="el-tooltip-2351" tabindex="0"  @mouseover="overShow" @mouseout="outHide"></i>  -->
                     </th>
                   </template>
                 </tr>
@@ -197,7 +198,7 @@ import qs from 'qs'
 const columns = [
   {
     title: '排序',
-    width: 10,
+    width: 8,
     render: (text, record, index) => {
       return index + 1
     }
@@ -205,7 +206,7 @@ const columns = [
   {
     title: '商品标题',
     dataIndex: 'title',
-    width: 30,
+    width: 45,
     itemPicture: 'itemPicture',
     lateralCover: 'lateralCover',
     verticalCover: 'verticalCover',
@@ -214,15 +215,27 @@ const columns = [
   {
     title: '商品类型',
     dataIndex: 'itemType',
-    width: 15,
+    width: 8,
     type: true
   },
   {
     title: '商品价格',
     dataIndex: 'price',
-    width: 10,
+    width: 8,
     price: true
   },
+  // {
+  //   title: '分销/抽成',
+  //   dataIndex: 'price',
+  //   width: 8,
+  //   distribute: true
+  // },
+  // {
+  //   title: '讲师/抽成',
+  //   dataIndex: 'price',
+  //   width: 8,
+  //   lecturer: true
+  // },
   {
     title: '操作',
     dataIndex: 'id',
@@ -262,7 +275,10 @@ export default {
       courseIds: [],
       columnIds: [],
       arrClassStatus: [],
-      arrColumnStatus: []
+      arrColumnStatus: [],
+
+      showText: false,
+      hideText: true
     }
   },
   created () {
@@ -270,6 +286,14 @@ export default {
     this.goodsGroupId = this.$route.params.id
   },
   methods: {
+    // overShow () {
+    //   this.showText = !this.showText
+    //   this.hideText = !this.hideText
+    // },
+    // outHide () {
+    //   this.showText = !this.showText
+    //   this.hideText = !this.hideText
+    // },
     openDialogGoods () {
       this.arrClassStatus = []
       this.arrColumnStatus = []
@@ -654,6 +678,12 @@ export default {
     display: inline-block;
     float: left;
     background-repeat: no-repeat;
+  }
+  .show{
+    display: block;
+  }
+  .hide{
+      display: none;
   }
 }
 

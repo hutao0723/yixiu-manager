@@ -18,7 +18,12 @@
       <div class="tabel-wrap">
         <template>
           <el-table :data="groupList" style="width: 100%" >
-            <el-table-column prop="id" label="ID" ></el-table-column>
+            <el-table-column prop="id" label="ID" >
+              <template slot-scope="scope">
+                {{scope.row.id}}
+                <el-tag v-show="scope.row.distributionPage == 1" size="small">分销商品组</el-tag>
+              </template>
+            </el-table-column>
             <el-table-column prop="goodsGroupName" label="分组标题" ></el-table-column>
             <el-table-column label="商品数">
               <template slot-scope="scope">

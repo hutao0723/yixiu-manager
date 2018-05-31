@@ -96,6 +96,20 @@ export const constantRouterMap = [
             }
           },
           {
+            path: 'templateMessage/:type/:id',
+            name: 'templateMessage',
+            component: function (resolve) {
+              require(['../views/officalAcount/pages/templateMessage'], resolve)
+            }
+          },
+          {
+            path: 'templateDetail/:id',
+            name: 'templateDetail',
+            component: function (resolve) {
+              require(['../views/officalAcount/pages/editTemplateMessage'], resolve)
+            }
+          },
+          {
             path: 'graphType',
             component: function (resolve) {
               require(['../views/officalAcount/pages/graphType'], resolve)
@@ -232,6 +246,12 @@ export const constantRouterMap = [
             }
           },
           {
+            path: 'readPoster',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/readPoster'], resolve)
+            }
+          },
+          {
             path: 'add',
             component: function (resolve) {
               require(['../views/knowledge/pages/addpage'], resolve)
@@ -313,6 +333,19 @@ export const constantRouterMap = [
             path: 'order',
             component: function (resolve) {
               require(['../views/knowledge/pages/order'], resolve)
+            }
+          },
+          {
+            name: 'distribute',
+            path: 'distribute',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/distribute'], resolve)
+            }
+          },
+          {
+            path: 'editdistributor/:userId',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/editdistributor'], resolve)
             }
           },
           {

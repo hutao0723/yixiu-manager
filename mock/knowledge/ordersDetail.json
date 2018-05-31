@@ -15,6 +15,8 @@
         "adzoneId": 1,
         "lecturerId": 1,
         "lecturerName": "邱老师",
+        "distributorId": 1,
+        "distributorName": "哈哈哈",
         "orderFunds": [
             {
                 "fundId": "dsadwwwwwww",
@@ -34,6 +36,7 @@
                 "itemType": 1,
                 "itemNum": 5,
                 "lecturerRate": 6000,
+                "distributorRate": 3000,
                 "itemCategory": 1,
                 "type": "音频"
             }

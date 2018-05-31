@@ -1,0 +1,11 @@
+{
+    "code": "string",
+    "data": {
+        "gmtCreate": "2018-05-17",
+        "goodsGroupName": "商品组商品组商品组",
+        "goodsNum": 999,
+        "id": 2
+    },
+    "desc": "string",
+    "success": true
+}

@@ -45,6 +45,7 @@
                       <th class="w155">数量</th>
                       <th class="w155">总价(元)</th>
                       <th class="w175">讲师抽成比例(%)</th>
+                      <th class="w175">分销抽成比例(%)</th>
                       <th>商品类型</th>
                     </tr>
                   </thead>
@@ -64,6 +65,7 @@
                       <td>{{orderItems.itemNum ? orderItems.itemNum: ''}}</td>
                       <td>{{totalPrice ? totalPrice: ''}}</td>
                       <td>{{orderItems.lecturerRate ? (orderItems.lecturerRate / 100).toFixed(2) : ''}}</td>
+                      <td>{{detailList.distributeRate ? (detailList.distributeRate / 100).toFixed(2) : ''}}</td>
                       <td>{{orderItems.type}}</td>
                     </tr>
                   </tbody>
@@ -145,6 +147,21 @@
                     <tr>
                       <td>{{detailList.lecturerId}}</td>
                       <td>{{detailList.lecturerName}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div class="order-detail-title">分销员</div>
+                <table class="table-list">
+                  <thead>
+                    <tr class="tr-header">
+                      <th class="w255">分销员ID</th>
+                      <th>分销员昵称</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>{{detailList.distributorId}}</td>
+                      <td>{{detailList.distributorName}}</td>
                     </tr>
                   </tbody>
                 </table>

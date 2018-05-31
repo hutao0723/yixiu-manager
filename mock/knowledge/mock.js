@@ -131,6 +131,66 @@ var setOnline = [
     type: 'get',
     url: '/knowledge/order/checkExport'
   },
+  // 分销人员列表
+  {
+    name: 'distributor',
+    type: 'get',
+    url: '/knowledge/distributor/getList'
+  },
+  //分页查询课程列表
+  {
+    name: 'coursePageList',
+    type: 'get',
+    url: '/course/pageList'
+  },
+  //分页查询专栏列表
+  {
+    name: 'columnPageList',
+    type: 'get',
+    url: '/column/pageList'
+  },
+  //查询分销商品组信息
+  {
+    name: 'getDistributionGoodsGroup',
+    type: 'get',
+    url: '/goodsGroup/getDistributionGoodsGroup'
+  },
+  //更换分销商品组
+  {
+    name: 'setDistributionGoodsGroup',
+    type: 'post',
+    url: '/goodsGroup/setDistributionGoodsGroup'
+  },
+  //查询海报列表
+  {
+    name: 'getPublicPosters',
+    type: 'get',
+    url: '/poster/findItemPosters'
+  },
+  //根据id删除海报
+  {
+    name: 'deletePoster',
+    type: 'post',
+    url: '/poster/delete'
+  },
+  //新增海报
+  {
+    name: 'addPoster',
+    type: 'post',
+    url: '/poster/add'
+  },
+  //修改海报
+  {
+    name: 'updatePoster',
+    type: 'post',
+    url: '/poster/update'
+  },
+  //分页查询分销详情
+  {
+    name: 'getUserDistribution',
+    type: 'get',
+    url: '/distributor/userDistribution/pageList'
+  },
   // 课程
   {
     name: 'course',

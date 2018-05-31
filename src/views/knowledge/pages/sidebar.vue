@@ -28,6 +28,20 @@
                 </el-menu-item>
               </router-link>
             </el-submenu>
+
+             <el-submenu index="6">
+              <span slot="title">阅读</span>
+              <router-link :to="{ path: '/manager/knowledge/read' }">
+                <el-menu-item index="6-1">
+                  <span>阅读计划</span>
+                </el-menu-item>
+              </router-link>
+              <router-link :to="{ path: '/manager/knowledge/option' }">
+                <el-menu-item index="6-2">
+                  <span>观点</span>
+                </el-menu-item>
+              </router-link>
+            </el-submenu>
             <router-link :to="{ path: '/manager/knowledge/order' }">
               <el-menu-item index="3">
                 <span>订单</span>
@@ -51,10 +65,10 @@
                 </el-menu-item>
               </router-link>
             </el-submenu>
-            <el-submenu index="6">
+            <el-submenu index="7">
             <span slot="title">营销</span>
             <router-link :to="{ path: '/manager/knowledge/distribute' }">
-              <el-menu-item index="6-2">
+              <el-menu-item index="7-2">
                 <span>分销</span>
               </el-menu-item>
             </router-link>
@@ -121,17 +135,26 @@
           case '/manager/knowledge/extend':
           pathIndex = "5-2";
           break;
-          case '/manager/knowledge/coupon':
+          
+
+          case '/manager/knowledge/read':
           pathIndex = "6-1";
           break;
-          case '/manager/knowledge/activity':
+          case '/manager/knowledge/option':
           pathIndex = "6-2";
+          break;
+          
+          case '/manager/knowledge/coupon':
+          pathIndex = "7-1";
+          break;
+          case '/manager/knowledge/distribute':
+          pathIndex = "7-2";
           break;
           case '/manager/knowledge/add':
           pathIndex = "1";
           break;
           
-        default:
+          default:
           break;
       }
       this.pathIndex = pathIndex;

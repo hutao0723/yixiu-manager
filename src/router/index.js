@@ -268,9 +268,45 @@ export const constantRouterMap = [
             }
           },
           {
+            path: 'editDraft/:id',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/editDraft'], resolve)
+            }
+          },
+          {
             path: 'goodsGroup',
             component: function (resolve) {
               require(['../views/knowledge/pages/goodsGroup'], resolve)
+            }
+          },
+          {
+            path: 'read',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/read'], resolve)
+            }
+          },
+          {
+            path: 'readPlan',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/readPlan'], resolve)
+            }
+          },
+          {
+            path: 'coursePlan',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/coursePlan'], resolve)
+            }
+          },
+          {
+            path: 'courseGroup',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/courseGroup'], resolve)
+            }
+          },
+          {
+            path: 'numberEdit',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/numberEdit'], resolve)
             }
           },
           {
@@ -283,6 +319,18 @@ export const constantRouterMap = [
             path: 'ordersDetail/:id',
             component: function (resolve) {
               require(['../views/knowledge/pages/ordersDetail'], resolve)
+            }
+          },
+          {
+            path: 'option',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/option'], resolve)
+            }
+          },
+          {
+            path: 'optionOrder',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/optionOrder'], resolve)
             }
           },
           {

@@ -1,0 +1,52 @@
+{
+  "code": "string",
+  "data": [
+    {
+      "commentState": 1,
+      "content": "观点内容内容",
+      "courseAuthor": "作者",
+      "courseId": 1,
+      "courseSubTitle": "副标题",
+      "courseTitle": "标题",
+      "id": 1,
+      "relationId": 111,
+      "relationName": "阅读标题",
+      "releaseTime": "2018-05-22T08:10:54.202Z",
+      "sorted": 1,
+      "userId": 1,
+      "userNickname": "string"
+    },
+    {
+      "commentState": 2,
+      "content": "观点内容内容",
+      "courseAuthor": "作者",
+      "courseId": 2,
+      "courseSubTitle": "副标题",
+      "courseTitle": "标题",
+      "id": 2,
+      "relationId": 2,
+      "relationName": "阅读标题",
+      "releaseTime": "2018-05-22T08:10:54.202Z",
+      "sorted": 2,
+      "userId": 2,
+      "userNickname": "string"
+    },
+    {
+      "commentState": 3,
+      "content": "观点内容内容",
+      "courseAuthor": "作者",
+      "courseId": 30,
+      "courseSubTitle": "副标题",
+      "courseTitle": "标题",
+      "id": 30,
+      "relationId": 30,
+      "relationName": "阅读标题",
+      "releaseTime": "2018-05-22T08:10:54.202Z",
+      "sorted": 30,
+      "userId": 30,
+      "userNickname": "string"
+    }
+  ],
+  "desc": "成功",
+  "success": true
+}

@@ -13,73 +13,74 @@
       <div class="tabel-wrap removeDefStyle">
         <template >
           <el-table :data="courseManageList" border style="width: 100%;text-align: center" > <!--:span-method="arraySpanMethod"-->
-              <el-table-column prop="title" label="书籍标题">
-              </el-table-column>
+            <el-table-column prop="title" label="书籍标题">
+            </el-table-column>
 
-              <el-table-column  label="解锁日期">
-                <template slot-scope="scope">
-                  <div  class="itemStyle"  v-for="(item,index) in scope.row.readBookCourseVOList">第{{item.dayNum}}天</div>
-                </template>
-              </el-table-column>
+            <el-table-column  label="解锁日期">
+              <template slot-scope="scope">
+                <div  class="itemStyle"  v-for="(item,index) in scope.row.readBookCourseVOList">第{{item.dayNum}}天</div>
+              </template>
+            </el-table-column>
 
-              <el-table-column  prop="id" label="课程id" >
-                <template slot-scope="scope" >
-                  <div class="itemStyle" v-for="(item,index) in scope.row.readBookCourseVOList">{{item.courseID}}</div>
-                </template>
-              </el-table-column>
+            <el-table-column  prop="id" label="课程id" >
+              <template slot-scope="scope" >
+                <div class="itemStyle" v-for="(item,index) in scope.row.readBookCourseVOList">{{item.courseID}}</div>
+              </template>
+            </el-table-column>
 
-              <el-table-column prop="courseType" label="课程类型">
-                <template slot-scope="scope">
-                  <div class="itemStyle" v-for="(item,index) in scope.row.readBookCourseVOList">{{item.courseType==1?'音频':'其它'}}</div>
-                </template>
-              </el-table-column>
+            <el-table-column prop="courseType" label="课程类型">
+              <template slot-scope="scope">
+                <div class="itemStyle" v-for="(item,index) in scope.row.readBookCourseVOList">{{item.courseType==1?'音频':'其它'}}</div>
+              </template>
+            </el-table-column>
 
-              <el-table-column prop="title" label="课程标题">
-                <template slot-scope="scope">
-                  <div class="itemStyle" v-for="(item,index) in scope.row.readBookCourseVOList">{{item.courseTitle}}</div>
-                </template>
-              </el-table-column>
+            <el-table-column prop="title" label="课程标题">
+              <template slot-scope="scope">
+                <div class="itemStyle" v-for="(item,index) in scope.row.readBookCourseVOList">{{item.courseTitle}}</div>
+              </template>
+            </el-table-column>
 
-              <el-table-column prop = "manageStatus"  label="课程状态">
-                <template slot-scope="scope">
-                  <div class="itemStyle" v-for="(item,index) in scope.row.readBookCourseVOList">
-                    <template v-if="item.courseStatus==0">待上线</template>
-                    <template v-if="item.courseStatus==1">已上线</template>
-                    <template v-if="item.courseStatus==2">已下线</template>
-                  </div>
-                </template>
-              </el-table-column>
+            <el-table-column prop = "manageStatus"  label="课程状态">
+              <template slot-scope="scope">
+                <div class="itemStyle" v-for="(item,index) in scope.row.readBookCourseVOList">
+                  <template v-if="item.courseStatus==0">待上线</template>
+                  <template v-if="item.courseStatus==1">已上线</template>
+                  <template v-if="item.courseStatus==2">已下线</template>
+                </div>
+              </template>
+            </el-table-column>
 
-              <el-table-column label="操作" >
-                <template slot-scope="edit">
-                  <div class="itemStyle" v-for="(item,index) in edit.row.readBookCourseVOList">
-                    <el-button type="text" size="mini" @click="editCourse(1,item)">编辑课程</el-button>
-                    <el-button type="text" size="mini" @click="removeCourse(item)">移除</el-button>
-                  </div>
-                </template>
-              </el-table-column>
+            <el-table-column label="操作" >
+              <template slot-scope="edit">
+                <div class="itemStyle" v-for="(item,index) in edit.row.readBookCourseVOList">
+                  <el-button type="text" size="mini" @click="editCourse(1,item)">编辑课程</el-button>
+                  <el-button type="text" size="mini" @click="removeCourse(item)">移除</el-button>
+                </div>
+              </template>
+            </el-table-column>
 
-              <el-table-column label="操作" >
-                <template slot-scope="edit">
-                  <el-button type="text" size="mini" @click="editCourse(2,edit.row)">添加课程</el-button>
-                  <el-button type="text" size="mini" @click="addBook(2,edit.row)">编辑</el-button>
-                  <el-button type="text" size="mini" @click="deleteBook(edit.row.id)">删除</el-button>
-                </template>
-              </el-table-column>
-            </el-table>
+            <el-table-column label="操作" >
+              <template slot-scope="edit">
+                <el-button type="text" size="mini" @click="editCourse(2,edit.row)">添加课程</el-button>
+                <el-button type="text" size="mini" @click="addBook(2,edit.row)">编辑</el-button>
+                <el-button type="text" size="mini" @click="deleteBook(edit.row.id)">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
 
         </template>
       </div>
     </div>
     <!--弹窗-->
+
     <div class="add-type-diolog">
-      <el-dialog :title="digTite + '课程'" :visible.sync="editDiolog">
+      <el-dialog :title="digTite + '课程'" :visible.sync="editDiolog" style="width:80%;left:50%;margin-left:-40%;">
         <el-form :model="courseSearchForm" ref="courseSearchForm" :rules="rules">
           <el-form-item label="解锁日期：">
             第{{courseDay}}天
           </el-form-item>
           <el-form-item label="关联课程：">
-            <el-select filterable v-model="courseSearchForm.selectType" class="iptl w150">
+            <el-select filterable v-model="courseSearchForm.selectType" class="iptl">
               <el-option v-for="(item,index) in courseList" :key="index" :label="item.title" :value="item.id">
               </el-option>
             </el-select>
@@ -91,6 +92,7 @@
         </div>
       </el-dialog>
     </div>
+
 
     <!--新增|编辑书籍 弹窗-->
     <div class="add-type-diolog">
@@ -128,7 +130,7 @@
               <img v-if="courseForm.backGroundUrl" :src="courseForm.backGroundUrl" class="avatar">
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
               <el-button size="small" type="primary">{{courseForm.backGroundUrl ? '修改文件' : '选择文件'}}</el-button>
-              <div slot="tip" class="el-upload__tip">???*???,支持jpg、png、gif格式,最大5M</div>
+              <div slot="tip" class="el-upload__tip">750*544,支持jpg、png、gif格式,最大5M</div>
             </el-upload>
           </el-form-item>
         </el-form>
@@ -248,7 +250,7 @@
                 }
               }
             })
-          this.contactDot = contactDot;
+            this.contactDot = contactDot;
           } else {
             let msg = resp.desc || '请求失败'
             this.$message.error(msg)
@@ -365,12 +367,11 @@
         image.onload = function () {
           const width = image.width;
           const height = image.height;
-          self.courseForm.backGroundUrl = 'https:' + res.data.fileUrl;
-
-          // if (width == 360 && height == 484) {
-          // } else {
-          //   self.$message.error('上传图片的尺寸必须为 360*484!')
-          // }
+          if (width == 750 && height == 544) {
+            self.courseForm.backGroundUrl = 'https:' + res.data.fileUrl;
+          } else {
+            self.$message.error('上传图片的尺寸必须为 750*544!')
+          }
         };
       },
       getAllCourse(title){

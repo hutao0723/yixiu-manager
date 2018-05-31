@@ -115,7 +115,7 @@
         if(String(value).indexOf('.') !=-1){
           callback(new Error('抽成需要为整数'));
         }else{
-          if(value> 100 || value <=0){
+          if(value> 100 || value <0){
             callback(new Error('抽成比例在0-100之间'));
           } else{
             callback()

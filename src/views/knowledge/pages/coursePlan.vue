@@ -80,7 +80,7 @@
             第{{courseDay}}天
           </el-form-item>
           <el-form-item label="关联课程：">
-            <el-select filterable v-model="courseSearchForm.selectType" class="iptl">
+            <el-select filterable v-model="courseSearchForm.selectType" style="width:50%;">
               <el-option v-for="(item,index) in courseList" :key="index" :label="item.title" :value="item.id">
               </el-option>
             </el-select>

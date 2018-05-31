@@ -22,7 +22,7 @@
           </el-col>
         </el-form-item>
         <el-form-item class="is-required" label="老师微信" >
-          <el-form-item style="margin-bottom: 10px" v-for="(item,index) in teachterArr" v-on:click.native="getImgIndex(index)" prop="wxQrcodeUrl">
+          <el-form-item style="margin-bottom: 10px" :key="index" v-for="(item,index) in teachterArr" v-on:click.native="getImgIndex(index)" prop="wxQrcodeUrl">
             <div style="color:#606266;">第{{item.startNum}}~{{item.startEnd}}单</div>
             <el-upload
                        class="avatar-uploader"
@@ -35,7 +35,7 @@
               <img v-if="item.teacherWxQrcodeUrl" :src="item.teacherWxQrcodeUrl" class="avatar">
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
               <el-button size="small" type="primary">{{columnForm.teacherWxQrcodeUrl ? '修改文件' : '选择文件'}}</el-button>
-              <div slot="tip" class="el-upload__tip">750*545,支持jpg、png、gif格式,最大5M</div>
+              <div slot="tip" class="el-upload__tip">540*630,支持jpg、png、gif格式,最大5M</div>
             </el-upload>
             <!--<el-form-item label="微信号" style="padding:30px 0" >-->
               <!--<el-col :span="6">-->
@@ -267,12 +267,12 @@
         image.onload = function () {
           const width = image.width;
           const height = image.height;
-          if (width == 750 && height == 545) {
+          if (width == 540 && height == 630) {
             self.columnForm.wxQrcodeUrl = 'https:' + res.data.fileUrl;
             self.teachterArr[self.imgIndex].teacherWxQrcodeUrl = 'https:' + res.data.fileUrl;
             self.$set(self.teachterArr, self.imgIndex,self.teachterArr[self.imgIndex] );
           } else {
-            self.$message.error('上传图片的尺寸必须为 750*545!')
+            self.$message.error('上传图片的尺寸必须为 540*630!')
           }
       };
 

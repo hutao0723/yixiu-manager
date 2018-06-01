@@ -1,0 +1,20 @@
+{
+  "success": true,
+  "data": {
+    "content": [
+      {
+        "activityId": 1,
+        "outCode": "dddddddddd",
+        "activityTitle": "分享2次免费领30元",
+        "status": 1
+      }
+    ],
+    "totalPages": 7,
+    "numberOfElements": 20,
+    "firstPage": true,
+    "lastPage": false,
+    "totalElements": 135,
+    "size": 20,
+    "number": 0
+  }
+}

@@ -255,7 +255,25 @@ var setOnline = [
     name: 'save',
     type: 'post',
     url: '/comment/changeStatus'
-  }
+  },
+  //母版列表
+  {
+    name: 'parentEditionList',
+    type: 'get',
+    url: '/parentEdition/list'
+  },
+  //已发券列表
+  {
+    name: 'voucherList',
+    type: 'get',
+    url: '/voucher/list'
+  },
+  //发券活动列表
+  {
+    name: 'voucherActivitiesList',
+    type: 'get',
+    url: '/voucherActivities/list'
+  },
 ];
 var fs = require('fs');
 

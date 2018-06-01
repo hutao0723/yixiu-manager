@@ -84,3 +84,17 @@ export const templateDetail = params => get('authorizerMpTemplate/details', para
 */
 //分页查询分销详情
 export const getUserDistributionList = params => get('distributor/userDistribution/pageList', params);
+
+/*
+*优惠券相关接口
+*/
+//获取母版列表
+export const parentEditionList = params => get('parentEdition/list', params);
+//获取已发券列表
+export const voucherList = params => get('voucher/list', params);
+
+/*
+*发券活动相关接口
+*/
+//获取已发券列表
+export const voucherActivitiesList = params => get('voucherActivities/list', params);

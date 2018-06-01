@@ -143,9 +143,6 @@
 </template>
 <script>
   import {formatHourSec} from '../../../utils/dateUtils'
-  import 'quill/dist/quill.core.css'
-  import 'quill/dist/quill.snow.css'
-  import 'quill/dist/quill.bubble.css'
   import E from 'wangeditor'
   import plupload from 'plupload';
   import qs from 'qs'

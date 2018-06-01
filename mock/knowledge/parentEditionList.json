@@ -1,0 +1,21 @@
+{
+  "success": true,
+  "data": {
+    "content": [
+      {
+        "parentEditionId": 1,
+        "parentEditionTitle": "五一大放送",
+        "money": "19.9元",
+        "effectiveDate": "2018.6.1",
+        "status": 1
+      }
+    ],
+    "totalPages": 7,
+    "numberOfElements": 20,
+    "firstPage": true,
+    "lastPage": false,
+    "totalElements": 135,
+    "size": 20,
+    "number": 0
+  }
+}

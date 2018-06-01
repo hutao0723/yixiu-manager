@@ -165,6 +165,25 @@
                     </tr>
                   </tbody>
                 </table>
+                <div class="order-detail-title">优惠券</div>
+                <table class="table-list">
+                  <thead>
+                    <tr class="tr-header">
+                      <th class="w255">优惠券ID</th>
+                      <th class="w255">母版ID</th>
+                      <th class="w255">母版标题</th>
+                      <th>面额</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>{{detailList.distributorId}}</td>
+                      <td>{{detailList.distributorName}}</td>
+                      <td>{{detailList.distributorName}}</td>
+                      <td>{{detailList.distributorName}}</td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>

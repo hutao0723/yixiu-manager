@@ -13,7 +13,7 @@ module.exports = {
     proxyTable: {
       '*': {
         // 测试环境 
-        target: 'http://172.31.20.47:9101/',  // 接口域名
+        target: 'http://localhost:3000/',  // 接口域名
         changeOrigin: true,  //是否跨域
       }
 

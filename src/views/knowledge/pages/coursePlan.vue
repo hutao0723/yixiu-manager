@@ -13,7 +13,8 @@
       <div class="tabel-wrap removeDefStyle">
         <template >
           <el-table :data="courseManageList" border style="width: 100%;text-align: center" > <!--:span-method="arraySpanMethod"-->
-            <el-table-column prop="title" label="书籍标题">
+
+            <el-table-column prop="title" label="书籍标题" width="200">
             </el-table-column>
 
             <el-table-column  label="解锁日期">
@@ -34,7 +35,7 @@
               </template>
             </el-table-column>
 
-            <el-table-column prop="title" label="课程标题">
+            <el-table-column prop="title" label="课程标题" width="280">
               <template slot-scope="scope">
                 <div class="itemStyle" v-for="(item,index) in scope.row.readBookCourseVOList">{{item.courseTitle}}</div>
               </template>
@@ -490,11 +491,24 @@
   }
 
 </script>
-<style lang="less" scoped>
+<style lang="less" >
   .ofa-main-wrap {
     .removeDefStyle{
+      .el-table td, .el-table th{
+        padding:0;
+        text-align:center;
+        min-height:40px;
+        line-height:40px;
+      }
+      .el-table .cell, .el-table th div, .el-table--border td:first-child .cell, .el-table--border th:first-child .cell{
+        padding-left:0;
+        min-height:50px;
+        line-height:50px;
+      }
+      .el-table .cell, .el-table th div{
+        padding-right:0;
+      }
       .itemStyle{
-        padding:10px 0;
         border-bottom:1px solid #ebeef5;
       }
       .itemStyle:last-child{

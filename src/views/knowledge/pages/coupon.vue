@@ -5,7 +5,9 @@
         <!--母版列表-->
         <div class="content">
           <div class="search-bar">
-            <el-button type="primary" size="small" class="fr" @click="edit(0)">新建母版</el-button>
+            <router-link :to="{ path: '/manager/knowledge/editMaster/0' }">
+            <el-button type="primary" size="small" class="fr">新建母版</el-button>
+            </router-link>
             <template>
               <el-form :inline="true" :model="parentEditionSearchForm" class="demo-form-inline" size="mini">
                 <el-form-item>
@@ -37,7 +39,9 @@
                 <el-table-column prop="status" sortable label="状态" ></el-table-column>
                 <el-table-column  label="操作">
                   <template slot-scope="scope">
-                    <el-button type="text" size="mini" @click="edit(scope.row.parentEditionId)">编辑</el-button> 
+                    <router-link :to="{ path: '/manager/knowledge/editMaster/' + scope.row.parentEditionId }">
+                      <el-button type="text" size="mini">编辑</el-button>
+                    </router-link>
                     <el-button type="text" size="mini" @click="copy(scope.row)">复制</el-button>
                     <el-button type="text" size="mini" @click="changeStatus(scope.row.id, scope.row.status)">{{scope.row.status == 1 ? '下线' : '上线'}}</el-button> 
                     <el-button type="text" size="mini" @click="deleteRow(scope.row)">删除</el-button> 
@@ -303,15 +307,6 @@ export default {
       } else {
         this.getVoucherList();
       }
-    },
-    //编辑母版
-    edit(id) {
-      this.$router.push({
-        path: 'editMaster',
-        params: {
-          id: id
-        }
-      });
     },
     //复制母版
     copy() {

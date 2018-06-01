@@ -386,6 +386,18 @@ export const constantRouterMap = [
               require(['../views/knowledge/pages/voucherActivities'], resolve)
             }
           },
+          {
+            path: 'editMaster/:id',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/editMaster'], resolve)
+            }
+          },
+          {
+            path: 'addActivity/:id',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/addActivity'], resolve)
+            }
+          }
         ]
       }
     ]

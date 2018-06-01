@@ -14,6 +14,7 @@ module.exports = {
       '*': {
         // 测试环境 
         target: 'http://localhost:3000/',  // 接口域名
+        // 测试环境
         changeOrigin: true,  //是否跨域
       }
 

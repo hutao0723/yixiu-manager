@@ -237,14 +237,6 @@ export default {
   watch: {
     posterMsg() {
       this.newPosterMsg = this.posterMsg;
-    },
-    'newPosterDetail.portraitLength'(oldValue, newValue) {
-      console.log(oldValue, newValue)
-      if (this.newPosterDetail.portraitLength > 100) {
-        this.newPosterDetail.portraitLength = 100;
-      } else if (this.newPosterDetail.portraitLength < 62) {
-        this.newPosterDetail.portraitLength = 62;
-      }
     }
   },
   methods: {

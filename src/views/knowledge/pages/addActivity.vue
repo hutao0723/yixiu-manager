@@ -18,8 +18,8 @@
             </el-form-item>
             <el-form-item label="奖励优惠券" prop="coupon">
               <el-col :span="6">
-                <el-select v-model="activityForm.coupon">
-                  <el-option v-for="item in masterOptions" :key="item.id" :label="item.nickName" :value="item.id">
+                <el-select v-model="prize">
+                  <el-option v-for="item in masterOptions" :key="item.parentEditionId" :label="item.parentEditionTitle" :value="item.parentEditionId">
                       </el-option>
                 </el-select>
               </el-col>
@@ -67,10 +67,12 @@
         rules: couponrules,
         activityForm: {
           id: '',
+          activityId: '',
           activity: '',
           limit: 1,
-          coupon:'请选择'
+          coupon:''
         },
+        prize:'',
         dateForm: {
           date: []
         },
@@ -80,42 +82,67 @@
         readForm: {
           readPlan: ''
         },
-        masterOptions: [
-          {
-            value: '',
-            label: '请选择'
-          },
-          {
-            value: 'name',
-            label: '一修读书报名页'
-          }
-        ]
+        masterOptions: []
       }
     },
     created () {
       this.getCouponList()
+      this.getPopActivity()
     },
     watch: {
+      'prize': function (newVal) {
+        if (this.masterOptions[newVal] !== undefined) {
+          this.activityForm.id = this.masterOptions[newVal].parentEditionId
+        }
+      }
     },
     methods: {
       // 获取奖励优惠券列表
-      getCouponList() {
-        let { id } = this.$route.params;
-        if (id === 'new') {
-          this.type = 'new';
-        } else {
-          this.type = 'edit';
-        }
-        this.$http.get('/lecturer/pageList', {}).then(res => {
+      getCouponList () {
+        this.$http.get('/get/prize/coupon', {}).then(res => {
           let resp = res.data
           if (resp.success) {
-            this.masterOptions = resp.data.content
+            if(resp.data){
+              this.masterOptions = resp.data.content
+            }
           } else {
             let msg = resp.desc || '请求失败'
             this.$message.error(msg)
           }
         })
-      }
+      },
+      // 获取单个活动详情
+      getPopActivity () {
+        let id = this.$route.params.id
+        if (id === "new") {
+          this.type = 'new';
+          id = '' 
+        } else {
+          this.type = 'edit';
+        }
+        let params = {
+          id: id
+        }
+        this.$http.get('/get/pop/activity', {params: params}).then(res => {
+          let resp = res.data
+          if (resp.success) {
+            if(resp.data){
+              this.activityForm = resp.data
+              this.dateForm.date =[new Date(resp.data.startdate),new Date(resp.data.enddate)] 
+              this.prize = this.activityForm.title
+              this.masterOptions.parentEditionTitle = this.activityForm.title
+              this.masterOptions.parentEditionId = this.activityForm.titleId
+            }
+          } else {
+            let msg = resp.desc || '请求失败'
+            this.$message.error(msg)
+          }
+        })
+      },
+      // 保存活动
+      saveActivity () {
+        
+      },
     }
   }
 </script>

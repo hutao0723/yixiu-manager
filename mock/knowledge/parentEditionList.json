@@ -6,7 +6,21 @@
         "parentEditionId": 1,
         "parentEditionTitle": "五一大放送",
         "money": "19.9元",
-        "effectiveDate": "2018.6.1",
+        "effectiveDate": "2018.6.6",
+        "status": 1
+      },
+      {
+        "parentEditionId": 2,
+        "parentEditionTitle": "优惠大抢购",
+        "money": "19.9元",
+        "effectiveDate": "2018.6.2",
+        "status": 2
+      },
+      {
+        "parentEditionId": 3,
+        "parentEditionTitle": "优惠福利券",
+        "money": "19.9元",
+        "effectiveDate": "2018.6.3",
         "status": 1
       }
     ],

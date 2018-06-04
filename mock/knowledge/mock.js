@@ -274,6 +274,24 @@ var setOnline = [
     type: 'get',
     url: '/voucherActivities/list'
   },
+  //获取奖励优惠券列表
+  {
+    name: 'parentEditionList',
+    type: 'get',
+    url: '/get/prize/coupon'
+  },
+  // 获取当优惠券列表
+  {
+    name: 'activitySingle',
+    type: 'get',
+    url: '/get/pop/activity'
+  },
+  // 保存
+  {
+    name: 'save',
+    type: 'get',
+    url: '/save/activity'
+  },
 ];
 var fs = require('fs');
 

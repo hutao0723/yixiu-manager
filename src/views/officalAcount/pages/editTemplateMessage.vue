@@ -84,7 +84,7 @@
                     <div class="editContent">
                         <div class="attributePage">
                             <div class="attribute">start</div>
-                            <el-input v-model="templateDetail.firstData" size="mini" class="attributeContent"></el-input>
+                            <el-input v-model="templateDetail.firstData" size="mini" class="attributeContent" :maxlength="100"></el-input>
                             <el-color-picker v-model="templateDetail.colorContent.first" class="colorPicker" size="mini"></el-color-picker>
                         </div>
                         <div v-if="templateDetail.templateType == 1">
@@ -174,7 +174,7 @@
                         </div>
                         <div class="attributePage">
                             <div class="attribute">remark</div>
-                            <el-input v-model="templateDetail.remarkData" size="mini" class="attributeContent"></el-input>
+                            <el-input v-model="templateDetail.remarkData" size="mini" class="attributeContent" :maxlength="100"></el-input>
                             <el-color-picker v-model="templateDetail.colorContent.remark" class="colorPicker" size="mini"></el-color-picker>
                         </div>
                     </div>
@@ -184,10 +184,10 @@
                       <el-radio :label=1>小程序路径 </el-radio>
                     </el-radio-group>
                     <div :style="{ marginTop: '10px'}">
-                      <el-input v-if="this.templateDetail.linkType === 0" :style="{ width: '373px' }" placeholder="跳转的链接" v-model="templateDetail.linkAddress"></el-input>
+                      <el-input v-if="this.templateDetail.linkType === 0" :style="{ width: '373px' }" placeholder="跳转的链接" v-model="templateDetail.linkAddress" :maxlength="1000"></el-input>
                       <div v-else-if="this.templateDetail.linkType === 1">
-                        <el-input :style="{ width: '160px' }" placeholder="小程序Appid" v-model="templateDetail.miniappId"></el-input>
-                        <el-input :style="{ width: '207px' }" placeholder="小程序路径" v-model="templateDetail.pagePath"></el-input>
+                        <el-input :style="{ width: '160px' }" placeholder="小程序Appid" v-model="templateDetail.miniappId" :maxlength="1000"></el-input>
+                        <el-input :style="{ width: '207px' }" placeholder="小程序路径" v-model="templateDetail.pagePath" :max="1000"></el-input>
                       </div>
                     </div>
                 </div>

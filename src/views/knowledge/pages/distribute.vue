@@ -55,7 +55,7 @@
               <el-tab-pane :label="childTab1" :name="childTab1">
                 <Poster :posterMsg="posterMsg" @queryPoster="queryPoster" @get-poster-list="getPosterList"></Poster>
               </el-tab-pane>
-              <el-tab-pane :label="childTab2" :name="childTab2">
+              <!-- <el-tab-pane :label="childTab2" :name="childTab2"> -->
                 <!-- <div class="table-wrap">
                   <div class="detail" v-show="this.goodsGroupDetail.id">
                     <span>商品组ID：</span>
@@ -78,7 +78,7 @@
                     <el-button type="text" size="mini" class="detailBtn" @click="changeGoodsGroup()">更换分销商品组</el-button>
                   </div>
                 </div> -->
-              </el-tab-pane>
+              <!-- </el-tab-pane> -->
             </el-tabs>
           </div>
         </div>

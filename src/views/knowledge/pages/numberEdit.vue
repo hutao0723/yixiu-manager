@@ -22,7 +22,7 @@
           </el-col>
         </el-form-item>
         <el-form-item class="is-required" label="老师微信" >
-          <el-form-item style="margin-bottom: 10px" v-for="(item,index) in teachterArr" v-on:click.native="getImgIndex(index)" prop="wxQrcodeUrl">
+          <el-form-item style="margin-bottom: 10px" v-for="(item,index) in teachterArr" :key="index" v-on:click.native="getImgIndex(index)" prop="wxQrcodeUrl">
             <div style="color:#606266;">第{{item.startNum}}~{{item.startEnd}}单</div>
             <el-upload
                        class="avatar-uploader"
@@ -62,9 +62,6 @@
   </section>
 </template>
 <script>
-  import 'quill/dist/quill.core.css'
-  import 'quill/dist/quill.snow.css'
-  import 'quill/dist/quill.bubble.css'
   import qs from 'qs'
   import { formatDateNew } from '../components/knowledgeValidRules'
 

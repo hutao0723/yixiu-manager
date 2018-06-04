@@ -4,10 +4,10 @@
           <draggable v-model="newPosterMsg" @update="datadragEnd">
             <el-col v-for="(item, index) in posterMsg" class="showCol" :span="8" :key="index">
                 <el-card class="showPoster" :style="{ backgroundImage: 'url('+item.poster+')', backgroundRepeat: 'no-repeat', backgroundSize: 'contain', backgroundPosition: 'center' }" :body-style="{ padding: 0 }" @mouseout.native="onMouseOut(index)" @mouseover.native="onMouseOver(index)">
-                    <img class="headImg" :style="{ width: item.portraitWidth + 'px', height: item.portraitHeight + 'px', left: item.portraitLeftMargin + 'px', top: item.portraitTopMargin + 'px', borderRadius: item.portraitRoundProportion + '%', display: item.portraitDisplay === 1 ? 'block' : 'none' }">
-                    <div class="nickName" placeholder="昵称" :style="{ fontSize: item.nicknameFontSize + 'px', left: item.nicknameLeftMargin + 'px', top: item.nicknameTopMargin + 'px', width: item.nicknameWidth + 'px', height: item.nicknameHeight + 'px', color: item.nicknameFontColor, display: item.nicknameDisplay === 1 ? 'block' : 'none' }">昵称</div>
-                    <div class="goodsName" placeholder="商品名称" :style="{ fontSize: item.ctitleFontSize + 'px', left: item.ctitleLeftMargin + 'px', top: item.ctitleTopMargin + 'px', width: item.ctitleWidth + 'px', height: item.ctitleHeight + 'px', color: item.ctitleFontColor, display: item.ctitleDisplay === 1 ? 'block' : 'none' }">商品标题</div>
-                    <img class="qrCode" :style="{ width: item.qrcodeWidth + 'px', height: item.qrcodeHeight + 'px', left: item.qrcodeLeftMargin + 'px', top: item.qrcodeTopMargin + 'px' }">
+                    <div class="headImg" :style="{ border: '1px solid #dad2d2', width: item.portraitLength + 'px', height: item.portraitLength + 'px', left: item.portraitLeftMargin + 'px', top: item.portraitTopMargin + 'px', borderRadius: item.portraitRoundProportion + '%', display: item.portraitDisplay === 1 ? 'block' : 'none' }"></div>
+                    <div class="nickName" :style="{ fontSize: item.nicknameFontSize + 'px', left: item.nicknameLeftMargin + 'px', top: item.nicknameTopMargin + 'px', width: item.nicknameWidth + 'px', height: item.nicknameHeight + 'px', color: item.nicknameFontColor, display: item.nicknameDisplay === 1 ? 'block' : 'none' }">昵称</div>
+                    <div class="goodsName" :style="{ fontSize: item.ctitleFontSize + 'px', left: item.ctitleLeftMargin + 'px', top: item.ctitleTopMargin + 'px', width: item.ctitleWidth + 'px', height: item.ctitleHeight + 'px', color: item.ctitleFontColor, display: item.ctitleDisplay === 1 ? 'block' : 'none' }">商品标题</div>
+                    <div class="qrCode" :style="{ border: '1px solid #dad2d2', width: item.qrcodeLength + 'px', height: item.qrcodeLength + 'px', left: item.qrcodeLeftMargin + 'px', top: item.qrcodeTopMargin + 'px' }"></div>
                     <el-button v-show="diaplayState==index" type="text" class="deletePosterBtn" @click="deletePoster(item.id)">
                         <i class="el-icon-circle-close-outline"></i>
                     </el-button>
@@ -24,124 +24,120 @@
                 <h5>{{ this.dialogType === 'edit' ? '编辑海报：' : '添加海报：' }}</h5>
                 <div class="mainDiv">
                     <el-card class="showPoster mainPoster" :style="{ float: 'left', backgroundImage: 'url(' + this.newPosterDetail.poster + ')' }" :body-style="{ padding: 0 }">
-                        <el-upload action="/upload/image" name="imageFile" :on-success="changeHeadImg" :show-file-list="false">
-                            <img class="headImg" :style="{ border: this.newPosterDetail.headImgUrl? '' : '1px solid #dad2d2', 
-                            boxSizing: 'border-box', width: this.newPosterDetail.portraitLength + 'px', height: this.newPosterDetail.portraitLength + 'px', left: this.newPosterDetail.portraitLeftMargin + 'px', top: this.newPosterDetail.portraitTopMargin + 'px', borderRadius: this.newPosterDetail.portraitRoundProportion + '%', display: this.newPosterDetail.portraitDisplay === 1 ? 'block' : 'none' }" :src="this.headImgUrl" alt="">
-                        </el-upload>
-                        <input class="nickName" placeholder="昵称" :style="{ padding: '0', fontSize: this.newPosterDetail.nicknameFontSize + 'px', left: this.newPosterDetail.nicknameLeftMargin + 'px', top: this.newPosterDetail.nicknameTopMargin + 'px', width: this.newPosterDetail.nicknameWidth + 'px', height: this.newPosterDetail.nicknameHeight + 'px', color: this.newPosterDetail.nicknameFontColor, display: this.newPosterDetail.nicknameDisplay === 1 ? 'block' : 'none' }" />
-                        <textarea name="goodsName" @input="changeTitleHeight" class="goodsName" rows="5" placeholder="商品名称" :style="{ textAlign: 'center', fontSize: this.newPosterDetail.ctitleFontSize + 'px', left: this.newPosterDetail.ctitleLeftMargin + 'px', top: this.newPosterDetail.ctitleTopMargin + 'px', width: this.newPosterDetail.ctitleWidth + 'px', height: this.newPosterDetail.ctitleHeight + 'px', color: this.newPosterDetail.ctitleFontColor, display: this.newPosterDetail.ctitleDisplay === 1 ? 'block' : 'none' }"></textarea>
-                        <el-upload action="/upload/image" name="imageFile" :on-success="changeQrCode" :show-file-list="false">
-                            <img class="qrCode" :style="{ border: this.newPosterDetail.headImgUrl? '' : '1px solid #dad2d2', 
-                            boxSizing: 'border-box', width: this.newPosterDetail.qrcodeLength + 'px', height: this.newPosterDetail.qrcodeLength + 'px', left: this.newPosterDetail.qrcodeLeftMargin + 'px', top: this.newPosterDetail.qrcodeTopMargin + 'px' }" :src="this.qrCodeUrl" alt="">
-                        </el-upload>
+                      <div class="headImg" :style="{ border: '1px solid #dad2d2', textAlign: 'center', lineHeight: this.newPosterDetail.portraitLength + 'px', boxSizing: 'border-box', width: this.newPosterDetail.portraitLength + 'px', height: this.newPosterDetail.portraitLength + 'px', left: this.newPosterDetail.portraitLeftMargin + 'px', top: this.newPosterDetail.portraitTopMargin + 'px', borderRadius: this.newPosterDetail.portraitRoundProportion + '%', display: this.newPosterDetail.portraitDisplay === 1 ? 'block' : 'none' }">
+                        头像
+                      </div>
+                      <div class="nickName" :style="{ boxSizing: 'border-box', border: '1px solid #dad2d2', padding: '0', textAlign: 'center', lineHeight: this.newPosterDetail.nicknameHeight + 'px', fontSize: this.newPosterDetail.nicknameFontSize + 'px', left: this.newPosterDetail.nicknameLeftMargin + 'px', top: this.newPosterDetail.nicknameTopMargin + 'px', width: this.newPosterDetail.nicknameWidth + 'px', height: this.newPosterDetail.nicknameHeight + 'px', color: this.newPosterDetail.nicknameFontColor, display: this.newPosterDetail.nicknameDisplay === 1 ? 'block' : 'none' }" >昵称</div>
+                      <div name="goodsName" class="goodsName" :style="{ boxSizing: 'border-box',  border: '1px solid #dad2d2', textAlign: 'center', lineHeight: this.newPosterDetail.ctitleHeight + 'px', fontSize: this.newPosterDetail.ctitleFontSize + 'px', left: this.newPosterDetail.ctitleLeftMargin + 'px', top: this.newPosterDetail.ctitleTopMargin + 'px', width: this.newPosterDetail.ctitleWidth + 'px', height: this.newPosterDetail.ctitleHeight + 'px', color: this.newPosterDetail.ctitleFontColor, display: this.newPosterDetail.ctitleDisplay === 1 ? 'block' : 'none' }">商品标题</div>
+                      <div class="qrCode" :style="{ border: '1px solid #dad2d2', boxSizing: 'border-box', textAlign: 'center', lineHeight: this.newPosterDetail.qrcodeLength + 'px', width: this.newPosterDetail.qrcodeLength + 'px', height: this.newPosterDetail.qrcodeLength + 'px', left: this.newPosterDetail.qrcodeLeftMargin + 'px', top: this.newPosterDetail.qrcodeTopMargin + 'px' }">二维码</div>
                     </el-card>
                     <div class="postDetailInfo">
-                        <el-upload action="/upload/image" name="imageFile" :show-file-list=false :on-success="changePoster" :before-upload="beforePosterUpload">
-                            <el-button size="small" class="postBtn postPoster">上传海报</el-button>
-                        </el-upload>
-                        <h5 :style="{ 'margin-bottom': '10px' }">头像设置：</h5>
-                        <el-radio-group v-model="newPosterDetail.portraitDisplay" :change="changePortraitDisplay">
-                            <el-radio :label=1>显示</el-radio>
-                            <el-radio :label=0>隐藏</el-radio>
-                        </el-radio-group>
-                        <el-row>
-                          <el-col :span="12" class="setInfo">
-                            圆角
-                            <el-input v-model="newPosterDetail.portraitRoundProportion" class="font-detail"></el-input>
-                            <span>%</span>
-                          </el-col>
-                          <el-col :span="12" class="setInfo">
-                            大小
-                            <el-input v-model="newPosterDetail.portraitLength" class="font-detail"></el-input>
-                            <span>px</span>
-                          </el-col>
-                        </el-row>
-                        <el-row>
-                          <el-col :span="12" class="setInfo">
-                            Left
-                            <el-input v-model="newPosterDetail.portraitLeftMargin" class="font-detail"></el-input>
-                            <span>px</span>
-                          </el-col>
-                          <el-col :span="12" class="setInfo">
-                            Top
-                            <el-input v-model="newPosterDetail.portraitTopMargin" class="font-detail"></el-input>
-                            <span>px</span>
-                          </el-col>
-                        </el-row>
-                        <h5 :style="{ 'margin-bottom': '10px', 'margin-top': '10px' }">昵称设置：</h5>
-                        <el-radio-group v-model="newPosterDetail.nicknameDisplay" :change="changeNicknameDisplay">
-                            <el-radio :label=1>显示</el-radio>
-                            <el-radio :label=0>隐藏</el-radio>
-                        </el-radio-group>
-                        <el-row>
-                          <el-col :span="12" class="setInfo">
-                            Left
-                            <el-input v-model="newPosterDetail.nicknameLeftMargin" class="font-detail"></el-input>
-                            <span>px</span>
-                          </el-col>
-                          <el-col :span="12" class="setInfo">
-                            Top
-                            <el-input v-model="newPosterDetail.nicknameTopMargin" class="font-detail"></el-input>
-                            <span>px</span>
-                          </el-col>
-                        </el-row>
-                        <el-row>
-                          <el-col :span="12" class="setInfo">
-                            字号
-                            <el-input v-model="newPosterDetail.nicknameFontSize" class="font-detail"></el-input>
-                            <span>px</span>
-                          </el-col>
-                          <el-col :span="12" class="setInfo color">
-                            颜色
-                            <el-input v-model="newPosterDetail.nicknameFontColor" class="font-detail"></el-input>
-                            <el-color-picker v-model="newPosterDetail.nicknameFontColor" size="mini" class="colorPicker"></el-color-picker>
-                          </el-col>
-                        </el-row>
-                        <h5 :style="{ 'margin-bottom': '10px', 'margin-top': '10px' }">商品标题：</h5>
-                        <el-radio-group v-model="newPosterDetail.ctitleDisplay" :change="changeTitleDisplay">
-                            <el-radio :label=1>显示</el-radio>
-                            <el-radio :label=0>隐藏</el-radio>
-                        </el-radio-group>
-                        <el-row>
-                          <el-col :span="12" class="setInfo">
-                            Top
-                            <el-input v-model="newPosterDetail.ctitleTopMargin" class="font-detail"></el-input>
-                            <span>px</span>
-                          </el-col>
-                        </el-row>
-                        <el-row>
-                          <el-col :span="12" class="setInfo">
-                            字号
-                            <el-input v-model="newPosterDetail.ctitleFontSize" class="font-detail"></el-input>
-                            <span>px</span>
-                          </el-col>
-                          <el-col :span="12" class="setInfo color">
-                            颜色
-                            <el-input v-model="newPosterDetail.ctitleFontColor" class="font-detail"></el-input>
-                            <el-color-picker v-model="newPosterDetail.ctitleFontColor" size="mini" class="colorPicker"></el-color-picker>
-                          </el-col>
-                        </el-row>
-                        <h5 :style="{ 'margin-bottom': '10px', 'margin-top': '10px' }">二维码：</h5>
-                        <el-row>
-                          <el-col :span="12" class="setInfo">
-                            大小
-                            <el-input v-model="newPosterDetail.qrcodeLength" class="font-detail"></el-input>
-                            <span>px</span>
-                          </el-col>
-                        </el-row>
-                        <el-row>
-                          <el-col :span="12" class="setInfo">
-                            Left
-                            <el-input v-model="newPosterDetail.qrcodeLeftMargin" class="font-detail"></el-input>
-                            <span>px</span>
-                          </el-col>
-                          <el-col :span="12" class="setInfo">
-                            Top
-                            <el-input v-model="newPosterDetail.qrcodeTopMargin" class="font-detail"></el-input>
-                            <span>px</span>
-                          </el-col>
-                        </el-row>
-                    </div>
+                      <el-upload action="/upload/image" name="imageFile" :show-file-list=false :on-success="changePoster" :before-upload="beforePosterUpload">
+                        <el-button size="small" class="postBtn postPoster">上传海报</el-button>
+                      </el-upload>
+                      <h5 :style="{ 'margin-bottom': '10px' }">头像设置：</h5>
+                      <el-radio-group v-model="newPosterDetail.portraitDisplay" :change="changePortraitDisplay">
+                        <el-radio :label=1>显示</el-radio>
+                        <el-radio :label=0>隐藏</el-radio>
+                      </el-radio-group>
+                      <el-row>
+                        <el-col :span="12" class="setInfo">
+                          圆角
+                          <el-input-number v-model="newPosterDetail.portraitRoundProportion" class="font-detail" controls-position="right" size="mini" :min="0" :max="50"></el-input-number>
+                          <span>%</span>
+                        </el-col>
+                        <el-col :span="12" class="setInfo">
+                          大小
+                          <el-input-number v-model.number="newPosterDetail.portraitLength" class="font-detail" controls-position="right" size="mini" :min="62" :max="100"></el-input-number>
+                          <span>px</span>
+                        </el-col>
+                      </el-row>
+                      <el-row>
+                        <el-col :span="12" class="setInfo">
+                          Left
+                          <el-input-number v-model="newPosterDetail.portraitLeftMargin" class="font-detail" controls-position="right" size="mini" :min="0" :max="410"></el-input-number>
+                          <span>px</span>
+                        </el-col>
+                        <el-col :span="12" class="setInfo">
+                          Top
+                          <el-input-number v-model="newPosterDetail.portraitTopMargin" class="font-detail" controls-position="right" size="mini" :min="0" :max="720"></el-input-number>
+                          <span>px</span>
+                        </el-col>
+                      </el-row>
+                      <h5 :style="{ 'margin-bottom': '10px', 'margin-top': '10px' }">昵称设置：</h5>
+                      <el-radio-group v-model="newPosterDetail.nicknameDisplay" :change="changeNicknameDisplay">
+                          <el-radio :label=1>显示</el-radio>
+                          <el-radio :label=0>隐藏</el-radio>
+                      </el-radio-group>
+                      <el-row>
+                        <el-col :span="12" class="setInfo">
+                          Left
+                          <el-input-number v-model="newPosterDetail.nicknameLeftMargin" class="font-detail" controls-position="right" size="mini" :min="0" :max="436"></el-input-number>
+                          <span>px</span>
+                        </el-col>
+                        <el-col :span="12" class="setInfo">
+                          Top
+                          <el-input-number v-model="newPosterDetail.nicknameTopMargin" class="font-detail" controls-position="right" size="mini" :min="0" :max="790"></el-input-number>
+                          <span>px</span>
+                        </el-col>
+                      </el-row>
+                      <el-row>
+                        <el-col :span="12" class="setInfo">
+                          字号
+                          <el-input-number v-model="newPosterDetail.nicknameFontSize" class="font-detail" controls-position="right" size="mini" :min="26" :max="56"></el-input-number>
+                          <span>px</span>
+                        </el-col>
+                        <el-col :span="12" class="setInfo color">
+                          颜色
+                          <el-input v-model="newPosterDetail.nicknameFontColor" class="font-detail" size="mini"></el-input>
+                          <el-color-picker v-model="newPosterDetail.nicknameFontColor" size="mini" class="colorPicker"></el-color-picker>
+                        </el-col>
+                      </el-row>
+                      <h5 :style="{ 'margin-bottom': '10px', 'margin-top': '10px' }">商品标题：</h5>
+                      <el-radio-group v-model="newPosterDetail.ctitleDisplay" :change="changeTitleDisplay">
+                          <el-radio :label=1>显示</el-radio>
+                          <el-radio :label=0>隐藏</el-radio>
+                      </el-radio-group>
+                      <el-row>
+                        <el-col :span="12" class="setInfo">
+                          Top
+                          <el-input-number v-model="newPosterDetail.ctitleTopMargin" class="font-detail" controls-position="right" size="mini" :min="0" :max="780"></el-input-number>
+                          <span>px</span>
+                        </el-col>
+                      </el-row>
+                      <el-row>
+                        <el-col :span="12" class="setInfo">
+                          字号
+                          <el-input-number v-model="newPosterDetail.ctitleFontSize" class="font-detail" controls-position="right" size="mini" :min="20" :max="50"></el-input-number>
+                          <span>px</span>
+                        </el-col>
+                        <el-col :span="12" class="setInfo color">
+                          颜色
+                          <el-input v-model="newPosterDetail.ctitleFontColor" class="font-detail" size="mini"></el-input>
+                          <el-color-picker v-model="newPosterDetail.ctitleFontColor" size="mini" class="colorPicker"></el-color-picker>
+                        </el-col>
+                      </el-row>
+                      <h5 :style="{ 'margin-bottom': '10px', 'margin-top': '10px' }">二维码：</h5>
+                      <el-row>
+                        <el-col :span="12" class="setInfo">
+                          大小
+                          <el-input-number v-model="newPosterDetail.qrcodeLength" class="font-detail" controls-position="right" size="mini" :min="100" :max="160"></el-input-number>
+                          <span>px</span>
+                        </el-col>
+                      </el-row>
+                      <el-row>
+                        <el-col :span="12" class="setInfo">
+                          Left
+                          <el-input-number v-model="newPosterDetail.qrcodeLeftMargin" class="font-detail" controls-position="right" size="mini" :min="0" :max="350"></el-input-number>
+                          <span>px</span>
+                        </el-col>
+                        <el-col :span="12" class="setInfo">
+                          Top
+                          <el-input-number v-model="newPosterDetail.qrcodeTopMargin" class="font-detail" controls-position="right" size="mini" :min="0" :max="660"></el-input-number>
+                          <span>px</span>
+                        </el-col>
+                      </el-row>
+                  </div>
                 </div>
                 <h5 :style="{ 'margin-top': '15px' }">海报小图：</h5>
                 <el-upload class="postSmallPoster" action="/upload/image" :on-success="changeSmall" name="imageFile" :before-upload="beforeSmallPosterUpload" :show-file-list=false>
@@ -184,8 +180,6 @@ export default {
       dialogDeletePoster: false,
       dialogType: "",
       radio: "1",
-      qrCodeUrl: "",
-      headImgUrl: "",
       posterDetail: {
         poster: "",
         smallPoster: "",
@@ -197,7 +191,7 @@ export default {
         nicknameFontSize: 22,
         nicknameWidth: 74,
         nicknameHeight: 30,
-        nicknameLeftMargin: 222,
+        nicknameLeftMargin: 218,
         nicknameTopMargin: 120,
         nicknameFontColor: "#000",
         nicknameDisplay: 1,
@@ -206,11 +200,11 @@ export default {
         ctitleLeftMargin: 59,
         ctitleTopMargin: 427,
         ctitleFontSize: 28,
-        ctitleFontColor: "#fff",
+        ctitleFontColor: "#000",
         ctitleDisplay: 1,
         qrcodeLength: 100,
-        qrcodeLeftMargin: 204,
-        qrcodeTopMargin: 630
+        qrcodeLeftMargin: 205,
+        qrcodeTopMargin: 631
       },
       newPosterDetail: {
         poster: "",
@@ -232,7 +226,7 @@ export default {
         ctitleLeftMargin: 59,
         ctitleTopMargin: 427,
         ctitleFontSize: 28,
-        ctitleFontColor: "#fff",
+        ctitleFontColor: "#000",
         ctitleDisplay: 1,
         qrcodeLength: 100,
         qrcodeLeftMargin: 205,
@@ -243,15 +237,17 @@ export default {
   watch: {
     posterMsg() {
       this.newPosterMsg = this.posterMsg;
+    },
+    'newPosterDetail.portraitLength'(oldValue, newValue) {
+      console.log(oldValue, newValue)
+      if (this.newPosterDetail.portraitLength > 100) {
+        this.newPosterDetail.portraitLength = 100;
+      } else if (this.newPosterDetail.portraitLength < 62) {
+        this.newPosterDetail.portraitLength = 62;
+      }
     }
   },
   methods: {
-    changeTitleHeight() {
-      let goodsHeight = document.getElementsByName('goodsName');
-      if (goodsHeight[0].scrollHeight > this.newPosterDetail.ctitleHeight) {
-        this.newPosterDetail.ctitleHeight += 40;
-      }
-    },
     datadragEnd(e) {
       let posterId = +this.newPosterMsg[e.newIndex].id;
       let start = +this.newPosterMsg[e.newIndex].sort;
@@ -337,13 +333,21 @@ export default {
       this.diaplayState = -1;
     },
     changeSmall(res, file) {
-      this.newPosterDetail.smallPoster = "https:" + res.data.fileUrl;
+      const self = this;
+      const image = new Image();
+      image.src = "https:" + res.data.fileUrl;
+      image.onload = function() {
+        const width = image.width;
+        const height = image.height;
+        if (width == 120 && height == 120) {
+          self.newPosterDetail.smallPoster = "https:" + res.data.fileUrl;
+        } else {
+          self.$message.error("上传图片的尺寸必须为 120*120!");
+        }
+      };
     },
     beforeSmallPosterUpload(file) {
-      const isType =
-        file.type === "image/jpeg " ||
-        file.type === "image/jpg" ||
-        file.type === "image/png";
+      const isType = file.type === 'image/jpg' || file.type === 'image/png' || file.type ==='image/jpeg';
       const isSize = file.size / 1024 / 1024 < 1;
       if (!isType) {
         this.$message.error("上传小图只能是 JPG/JPEG/PNG 格式!");
@@ -354,11 +358,22 @@ export default {
       return isType && isSize;
     },
     changePoster(res, file) {
-      this.newPosterDetail.poster = "https:" + res.data.fileUrl;
+      const self = this;
+      const image = new Image();
+      image.src = "https:" + res.data.fileUrl;
+      image.onload = function() {
+        const width = image.width;
+        const height = image.height;
+        if (width == 510 && height == 820) {
+          self.newPosterDetail.poster = "https:" + res.data.fileUrl;
+        } else {
+          self.$message.error("上传图片的尺寸必须为 510*820!");
+        }
+      };
     },
     beforePosterUpload(file) {
       const isType =
-        file.type === "image/jpeg " ||
+        file.type === "image/jpeg" ||
         file.type === "image/jpg" ||
         file.type === "image/png";
       const isSize = file.size / 1024 / 1024 < 2;
@@ -369,12 +384,6 @@ export default {
         this.$message.error("上传海报图片大小不能超过 2MB!");
       }
       return isType && isSize;
-    },
-    changeQrCode(res, file) {
-      this.qrCodeUrl = "https:" + res.data.fileUrl;
-    },
-    changeHeadImg(res, file) {
-      this.headImgUrl = "https:" + res.data.fileUrl;
     },
     submitPoster() {
       if (this.dialogType === "edit") {
@@ -450,7 +459,7 @@ export default {
   padding: 0;
   margin-right: 0px;
   display: inline-block;
-  box-sizing: border-box;
+  box-sizing: content-box;
   position: relative;
 }
 .mainPoster {
@@ -492,7 +501,7 @@ export default {
   display: flex;
   overflow: hidden;
   margin-top: 20px;
-  margin-left: 70px;
+  margin-left: 35px;
 }
 .smallImg {
   height: 50px;
@@ -558,7 +567,7 @@ export default {
   margin-bottom: 40px;
 }
 .font-detail {
-  width: 70px;
+  width: 100px;
 }
 .setInfo {
   margin-bottom: 10px;

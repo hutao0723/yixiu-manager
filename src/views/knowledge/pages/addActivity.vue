@@ -18,7 +18,7 @@
             </el-form-item>
             <el-form-item label="奖励优惠券" prop="coupon">
               <el-col :span="6">
-                <el-select v-model="prize">
+                <el-select v-model="activityForm.coupon">
                   <el-option v-for="item in masterOptions" :key="item.parentEditionId" :label="item.parentEditionTitle" :value="item.parentEditionId">
                       </el-option>
                 </el-select>
@@ -30,25 +30,25 @@
                 <el-radio :label="2">固定周期</el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form ref="pieceForm" :model="pieceForm" label-width="100px" v-show="activityForm.limit == 1">
-              <el-form-item  prop="piece">
-                <el-col :span="6">
-                  <el-input v-model="pieceForm.piece" placeholder="1-99999999" type="number" :maxlength="8">
-                    <template slot="append">张</template>
-                  </el-input>
-                </el-col>
-              </el-form-item>
-            </el-form>
-            <el-form ref="dateForm" :model="dateForm" label-width="100px" v-show="activityForm.limit == 2">
-              <el-form-item prop="date">
-                <el-date-picker v-model="dateForm.date"  type="datetimerange" range-separator="至" start-placeholder="开始日期"  end-placeholder="结束日期"></el-date-picker>
-              </el-form-item>
-            </el-form>
+            <el-form-item  prop="piece" v-if="activityForm.limit == 1" :maxlength="8" type="number" :rules="[
+                { required: true, message: '请输入张数', trigger: 'blur' }
+            ]">
+              <el-col :span="6">
+                <el-input v-model="activityForm.piece" placeholder="1-99999999" type="number" :maxlength="8">
+                  <template slot="append">张</template>
+                </el-input>
+              </el-col>
+            </el-form-item>
+            <el-form-item prop="date" v-if="activityForm.limit == 2" :rules="[
+                { required: true, message: '请选择时间', trigger: 'blur' }
+            ]">
+              <el-date-picker v-model="activityForm.date"  type="datetimerange" range-separator="至" start-placeholder="开始日期"  end-placeholder="结束日期"></el-date-picker>
+            </el-form-item>
             <el-form-item>
               <router-link :to="{ path: '/manager/knowledge/voucherActivities'}">
                   <el-button type="pain">取消</el-button>
               </router-link>
-              <el-button type="primary" >保存</el-button>
+              <el-button type="primary" @click="saveActivity">保存</el-button>
             </el-form-item>
         </el-form>
       </div>
@@ -66,22 +66,15 @@
         type: 'new',
         rules: couponrules,
         activityForm: {
-          id: '',
-          activityId: '',
+          id: null,
+          activityId: null,
           activity: '',
           limit: 1,
-          coupon:''
-        },
-        prize:'',
-        dateForm: {
+          coupon:'',
+          piece: null,
           date: []
         },
-        pieceForm:{
-          piece: ''
-        },
-        readForm: {
-          readPlan: ''
-        },
+        prize:'',
         masterOptions: []
       }
     },
@@ -90,7 +83,7 @@
       this.getPopActivity()
     },
     watch: {
-      'prize': function (newVal) {
+      'activityForm.coupon': function (newVal) {
         if (this.masterOptions[newVal] !== undefined) {
           this.activityForm.id = this.masterOptions[newVal].parentEditionId
         }
@@ -128,9 +121,8 @@
           if (resp.success) {
             if(resp.data){
               this.activityForm = resp.data
-              this.dateForm.date =[new Date(resp.data.startdate),new Date(resp.data.enddate)] 
-              this.prize = this.activityForm.title
-              this.masterOptions.parentEditionTitle = this.activityForm.title
+              this.activityForm.date =[new Date(resp.data.startdate),new Date(resp.data.enddate)] 
+              this.masterOptions.parentEditionTitle = this.activityForm.coupon
               this.masterOptions.parentEditionId = this.activityForm.titleId
             }
           } else {
@@ -141,7 +133,33 @@
       },
       // 保存活动
       saveActivity () {
-        
+        this.$refs['activityForm'].validate((valid) => {
+          if (valid) {
+            console.log(this.activityForm)
+            let {id, activityId, activity, limit, coupon, piece, date} = this.activityForm
+            let params = {
+              id, 
+              activityId, 
+              activity, 
+              limit, 
+              coupon, 
+              piece, 
+              date
+            };
+            this.$http.post('/save/activity', qs.stringify(params)).then(res => {
+              if (res.data.success) {
+                this.$message.success('操作成功')
+                this.$router.push('skinMarket')
+              } else {
+                this.$message.error('操作失败')
+              }
+            }).catch(() => {
+              this.$message.error('网络错误')
+            })
+          } else {
+            return false
+          }
+        })
       },
     }
   }

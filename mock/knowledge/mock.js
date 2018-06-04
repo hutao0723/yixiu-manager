@@ -289,7 +289,7 @@ var setOnline = [
   // 保存
   {
     name: 'save',
-    type: 'get',
+    type: 'post',
     url: '/save/activity'
   },
 ];

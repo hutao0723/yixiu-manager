@@ -30,18 +30,14 @@
                 <el-radio :label="2">固定周期</el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item  prop="piece" v-if="activityForm.limit == 1" :maxlength="8" type="number" :rules="[
-                { required: true, message: '请输入张数', trigger: 'blur' }
-            ]">
+            <el-form-item  prop="piece" v-if="activityForm.limit == 1" :maxlength="8" type="number">
               <el-col :span="6">
                 <el-input v-model="activityForm.piece" placeholder="1-99999999" type="number" :maxlength="8">
                   <template slot="append">张</template>
                 </el-input>
               </el-col>
             </el-form-item>
-            <el-form-item prop="date" v-if="activityForm.limit == 2" :rules="[
-                { required: true, message: '请选择时间', trigger: 'blur' }
-            ]">
+            <el-form-item prop="date" v-if="activityForm.limit == 2">
               <el-date-picker v-model="activityForm.date"  type="datetimerange" range-separator="至" start-placeholder="开始日期"  end-placeholder="结束日期"></el-date-picker>
             </el-form-item>
             <el-form-item>
@@ -71,7 +67,7 @@
           activity: '',
           limit: 1,
           coupon:'',
-          piece: null,
+          piece: '',
           date: []
         },
         prize:'',

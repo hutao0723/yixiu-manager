@@ -5,7 +5,7 @@
         <!--母版列表-->
         <div class="content">
           <div class="search-bar">
-            <router-link :to="{ path: '/manager/knowledge/editMaster/0' }">
+            <router-link :to="{ path: '/manager/knowledge/editMaster/new' }">
             <el-button type="primary" size="small" class="fr">新建母版</el-button>
             </router-link>
             <template>
@@ -40,7 +40,7 @@
                 <el-table-column  label="操作">
                   <template slot-scope="scope">
                     <router-link :to="{ path: '/manager/knowledge/editMaster/' + scope.row.parentEditionId }">
-                      <el-button type="text" size="mini">编辑</el-button>
+                      <el-button type="text" size="mini" :style="{ marginRight: '10px' }">编辑</el-button>
                     </router-link>
                     <el-button type="text" size="mini" @click="copy(scope.row)">复制</el-button>
                     <el-button type="text" size="mini" @click="changeStatus(scope.row.id, scope.row.status)">{{scope.row.status == 1 ? '下线' : '上线'}}</el-button> 
@@ -80,7 +80,7 @@
                   <el-date-picker v-if="voucherSearchForm.selectType2 == 'date'" v-model="voucherSearchForm.searchValue2" type="datetime"
                   placeholder="选择日期时间">
                   </el-date-picker>
-                  <el-date-picker v-else v-model="voucherSearchForm.searchValue2" type="datetimerange"
+                  <el-date-picker class="date-range" v-else v-model="voucherSearchForm.searchValue2" type="datetimerange"
                   range-separator="至"
                   start-placeholder="开始日期"
                   end-placeholder="结束日期" @change="changeDate">
@@ -103,6 +103,7 @@
                   <el-input v-model="voucherSearchForm.userId" class="iptr" placeholder="用户ID"></el-input>
                 </el-form-item>
                 <el-button type="primary" @click="getVoucherList" size="small">查询</el-button>
+                <el-button type="primary" @click="exportVoucherList" size="small">导出</el-button>
               </el-form>
             </template>
           </div>
@@ -295,6 +296,10 @@ export default {
           this.loading = false;
         });
     },
+    //导出已发券列表
+    exportVoucherList() {
+      console.log('export')
+    },
     // 切换tab
     handleClick(tab, event) {
       if (this.tabList[tab.index].id == this.tabId) {
@@ -344,5 +349,8 @@ export default {
 }
 .deleteMsg {
   text-align: center;
+}
+.date-range {
+  margin-top: 1px;
 }
 </style>

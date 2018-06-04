@@ -5,7 +5,7 @@
         <!--发券活动列表-->
         <div class="content">
           <div class="search-bar">
-            <router-link :to="{ path: '/manager/knowledge/addActivity/0' }"> 
+            <router-link :to="{ path: '/manager/knowledge/addActivity/new' }"> 
             <el-button type="primary" size="small" class="fr">新建活动</el-button>
             </router-link>
             <template>
@@ -48,7 +48,7 @@
                 <el-table-column  label="操作">
                   <template slot-scope="scope">
                     <router-link :to="{ path: '/manager/knowledge/addActivity/' + scope.row.activityId }">
-                    <el-button type="text" size="mini">编辑</el-button>
+                    <el-button type="text" size="mini" :style="{ marginRight: '10px' }">编辑</el-button>
                     </router-link>
                     <el-button type="text" size="mini" @click="copy(scope.row)">复制</el-button>
                     <el-button type="text" size="mini" @click="changeStatus(scope.row.id, scope.row.status)">{{scope.row.status == 1 ? '下线' : '上线'}}</el-button> 
@@ -65,7 +65,7 @@
       </el-tab-pane>
     </el-tabs>
     <el-dialog title="删除" width="25%" :visible.sync="dialogDeleteVoucherActivities">
-        <div class="deleteMsg">确定删除母版：<span>{{ deleteTitle }}</span>？</div>
+        <div class="deleteMsg">确定删除活动：<span>{{ deleteTitle }}</span>？</div>
         <span slot="footer" class="dialog-footer">
           <el-button size="mini" @click="dialogDeleteVoucherActivities = false">取 消</el-button>
           <el-button size="mini" type="primary" @click="queryDeleteVoucherActivities">确 定</el-button>

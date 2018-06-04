@@ -3,7 +3,7 @@
     <div class="title-wrap">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item :to="{ path: '/manager/knowledge/voucherActivities'}">弹层领券</el-breadcrumb-item>
-        <el-breadcrumb-item>弹层领券活动</el-breadcrumb-item>
+        <el-breadcrumb-item>{{ this.type == 'new' ? '新建' : '编辑' }}弹层领券活动</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="content">
@@ -42,7 +42,6 @@
             <el-form ref="dateForm" :model="dateForm" label-width="100px" v-show="activityForm.limit == 2">
               <el-form-item prop="date">
                 <el-date-picker v-model="dateForm.date"  type="datetimerange" range-separator="至" start-placeholder="开始日期"  end-placeholder="结束日期"></el-date-picker>
-                </el-date-picker>
               </el-form-item>
             </el-form>
             <el-form-item>
@@ -64,6 +63,7 @@
   export default {
     data () {
       return {
+        type: 'new',
         rules: couponrules,
         activityForm: {
           id: '',
@@ -100,6 +100,12 @@
     methods: {
       // 获取奖励优惠券列表
       getCouponList() {
+        let { id } = this.$route.params;
+        if (id === 'new') {
+          this.type = 'new';
+        } else {
+          this.type = 'edit';
+        }
         this.$http.get('/lecturer/pageList', {}).then(res => {
           let resp = res.data
           if (resp.success) {
@@ -110,7 +116,6 @@
           }
         })
       }
-     
     }
   }
 </script>

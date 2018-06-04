@@ -3,7 +3,7 @@
     <div class="title-wrap">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item :to="{ path: '/manager/knowledge/coupon' }">母版</el-breadcrumb-item>
-        <el-breadcrumb-item>新建母版</el-breadcrumb-item>
+        <el-breadcrumb-item>{{ this.type == 'new' ? '新建母版' : '编辑母版' }}</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="content">
@@ -15,7 +15,7 @@
         <!-- :rules="rules" -->
         <el-form ref="masterForm" :model="masterForm" label-width="120px" :rules="rules">
             <el-form-item label="母版标题" prop="keyWord">
-              <el-input v-model="masterForm.keyWord" style="width: 60%;" placeholder="1-45字"></el-input>
+              <el-input v-model="masterForm.keyWord" style="width: 60%;" placeholder="1-45字" :maxlength="45"></el-input>
             </el-form-item>
             <el-form-item label="面额" prop="price">
               <el-col :span="6">
@@ -33,7 +33,7 @@
             <el-form ref="dayForm" :model="dayForm" label-width="120px" v-show="masterForm.period == 1">
               <el-form-item  prop="day">
                 <el-col :span="6">
-                  <el-input v-model="dayForm.day" placeholder="0.00-99999.99" type="number" :maxlength="8">
+                  <el-input v-model="dayForm.day" placeholder="1-999" type="number" :maxlength="8">
                     <template slot="append">天</template>
                   </el-input>
                 </el-col>
@@ -41,7 +41,7 @@
             </el-form>
             <el-form ref="dayForm" :model="dateForm" label-width="120px" v-show="masterForm.period == 2">
               <el-form-item prop="date">
-                <el-date-picker v-model="dateForm.date"  type="daterange" range-separator="至" start-placeholder="开始日期"  end-placeholder="结束日期"></el-date-picker>
+                <el-date-picker v-model="dateForm.date"  type="daterange" range-separator="至" start-placeholder="开始日期"  end-placeholder="结束日期">
                 </el-date-picker>
               </el-form-item>
             </el-form>
@@ -114,6 +114,7 @@
   export default {
     data () {
       return {
+        type: 'new',
         rules: couponrules,
         masterForm: {
           id: '',
@@ -153,7 +154,7 @@
       }
     },
     created () {
-      
+      this.init()
     },
     watch: {
     },
@@ -163,8 +164,14 @@
         console.log("关联阅读计划")
         this.dialogReadPlanVisible = true
       },
-      
-     
+      init() {
+        let { id } = this.$route.params;
+        if (id === 'new') {
+          this.type = 'new';
+        } else {
+          this.type = 'edit';
+        }
+      }
     }
   }
 </script>

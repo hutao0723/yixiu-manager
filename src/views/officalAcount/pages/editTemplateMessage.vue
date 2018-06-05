@@ -280,6 +280,7 @@ export default {
     },
     saveTemplate() {
       let {
+        id,
         authorizerId,
         templateId,
         templateType,
@@ -305,6 +306,7 @@ export default {
         linkAddress = "";
       }
       let params = {
+        id: id,
         authorizerId: authorizerId,
         templateId: templateId,
         templateType: templateType,

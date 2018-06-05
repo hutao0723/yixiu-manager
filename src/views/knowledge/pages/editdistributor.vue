@@ -47,7 +47,11 @@
                                     </template>
                                     </el-table-column>
                                     <el-table-column prop="totalTradeNum" sortable label="累计购买笔数"></el-table-column>
-                                    <el-table-column prop="totalTradeMoney" sortable label="累计购买金额" ></el-table-column>
+                                    <el-table-column prop="totalTradeMoney" sortable label="累计购买金额" >
+                                      <template slot-scope="scope">
+                                        {{scope.row.totalTradeMoney / 100}}
+                                      </template>
+                                    </el-table-column>
                                     <el-table-column prop="bindTime" sortable label="最新绑定时间"></el-table-column>
                                     <el-table-column prop="remainingBindTime" sortable label="剩余绑定时间(小时)" ></el-table-column>
                                 </el-table>
@@ -102,8 +106,24 @@ export default {
   // },
   methods: {
     init() {
-      this.distributorMsg = JSON.parse(sessionStorage.getItem("distributor"));
       this.getUserDistribution(this.tabId);
+      let { userId } = this.$route.params;
+      this.$http
+        .get("/distributor/get?id=" + userId)
+        .then(
+          res => {
+            let resp = res.data;
+            if (resp.success) {
+              this.distributorMsg = resp.data;
+            } else {
+              let msg = resp.desc || "请求失败";
+              this.$message.error(msg);
+            }
+          },
+          () => {
+            this.$message.error("网络错误");
+          }
+        );
     },
     //切换tab
     handleClickDistribute(tab, event) {

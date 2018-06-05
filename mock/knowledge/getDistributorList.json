@@ -1,0 +1,29 @@
+{
+  "code": "string",
+  "data": {
+    "content": [
+      {
+        "bindUsers": 0,
+        "consumerId": 0,
+        "deleted": false,
+        "gmtCreate": "2018-06-05T02:49:34.751Z",
+        "gmtModified": "2018-06-05T02:49:34.751Z",
+        "headImgurl": "string",
+        "id": 1,
+        "nickName": "string",
+        "totalDistributeMoney": 0,
+        "totalDistributeNum": 0
+      }
+    ],
+    "firstPage": true,
+    "lastPage": true,
+    "number": 0,
+    "numberOfElements": 0,
+    "size": 0,
+    "sort": {},
+    "totalElements": 0,
+    "totalPages": 0
+  },
+  "desc": "string",
+  "success": true
+}

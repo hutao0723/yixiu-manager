@@ -1,0 +1,12 @@
+{
+  "success": true,
+  "data": {
+    "id": 1,
+    "gmtCreate": "2018-05-11 18:37:24",
+    "gmtModified": "2018-05-28 17:53:01",
+    "consumerId": 500188002,
+    "totalDistributeNum": 4,
+    "totalDistributeMoney": 1,
+    "bindUsers": 2
+  }
+}

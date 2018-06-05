@@ -32,13 +32,17 @@
                   </template>
                 </el-table-column>
                 <el-table-column prop="totalDistributeNum" sortable label="累计分销笔数"></el-table-column>
-                <el-table-column prop="totalDistributeMoney" sortable label="累计分销金额" ></el-table-column>
+                <el-table-column prop="totalDistributeMoney" sortable label="累计分销金额" >
+                  <template slot-scope="scope">
+                    {{scope.row.totalDistributeMoney / 100}}
+                  </template>
+                </el-table-column>
                 <el-table-column prop="bindUsers" sortable label="绑定用户数" width="250" ></el-table-column>
                 <el-table-column prop="gmtCreate" sortable label="加入日期" ></el-table-column>
                 <el-table-column  label="操作">
                   <template slot-scope="scope">
                   <router-link :to="{ path: '/manager/knowledge/editdistributor/' + scope.row.id}">
-                    <el-button type="text" size="mini" @click="gotoDeatail(scope.row)">详情</el-button>
+                    <el-button type="text" size="mini">详情</el-button>
                   </router-link>   
                   </template>
                 </el-table-column>
@@ -183,9 +187,6 @@ export default {
   methods: {
     getPosterList() {
       this.getPublicPoster();
-    },
-    gotoDeatail(param) {
-      sessionStorage.setItem('distributor', JSON.stringify(param));
     },
     // 切换tab
     handleClick(tab, event) {

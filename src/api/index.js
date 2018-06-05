@@ -84,3 +84,7 @@ export const templateDetail = params => get('authorizerMpTemplate/details', para
 */
 //分页查询分销详情
 export const getUserDistributionList = params => get('distributor/userDistribution/pageList', params);
+//查询分销人员详情
+export const getDistributorDetail = params => get('distributor/get', params);
+//分页查询分销人员列表
+export const getDistributorList = params => get('distributor/pageList', params);

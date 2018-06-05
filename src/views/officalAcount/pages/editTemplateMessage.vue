@@ -207,7 +207,7 @@
         </div>
         <div class="footer">
           <el-button size="mini" type="primary" @click="saveTemplate">保存</el-button>
-          <el-button size="mini">取消</el-button>
+          <el-button size="mini" @click="cancelTemplate">取消</el-button>
         </div>
     </section>
 </template>
@@ -342,6 +342,9 @@ export default {
     },
     queryPushStatus(val) {
       this.dialogPushStatus = false;
+    },
+    cancelTemplate() {
+      this.$router.go(-1);
     },
     cancelPushStatus() {
       if (this.templateDetail.pushStatus == 0) {

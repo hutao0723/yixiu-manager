@@ -262,11 +262,29 @@ var setOnline = [
     type: 'get',
     url: '/coupon/template/page'
   },
+  //复制优惠券母版
+  {
+    name: 'copyTemplate',
+    type: 'post',
+    url: '/coupon/template/copy'
+  },
+  //修改优惠券母版状态
+  {
+    name: 'updateStatusTemplate',
+    type: 'post',
+    url: '/coupon/template/updateStatus'
+  },
+  //删除优惠券母版
+  {
+    name: 'deleteTemplate',
+    type: 'post',
+    url: '/coupon/template/delete'
+  },
   //已发券列表
   {
     name: 'voucherList',
     type: 'get',
-    url: '/voucher/list'
+    url: '/coupon/info/page'
   },
   //发券活动列表
   {

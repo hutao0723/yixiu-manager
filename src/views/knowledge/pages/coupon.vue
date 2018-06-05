@@ -11,13 +11,13 @@
             <template>
               <el-form :inline="true" :model="parentEditionSearchForm" class="demo-form-inline" size="mini">
                 <el-form-item>
-                  <el-select v-model="parentEditionSearchForm.selectType" class="iptl w150">
+                  <el-select v-model="selectType" class="iptl w150">
                     <el-option v-for="item in searchOptions" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
                   </el-select>
                 </el-form-item>
                 <el-form-item>
-                  <el-input v-model="parentEditionSearchForm.searchValue" class="iptr"></el-input>
+                  <el-input v-model="templateValue" class="iptr"></el-input>
                 </el-form-item>
                 <el-form-item>
                   <el-select v-model="parentEditionSearchForm.status" class="w150">
@@ -33,17 +33,17 @@
             <template>
               <el-table :data="parentEditionList">
                 <el-table-column prop="couponTemplateId" label="母版ID" ></el-table-column>
-                <el-table-column prop="title" sortable label="母版标题"></el-table-column>
-                <el-table-column prop="couponPrice" sortable label="面额" ></el-table-column>
-                <el-table-column prop="expireDate" sortable label="有效期" width="250" ></el-table-column>
-                <el-table-column prop="status" sortable label="状态" ></el-table-column>
+                <el-table-column prop="title" label="母版标题"></el-table-column>
+                <el-table-column prop="couponPrice" label="面额" ></el-table-column>
+                <el-table-column prop="expireDate" label="有效期" width="250" ></el-table-column>
+                <el-table-column prop="status" label="状态" :formatter="getStatus"></el-table-column>
                 <el-table-column  label="操作">
                   <template slot-scope="scope">
                     <router-link :to="{ path: '/manager/knowledge/editMaster/' + scope.row.parentEditionId }">
                       <el-button type="text" size="mini" :style="{ marginRight: '10px' }">编辑</el-button>
                     </router-link>
-                    <el-button type="text" size="mini" @click="copy(scope.row)">复制</el-button>
-                    <el-button type="text" size="mini" @click="changeStatus(scope.row.id, scope.row.status)">{{scope.row.status == 1 ? '下线' : '上线'}}</el-button> 
+                    <el-button type="text" size="mini" @click="copy(scope.row.couponTemplateId)">复制</el-button>
+                    <el-button type="text" size="mini" @click="changeStatus(scope.row.couponTemplateId, scope.row.status)">{{scope.row.status == 1 ? '下线' : '上线'}}</el-button> 
                     <el-button type="text" size="mini" @click="deleteRow(scope.row)">删除</el-button> 
                   </template>
                 </el-table-column>
@@ -142,22 +142,25 @@
 
 <script>
 import { formatToMs } from "../../../utils/dateUtils";
-import { parentEditionList, voucherList } from "@/api/index";
+import { parentEditionList, copyTemplate, updateStatusTemplate, deleteTemplate, voucherList } from "@/api/index";
 import qs from "qs";
 export default {
   data() {
     return {
       loading: false,
+      templateValue: '',
+      selectType: 'title',
       deleteTitle: "",
+      deleteID: "",
       dialogDeleteParentEdition: false,
       parentEditionSearchForm: {
-        selectType: "title",
-        searchValue: null,
-        id: null,
+        couponTemplateId: null,
         title: null,
         status: "",
         pageNum: 1,
-        pageSize: null
+        pageSize: 20,
+        columns: null,
+        order: null
       },
       voucherSearchForm: {
         selectType1: "title",
@@ -190,7 +193,7 @@ export default {
           label: "已上线"
         },
         {
-          value: 2,
+          value: -1,
           label: "已下线"
         }
       ],
@@ -264,6 +267,14 @@ export default {
     },
     //获取母版列表
     getParentEditionList() {
+      this.loading = true;
+      if (this.selectType == 'title') {
+        this.parentEditionSearchForm.title = this.templateValue;
+        this.parentEditionSearchForm.couponTemplateId = '';
+      } else if (this.selectType == 'id') {
+        this.parentEditionSearchForm.title = '';
+        this.parentEditionSearchForm.couponTemplateId = this.templateValue;
+      }
       parentEditionList(this.parentEditionSearchForm)
         .then(res => {
           if (res.success) {
@@ -313,22 +324,94 @@ export default {
         this.getVoucherList();
       }
     },
+    getStatus(row, column) {
+      switch (row.status) {
+        case '':
+          return '状态';
+        case 0:
+          return '待上线';
+        case 1:
+          return '已上线';
+        case -1:
+          return '已下线';
+      }
+    },
     //复制母版
-    copy() {
-      console.log("copy");
+    copy(id) {
+      let params = {
+        couponTemplateId: id
+      }
+      copyTemplate(params)
+      .then(res => {
+        if (res.success) {
+          let msg = res.data.desc || "复制成功";
+          this.$message.success(msg);
+          this.getParentEditionList();
+        } else {
+          let msg = res.data.desc || "复制失败";
+          this.$message.error(msg);
+        }
+        this.loading = false;
+      })
+      .catch(() => {
+        this.loading = false;
+      });
     },
     //改变状态
-    changeStatus() {
-      console.log("change");
+    changeStatus(id, status) {
+      if (status == 1) {
+        status = -1;
+      } else {
+        status = 1;
+      }
+      let params = {
+        couponTemplateId: id,
+        status: status
+      }
+      updateStatusTemplate(params)
+      .then(res => {
+        if (res.success) {
+          let msg = res.data.desc || "修改状态成功";
+          this.$message.success(msg);
+          this.getParentEditionList();
+        } else {
+          let msg = res.data.desc || "修改状态失败";
+          this.$message.error(msg);
+        }
+        this.loading = false;
+      })
+      .catch(() => {
+        this.loading = false;
+      });
     },
     //删除母版
     deleteRow(row) {
-      this.deleteTitle = row.parentEditionTitle;
+      this.deleteTitle = row.title;
+      this.deleteID = row.couponTemplateId;
       this.dialogDeleteParentEdition = true;
     },
     //确认删除母版
     queryDeleteParentEdition() {
-      console.log("queryDeleteParentEdition");
+      console.log(this.deleteID);
+      let params = {
+        couponTemplateId: this.deleteID
+      }
+      deleteTemplate(params)
+      .then(res => {
+        if (res.success) {
+          this.dialogDeleteParentEdition = false;
+          let msg = res.data.desc || "删除母版成功";
+          this.$message.success(msg);
+          this.getParentEditionList();
+        } else {
+          let msg = res.data.desc || "删除母版失败";
+          this.$message.error(msg);
+        }
+        this.loading = false;
+      })
+      .catch(() => {
+        this.loading = false;
+      });
     }
   }
 };

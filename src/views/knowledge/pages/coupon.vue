@@ -32,10 +32,10 @@
           <div class="tabel-wrap">
             <template>
               <el-table :data="parentEditionList">
-                <el-table-column prop="parentEditionId" label="母版ID" ></el-table-column>
-                <el-table-column prop="parentEditionTitle" sortable label="母版标题"></el-table-column>
-                <el-table-column prop="money" sortable label="面额" ></el-table-column>
-                <el-table-column prop="effectiveDate" sortable label="有效期" width="250" ></el-table-column>
+                <el-table-column prop="couponTemplateId" label="母版ID" ></el-table-column>
+                <el-table-column prop="title" sortable label="母版标题"></el-table-column>
+                <el-table-column prop="couponPrice" sortable label="面额" ></el-table-column>
+                <el-table-column prop="expireDate" sortable label="有效期" width="250" ></el-table-column>
                 <el-table-column prop="status" sortable label="状态" ></el-table-column>
                 <el-table-column  label="操作">
                   <template slot-scope="scope">

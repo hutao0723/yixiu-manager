@@ -89,7 +89,7 @@ export const getUserDistributionList = params => get('distributor/userDistributi
 *优惠券相关接口
 */
 //获取母版列表
-export const parentEditionList = params => get('parentEdition/list', params);
+export const parentEditionList = params => get('coupon/template/page', params);
 //获取已发券列表
 export const voucherList = params => get('voucher/list', params);
 

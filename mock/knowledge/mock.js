@@ -260,7 +260,7 @@ var setOnline = [
   {
     name: 'parentEditionList',
     type: 'get',
-    url: '/parentEdition/list'
+    url: '/coupon/template/page'
   },
   //已发券列表
   {

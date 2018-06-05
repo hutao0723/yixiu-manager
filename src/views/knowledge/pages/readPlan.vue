@@ -17,18 +17,18 @@
           </div>
         </el-form-item>
         <!--<el-form-item class="is-required" label="背景图" prop="bgImgUrl">-->
-          <!--<el-upload-->
-            <!--class="avatar-uploader"-->
-            <!--action="/upload/image"-->
-            <!--name="imageFile"-->
-            <!--:show-file-list=false-->
-            <!--:on-success="firstSuccess"-->
-            <!--:before-upload="beforeAvatarUpload">-->
-            <!--<img v-if="courseForm.bgImgUrl" :src="courseForm.bgImgUrl" class="avatar">-->
-            <!--<i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
-            <!--<el-button size="small" type="primary">{{courseForm.bgImgUrl ? '修改文件' : '选择文件'}}</el-button>-->
-            <!--<div slot="tip" class="el-upload__tip">750*545,支持jpg、png、gif格式,最大5M</div>-->
-          <!--</el-upload>-->
+        <!--<el-upload-->
+        <!--class="avatar-uploader"-->
+        <!--action="/upload/image"-->
+        <!--name="imageFile"-->
+        <!--:show-file-list=false-->
+        <!--:on-success="firstSuccess"-->
+        <!--:before-upload="beforeAvatarUpload">-->
+        <!--<img v-if="courseForm.bgImgUrl" :src="courseForm.bgImgUrl" class="avatar">-->
+        <!--<i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
+        <!--<el-button size="small" type="primary">{{courseForm.bgImgUrl ? '修改文件' : '选择文件'}}</el-button>-->
+        <!--<div slot="tip" class="el-upload__tip">750*545,支持jpg、png、gif格式,最大5M</div>-->
+        <!--</el-upload>-->
         <!--</el-form-item>-->
         <el-form-item label="计划周期" prop="days">
           <el-col :span="6">
@@ -109,10 +109,10 @@
       };
 
       var rateRule = (rule, value, callback) => {
-        if(String(value).indexOf('.') !=-1){
-          callback(new Error('抽成需要为整数'));
+        if(String(value).indexOf('.') !=-1 && String(value).split('.')[1].length >2){
+          callback(new Error('最多两位小数'));
         }else{
-          if(value> 100 || value <=0){
+          if(value> 100 || value <0){
             callback(new Error('抽成比例在0-100之间'));
           } else{
             callback()
@@ -175,9 +175,9 @@
         },
       }
     },
-     mounted(){
-       this.creatRichText();
-     },
+    mounted(){
+      this.creatRichText();
+    },
     created() {
       if(this.$route.query.courseId){
         this.courseId = this.$route.query.courseId;
@@ -261,9 +261,9 @@
 
       submitForm() {
         let params =  this.courseForm;
-        console.log(params)
         this.$refs['courseForm'].validate((valid)=>{
           if (valid) {
+            params.distRate = params.distRate*100;
             this.loading = true;
             if (this.courseId!=0) {
               console.log('修改')

@@ -6,7 +6,7 @@
                 <el-card class="showPoster" :style="{ backgroundImage: 'url('+item.poster+')', backgroundRepeat: 'no-repeat', backgroundSize: 'contain', backgroundPosition: 'center' }" :body-style="{ padding: 0 }" @mouseout.native="onMouseOut(index)" @mouseover.native="onMouseOver(index)">
                     <div class="headImg" :style="{ border: '1px solid #dad2d2', width: item.portraitLength + 'px', height: item.portraitLength + 'px', left: item.portraitLeftMargin + 'px', top: item.portraitTopMargin + 'px', borderRadius: item.portraitRoundProportion + '%', display: item.portraitDisplay === 1 ? 'block' : 'none' }"></div>
                     <div class="nickName" :style="{ fontSize: item.nicknameFontSize + 'px', left: item.nicknameLeftMargin + 'px', top: item.nicknameTopMargin + 'px', width: item.nicknameWidth + 'px', height: item.nicknameHeight + 'px', color: item.nicknameFontColor, display: item.nicknameDisplay === 1 ? 'block' : 'none' }">昵称</div>
-                    <div class="goodsName" :style="{ fontSize: item.ctitleFontSize + 'px', left: item.ctitleLeftMargin + 'px', top: item.ctitleTopMargin + 'px', width: item.ctitleWidth + 'px', height: item.ctitleHeight + 'px', color: item.ctitleFontColor, display: item.ctitleDisplay === 1 ? 'block' : 'none' }">商品标题</div>
+                    <div v-if="$route.path == '/manager/knowledge/distribute'" class="goodsName" :style="{ fontSize: item.ctitleFontSize + 'px', left: item.ctitleLeftMargin + 'px', top: item.ctitleTopMargin + 'px', width: item.ctitleWidth + 'px', height: item.ctitleHeight + 'px', color: item.ctitleFontColor, display: item.ctitleDisplay === 1 ? 'block' : 'none' }">商品标题</div>
                     <div class="qrCode" :style="{ border: '1px solid #dad2d2', width: item.qrcodeLength + 'px', height: item.qrcodeLength + 'px', left: item.qrcodeLeftMargin + 'px', top: item.qrcodeTopMargin + 'px' }"></div>
                     <el-button v-show="diaplayState==index" type="text" class="deletePosterBtn" @click="deletePoster(item.id)">
                         <i class="el-icon-circle-close-outline"></i>
@@ -28,7 +28,7 @@
                         头像
                       </div>
                       <div class="nickName" :style="{ boxSizing: 'border-box', border: '1px solid #dad2d2', padding: '0', textAlign: 'center', lineHeight: this.newPosterDetail.nicknameHeight + 'px', fontSize: this.newPosterDetail.nicknameFontSize + 'px', left: this.newPosterDetail.nicknameLeftMargin + 'px', top: this.newPosterDetail.nicknameTopMargin + 'px', width: this.newPosterDetail.nicknameWidth + 'px', height: this.newPosterDetail.nicknameHeight + 'px', color: this.newPosterDetail.nicknameFontColor, display: this.newPosterDetail.nicknameDisplay === 1 ? 'block' : 'none' }" >昵称</div>
-                      <div name="goodsName" class="goodsName" :style="{ boxSizing: 'border-box',  border: '1px solid #dad2d2', textAlign: 'center', lineHeight: this.newPosterDetail.ctitleHeight + 'px', fontSize: this.newPosterDetail.ctitleFontSize + 'px', left: this.newPosterDetail.ctitleLeftMargin + 'px', top: this.newPosterDetail.ctitleTopMargin + 'px', width: this.newPosterDetail.ctitleWidth + 'px', height: this.newPosterDetail.ctitleHeight + 'px', color: this.newPosterDetail.ctitleFontColor, display: this.newPosterDetail.ctitleDisplay === 1 ? 'block' : 'none' }">商品标题</div>
+                      <div v-if="$route.path == '/manager/knowledge/distribute'" name="goodsName" class="goodsName" :style="{ boxSizing: 'border-box',  border: '1px solid #dad2d2', textAlign: 'center', lineHeight: this.newPosterDetail.ctitleHeight + 'px', fontSize: this.newPosterDetail.ctitleFontSize + 'px', left: this.newPosterDetail.ctitleLeftMargin + 'px', top: this.newPosterDetail.ctitleTopMargin + 'px', width: this.newPosterDetail.ctitleWidth + 'px', height: this.newPosterDetail.ctitleHeight + 'px', color: this.newPosterDetail.ctitleFontColor, display: this.newPosterDetail.ctitleDisplay === 1 ? 'block' : 'none' }">商品标题</div>
                       <div class="qrCode" :style="{ border: '1px solid #dad2d2', boxSizing: 'border-box', textAlign: 'center', lineHeight: this.newPosterDetail.qrcodeLength + 'px', width: this.newPosterDetail.qrcodeLength + 'px', height: this.newPosterDetail.qrcodeLength + 'px', left: this.newPosterDetail.qrcodeLeftMargin + 'px', top: this.newPosterDetail.qrcodeTopMargin + 'px' }">二维码</div>
                     </el-card>
                     <div class="postDetailInfo">
@@ -93,30 +93,32 @@
                           <el-color-picker v-model="newPosterDetail.nicknameFontColor" size="mini" class="colorPicker"></el-color-picker>
                         </el-col>
                       </el-row>
-                      <h5 :style="{ 'margin-bottom': '10px', 'margin-top': '10px' }">商品标题：</h5>
-                      <el-radio-group v-model="newPosterDetail.ctitleDisplay" :change="changeTitleDisplay">
-                          <el-radio :label=1>显示</el-radio>
-                          <el-radio :label=0>隐藏</el-radio>
-                      </el-radio-group>
-                      <el-row>
-                        <el-col :span="12" class="setInfo">
-                          Top
-                          <el-input-number v-model="newPosterDetail.ctitleTopMargin" class="font-detail" controls-position="right" size="mini" :min="0" :max="780"></el-input-number>
-                          <span>px</span>
-                        </el-col>
-                      </el-row>
-                      <el-row>
-                        <el-col :span="12" class="setInfo">
-                          字号
-                          <el-input-number v-model="newPosterDetail.ctitleFontSize" class="font-detail" controls-position="right" size="mini" :min="20" :max="50"></el-input-number>
-                          <span>px</span>
-                        </el-col>
-                        <el-col :span="12" class="setInfo color">
-                          颜色
-                          <el-input v-model="newPosterDetail.ctitleFontColor" class="font-detail" size="mini"></el-input>
-                          <el-color-picker v-model="newPosterDetail.ctitleFontColor" size="mini" class="colorPicker"></el-color-picker>
-                        </el-col>
-                      </el-row>
+                      <div  v-if="$route.path == '/manager/knowledge/distribute'">
+                        <h5 :style="{ 'margin-bottom': '10px', 'margin-top': '10px' }">商品标题：</h5>
+                        <el-radio-group v-model="newPosterDetail.ctitleDisplay" :change="changeTitleDisplay">
+                            <el-radio :label=1>显示</el-radio>
+                            <el-radio :label=0>隐藏</el-radio>
+                        </el-radio-group>
+                        <el-row>
+                          <el-col :span="12" class="setInfo">
+                            Top
+                            <el-input-number v-model="newPosterDetail.ctitleTopMargin" class="font-detail" controls-position="right" size="mini" :min="0" :max="780"></el-input-number>
+                            <span>px</span>
+                          </el-col>
+                        </el-row>
+                        <el-row>
+                          <el-col :span="12" class="setInfo">
+                            字号
+                            <el-input-number v-model="newPosterDetail.ctitleFontSize" class="font-detail" controls-position="right" size="mini" :min="20" :max="50"></el-input-number>
+                            <span>px</span>
+                          </el-col>
+                          <el-col :span="12" class="setInfo color">
+                            颜色
+                            <el-input v-model="newPosterDetail.ctitleFontColor" class="font-detail" size="mini"></el-input>
+                            <el-color-picker v-model="newPosterDetail.ctitleFontColor" size="mini" class="colorPicker"></el-color-picker>
+                          </el-col>
+                        </el-row>
+                      </div>
                       <h5 :style="{ 'margin-bottom': '10px', 'margin-top': '10px' }">二维码：</h5>
                       <el-row>
                         <el-col :span="12" class="setInfo">

@@ -42,7 +42,7 @@
                 <el-table-column  label="操作">
                   <template slot-scope="scope">
                   <router-link :to="{ path: '/manager/knowledge/editdistributor/' + scope.row.id}">
-                    <el-button type="text" size="mini">详情</el-button>
+                    <el-button type="text" size="mini" @click="gotoDetails(scope.row)">详情</el-button>
                   </router-link>   
                   </template>
                 </el-table-column>
@@ -262,6 +262,9 @@ export default {
           this.$message.error("网络错误");
         }
       );
+    },
+    gotoDetails(row) {
+      sessionStorage.setItem('consumerId', row.consumerId);
     },
     changePageAppList(page) {
       this.dialogPageOption.pageNum = page;

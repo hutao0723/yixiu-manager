@@ -142,8 +142,9 @@ export default {
     },
     // 获取全部内容列表
     getUserDistribution(type) {
+      let consumerId = sessionStorage.getItem('consumerId');
       let params = {
-        superiorId: this.distributorMsg.consumerId,
+        superiorId: consumerId,
         pageNum: this.pageOption.pageNum,
         pageSize: this.pageOption.pageSize,
         distributionType: "USER",

@@ -30,7 +30,11 @@
                 <span slot="title">投放内容</span>
               </el-menu-item>
             </router-link>
-            
+            <router-link :to="{ path: '/manager/dlv/monitor' }">
+              <el-menu-item index="6">
+                <span slot="title">页面监控</span>
+              </el-menu-item>
+            </router-link>
           </el-menu>
         </div>
       </el-aside>
@@ -83,7 +87,9 @@
         case '/manager/dlv/putcontent':
           pathIndex = "5";
           break;
-      
+        case '/manager/dlv/monitor':
+          pathIndex = "6";
+          break;
         default:
           break;
       }

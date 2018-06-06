@@ -26,12 +26,12 @@
                 <h5>{{ this.dialogType === 'edit' ? '编辑海报：' : '添加海报：' }}</h5>
                 <div class="mainDiv">
                     <el-card class="showPoster mainPoster" :style="{ minWidth: posterWidth/unitLength + 'px',  width: posterWidth/unitLength + 'px', height: posterHeight/unitLength + 'px', float: 'left', backgroundImage: 'url(' + this.newPosterDetail.poster + ')' }" :body-style="{ padding: 0 }">
-                      <div class="headImg" :style="{ minWidth: minLength1/unitLength + 'px', minHeight: minLength1/unitLength + 'px', maxWidth: maxLength1/unitLength + 'px', maxHeight: maxLength1/unitLength + 'px', border: '1px solid #dad2d2', textAlign: 'center', lineHeight: this.newPosterDetail.portraitLength/unitLength + 'px', boxSizing: 'border-box', width: this.newPosterDetail.portraitLength/unitLength + 'px', height: this.newPosterDetail.portraitLength/unitLength + 'px', left: this.newPosterDetail.portraitLeftMargin/unitLength + 'px', top: this.newPosterDetail.portraitTopMargin/unitLength + 'px', borderRadius: this.newPosterDetail.portraitRoundProportion + '%', display: this.newPosterDetail.portraitDisplay === 1 ? 'block' : 'none' }">
+                      <div class="headImg" :style="{ fontSize: this.headFont/unitLength + 'px', minWidth: minLength1/unitLength + 'px', minHeight: minLength1/unitLength + 'px', maxWidth: maxLength1/unitLength + 'px', maxHeight: maxLength1/unitLength + 'px', border: '1px solid #dad2d2', textAlign: 'center', lineHeight: this.newPosterDetail.portraitLength/unitLength + 'px', boxSizing: 'border-box', width: this.newPosterDetail.portraitLength/unitLength + 'px', height: this.newPosterDetail.portraitLength/unitLength + 'px', left: this.newPosterDetail.portraitLeftMargin/unitLength + 'px', top: this.newPosterDetail.portraitTopMargin/unitLength + 'px', borderRadius: this.newPosterDetail.portraitRoundProportion + '%', display: this.newPosterDetail.portraitDisplay === 1 ? 'block' : 'none' }">
                         头像
                       </div>
-                      <div class="nickName" :style="{ boxSizing: 'border-box', border: '1px solid #dad2d2', padding: '0', textAlign: 'center', lineHeight: this.newPosterDetail.nicknameHeight/unitLength + 'px', fontSize: this.newPosterDetail.nicknameFontSize/unitLength + 'px', left: this.newPosterDetail.nicknameLeftMargin/unitLength + 'px', top: this.newPosterDetail.nicknameTopMargin/unitLength + 'px', width: this.newPosterDetail.nicknameWidth/unitLength + 'px', height: this.newPosterDetail.nicknameHeight/unitLength + 'px', color: this.newPosterDetail.nicknameFontColor, display: this.newPosterDetail.nicknameDisplay === 1 ? 'block' : 'none' }" >昵称</div>
+                      <div class="nickName" :style="{ minWidth: this.newPosterDetail.nicknameWidth/unitLength + 'px', boxSizing: 'border-box', border: '1px solid #dad2d2', padding: '0', textAlign: 'center', lineHeight: this.newPosterDetail.nicknameHeight/unitLength + 'px', fontSize: this.newPosterDetail.nicknameFontSize/unitLength + 'px', left: this.newPosterDetail.nicknameLeftMargin/unitLength + 'px', top: this.newPosterDetail.nicknameTopMargin/unitLength + 'px', width: this.newPosterDetail.nicknameWidth/unitLength + 'px', height: this.newPosterDetail.nicknameHeight/unitLength + 'px', color: this.newPosterDetail.nicknameFontColor, display: this.newPosterDetail.nicknameDisplay === 1 ? 'block' : 'none' }" >昵称</div>
                       <div v-if="$route.path == '/manager/knowledge/distribute'" name="goodsName" class="goodsName" :style="{ boxSizing: 'border-box',  border: '1px solid #dad2d2', textAlign: 'center', lineHeight: this.newPosterDetail.ctitleHeight/unitLength + 'px', fontSize: this.newPosterDetail.ctitleFontSize/unitLength + 'px', left: this.newPosterDetail.ctitleLeftMargin/unitLength + 'px', top: this.newPosterDetail.ctitleTopMargin/unitLength + 'px', width: this.newPosterDetail.ctitleWidth/unitLength + 'px', height: this.newPosterDetail.ctitleHeight/unitLength + 'px', color: this.newPosterDetail.ctitleFontColor, display: this.newPosterDetail.ctitleDisplay === 1 ? 'block' : 'none' }">商品标题</div>
-                      <div class="qrCode" :style="{ minWidth: maxLength1/unitLength + 'px', minHeight: maxLength1/unitLength + 'px', maxWidth: maxLength2/unitLength + 'px', maxHeight: maxLength2/unitLength + 'px', border: '1px solid #dad2d2', boxSizing: 'border-box', textAlign: 'center', lineHeight: this.newPosterDetail.qrcodeLength/unitLength + 'px', width: this.newPosterDetail.qrcodeLength/unitLength + 'px', height: this.newPosterDetail.qrcodeLength/unitLength + 'px', left: this.newPosterDetail.qrcodeLeftMargin/unitLength + 'px', top: this.newPosterDetail.qrcodeTopMargin/unitLength + 'px' }">二维码</div>
+                      <div class="qrCode" :style="{ fontSize: this.qrCodeFont/unitLength + 'px', minWidth: maxLength1/unitLength + 'px', minHeight: maxLength1/unitLength + 'px', maxWidth: maxLength2/unitLength + 'px', maxHeight: maxLength2/unitLength + 'px', border: '1px solid #dad2d2', boxSizing: 'border-box', textAlign: 'center', lineHeight: this.newPosterDetail.qrcodeLength/unitLength + 'px', width: this.newPosterDetail.qrcodeLength/unitLength + 'px', height: this.newPosterDetail.qrcodeLength/unitLength + 'px', left: this.newPosterDetail.qrcodeLeftMargin/unitLength + 'px', top: this.newPosterDetail.qrcodeTopMargin/unitLength + 'px' }">二维码</div>
                     </el-card>
                     <div class="postDetailInfo">
                       <div>
@@ -180,6 +180,8 @@ export default {
   },
   data() {
     return {
+      qrCodeFont: '16',
+      headFont: '12',
       minLength1: '62',
       maxLength1: '100',
       maxLength2: '160',
@@ -444,6 +446,7 @@ export default {
         } else if (posterType === "/manager/knowledge/readPoster") {
           addPosterParams["itemId"] = 0;
           addPosterParams["itemType"] = 3;
+          addPosterParams["ctitleDisplay"] = 0;
         }
         this.$http.post("/poster/add", addPosterParams).then(
           res => {
@@ -551,7 +554,6 @@ export default {
   text-align: center;
   width: 200px;
   position: absolute;
-  min-width: 62px;
   width: 62px;
   background-color: transparent;
   border: 0;
@@ -615,7 +617,7 @@ export default {
 .prompt {
   float: left;
   margin-left: 10px;
-  color: red;
+  color: black;
 }
 .uploadImg {
   float: left;

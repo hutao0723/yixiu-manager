@@ -51,6 +51,9 @@
                         <p>绑定时间
                           <span :style="{ color: this.templateDetail.colorContent.keyword2 }">{{ bindTime }}</span>
                         </p>
+                        <p>备注
+                          <span :style="{ color: this.templateDetail.colorContent.keyword3 }">{{ remarkData }}</span>
+                        </p>
                         <p :style="{ color: this.templateDetail.colorContent.remark }">{{ templateDetail.remarkData }}</p>
                     </div>
                     <div v-if="templateDetail.templateType == 4" class="configContent">
@@ -59,8 +62,12 @@
                           获得佣金
                           <span :style="{ color: this.templateDetail.colorContent.keyword1 }">{{ getCommission }}</span>
                         </p>
+                        <p>
+                          收益来源
+                          <span :style="{ color: this.templateDetail.colorContent.keyword2 }">{{ moneyFrom }}</span>
+                        </p>
                         <p>绑定时间
-                          <span :style="{ color: this.templateDetail.colorContent.keyword2 }">{{ bindTime }}</span>
+                          <span :style="{ color: this.templateDetail.colorContent.keyword3 }">{{ bindTime }}</span>
                         </p>
                         <p :style="{ color: this.templateDetail.colorContent.remark }">{{ templateDetail.remarkData }}</p>
                     </div>
@@ -132,6 +139,13 @@
                               <el-input size="mini" class="attributeContent" disabled="disabled" placeholder="{bindTime}"></el-input>
                               <el-color-picker v-model="templateDetail.colorContent.keyword2" class="colorPicker" size="mini"></el-color-picker>
                           </div>
+                          <div class="attributePage">
+                              <div class="attribute">
+                                  <i class="el-icon-star-on  star"></i>
+                                  备注</div>
+                              <el-input size="mini" class="attributeContent" disabled="disabled" placeholder="快来邀请小伙伴一起读书吧～"></el-input>
+                              <el-color-picker v-model="templateDetail.colorContent.keyword3" class="colorPicker" size="mini"></el-color-picker>
+                          </div>
                         </div>
                         <div v-if="templateDetail.templateType == 4">
                           <div class="attributePage">
@@ -142,11 +156,18 @@
                             <el-color-picker v-model="templateDetail.colorContent.keyword1" class="colorPicker" size="mini"></el-color-picker>
                           </div>
                           <div class="attributePage">
+                            <div class="attribute">
+                                <i class="el-icon-star-on star"></i>
+                                收益来源</div>
+                            <el-input size="mini" class="attributeContent" disabled="disabled" placeholder="分销商品"></el-input>
+                            <el-color-picker v-model="templateDetail.colorContent.keyword2" class="colorPicker" size="mini"></el-color-picker>
+                          </div>
+                          <div class="attributePage">
                               <div class="attribute">
                                   <i class="el-icon-star-on  star"></i>
                                   绑定时间</div>
                               <el-input size="mini" class="attributeContent" disabled="disabled" placeholder="{gmtCreate}"></el-input>
-                              <el-color-picker v-model="templateDetail.colorContent.keyword2" class="colorPicker" size="mini"></el-color-picker>
+                              <el-color-picker v-model="templateDetail.colorContent.keyword3" class="colorPicker" size="mini"></el-color-picker>
                           </div>
                         </div>
                         <div v-if="templateDetail.templateType == 5">
@@ -178,7 +199,7 @@
                             <el-color-picker v-model="templateDetail.colorContent.remark" class="colorPicker" size="mini"></el-color-picker>
                         </div>
                     </div>
-                    <div class="pushStatus">推送状态：</div>
+                    <div class="pushStatus">配置跳转路径：</div>
                     <el-radio-group v-model="templateDetail.linkType">
                       <el-radio :label=0>H5链接</el-radio>
                       <el-radio :label=1>小程序路径 </el-radio>
@@ -227,6 +248,8 @@ export default {
       putMoney: "9.9元",
       putTime: "2018年4月17日 19:25",
       reason: "未实名认证",
+      remarkData: "快来邀请小伙伴一起读书吧～",
+      moneyFrom: "分销商品",
       templateDetail: {
         id: null,
         authorizerId: null,

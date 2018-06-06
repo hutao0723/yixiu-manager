@@ -24,7 +24,7 @@
                 </el-row>
                 <el-row class="row">
                     <el-col :span="8">加入日期：{{ this.distributorMsg.gmtCreate }}</el-col>
-                    <el-col :span="8">累计分销金额：{{ this.distributorMsg.totalDistributeMoney }}</el-col>
+                    <el-col :span="8">累计分销金额：¥{{ this.distributorMsg.totalDistributeMoney/100 }}</el-col>
                 </el-row>
             </div>
             <div class="footer">

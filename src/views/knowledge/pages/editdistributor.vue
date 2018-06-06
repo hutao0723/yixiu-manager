@@ -38,7 +38,7 @@
                     <div class="tabel-wrap">
                             <template>
                                 <el-table :data="bindingList">
-                                    <el-table-column prop="id" label="用户ID" ></el-table-column>
+                                    <el-table-column prop="id" label="用户ID" width="100"></el-table-column>
                                     <el-table-column label="用户信息" width="350">
                                     <template slot-scope="scope">
                                         <div v-if="scope.row.headImgurl" class="img-box por" :style="{ backgroundImage: 'url('+ scope.row.headImgurl +')', backgroundSize: 'contain', backgroundPosition: 'center' }"></div>
@@ -46,14 +46,14 @@
                                         <span v-text="scope.row.nickName" class="goods-word"></span>
                                     </template>
                                     </el-table-column>
-                                    <el-table-column prop="totalTradeNum" sortable label="累计购买笔数" width="200"></el-table-column>
-                                    <el-table-column prop="totalTradeMoney" sortable label="累计购买金额" width="200">
+                                    <el-table-column prop="totalTradeNum" sortable label="累计购买笔数" width="300"></el-table-column>
+                                    <el-table-column prop="totalTradeMoney" sortable label="累计购买金额" width="300">
                                       <template slot-scope="scope">
                                         {{scope.row.totalTradeMoney / 100}}
                                       </template>
                                     </el-table-column>
-                                    <el-table-column prop="bindTime" sortable label="最新绑定时间" width="200"></el-table-column>
-                                    <el-table-column prop="remainingBindTime" sortable label="剩余绑定时间(小时)" width="200"></el-table-column>
+                                    <el-table-column prop="bindTime" sortable label="最新绑定时间" width="300"></el-table-column>
+                                    <el-table-column prop="remainingBindTime" sortable label="剩余绑定时间(小时)" width="300"></el-table-column>
                                 </el-table>
                             </template>
                         </div>

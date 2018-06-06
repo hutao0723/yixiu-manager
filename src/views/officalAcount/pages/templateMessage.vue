@@ -81,7 +81,7 @@ export default {
           templateDate: "新用户绑定",
           templateStatus: "",
           toolTipContent:
-            '<div style="font-size: 22px; font-weight: bold; margin-bottom: 20px">绑定成功通知</div><div style="margin-left: 20px"><div style="margin-bottom: 20px">用户昵称：微信用户昵称</div><div style="margin-bottom: 20px">绑定时间：用户绑定分销员的时间</div><div style="margin-bottom: 20px">备注 :快来邀请小伙伴一起读书吧～</div><div style="margin-bottom: 20px">注：新用户（未绑定过任何分销员）绑定分销员</div><div style="margin-bottom: 20px">时，会给分销员1分钱奖励</div></div>'
+            '<div style="font-size: 22px; font-weight: bold; margin-bottom: 20px">绑定成功通知</div><div style="margin-left: 20px"><div style="margin-bottom: 20px">用户昵称：微信用户昵称</div><div style="margin-bottom: 20px">绑定时间：用户绑定分销员的时间</div><div style="margin-bottom: 20px">备注 :快来邀请小伙伴一起读书吧～</div></div>'
         },
         {
           id: '',

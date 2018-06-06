@@ -52,7 +52,7 @@
                 <span>讲师</span>
               </el-menu-item>
             </router-link>
-             <el-submenu index="5">
+            <el-submenu index="5">
               <span slot="title">渠道</span>
               <router-link :to="{ path: '/manager/knowledge/channel' }">
                 <el-menu-item index="5-1">
@@ -65,6 +65,14 @@
                 </el-menu-item>
               </router-link>
             </el-submenu>
+            <el-submenu index="7">
+            <span slot="title">营销</span>
+            <router-link :to="{ path: '/manager/knowledge/distribute' }">
+              <el-menu-item index="7-2">
+                <span>分销</span>
+              </el-menu-item>
+            </router-link>
+          </el-submenu>
           </el-menu>
         </div>
       </el-aside>
@@ -127,17 +135,26 @@
           case '/manager/knowledge/extend':
           pathIndex = "5-2";
           break;
-          case '/manager/knowledge/add':
-          pathIndex = "1";
-          break;
+          
+
           case '/manager/knowledge/read':
           pathIndex = "6-1";
           break;
           case '/manager/knowledge/option':
           pathIndex = "6-2";
           break;
-
-        default:
+          
+          case '/manager/knowledge/coupon':
+          pathIndex = "7-1";
+          break;
+          case '/manager/knowledge/distribute':
+          pathIndex = "7-2";
+          break;
+          case '/manager/knowledge/add':
+          pathIndex = "1";
+          break;
+          
+          default:
           break;
       }
       this.pathIndex = pathIndex;

@@ -61,4 +61,30 @@ export const lecturerList = params => get('lecturer/getList', params);
 export const getDirectTransmissionSign = params => get('upload/getDirectTransmissionSign', params);
 export const getCdnFileUrl = params => get('upload/getCdnFileUrl', params);
 
+/**
+ * 海报相关接口
+ */
 
+//根据id删除海报
+export const removePoster = params => post('poster/delete', params);
+//新增海报
+export const addPoster = params => post('poster/add', params);
+
+/*
+*模板相关接口
+*/
+
+//根据公众号id查询模板数据列表
+export const templateList = params => get('authorizerMpTemplate/list', params);
+//根据模板id查询模板数据详情
+export const templateDetail = params => get('authorizerMpTemplate/details', params);
+
+/*
+*分销人员相关接口
+*/
+//分页查询分销详情
+export const getUserDistributionList = params => get('distributor/userDistribution/pageList', params);
+//查询分销人员详情
+export const getDistributorDetail = params => get('distributor/get', params);
+//分页查询分销人员列表
+export const getDistributorList = params => get('distributor/pageList', params);

@@ -71,9 +71,6 @@
 </template>
 <script>
   import {formatHourSec} from '../../../utils/dateUtils'
-  import 'quill/dist/quill.core.css'
-  import 'quill/dist/quill.snow.css'
-  import 'quill/dist/quill.bubble.css'
   import E from 'wangeditor'
   import plupload from 'plupload';
   import qs from 'qs'
@@ -195,6 +192,7 @@
         this.$http.get('/read/detail?id='+id).then(res =>{
           let resp = res.data;
           this.courseForm = resp.data;
+          this.courseForm.distRate = (this.courseForm.distRate/100).toFixed(2)
           document.getElementsByClassName('w-e-text')[0].innerHTML = this.courseForm.briefer
           console.log(resp.data)
         })

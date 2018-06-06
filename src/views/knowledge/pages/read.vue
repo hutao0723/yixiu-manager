@@ -8,7 +8,9 @@
     </div>
     <div class="content">
       <div class="search-bar">
+
         <el-button type="primary" @click="newcourseForm(0)" size="small" class="fr">新建阅读计划</el-button>
+        <el-button type="primary"  size="small" class="fr_left" @click="goPoster()">海报</el-button>
         <template>
           <el-form :inline="true" :model="courseSearchForm" class="demo-form-inline" size="small">
             <el-form-item >
@@ -104,9 +106,6 @@
 </template>
 <script>
   import {formatHourSec} from '../../../utils/dateUtils'
-  import 'quill/dist/quill.core.css'
-  import 'quill/dist/quill.snow.css'
-  import 'quill/dist/quill.bubble.css'
   import E from 'wangeditor'
   import plupload from 'plupload';
   import qs from 'qs'
@@ -216,6 +215,9 @@
       this.getData();
     },
     methods: {
+      goPoster(){
+        this.$router.push('/manager/knowledge/readPoster')
+      },
       openDialogWeight (row) {
         this.editDiolog = true
         this.weightForm.id = row.id
@@ -366,6 +368,10 @@
 </script>
 <style lang="less" scoped>
   .ofa-main-wrap {
+    .fr_left{
+      float: right;
+      margin-right: 20px;
+    }
     width: 100%;
     .totle-time {
       color: #333;

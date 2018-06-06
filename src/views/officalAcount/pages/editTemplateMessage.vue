@@ -186,7 +186,7 @@
                     <div :style="{ marginTop: '10px'}">
                       <el-input v-if="this.templateDetail.linkType === 0" :style="{ width: '373px' }" placeholder="跳转的链接" v-model="templateDetail.linkAddress" :maxlength="1000"></el-input>
                       <div v-else-if="this.templateDetail.linkType === 1">
-                        <el-input :style="{ width: '160px' }" placeholder="小程序Appid" v-model="templateDetail.miniappId" :maxlength="1000"></el-input>
+                        <el-input :style="{ width: '160px' }" placeholder="小程序Appid" v-model="templateDetail.miniappId" :maxlength="100"></el-input>
                         <el-input :style="{ width: '207px' }" placeholder="小程序路径" v-model="templateDetail.pagePath" :maxlength="1000"></el-input>
                       </div>
                     </div>

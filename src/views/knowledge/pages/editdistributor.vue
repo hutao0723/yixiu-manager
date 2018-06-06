@@ -24,7 +24,7 @@
                 </el-row>
                 <el-row class="row">
                     <el-col :span="8">加入日期：{{ this.distributorMsg.gmtCreate }}</el-col>
-                    <el-col :span="8">累计分销金额：¥{{ this.distributorMsg.totalDistributeMoney/100 }}</el-col>
+                    <el-col :span="8">累计分销金额：¥{{ this.distributorMsg.totalTradeMoney/100 }}</el-col>
                 </el-row>
             </div>
             <div class="footer">
@@ -39,21 +39,21 @@
                             <template>
                                 <el-table :data="bindingList">
                                     <el-table-column prop="id" label="用户ID" ></el-table-column>
-                                    <el-table-column label="用户信息">
+                                    <el-table-column label="用户信息" width="350">
                                     <template slot-scope="scope">
                                         <div v-if="scope.row.headImgurl" class="img-box por" :style="{ backgroundImage: 'url('+ scope.row.headImgurl +')', backgroundSize: 'contain', backgroundPosition: 'center' }"></div>
                                         <div v-else class="img-box por" :style="{ backgroundImage: 'url(//yun.dui88.com/yoofans/images/201804/noClassImg.png)',    backgroundSize: 'contain', backgroundPosition: 'center' }"></div>
                                         <span v-text="scope.row.nickName" class="goods-word"></span>
                                     </template>
                                     </el-table-column>
-                                    <el-table-column prop="totalTradeNum" sortable label="累计购买笔数"></el-table-column>
-                                    <el-table-column prop="totalTradeMoney" sortable label="累计购买金额" >
+                                    <el-table-column prop="totalTradeNum" sortable label="累计购买笔数" width="200"></el-table-column>
+                                    <el-table-column prop="totalTradeMoney" sortable label="累计购买金额" width="200">
                                       <template slot-scope="scope">
                                         {{scope.row.totalTradeMoney / 100}}
                                       </template>
                                     </el-table-column>
-                                    <el-table-column prop="bindTime" sortable label="最新绑定时间"></el-table-column>
-                                    <el-table-column prop="remainingBindTime" sortable label="剩余绑定时间(小时)" ></el-table-column>
+                                    <el-table-column prop="bindTime" sortable label="最新绑定时间" width="200"></el-table-column>
+                                    <el-table-column prop="remainingBindTime" sortable label="剩余绑定时间(小时)" width="200"></el-table-column>
                                 </el-table>
                             </template>
                         </div>
@@ -74,7 +74,7 @@ export default {
         nickName: "",
         headImgurl: "",
         totalDistributeNum: "",
-        totalDistributeMoney: "",
+        totalTradeMoney: "",
         gmtCreate: ""
       },
       loading: false,

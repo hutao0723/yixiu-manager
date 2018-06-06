@@ -1,5 +1,5 @@
 <template>
-  <section class="distributor-box wrap-box">
+  <section class="distributor-box">
     <el-tabs v-model="activeType" type="card" @tab-click="handleClick" class="pad-length">
       <el-tab-pane :label="tab1" :name="tab1">
         <!--分销人员列表-->
@@ -22,23 +22,23 @@
           </div>
           <div class="tabel-wrap">
             <template>
-              <el-table :data="distributorList">
-                <el-table-column prop="id" label="用户ID" ></el-table-column>
-                <el-table-column label="用户信息">
+              <el-table :data="distributorList" style="width: 100%">
+                <el-table-column prop="id" label="用户ID" width="100"></el-table-column>
+                <el-table-column label="用户信息" width="350">
                   <template slot-scope="scope">
                     <div v-if="scope.row.headImgurl" class="img-box por" :style="{ backgroundImage: 'url('+ scope.row.headImgurl +')', backgroundSize: 'contain', backgroundPosition: 'center' }"></div>
                     <div v-else class="img-box por" :style="{ backgroundImage: 'url(//yun.dui88.com/yoofans/images/201804/noClassImg.png)',    backgroundSize: 'contain', backgroundPosition: 'center' }"></div>
                     <span v-text="scope.row.nickName" class="goods-word"></span>
                   </template>
                 </el-table-column>
-                <el-table-column prop="totalDistributeNum" sortable label="累计分销笔数"></el-table-column>
-                <el-table-column prop="totalDistributeMoney" sortable label="累计分销金额" >
+                <el-table-column prop="totalDistributeNum" sortable label="累计分销笔数" width="200"></el-table-column>
+                <el-table-column prop="totalTradeMoney" sortable label="累计分销金额" width="200">
                   <template slot-scope="scope">
-                    {{scope.row.totalDistributeMoney / 100}}
+                    {{scope.row.totalTradeMoney / 100}}
                   </template>
                 </el-table-column>
-                <el-table-column prop="bindUsers" sortable label="绑定用户数" width="250" ></el-table-column>
-                <el-table-column prop="gmtCreate" sortable label="加入日期" ></el-table-column>
+                <el-table-column prop="bindUsers" sortable label="绑定用户数" width="200"></el-table-column>
+                <el-table-column prop="gmtCreate" sortable label="加入日期" width="300"></el-table-column>
                 <el-table-column  label="操作">
                   <template slot-scope="scope">
                   <router-link :to="{ path: '/manager/knowledge/editdistributor/' + scope.row.id}">
@@ -369,8 +369,8 @@ export default {
 <style lang="less" scoped>
 .img-box {
   overflow: hidden;
-  width: 75px;
-  height: 75px;
+  width: 55px;
+  height: 55px;
   display: inline-block;
   float: left;
   background-repeat: no-repeat;
@@ -380,12 +380,13 @@ export default {
 }
 .goods-word {
   margin-left: 10px;
-  line-height: 75px;
+  line-height: 55px;
 }
 .distributor-box {
   width: 100%;
   .search-bar {
     margin-top: 20px;
+    margin-bottom: 30px;
   }
   .page-control {
     float: right;
@@ -405,5 +406,13 @@ export default {
 }
 .detailBtn {
   font-size: 100%;
+}
+</style>
+<style>
+.el-table .cell {
+  display: flex;
+}
+.el-table .cell span {
+  flex: 1;
 }
 </style>

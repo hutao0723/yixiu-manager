@@ -110,7 +110,7 @@
       // }
       return {
         teachterArr:[
-          {markCode:"1-3000",startNum:1,startEnd:3000,teacherWxNumber:'',teacherWxQrcodeUrl:''}
+          {markCode:"1-500",startNum:1,startEnd:500,teacherWxNumber:'',teacherWxQrcodeUrl:''}
         ],
         wxNumArr:[],
         imgIndex:0,
@@ -178,8 +178,8 @@
         }
         let teachObj = {
           startNum:this.startEnd+1,
-          startEnd:this.startEnd + 3000,
-          markCode:(this.startEnd+1) +'-'+ (this.startEnd+3000),
+          startEnd:this.startEnd + 500,
+          markCode:(this.startEnd+1) +'-'+ (this.startEnd+500),
           teacherWxNumber:"",
           teacherWxQrcodeUrl:""
         }

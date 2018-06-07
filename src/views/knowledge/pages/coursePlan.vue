@@ -14,7 +14,7 @@
         <template >
           <el-table :data="courseManageList" border style="width: 100%;text-align: center" > <!--:span-method="arraySpanMethod"-->
 
-            <el-table-column prop="title" label="书籍标题" width="300">
+            <el-table-column prop="title" label="书籍标题" width="320">
             </el-table-column>
 
             <el-table-column  label="解锁日期" >
@@ -35,7 +35,7 @@
               </template>
             </el-table-column>
 
-            <el-table-column prop="title" label="课程标题" width="300">
+            <el-table-column prop="title" label="课程标题" width="320">
               <template slot-scope="scope">
                 <div class="itemStyle" v-for="(item,index) in scope.row.readBookCourseVOList">{{item.courseTitle}}</div>
               </template>

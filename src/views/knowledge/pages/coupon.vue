@@ -284,7 +284,8 @@ export default {
       totalSize: 0,
       totalSize1: 0,
       parentEditionList: [],
-      voucherList: []
+      voucherList: [],
+      filename: ''
     };
   },
   created() {
@@ -363,6 +364,63 @@ export default {
     //导出已发券列表
     exportVoucherList() {
       console.log('export')
+      this.dialogVisible = true
+      this.disabled = true
+      this.downStatus = true
+      if (this.selectType2 == 'dateGroup1') {
+        this.voucherSearchForm.createStartTime = this.satrtTime;
+        this.voucherSearchForm.createEndTime = this.endTime;
+        this.voucherSearchForm.usedStartTime = '';
+        this.voucherSearchForm.usedEndTime = '';
+      } else if (this.selectType2 == 'dateGroup2') {
+        this.voucherSearchForm.createStartTime = '';
+        this.voucherSearchForm.createEndTime = '';
+        this.voucherSearchForm.usedStartTime = this.satrtTime;
+        this.voucherSearchForm.usedEndTime = this.endTime;
+      }
+      for (let key in this.voucherSearchForm) {
+        if (key == 'pageNum' || key == 'pageSize') {
+          delete this.voucherSearchForm[key]
+        }
+      }
+      console.log(this.voucherSearchForm)
+      exportVoucher(this.voucherSearchForm)
+      .then(res => {
+        if (resp.success) {
+          this.filename = resp.data
+          let that = this
+          let orders = setInterval(function(){
+            let params = {
+              filename: that.filename
+            }
+            that.$http.get('/knowledge/order/checkExport', {params}).then(res => {
+              let resp = res.data
+              if (resp.success) {
+                if(resp.data.succeed){
+                  clearInterval(orders)
+                  that.disabled = false
+                  that.downStatus = false
+                  that.downloadUrl = resp.data.fileUrl
+                }else{
+                  // let msg = resp.data.message || '文件正在上传中'
+                  // that.$message.error(msg)
+                  console.log(resp.data.message)
+                }
+              } else {
+                let msg = resp.desc || '请求失败'
+                that.$message.error(msg)
+              } 
+            }, () => {
+              that.$message.error('网络错误')
+            })
+          }, 500)
+        } else {
+          let msg = resp.desc || '请求失败'
+          this.$message.error(msg)
+        }
+      }, () => {
+        this.$message.error('网络错误')
+      })
     },
     // 切换tab
     handleClick(tab, event) {

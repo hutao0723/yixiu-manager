@@ -134,16 +134,28 @@
           <el-button size="mini" type="primary" @click="queryDeleteParentEdition">确 定</el-button>
         </span>
     </el-dialog>
+    <el-dialog title="优惠券导出" :visible.sync="dialogVoucher" width="30%" >
+      <span v-if="downStatus">正在生成导出文件，请稍后<span class="beat-ellipsis"></span></span>
+      <span v-else>优惠券文件已生成，请点击「下载」按钮！</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVoucher = false">取 消</el-button>
+        <a :class="disabled ? 'btn-disabled' : ''" :href="disabled ? 'javascript:;' : downloadUrl" class="el-button el-button--primary">下 载</a>
+      </span>
+    </el-dialog>
   </section>
 </template>
 
 <script>
 import { formatToMs } from "../../../utils/dateUtils";
-import { parentEditionList, copyTemplate, updateStatusTemplate, deleteTemplate, voucherList } from "@/api/index";
+import { parentEditionList, copyTemplate, updateStatusTemplate, deleteTemplate, voucherList, exportVoucher } from "@/api/index";
 import qs from "qs";
 export default {
   data() {
     return {
+      downStatus: true, // 文字
+      downloadUrl: 'http://www.baidu.com',//链接
+      disabled: true,
+      dialogVoucher: false,
       loading: false,
       templateValue: '',
       selectType: 'title',

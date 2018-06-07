@@ -322,11 +322,16 @@ var setOnline = [
     type: 'get',
     url: '/activity/get'
   },
-  // 保存
+  // 保存活动
   {
     name: 'save',
     type: 'post',
     url: '/activity/save'
+  },
+  {
+    name: 'exportVoucher',
+    type: 'post',
+    url: '/coupon/export/order'
   },
 ];
 var fs = require('fs');

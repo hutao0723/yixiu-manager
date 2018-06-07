@@ -31,14 +31,14 @@
                       </div>
                       <div class="nickName" :style="{ minWidth: this.newPosterDetail.nicknameWidth/unitLength + 'px', boxSizing: 'border-box', border: '1px solid #dad2d2', padding: '0', textAlign: 'center', lineHeight: this.newPosterDetail.nicknameHeight/unitLength + 'px', fontSize: this.newPosterDetail.nicknameFontSize/unitLength + 'px', left: this.newPosterDetail.nicknameLeftMargin/unitLength + 'px', top: this.newPosterDetail.nicknameTopMargin/unitLength + 'px', width: this.newPosterDetail.nicknameWidth/unitLength + 'px', height: this.newPosterDetail.nicknameHeight/unitLength + 'px', color: this.newPosterDetail.nicknameFontColor, display: this.newPosterDetail.nicknameDisplay === 1 ? 'block' : 'none' }" >昵称</div>
                       <div v-if="$route.path == '/manager/knowledge/distribute'" name="goodsName" class="goodsName" :style="{ boxSizing: 'border-box',  border: '1px solid #dad2d2', textAlign: 'center', lineHeight: this.newPosterDetail.ctitleHeight/unitLength + 'px', fontSize: this.newPosterDetail.ctitleFontSize/unitLength + 'px', left: this.newPosterDetail.ctitleLeftMargin/unitLength + 'px', top: this.newPosterDetail.ctitleTopMargin/unitLength + 'px', width: this.newPosterDetail.ctitleWidth/unitLength + 'px', height: this.newPosterDetail.ctitleHeight/unitLength + 'px', color: this.newPosterDetail.ctitleFontColor, display: this.newPosterDetail.ctitleDisplay === 1 ? 'block' : 'none' }">商品标题</div>
-                      <div class="qrCode" :style="{ fontSize: this.qrCodeFont/unitLength + 'px', minWidth: maxLength1/unitLength + 'px', minHeight: maxLength1/unitLength + 'px', maxWidth: maxLength2/unitLength + 'px', maxHeight: maxLength2/unitLength + 'px', border: '1px solid #dad2d2', boxSizing: 'border-box', textAlign: 'center', lineHeight: this.newPosterDetail.qrcodeLength/unitLength + 'px', width: this.newPosterDetail.qrcodeLength/unitLength + 'px', height: this.newPosterDetail.qrcodeLength/unitLength + 'px', left: this.newPosterDetail.qrcodeLeftMargin/unitLength + 'px', top: this.newPosterDetail.qrcodeTopMargin/unitLength + 'px' }">二维码</div>
+                      <div class="qrCode" :style="{ fontSize: this.qrCodeFont/unitLength + 'px', minWidth: minLength1/unitLength + 'px', minHeight: minLength1/unitLength + 'px', maxWidth: maxLength2/unitLength + 'px', maxHeight: maxLength2/unitLength + 'px', border: '1px solid #dad2d2', boxSizing: 'border-box', textAlign: 'center', lineHeight: this.newPosterDetail.qrcodeLength/unitLength + 'px', width: this.newPosterDetail.qrcodeLength/unitLength + 'px', height: this.newPosterDetail.qrcodeLength/unitLength + 'px', left: this.newPosterDetail.qrcodeLeftMargin/unitLength + 'px', top: this.newPosterDetail.qrcodeTopMargin/unitLength + 'px' }">二维码</div>
                     </el-card>
                     <div class="postDetailInfo">
                       <div>
                         <el-upload class="uploadImg" action="/upload/image" name="imageFile" :show-file-list=false :on-success="changePoster" :before-upload="beforePosterUpload">
                           <el-button size="small" class="postBtn postPoster">上传海报</el-button>
                         </el-upload>
-                        <div class="prompt">尺寸510px*820px,支持<br/>jpg/jpeg/png,最大2M</div>
+                        <div class="prompt">尺寸750px*1206px,支持<br/>jpg/jpeg/png,最大2M</div>
                       </div>
                       <h5 :style="{ marginBottom: '10px', clear: 'both' }">头像设置：</h5>
                       <el-radio-group v-model="newPosterDetail.portraitDisplay" :change="changePortraitDisplay">
@@ -53,19 +53,19 @@
                         </el-col>
                         <el-col :span="8" class="setInfo">
                           大小
-                          <el-input-number v-model.number="newPosterDetail.portraitLength" class="font-detail" controls-position="right" size="mini" :min="62" :max="100"></el-input-number>
+                          <el-input-number v-model.number="newPosterDetail.portraitLength" class="font-detail" controls-position="right" size="mini" :min="100" :max="160"></el-input-number>
                           <span>px</span>
                         </el-col>
                       </el-row>
                       <el-row>
                         <el-col :span="8" class="setInfo">
                           Left
-                          <el-input-number v-model="newPosterDetail.portraitLeftMargin" class="font-detail" controls-position="right" size="mini" :min="0" :max="410"></el-input-number>
+                          <el-input-number v-model="newPosterDetail.portraitLeftMargin" class="font-detail" controls-position="right" size="mini" :min="0" :max="590"></el-input-number>
                           <span>px</span>
                         </el-col>
                         <el-col :span="8" class="setInfo">
                           Top
-                          <el-input-number v-model="newPosterDetail.portraitTopMargin" class="font-detail" controls-position="right" size="mini" :min="0" :max="720"></el-input-number>
+                          <el-input-number v-model="newPosterDetail.portraitTopMargin" class="font-detail" controls-position="right" size="mini" :min="0" :max="1046"></el-input-number>
                           <span>px</span>
                         </el-col>
                       </el-row>
@@ -77,19 +77,19 @@
                       <el-row>
                         <el-col :span="8" class="setInfo">
                           Left
-                          <el-input-number v-model="newPosterDetail.nicknameLeftMargin" class="font-detail" controls-position="right" size="mini" :min="0" :max="436"></el-input-number>
+                          <el-input-number v-model="newPosterDetail.nicknameLeftMargin" class="font-detail" controls-position="right" size="mini" :min="0" :max="629"></el-input-number>
                           <span>px</span>
                         </el-col>
                         <el-col :span="8" class="setInfo">
                           Top
-                          <el-input-number v-model="newPosterDetail.nicknameTopMargin" class="font-detail" controls-position="right" size="mini" :min="0" :max="790"></el-input-number>
+                          <el-input-number v-model="newPosterDetail.nicknameTopMargin" class="font-detail" controls-position="right" size="mini" :min="0" :max="1156"></el-input-number>
                           <span>px</span>
                         </el-col>
                       </el-row>
                       <el-row>
                         <el-col :span="8" class="setInfo">
                           字号
-                          <el-input-number v-model="newPosterDetail.nicknameFontSize" class="font-detail" controls-position="right" size="mini" :min="26" :max="56"></el-input-number>
+                          <el-input-number v-model="newPosterDetail.nicknameFontSize" class="font-detail" controls-position="right" size="mini" :min="30" :max="50"></el-input-number>
                           <span>px</span>
                         </el-col>
                         <el-col :span="8" class="setInfo color">
@@ -107,14 +107,14 @@
                         <el-row>
                           <el-col :span="8" class="setInfo">
                             Top
-                            <el-input-number v-model="newPosterDetail.ctitleTopMargin" class="font-detail" controls-position="right" size="mini" :min="0" :max="780"></el-input-number>
+                            <el-input-number v-model="newPosterDetail.ctitleTopMargin" class="font-detail" controls-position="right" size="mini" :min="0" :max="1139"></el-input-number>
                             <span>px</span>
                           </el-col>
                         </el-row>
                         <el-row>
                           <el-col :span="8" class="setInfo">
                             字号
-                            <el-input-number v-model="newPosterDetail.ctitleFontSize" class="font-detail" controls-position="right" size="mini" :min="20" :max="50"></el-input-number>
+                            <el-input-number v-model="newPosterDetail.ctitleFontSize" class="font-detail" controls-position="right" size="mini" :min="30" :max="70"></el-input-number>
                             <span>px</span>
                           </el-col>
                           <el-col :span="8" class="setInfo color">
@@ -128,19 +128,19 @@
                       <el-row>
                         <el-col :span="8" class="setInfo">
                           大小
-                          <el-input-number v-model="newPosterDetail.qrcodeLength" class="font-detail" controls-position="right" size="mini" :min="100" :max="160"></el-input-number>
+                          <el-input-number v-model="newPosterDetail.qrcodeLength" class="font-detail" controls-position="right" size="mini" :min="100" :max="260"></el-input-number>
                           <span>px</span>
                         </el-col>
                       </el-row>
                       <el-row>
                         <el-col :span="8" class="setInfo">
                           Left
-                          <el-input-number v-model="newPosterDetail.qrcodeLeftMargin" class="font-detail" controls-position="right" size="mini" :min="0" :max="350"></el-input-number>
+                          <el-input-number v-model="newPosterDetail.qrcodeLeftMargin" class="font-detail" controls-position="right" size="mini" :min="0" :max="490"></el-input-number>
                           <span>px</span>
                         </el-col>
                         <el-col :span="8" class="setInfo">
                           Top
-                          <el-input-number v-model="newPosterDetail.qrcodeTopMargin" class="font-detail" controls-position="right" size="mini" :min="0" :max="660"></el-input-number>
+                          <el-input-number v-model="newPosterDetail.qrcodeTopMargin" class="font-detail" controls-position="right" size="mini" :min="0" :max="946"></el-input-number>
                           <span>px</span>
                         </el-col>
                       </el-row>
@@ -182,11 +182,11 @@ export default {
     return {
       qrCodeFont: '16',
       headFont: '12',
-      minLength1: '62',
-      maxLength1: '100',
-      maxLength2: '160',
-      posterWidth: '510',
-      posterHeight: '820',
+      minLength1: '100',
+      maxLength1: '160',
+      maxLength2: '260',
+      posterWidth: '750',
+      posterHeight: '1206',
       unitLength: '',
       newPosterMsg: [],
       editId: "",
@@ -199,54 +199,54 @@ export default {
       posterDetail: {
         poster: "",
         smallPoster: "",
-        portraitLength: 62,
-        portraitLeftMargin: 224,
-        portraitTopMargin: 54,
+        portraitLength: 120,
+        portraitLeftMargin: 315,
+        portraitTopMargin: 80,
         portraitRoundProportion: 0,
         portraitDisplay: 1,
-        nicknameFontSize: 22,
-        nicknameWidth: 74,
-        nicknameHeight: 30,
-        nicknameLeftMargin: 218,
-        nicknameTopMargin: 120,
+        nicknameFontSize: 36,
+        nicknameWidth: 121,
+        nicknameHeight: 50,
+        nicknameLeftMargin: 314,
+        nicknameTopMargin: 220,
         nicknameFontColor: "#000",
         nicknameDisplay: 1,
-        ctitleWidth: 392,
-        ctitleHeight: 40,
-        ctitleLeftMargin: 59,
-        ctitleTopMargin: 427,
-        ctitleFontSize: 28,
+        ctitleWidth: 672,
+        ctitleHeight: 67,
+        ctitleLeftMargin: 39,
+        ctitleTopMargin: 638,
+        ctitleFontSize: 48,
         ctitleFontColor: "#000",
         ctitleDisplay: 1,
-        qrcodeLength: 100,
-        qrcodeLeftMargin: 205,
-        qrcodeTopMargin: 631
+        qrcodeLength: 220,
+        qrcodeLeftMargin: 265,
+        qrcodeTopMargin: 920
       },
       newPosterDetail: {
         poster: "",
         smallPoster: "",
-        portraitLength: 62,
-        portraitLeftMargin: 224,
-        portraitTopMargin: 54,
+        portraitLength: 120,
+        portraitLeftMargin: 315,
+        portraitTopMargin: 80,
         portraitRoundProportion: 0,
         portraitDisplay: 1,
-        nicknameFontSize: 22,
-        nicknameWidth: 74,
-        nicknameHeight: 30,
-        nicknameLeftMargin: 218,
-        nicknameTopMargin: 120,
+        nicknameFontSize: 36,
+        nicknameWidth: 121,
+        nicknameHeight: 51,
+        nicknameLeftMargin: 314,
+        nicknameTopMargin: 220,
         nicknameFontColor: "#000",
         nicknameDisplay: 1,
-        ctitleWidth: 392,
-        ctitleHeight: 40,
-        ctitleLeftMargin: 59,
-        ctitleTopMargin: 427,
-        ctitleFontSize: 28,
+        ctitleWidth: 672,
+        ctitleHeight: 67,
+        ctitleLeftMargin: 39,
+        ctitleTopMargin: 638,
+        ctitleFontSize: 48,
         ctitleFontColor: "#000",
         ctitleDisplay: 1,
-        qrcodeLength: 100,
-        qrcodeLeftMargin: 205,
-        qrcodeTopMargin: 631
+        qrcodeLength: 220,
+        qrcodeLeftMargin: 265,
+        qrcodeTopMargin: 920
       }
     };
   },
@@ -258,11 +258,11 @@ export default {
   mounted() {
     let unitPercent = document.documentElement.clientWidth ||document.body.clientWidth;
     if (unitPercent < 1000) {
-      this.unitLength = 3;
+      this.unitLength = 3.5;
     } else if (unitPercent >= 1000 && unitPercent < 1500) {
-      this.unitLength = 2;
+      this.unitLength = 2.5;
     } else if (unitPercent >= 1500) {
-      this.unitLength = 1.5;
+      this.unitLength = 2;
     }
   },
   methods: {
@@ -382,10 +382,10 @@ export default {
       image.onload = function() {
         const width = image.width;
         const height = image.height;
-        if (width == 510 && height == 820) {
+        if (width == 750 && height == 1206) {
           self.newPosterDetail.poster = "https:" + res.data.fileUrl;
         } else {
-          self.$message.error("上传图片的尺寸必须为 510*820!");
+          self.$message.error("上传图片的尺寸必须为 750*1206!");
         }
       };
     },
@@ -473,8 +473,8 @@ export default {
 </script>
 <style lang="less" scoped>
 .showPoster {
-  width: 510px;
-  height: 820px;
+  width: 750px;
+  height: 1206px;
   margin: 0;
   padding: 0;
   margin-right: 0px;
@@ -494,13 +494,13 @@ export default {
   width: 100%;
   height: 100%;
   text-align: center;
-  // line-height: 820px;
+  // line-height: 1206px;
   border: 0;
   background-color: white;
 }
 .editPosterBtn {
   width: 100%;
-  height: 50px;
+  height: 35px;
   background-color: gray;
   color: white;
   margin-left: 0;
@@ -543,10 +543,6 @@ export default {
   margin-left: 30px;
 }
 .headImg {
-  min-width: 62px;
-  min-height: 62px;
-  max-width: 100px;
-  max-height: 100px;
   position: absolute;
 }
 .nickName {
@@ -567,10 +563,6 @@ export default {
   padding: 0;
 }
 .qrCode {
-  min-width: 100px;
-  min-height: 100px;
-  max-width: 160px;
-  max-height: 160px;
   position: absolute;
   text-align: center;
 }
@@ -621,6 +613,9 @@ export default {
 }
 .uploadImg {
   float: left;
+}
+.showCol {
+  margin-bottom: 20px;
 }
 </style>
 <style>

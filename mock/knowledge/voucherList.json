@@ -1,27 +1,29 @@
 {
-  "success": true,
+  "code": "string",
   "data": {
     "content": [
       {
-        "coupon": 1,
-        "receiveTime": "2018.6.1",
-        "parentEditionId": 1,
-        "parentEditionTitle": "六一大放送",
-        "money": "19.9元",
-        "effectiveDate": "2018.7.1",
-        "activityId": "1",
-        "userId": 1,
-        "useTime": "2018.6.1",
-        "orderId": 1,
-        "status": 1
+        "consumerId": 0,
+        "couponId": "string",
+        "couponPrice": "string",
+        "couponStatusValue": 1,
+        "couponTemplateId": 0,
+        "couponTemplateTitle": "string",
+        "effectiveDate": "string",
+        "gmtCreate": "2018-06-06T11:37:14.198Z",
+        "orderId": "string",
+        "usedTime": "2018-06-06T11:37:14.198Z"
       }
     ],
-    "totalPages": 7,
-    "numberOfElements": 20,
     "firstPage": true,
-    "lastPage": false,
-    "totalElements": 135,
-    "size": 20,
-    "number": 0
-  }
+    "lastPage": true,
+    "number": 0,
+    "numberOfElements": 0,
+    "size": 0,
+    "sort": {},
+    "totalElements": 100,
+    "totalPages": 20
+  },
+  "desc": "string",
+  "success": true
 }

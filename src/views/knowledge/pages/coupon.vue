@@ -39,7 +39,7 @@
                 <el-table-column prop="status" label="状态" :formatter="getStatus"></el-table-column>
                 <el-table-column  label="操作">
                   <template slot-scope="scope">
-                    <router-link :to="{ path: '/manager/knowledge/editMaster/' + scope.row.parentEditionId }">
+                    <router-link :to="{ path: '/manager/knowledge/editMaster/' + scope.row.couponTemplateId }">
                       <el-button type="text" size="mini" :style="{ marginRight: '10px' }">编辑</el-button>
                     </router-link>
                     <el-button type="text" size="mini" @click="copy(scope.row.couponTemplateId)">复制</el-button>
@@ -62,25 +62,22 @@
             <template>
               <el-form :inline="true" :model="voucherSearchForm" class="demo-form-inline" size="mini">
                 <el-form-item>
-                  <el-select v-model="voucherSearchForm.selectType1" class="iptl w150">
+                  <el-select v-model="selectType1" class="iptl w150">
                     <el-option v-for="item in searchOptions1" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
                   </el-select>
                 </el-form-item>
                 <el-form-item>
-                  <el-input v-model="voucherSearchForm.searchValue1" class="iptr"></el-input>
+                  <el-input v-model="couponValue1" class="iptr"></el-input>
                 </el-form-item>
                 <el-form-item>
-                  <el-select v-model="voucherSearchForm.selectType2" class="iptl w150">
+                  <el-select v-model="selectType2" class="iptl w150">
                     <el-option v-for="item in searchOptions2" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
                   </el-select>
                 </el-form-item>
                 <el-form-item>
-                  <el-date-picker v-if="voucherSearchForm.selectType2 == 'date'" v-model="voucherSearchForm.searchValue2" type="datetime"
-                  placeholder="选择日期时间">
-                  </el-date-picker>
-                  <el-date-picker class="date-range" v-else v-model="voucherSearchForm.searchValue2" type="datetimerange"
+                  <el-date-picker class="date-range" v-model="couponValue2" type="datetimerange"
                   range-separator="至"
                   start-placeholder="开始日期"
                   end-placeholder="结束日期" @change="changeDate">
@@ -88,19 +85,19 @@
                   <!-- <el-input v-model="voucherSearchForm.searchValue2" class="iptr"></el-input> -->
                 </el-form-item>
                 <el-form-item>
-                  <el-select v-model="voucherSearchForm.status" class="w150">
-                    <el-option v-for="item in parentEditionStateOptions" :key="item.value" :label="item.label" :value="item.value">
+                  <el-select v-model="voucherSearchForm.couponStatus" class="w150">
+                    <el-option v-for="item in couponOptions" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
                   </el-select>
-                </el-form-item>
-                <el-form-item>
-                  <el-input v-model="voucherSearchForm.orderId" class="iptr" placeholder="订单ID"></el-input>
                 </el-form-item>
                 <el-form-item>
                   <el-input v-model="voucherSearchForm.activityId" class="iptr" placeholder="活动ID"></el-input>
                 </el-form-item>
                 <el-form-item>
-                  <el-input v-model="voucherSearchForm.userId" class="iptr" placeholder="用户ID"></el-input>
+                  <el-input v-model="voucherSearchForm.consumerId " class="iptr" placeholder="用户ID"></el-input>
+                </el-form-item>
+                <el-form-item>
+                  <el-input v-model="voucherSearchForm.orderId" class="iptr" placeholder="订单ID"></el-input>
                 </el-form-item>
                 <el-button type="primary" @click="getVoucherList" size="small">查询</el-button>
                 <el-button type="primary" @click="exportVoucherList" size="small">导出</el-button>
@@ -110,17 +107,17 @@
           <div class="tabel-wrap">
             <template>
               <el-table :data="voucherList">
-                <el-table-column prop="coupon" sortable label="优惠券ID" ></el-table-column>
-                <el-table-column prop="receiveTime" sortable label="领取时间"></el-table-column>
-                <el-table-column prop="parentEditionId" sortable label="母版ID" ></el-table-column>
-                <el-table-column prop="parentEditionTitle" sortable label="母版标题"></el-table-column>
-                <el-table-column prop="money" sortable label="面额" ></el-table-column>
+                <el-table-column prop="couponId" sortable label="优惠券ID" ></el-table-column>
+                <el-table-column prop="gmtCreate" sortable label="领取时间"></el-table-column>
+                <el-table-column prop="couponTemplateId" sortable label="母版ID" ></el-table-column>
+                <el-table-column prop="couponTemplateTitle" sortable label="母版标题"></el-table-column>
+                <el-table-column prop="couponPrice" sortable label="面额" ></el-table-column>
                 <el-table-column prop="effectiveDate" sortable label="有效期" ></el-table-column>
                 <el-table-column prop="activityId" sortable label="活动ID"></el-table-column>
-                <el-table-column prop="userId" sortable label="用户ID" ></el-table-column>
-                <el-table-column prop="useTime" sortable label="使用时间"></el-table-column>
+                <el-table-column prop="consumerId" sortable label="用户ID" ></el-table-column>
+                <el-table-column prop="usedTime" sortable label="使用时间"></el-table-column>
                 <el-table-column prop="orderId" sortable label="订单ID" ></el-table-column>
-                <el-table-column prop="status" sortable label="状态" ></el-table-column>
+                <el-table-column prop="couponStatusValue" sortable label="状态" :formatter="getStatus1"></el-table-column>
               </el-table>
             </template>        
           </div>
@@ -150,6 +147,12 @@ export default {
       loading: false,
       templateValue: '',
       selectType: 'title',
+      selectType1: 'couponTemplateTitle',
+      selectType2: 'dateGroup1',
+      satrtTime: null,
+      endTime: null,
+      couponValue1: '',
+      couponValue2: '',
       deleteTitle: "",
       deleteID: "",
       dialogDeleteParentEdition: false,
@@ -163,20 +166,18 @@ export default {
         order: null
       },
       voucherSearchForm: {
-        selectType1: "title",
-        selectType2: "date",
-        searchValue1: null,
-        searchValue2: null,
-        orderId: "",
-        activityId: "",
-        userId: "",
-        id: null,
-        title: null,
-        status: "",
+        consumerId: null,
+        activityId: null,
+        couponTemplateId: null,
+        couponTemplateTitle: null,
+        createEndTime: null,
+        createStartTime: null,
+        usedEndTime: null,
+        usedStartTime: null,
+        orderId: null,
+        couponStatus: "",
         pageNum: 1,
-        pageSize: null,
-        satrtTime:'',
-        endTime: ''
+        pageSize: 20
       },
       parentEditionStateOptions: [
         //母版状态|待上线|已上线|已下线
@@ -197,6 +198,25 @@ export default {
           label: "已下线"
         }
       ],
+      couponOptions: [
+        //母版状态|待上线|已上线|已下线
+        {
+          value: "",
+          label: "状态"
+        },
+        {
+          value: 0,
+          label: "待使用"
+        },
+        {
+          value: 1,
+          label: "已使用"
+        },
+        {
+          value: -1,
+          label: "已过期"
+        }
+      ],
       searchOptions: [
         {
           value: "title",
@@ -209,21 +229,21 @@ export default {
       ],
       searchOptions1: [
         {
-          value: "title",
+          value: "couponTemplateTitle",
           label: "母版标题"
         },
         {
-          value: "id",
+          value: "couponTemplateId",
           label: "母版ID"
         }
       ],
       searchOptions2: [
         {
-          value: "date",
+          value: "dateGroup1",
           label: "领取时间"
         },
         {
-          value: "dateGroup",
+          value: "dateGroup2",
           label: "使用时间周期"
         }
       ],
@@ -261,9 +281,10 @@ export default {
   watch: {},
   methods: {
     changeDate() {
-      this.voucherSearchForm.satrtTime = this.voucherSearchForm.searchValue2 ? formatToMs(this.voucherSearchForm.searchValue2[0]) : '';
-      this.voucherSearchForm.endTime = this.voucherSearchForm.searchValue2 ? formatToMs(this.voucherSearchForm.searchValue2[1]) : '';
-      console.log(this.voucherSearchForm.satrtTime, this.voucherSearchForm.endTime)
+      console.log(this.couponValue2)
+      this.satrtTime = this.couponValue2 ? formatToMs(this.couponValue2[0]) : '';
+      this.endTime = this.couponValue2 ? formatToMs(this.couponValue2[1]) : '';
+      console.log(this.satrtTime, this.endTime)
     },
     //获取母版列表
     getParentEditionList() {
@@ -292,6 +313,26 @@ export default {
     },
     //获取已发券列表
     getVoucherList() {
+      this.loading = true;
+      if (this.selectType1 == 'couponTemplateTitle') {
+        this.voucherSearchForm.couponTemplateTitle = this.couponValue1;
+        this.voucherSearchForm.couponTemplateId = '';
+      } else if (this.selectType1 == 'couponTemplateId') {
+        this.voucherSearchForm.couponTemplateTitle = '';
+        this.voucherSearchForm.couponTemplateId = this.couponValue1;
+      }
+      if (this.selectType2 == 'dateGroup1') {
+        this.voucherSearchForm.createStartTime = this.satrtTime;
+        this.voucherSearchForm.createEndTime = this.endTime;
+        this.voucherSearchForm.usedStartTime = '';
+        this.voucherSearchForm.usedEndTime = '';
+      } else if (this.selectType2 == 'dateGroup2') {
+        this.voucherSearchForm.createStartTime = '';
+        this.voucherSearchForm.createEndTime = '';
+        this.voucherSearchForm.usedStartTime = this.satrtTime;
+        this.voucherSearchForm.usedEndTime = this.endTime;
+      }
+      console.log(this.voucherSearchForm)
       voucherList(this.voucherSearchForm)
         .then(res => {
           if (res.success) {
@@ -334,6 +375,18 @@ export default {
           return '已上线';
         case -1:
           return '已下线';
+      }
+    },
+    getStatus1(row, column) {
+      switch (row.couponStatusValue) {
+        case '':
+          return '状态';
+        case 0:
+          return '待使用';
+        case 1:
+          return '已使用';
+        case -1:
+          return '已过期';
       }
     },
     //复制母版

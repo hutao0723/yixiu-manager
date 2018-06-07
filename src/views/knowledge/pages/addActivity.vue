@@ -13,32 +13,32 @@
       </div>
       <div class="tabel-wrap">
         <el-form ref="activityForm" :model="activityForm" label-width="100px" :rules="rules">
-            <el-form-item label="活动标题" prop="activity">
-              <el-input v-model="activityForm.activity" style="width: 60%;" placeholder="1-45字"></el-input>
+            <el-form-item label="活动标题" prop="title">
+              <el-input v-model="activityForm.title" style="width: 60%;" placeholder="1-45字"></el-input>
             </el-form-item>
-            <el-form-item label="奖励优惠券" prop="coupon">
+            <el-form-item label="奖励优惠券" prop="awardItems[0].awardContentId">
               <el-col :span="6">
-                <el-select v-model="activityForm.coupon">
-                  <el-option v-for="item in masterOptions" :key="item.parentEditionId" :label="item.parentEditionTitle" :value="item.parentEditionId">
+                <el-select v-model="activityForm.awardItems[0].awardContentId">
+                  <el-option v-for="item in masterOptions" :key="item.couponTemplateId" :label="item.name" :value="item.couponTemplateId">
                       </el-option>
                 </el-select>
               </el-col>
             </el-form-item>
-            <el-form-item label="领奖限制" prop="limit">
-              <el-radio-group v-model="activityForm.limit">
+            <el-form-item label="领奖限制" prop="limitType">
+              <el-radio-group v-model="activityForm.limitType">
                 <el-radio :label="1">奖品数量</el-radio>
                 <el-radio :label="2">固定周期</el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item  prop="piece" v-if="activityForm.limit == 1" :maxlength="8" type="number">
+            <el-form-item  prop="itemSize" v-if="activityForm.limitType == 1" :maxlength="8" type="number">
               <el-col :span="6">
-                <el-input v-model="activityForm.piece" placeholder="1-99999999" type="number" :maxlength="8">
+                <el-input v-model="activityForm.itemSize" placeholder="1-99999999" type="number" :maxlength="8">
                   <template slot="append">张</template>
                 </el-input>
               </el-col>
             </el-form-item>
-            <el-form-item prop="date" v-if="activityForm.limit == 2">
-              <el-date-picker v-model="activityForm.date"  type="datetimerange" range-separator="至" start-placeholder="开始日期"  end-placeholder="结束日期"></el-date-picker>
+            <el-form-item prop="date" v-if="activityForm.limitType == 2">
+              <el-date-picker v-model="date" type="datetimerange" range-separator="至" start-placeholder="开始日期"  end-placeholder="结束日期" @change="changeDate"></el-date-picker>
             </el-form-item>
             <el-form-item>
               <router-link :to="{ path: '/manager/knowledge/voucherActivities'}">
@@ -53,7 +53,7 @@
 
 </template>
 <script>
-  import { formatDateNew } from '../../../utils/dateUtils'
+  import { formatDateNew, formatToMs } from '../../../utils/dateUtils'
   import couponrules from '../components/couponrules'
   import qs from 'qs'
   export default {
@@ -61,16 +61,23 @@
       return {
         type: 'new',
         rules: couponrules,
+        date: null,
         activityForm: {
-          id: null,
-          activityId: null,
-          activity: '',
-          limit: 1,
-          coupon:'',
-          piece: '',
-          date: []
+          activityStartTime: '',
+          activityEndTime: '',
+          activityType: 1,
+          title: '',
+          limitType: 1,
+          awardItems:[
+            {
+              activityId: '',
+              awardContentId: '',
+              awardContentType: 0,
+              id: null 
+            }
+          ],
+          itemSize: ''
         },
-        prize:'',
         masterOptions: []
       }
     },
@@ -86,13 +93,18 @@
       }
     },
     methods: {
+      changeDate() {
+        this.activityForm.activityStartTime = this.date ? formatToMs(this.date[0]) : '';
+        this.activityForm.activityEndTime = this.date ? formatToMs(this.date[1]) : '';
+      },
       // 获取奖励优惠券列表
       getCouponList () {
-        this.$http.get('/get/prize/coupon', {}).then(res => {
+        this.$http.get('/coupon/template/simple/list', {}).then(res => {
           let resp = res.data
           if (resp.success) {
             if(resp.data){
-              this.masterOptions = resp.data.content
+              this.masterOptions = resp.data
+              console.log(this.masterOptions)
             }
           } else {
             let msg = resp.desc || '请求失败'
@@ -112,14 +124,13 @@
         let params = {
           id: id
         }
-        this.$http.get('/get/pop/activity', {params: params}).then(res => {
+        this.$http.get('/activity/get', {params: params}).then(res => {
           let resp = res.data
           if (resp.success) {
             if(resp.data){
               this.activityForm = resp.data
-              this.activityForm.date =[new Date(resp.data.startdate),new Date(resp.data.enddate)] 
-              this.masterOptions.parentEditionTitle = this.activityForm.coupon
-              this.masterOptions.parentEditionId = this.activityForm.titleId
+              this.date =[resp.data.activityStartTime, resp.data.activityEndTime];
+              this.masterOptions.couponTemplateId = this.activityForm.awardItems[0].awardContentId;
             }
           } else {
             let msg = resp.desc || '请求失败'
@@ -129,23 +140,33 @@
       },
       // 保存活动
       saveActivity () {
+        this.activityForm['date'] = this.date;
+        for (let key in this.activityForm) {
+          if (key == 'activityId' || key == 'activityStatus' || key == 'deleted' || key == 'gmtCreate' || key == 'gmtModified' || key == 'id') {
+            delete this.activityForm[key]
+          }
+        }
+        if (this.activityForm.awardItems) {
+          for (let key in this.activityForm.awardItems[0]) {
+            if (key == 'activityId' || key == 'id') {
+              delete this.activityForm.awardItems[0][key]
+            }
+          }
+        }
         this.$refs['activityForm'].validate((valid) => {
           if (valid) {
+            if (this.activityForm.limitType == 1) {
+              this.activityForm.activityStartTime = null;
+              this.activityForm.activityEndTime = null;
+            } else if (this.activityForm.limitType == 2) {
+              this.activityForm.itemSize = null;
+            }
+            delete this.activityForm.date;
             console.log(this.activityForm)
-            let {id, activityId, activity, limit, coupon, piece, date} = this.activityForm
-            let params = {
-              id, 
-              activityId, 
-              activity, 
-              limit, 
-              coupon, 
-              piece, 
-              date
-            };
-            this.$http.post('/save/activity', qs.stringify(params)).then(res => {
+            this.$http.post('/activity/save', this.activityForm).then(res => {
               if (res.data.success) {
                 this.$message.success('操作成功')
-                this.$router.push('skinMarket')
+                this.$router.go(-1);
               } else {
                 this.$message.error('操作失败')
               }

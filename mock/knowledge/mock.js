@@ -268,17 +268,35 @@ var setOnline = [
     type: 'post',
     url: '/coupon/template/copy'
   },
+  //复制活动
+  {
+    name: 'copyActivity',
+    type: 'post',
+    url: '/activity/copy'
+  },
   //修改优惠券母版状态
   {
     name: 'updateStatusTemplate',
     type: 'post',
     url: '/coupon/template/updateStatus'
   },
+  //修改活动状态
+  {
+    name: 'updateStatusActivity',
+    type: 'post',
+    url: '/activity/updateStatus'
+  },
   //删除优惠券母版
   {
     name: 'deleteTemplate',
     type: 'post',
     url: '/coupon/template/delete'
+  },
+  //删除活动
+  {
+    name: 'deleteActivity',
+    type: 'post',
+    url: '/activity/delete'
   },
   //已发券列表
   {
@@ -290,25 +308,25 @@ var setOnline = [
   {
     name: 'voucherActivitiesList',
     type: 'get',
-    url: '/voucherActivities/list'
+    url: '/activity/pageList'
   },
   //获取奖励优惠券列表
   {
-    name: 'parentEditionList',
+    name: 'couponSimpleList',
     type: 'get',
-    url: '/get/prize/coupon'
+    url: '/coupon/template/simple/list'
   },
-  // 获取当优惠券列表
+  // 获取活动详情
   {
     name: 'activitySingle',
     type: 'get',
-    url: '/get/pop/activity'
+    url: '/activity/get'
   },
   // 保存
   {
     name: 'save',
     type: 'post',
-    url: '/save/activity'
+    url: '/activity/save'
   },
 ];
 var fs = require('fs');

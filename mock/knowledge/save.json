@@ -1,5 +1,6 @@
 {
-	"success": true,
+	"code": "string",
 	"data": true,
-	"desc": "保存成功"
+	"desc": "string",
+	"success": true
 }

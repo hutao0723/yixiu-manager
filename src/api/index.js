@@ -98,9 +98,15 @@ export const updateStatusTemplate = params => post('coupon/template/updateStatus
 export const deleteTemplate = params => post('coupon/template/delete', params);
 //获取已发券列表
 export const voucherList = params => get('coupon/info/page', params);
+//复制活动
+export const copyActivity = params => post('activity/copy', params);
 
 /*
 *发券活动相关接口
 */
-//获取已发券列表
-export const voucherActivitiesList = params => get('voucherActivities/list', params);
+//获取活动列表
+export const voucherActivitiesList = params => get('activity/pageList', params);
+//修改活动状态
+export const updateStatusActivity = params => post('activity/updateStatus', params);
+//删除活动
+export const deleteActivity = params => post('activity/delete', params);

@@ -14,7 +14,7 @@
         <template >
           <el-table :data="courseManageList" border style="width: 100%;text-align: center" > <!--:span-method="arraySpanMethod"-->
 
-            <el-table-column prop="title" label="书籍标题" width="320">
+            <el-table-column prop="title" label="书籍标题" width="200">
             </el-table-column>
 
             <el-table-column  label="解锁日期" >
@@ -35,7 +35,7 @@
               </template>
             </el-table-column>
 
-            <el-table-column prop="title" label="课程标题" width="320">
+            <el-table-column prop="title" label="课程标题" width="300">
               <template slot-scope="scope">
                 <div class="itemStyle" v-for="(item,index) in scope.row.readBookCourseVOList">{{item.courseTitle}}</div>
               </template>
@@ -51,7 +51,7 @@
               </template>
             </el-table-column>
 
-            <el-table-column label="操作" width="200">
+            <el-table-column label="操作" width="120">
               <template slot-scope="edit">
                 <div class="itemStyle" v-for="(item,index) in edit.row.readBookCourseVOList">
                   <el-button type="text" size="mini" @click="editCourse(1,item)">编辑课程</el-button>
@@ -60,7 +60,7 @@
               </template>
             </el-table-column>
 
-            <el-table-column label="操作" width="200">
+            <el-table-column label="操作" width="140">
               <template slot-scope="edit">
                 <el-button type="text" size="mini" @click="editCourse(2,edit.row)">添加课程</el-button>
                 <el-button type="text" size="mini" @click="addBook(2,edit.row)">编辑</el-button>

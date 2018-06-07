@@ -494,6 +494,9 @@
 <style lang="less" >
   .ofa-main-wrap {
     .removeDefStyle{
+      .el-table .cell{
+        display: block !important;
+      }
       .el-table td, .el-table th{
         padding:0;
         text-align:center;

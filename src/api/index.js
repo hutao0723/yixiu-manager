@@ -90,8 +90,12 @@ export const getUserDistributionList = params => get('distributor/userDistributi
 */
 //获取母版列表
 export const parentEditionList = params => get('coupon/template/page', params);
+//查询阅读计划集合,适用于阅读计划下拉框
+export const readList = params => get('read/list', params);
 //复制优惠券母版
 export const copyTemplate = params => post('coupon/template/copy', params);
+//保存优惠券母版
+export const saveTemplate = params => post('coupon/template/save', params);
 //修改优惠券母版状态
 export const updateStatusTemplate = params => post('coupon/template/updateStatus', params);
 //删除优惠券母版
@@ -100,6 +104,8 @@ export const deleteTemplate = params => post('coupon/template/delete', params);
 export const voucherList = params => get('coupon/info/page', params);
 //导出优惠券
 export const exportVoucher = params => post('coupon/export/order', params);
+//获取母版详情
+export const couponTemplateDetail = params => get('coupon/template/get', params);
 
 /*
 *发券活动相关接口

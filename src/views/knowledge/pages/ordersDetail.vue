@@ -177,10 +177,10 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>{{detailList.distributorId}}</td>
-                      <td>{{detailList.distributorName}}</td>
-                      <td>{{detailList.distributorName}}</td>
-                      <td>{{detailList.distributorName}}</td>
+                      <td>{{detailList.couponId}}</td>
+                      <td>{{detailList.couponTemplateId}}</td>
+                      <td>{{detailList.couponTemplateTitle}}</td>
+                      <td>{{detailList.couponPrice}}</td>
                     </tr>
                   </tbody>
                 </table>

@@ -7,7 +7,7 @@ const couponrules = {
   coupon: [
     { required: true, message: '请选择奖励优惠券', trigger: 'blur'}
   ],
-  piece: [
+  itemSize: [
     { required: true, message: '请输入优惠券的张数', trigger: 'blur'},
     { min: 1, max: 99999999, message: '张数在 1 到 99999999之间 ', trigger: 'blur'}
   ],
@@ -22,8 +22,8 @@ const couponrules = {
     { required: true, message: '请输入面额', trigger: 'blur'},
     { min: 0.01, max: 999.99, message: '长度在 0.01 到 999.99 个字符', trigger: 'blur'}
   ],
-  link: [
-    { required: true, message: '请选择时间', trigger: 'blur' }
+  pageLocationId: [
+    { required: true, message: '请选择跳转链接', trigger: 'blur' }
   ],
   day: [
     { required: true, message: '请输入有效期时长', trigger: 'blur'},

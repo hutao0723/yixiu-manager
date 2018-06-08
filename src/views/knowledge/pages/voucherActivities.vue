@@ -42,9 +42,9 @@
             <template>
               <el-table :data="voucherActivitiesList">
                 <el-table-column prop="id" label="活动ID" ></el-table-column>
-                <el-table-column prop="activityId" sortable label="外码"></el-table-column>
-                <el-table-column prop="title" sortable label="活动标题" ></el-table-column>
-                <el-table-column prop="activityStatus" sortable label="状态" :formatter="getStatus"></el-table-column>
+                <el-table-column prop="activityId" label="外码"></el-table-column>
+                <el-table-column prop="title" label="活动标题" ></el-table-column>
+                <el-table-column prop="activityStatus" label="状态" :formatter="getStatus"></el-table-column>
                 <el-table-column  label="操作">
                   <template slot-scope="scope">
                     <router-link :to="{ path: '/manager/knowledge/addActivity/' + scope.row.id }">

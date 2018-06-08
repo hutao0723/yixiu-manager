@@ -35,16 +35,21 @@
                 <el-table-column prop="couponTemplateId" label="母版ID" ></el-table-column>
                 <el-table-column prop="title" label="母版标题"></el-table-column>
                 <el-table-column prop="couponPrice" label="面额" ></el-table-column>
-                <el-table-column prop="expireDate" label="有效期" width="250" ></el-table-column>
-                <el-table-column prop="status" label="状态" :formatter="getStatus"></el-table-column>
+                <el-table-column v-if="parentEditionList.validityType == 1" prop="validityDays" label="有效期" width="250" ></el-table-column>
+                <el-table-column v-else-if="parentEditionList.validityType == 2" prop="couponStartTime + '/' + couponEndTime" label="有效期" width="250" >
+                  <template slot-scope="scope">
+                    {{scope.row.couponStartTime}}至{{scope.row.couponEndTime}}
+                  </template>
+                </el-table-column>
+                <el-table-column prop="couponStatus" label="状态" :formatter="getStatus"></el-table-column>
                 <el-table-column  label="操作">
                   <template slot-scope="scope">
                     <router-link :to="{ path: '/manager/knowledge/editMaster/' + scope.row.couponTemplateId }">
                       <el-button type="text" size="mini" :style="{ marginRight: '10px' }">编辑</el-button>
                     </router-link>
                     <el-button type="text" size="mini" @click="copy(scope.row.couponTemplateId)">复制</el-button>
-                    <el-button type="text" size="mini" @click="changeStatus(scope.row.couponTemplateId, scope.row.status)">{{scope.row.status == 1 ? '下线' : '上线'}}</el-button> 
-                    <el-button type="text" size="mini" @click="deleteRow(scope.row)">删除</el-button> 
+                    <el-button type="text" size="mini" @click="changeStatus(scope.row.couponTemplateId, scope.row.status)">{{scope.row.couponStatus == 1 ? '下线' : '上线'}}</el-button> 
+                    <el-button type="text" size="mini" @click="deleteRow(scope.row)">删除</el-button>
                   </template>
                 </el-table-column>
               </el-table>
@@ -107,17 +112,21 @@
           <div class="tabel-wrap">
             <template>
               <el-table :data="voucherList">
-                <el-table-column prop="couponId" sortable label="优惠券ID" ></el-table-column>
-                <el-table-column prop="gmtCreate" sortable label="领取时间"></el-table-column>
-                <el-table-column prop="couponTemplateId" sortable label="母版ID" ></el-table-column>
-                <el-table-column prop="couponTemplateTitle" sortable label="母版标题"></el-table-column>
-                <el-table-column prop="couponPrice" sortable label="面额" ></el-table-column>
-                <el-table-column prop="effectiveDate" sortable label="有效期" ></el-table-column>
-                <el-table-column prop="activityId" sortable label="活动ID"></el-table-column>
-                <el-table-column prop="consumerId" sortable label="用户ID" ></el-table-column>
-                <el-table-column prop="usedTime" sortable label="使用时间"></el-table-column>
-                <el-table-column prop="orderId" sortable label="订单ID" ></el-table-column>
-                <el-table-column prop="couponStatusValue" sortable label="状态" :formatter="getStatus1"></el-table-column>
+                <el-table-column prop="couponId" label="优惠券ID" ></el-table-column>
+                <el-table-column width="250" prop="gmtCreate" label="领取时间"></el-table-column>
+                <el-table-column prop="couponTemplateId" label="母版ID" ></el-table-column>
+                <el-table-column prop="couponTemplateTitle" label="母版标题"></el-table-column>
+                <el-table-column prop="couponPrice" label="面额" ></el-table-column>
+                <el-table-column prop="couponStartTime + '至' + couponEndTime" label="有效期" >
+                  <template slot-scope="scope">
+                    <div>{{scope.row.couponStartTime}}至{{scope.row.couponEndTime}}</div>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="sourceId" label="活动ID"></el-table-column>
+                <el-table-column prop="consumerId" label="用户ID" ></el-table-column>
+                <el-table-column prop="usedTime" label="使用时间"></el-table-column>
+                <el-table-column prop="orderId" label="订单ID" ></el-table-column>
+                <el-table-column prop="couponStatus" label="状态" :formatter="getStatus1"></el-table-column>
               </el-table>
             </template>        
           </div>
@@ -139,7 +148,7 @@
       <span v-else>优惠券文件已生成，请点击「下载」按钮！</span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVoucher = false">取 消</el-button>
-        <a :class="disabled ? 'btn-disabled' : ''" :href="disabled ? 'javascript:;' : downloadUrl" class="el-button el-button--primary">下 载</a>
+        <el-button :disabled="this.disabled" class="el-button el-button--primary" @click="queryExport">下 载</el-button>
       </span>
     </el-dialog>
   </section>
@@ -170,23 +179,28 @@ export default {
       dialogDeleteParentEdition: false,
       parentEditionSearchForm: {
         couponTemplateId: null,
+        couponStartTime: null,
+        couponEndTime: null,
+        validityDays: null,
+        validityType: null,
         title: null,
-        status: "",
+        couponPrice: null,
+        couponStatus: "",
         pageNum: 1,
         pageSize: 20,
         columns: null,
         order: null
       },
       voucherSearchForm: {
-        consumerId: null,
-        activityId: null,
-        couponTemplateId: null,
-        couponTemplateTitle: null,
-        createEndTime: null,
-        createStartTime: null,
-        usedEndTime: null,
-        usedStartTime: null,
-        orderId: null,
+        consumerId: '',
+        activityId: '',
+        couponTemplateId: '',
+        couponTemplateTitle: '',
+        createEndTime: '',
+        createStartTime: '',
+        usedEndTime: '',
+        usedStartTime: '',
+        orderId: '',
         couponStatus: "",
         pageNum: 1,
         pageSize: 20
@@ -284,8 +298,7 @@ export default {
       totalSize: 0,
       totalSize1: 0,
       parentEditionList: [],
-      voucherList: [],
-      filename: ''
+      voucherList: []
     };
   },
   created() {
@@ -294,10 +307,8 @@ export default {
   watch: {},
   methods: {
     changeDate() {
-      console.log(this.couponValue2)
       this.satrtTime = this.couponValue2 ? formatToMs(this.couponValue2[0]) : '';
       this.endTime = this.couponValue2 ? formatToMs(this.couponValue2[1]) : '';
-      console.log(this.satrtTime, this.endTime)
     },
     //获取母版列表
     getParentEditionList() {
@@ -309,11 +320,19 @@ export default {
         this.parentEditionSearchForm.title = '';
         this.parentEditionSearchForm.couponTemplateId = this.templateValue;
       }
-      parentEditionList(this.parentEditionSearchForm)
+      let params = {
+        couponTemplateId: this.parentEditionSearchForm.couponTemplateId,
+        title: this.parentEditionSearchForm.title,
+        status: this.parentEditionSearchForm.couponStatus,
+        pageNum: this.parentEditionSearchForm.pageNum,
+        pageSize: this.parentEditionSearchForm.pageSize
+      }
+      parentEditionList(params)
         .then(res => {
           if (res.success) {
             this.parentEditionList = res.data.content;
             this.totalSize = res.data.totalElements;
+            console.log(this.parentEditionList)
           } else {
             let msg = res.data.desc || "请求失败";
             this.$message.error(msg);
@@ -361,12 +380,7 @@ export default {
           this.loading = false;
         });
     },
-    //导出已发券列表
-    exportVoucherList() {
-      console.log('export')
-      this.dialogVisible = true
-      this.disabled = true
-      this.downStatus = true
+    queryExport() {
       if (this.selectType2 == 'dateGroup1') {
         this.voucherSearchForm.createStartTime = this.satrtTime;
         this.voucherSearchForm.createEndTime = this.endTime;
@@ -387,40 +401,26 @@ export default {
       exportVoucher(this.voucherSearchForm)
       .then(res => {
         if (resp.success) {
-          this.filename = resp.data
-          let that = this
-          let orders = setInterval(function(){
-            let params = {
-              filename: that.filename
-            }
-            that.$http.get('/knowledge/order/checkExport', {params}).then(res => {
-              let resp = res.data
-              if (resp.success) {
-                if(resp.data.succeed){
-                  clearInterval(orders)
-                  that.disabled = false
-                  that.downStatus = false
-                  that.downloadUrl = resp.data.fileUrl
-                }else{
-                  // let msg = resp.data.message || '文件正在上传中'
-                  // that.$message.error(msg)
-                  console.log(resp.data.message)
-                }
-              } else {
-                let msg = resp.desc || '请求失败'
-                that.$message.error(msg)
-              } 
-            }, () => {
-              that.$message.error('网络错误')
-            })
-          }, 500)
+          let msg = resp.desc || '导出成功'
         } else {
-          let msg = resp.desc || '请求失败'
+          let msg = resp.desc || '导出失败'
           this.$message.error(msg)
         }
       }, () => {
         this.$message.error('网络错误')
       })
+    },
+    //导出已发券列表
+    exportVoucherList() {
+      this.dialogVoucher = true;
+      this.disabled = true;
+      this.downStatus = true;
+      let that = this;
+      let coupons = setInterval(function() {
+        clearInterval(coupons);
+        that.disabled = false;
+        that.downStatus = false;
+      }, 1000)
     },
     // 切换tab
     handleClick(tab, event) {
@@ -436,7 +436,7 @@ export default {
       }
     },
     getStatus(row, column) {
-      switch (row.status) {
+      switch (row.couponStatus) {
         case '':
           return '状态';
         case 0:
@@ -448,7 +448,7 @@ export default {
       }
     },
     getStatus1(row, column) {
-      switch (row.couponStatusValue) {
+      switch (row.couponStatus) {
         case '':
           return '状态';
         case 0:
@@ -558,5 +558,12 @@ export default {
 }
 .date-range {
   margin-top: 1px;
+}
+.beat-ellipsis:after {
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: bottom;
+  animation: ellipsis 2s infinite;
+  content: "\2026"; 
 }
 </style>

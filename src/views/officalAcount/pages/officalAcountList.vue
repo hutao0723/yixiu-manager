@@ -61,6 +61,7 @@
 							<template slot-scope="scope">
 								<el-button v-if="scope.row.serviceTypeInfo == 2" type="text" size="mini" @click="goToTemplateMessage(scope.row)">模板消息</el-button>
 								<!-- <el-button v-else type="text" size="mini" :style="{ width: '50px' }"></el-button> -->
+                <el-button type="text" size="mini" @click="openDialogType(scope.row.appId,scope.row.id)">类型</el-button>
 								<el-button type="text" size="mini" @click="openDialogAdmin(scope.row.managerName,scope.row.id)">管理员</el-button>
 								<el-button type="text" size="mini" @click="getWeChatSetting">授权</el-button>
 								<el-button type="text" size="mini" @click="delAcount(scope.row)">删除</el-button>
@@ -85,6 +86,20 @@
 				<el-button type="primary" @click="setAdminName">确 定</el-button>
 			</div>
 		</el-dialog>
+    <el-dialog title="设置类型" :visible.sync="dialogType" width="30%">
+      <el-form :rules="typeRules" ref="typeForm" :model="typeForm">
+        <el-form-item label="类型名称" label-width="100px" prop="name">
+          <el-select v-model="typeForm.name" class="iptl w150">
+            <el-option v-for="item in typeList" :key="item.id" :label="item.name" :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogType = false">取 消</el-button>
+        <el-button type="primary" @click="setTypeName">确 定</el-button>
+      </div>
+    </el-dialog>
 	</section>
 </template>
 
@@ -137,13 +152,65 @@ export default {
             trigger: "blur"
           }
         ]
-      }
+      },
+      appId: '',
+        typeId: '',
+        typeForm: {
+          name: '',
+        },
+        typeRules: {
+          name: [{
+            required: true,
+            message: '请输入管理员名称',
+            trigger: 'blur'
+          }, ],
+        },
+        typeList: [],
+        dialogType: false,
     };
   },
   created() {
     this.getAllList();
   },
   methods: {
+    openDialogType(appId, id) {
+        console.log(appId, id)
+        this.$http.get('/content/type/band/info?authorizerId=' + id).then(res => {
+          if (res.data.success) {
+						console.log(id)
+            this.typeForm.name = res.data.data?res.data.data.id:'';
+            this.typeId = id;
+            this.appId = appId;
+            this.dialogType = true;
+          } else {
+            let msg = res.data.desc || '请求失败'
+            this.$message.error(msg)
+          }
+        })
+      },
+    setTypeName() {
+        this.$refs['typeForm'].validate((valid) => {
+          if (valid) {
+            let name = this.typeForm.name;
+            let typeId = this.typeId;
+            let appId = this.appId;
+            this.$http.post('/content/type/band', qs.stringify({
+              appId,
+							authorizerId: typeId,
+							authorizerTypeId: name
+            })).then(res => {
+              this.dialogType = false;
+              if (res.data.success) {
+                this.$message.success('修改类型成功')
+                this.onSearch();
+              } else {
+                let msg = res.data.desc || '请求失败'
+                this.$message.error(msg)
+              }
+            })
+          }
+        })
+      },
     //打开设置管理员弹窗
     openDialogAdmin(name, id) {
       this.dialogAdmin = true;

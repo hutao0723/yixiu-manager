@@ -307,10 +307,18 @@ export default {
       });
     },
     goToTemplateMessage(row, index) {
+
+      if(!row.authorizerTypeId){
+        this.$message({
+          type: "error",
+          message: "该公众号未关联类型"
+        });
+        return false;
+      }
       this.$router.push({
         name: "templateMessage",
         params: {
-          type: row.serviceTypeInfo,
+          type: row.authorizerTypeId,
           id: row.id
         }
       });

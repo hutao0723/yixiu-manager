@@ -104,6 +104,8 @@
 </template>
 
 <script>
+  import qs from 'qs'
+
 export default {
   data() {
     return {
@@ -171,8 +173,24 @@ export default {
   },
   created() {
     this.getAllList();
+    this.getTypeList();
   },
   methods: {
+    getTypeList() {
+  let params = {
+    modelType: 2,
+    name: '',
+  }
+  this.$http.get('/content/type/appType/all', { params: params }).then(res => {
+    let resp = res.data
+    if (resp.success) {
+      this.typeList = resp.data
+    } else {
+      let msg = resp.desc || '请求失败'
+      this.$message.error(msg)
+    }
+  })
+},
     openDialogType(appId, id) {
         console.log(appId, id)
         this.$http.get('/content/type/band/info?authorizerId=' + id).then(res => {

@@ -398,7 +398,7 @@
           const width = image.width;
           const height = image.height;
 
-          if (width == 750 && height == 544) {
+          if (width == 750 && height == 545) {
             self.courseSearchForm.imgUrl = 'https:' + res.data.fileUrl;
           } else {
             self.$message.error('上传图片的尺寸必须为 750*544!')
@@ -433,6 +433,8 @@
         })
       },
       editCourse(title,row) {
+        this.courseSearchForm.imgUrl = ''
+        this.courseSearchForm.selectType = ''
         this.courseEditId = row.id;
         this.editDiolog = true ;
         this.digType = title;
@@ -460,7 +462,6 @@
             if (resp.success) {
               this.$message.success('编辑成功');
               this.editDiolog = false;
-
               this.getData();
             } else {
               let msg = resp.desc || '编辑失败'
@@ -469,6 +470,7 @@
           })
         }else{
           console.log('新增')
+
           params.readId = this.readId;
           params.bookId =this.courseEditId;
           this.$http.post("/read/book/course/add",qs.stringify(params)).then(res =>{

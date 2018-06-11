@@ -208,7 +208,8 @@
           status: '',
           pageNum: 1,
           pageSize: null,
-          imgUrl:''
+          imgUrl:'',
+          selectType:''
         },
         //新增编辑课程form 表单
         courseForm: {
@@ -232,6 +233,7 @@
     },
     methods: {
       selChange(val){
+        console.log('*****'+val)
           this.courseSearchForm.selectType = val;
       },
       //获取列表数据
@@ -423,9 +425,9 @@
       getCourseDetail(id){
         this.$http.get('/read/book/course/detail?id='+id).then(res =>{
           let resp = res.data;
-          console.log(resp.data)
+          console.log(resp.data.courseId)
           if (resp.success) {
-             //this.courseSearchForm.selectType = resp.data.courseId
+             this.courseSearchForm.selectType = resp.data.courseId
              this.courseSearchForm.imgUrl = resp.data.imgUrl
           } else {
             let msg = resp.desc || '请求失败'
@@ -434,6 +436,7 @@
         })
       },
       editCourse(title,row) {
+        this.courseSearchForm.selectType = ''
         this.courseSearchForm.imgUrl= ''
         this.courseEditId = row.id;
         this.editDiolog = true ;

@@ -81,10 +81,24 @@
             第{{courseDay}}天
           </el-form-item>
           <el-form-item label="关联课程：">
-            <el-select filterable v-model="courseSearchForm.selectType" style="width:50%;">
+            <el-select filterable v-model="courseSearchForm.selectType" style="width:50%;" @change="selChange">
               <el-option v-for="(item,index) in courseList" :key="index" :label="item.title" :value="item.id">
               </el-option>
             </el-select>
+          </el-form-item>
+          <el-form-item label="海报背景图">
+            <el-upload
+              class="avatar-uploader"
+              action="/upload/image"
+              name="imageFile"
+              :show-file-list=false
+              :on-success="firstSuccess3"
+              :before-upload="beforeAvatarUpload">
+              <img v-if="courseSearchForm.imgUrl" :src="courseSearchForm.imgUrl" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+              <el-button size="small" type="primary">{{courseSearchForm.imgUrl ? '修改文件' : '选择文件'}}</el-button>
+              <div slot="tip" class="el-upload__tip">750*544,支持jpg、png、gif格式,最大5M</div>
+            </el-upload>
           </el-form-item>
         </el-form>
         <div class="btn-wrap">
@@ -194,6 +208,8 @@
           status: '',
           pageNum: 1,
           pageSize: null,
+          imgUrl:'',
+          selectType:''
         },
         //新增编辑课程form 表单
         courseForm: {
@@ -216,6 +232,10 @@
       this.getData();
     },
     methods: {
+      selChange(val){
+        console.log('*****'+val)
+          this.courseSearchForm.selectType = val;
+      },
       //获取列表数据
       getData() {
         let params ={
@@ -372,6 +392,22 @@
           }
         };
       },
+      firstSuccess3(res, file) {
+        const self = this;
+
+        const image = new Image();
+        image.src = 'https:' + res.data.fileUrl;
+        image.onload = function () {
+          const width = image.width;
+          const height = image.height;
+
+          if (width == 750 && height == 544) {
+            self.courseSearchForm.imgUrl = 'https:' + res.data.fileUrl;
+          } else {
+            self.$message.error('上传图片的尺寸必须为 750*544!')
+          }
+        };
+      },
       getAllCourse(title){
         let params ={
           title:title
@@ -386,24 +422,41 @@
           }
         })
       },
+      getCourseDetail(id){
+        this.$http.get('/read/book/course/detail?id='+id).then(res =>{
+          let resp = res.data;
+          console.log(resp.data.courseId)
+          if (resp.success) {
+             this.courseSearchForm.selectType = resp.data.courseId
+             this.courseSearchForm.imgUrl = resp.data.imgUrl
+          } else {
+            let msg = resp.desc || '请求失败'
+            this.$message.error(msg)
+          }
+        })
+      },
       editCourse(title,row) {
-        console.log(row)
+        this.courseSearchForm.selectType = ''
+        this.courseSearchForm.imgUrl= ''
         this.courseEditId = row.id;
         this.editDiolog = true ;
         this.digType = title;
         this.digTite = title == 1?'编辑':'添加' ;
-
         if(title==1){
           this.courseDay = row.dayNum;
+          this.getCourseDetail(row.id)
         }else{
           this.courseDay = row.lastDayNum+1;
         }
         this.getAllCourse(row.courseTitle)
+
       },
       subCourse(){
         let params = {
-          courseId:this.courseSearchForm.selectType
+          courseId:this.courseSearchForm.selectType,
+          imgUrl:this.courseSearchForm.imgUrl
         };
+
         if(this.digType==1){
           params.id = this.courseEditId
           console.log('编辑')
@@ -411,7 +464,7 @@
             let resp = res.data;
             if (resp.success) {
               this.$message.success('编辑成功');
-              this.editDiolog = false
+              this.editDiolog = false;
               this.getData();
             } else {
               let msg = resp.desc || '编辑失败'
@@ -420,13 +473,16 @@
           })
         }else{
           console.log('新增')
+
           params.readId = this.readId;
           params.bookId =this.courseEditId;
           this.$http.post("/read/book/course/add",qs.stringify(params)).then(res =>{
             let resp = res.data;
             if (resp.success) {
               this.$message.success('编辑成功');
-              this.editDiolog = false
+
+              this.editDiolog = false;
+
               this.getData();
             } else {
               let msg = resp.desc || '编辑失败'

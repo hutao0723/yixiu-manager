@@ -81,7 +81,7 @@
             第{{courseDay}}天
           </el-form-item>
           <el-form-item label="关联课程：">
-            <el-select filterable v-model="courseSearchForm.selectType" style="width:50%;">
+            <el-select filterable v-model="courseSearchForm.selectType" style="width:50%;" @change="selChange">
               <el-option v-for="(item,index) in courseList" :key="index" :label="item.title" :value="item.id">
               </el-option>
             </el-select>
@@ -231,6 +231,9 @@
       this.getData();
     },
     methods: {
+      selChange(val){
+          this.courseSearchForm.selectType = val;
+      },
       //获取列表数据
       getData() {
         let params ={
@@ -394,7 +397,7 @@
         image.onload = function () {
           const width = image.width;
           const height = image.height;
-          if (width == 750 && height == 544) {
+          if (width == 750 && height == 545) {
             self.courseSearchForm.imgUrl = 'https:' + res.data.fileUrl;
           } else {
             self.$message.error('上传图片的尺寸必须为 750*544!')
@@ -418,18 +421,24 @@
       getCourseDetail(id){
         this.$http.get('/read/book/course/detail?id='+id).then(res =>{
           let resp = res.data;
-          console.log(resp)
+          console.log(resp.data)
+          if (resp.success) {
+            this.courseSearchForm.selectType = resp.data.courseId
+            this.courseSearchForm.imgUrl = resp.data.imgUrl
+          } else {
+            let msg = resp.desc || '编辑失败'
+            this.$message.error(msg)
+          }
         })
       },
       editCourse(title,row) {
-        console.log(row)
         this.courseEditId = row.id;
         this.editDiolog = true ;
         this.digType = title;
         this.digTite = title == 1?'编辑':'添加' ;
         if(title==1){
           this.courseDay = row.dayNum;
-          this.getCourseDetail(row.courseID)
+          this.getCourseDetail(row.id)
         }else{
           this.courseDay = row.lastDayNum+1;
         }
@@ -439,8 +448,9 @@
       subCourse(){
         let params = {
           courseId:this.courseSearchForm.selectType,
-          backGroundUrl:this.courseSearchForm.imgUrl
+          imgUrl:this.courseSearchForm.imgUrl
         };
+
         if(this.digType==1){
           params.id = this.courseEditId
           console.log('编辑')

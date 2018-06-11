@@ -48,12 +48,12 @@
                       <el-row>
                         <el-col :span="8" class="setInfo">
                           圆角
-                          <el-input-number v-model="newPosterDetail.portraitRoundProportion" class="font-detail" controls-position="right" size="mini" :min="100" :max="160"></el-input-number>
+                          <el-input-number v-model="newPosterDetail.portraitRoundProportion" class="font-detail" controls-position="right" size="mini" :min="0" :max="100"></el-input-number>
                           <span>%</span>
                         </el-col>
                         <el-col :span="8" class="setInfo">
                           大小
-                          <el-input-number v-model.number="newPosterDetail.portraitLength" class="font-detail" controls-position="right" size="mini" :min="0" :max="160"></el-input-number>
+                          <el-input-number v-model.number="newPosterDetail.portraitLength" class="font-detail" controls-position="right" size="mini" :min="100" :max="160"></el-input-number>
                           <span>px</span>
                         </el-col>
                       </el-row>
@@ -89,7 +89,7 @@
                       <el-row>
                         <el-col :span="8" class="setInfo">
                           字号
-                          <el-input-number v-model="newPosterDetail.nicknameFontSize" class="font-detail" controls-position="right" size="mini" :min="0" :max="56"></el-input-number>
+                          <el-input-number v-model="newPosterDetail.nicknameFontSize" class="font-detail" controls-position="right" size="mini" :min="30" :max="50"></el-input-number>
                           <span>px</span>
                         </el-col>
                         <el-col :span="8" class="setInfo color">
@@ -114,7 +114,7 @@
                         <el-row>
                           <el-col :span="8" class="setInfo">
                             字号
-                            <el-input-number v-model="newPosterDetail.ctitleFontSize" class="font-detail" controls-position="right" size="mini" :min="20" :max="50"></el-input-number>
+                            <el-input-number v-model="newPosterDetail.ctitleFontSize" class="font-detail" controls-position="right" size="mini" :min="30" :max="70"></el-input-number>
                             <span>px</span>
                           </el-col>
                           <el-col :span="8" class="setInfo color">
@@ -135,12 +135,12 @@
                       <el-row>
                         <el-col :span="8" class="setInfo">
                           Left
-                          <el-input-number v-model="newPosterDetail.qrcodeLeftMargin" class="font-detail" controls-position="right" size="mini" :min="0" :max="750-newPosterDetail.qrcodeLength"></el-input-number>
+                          <el-input-number v-model="newPosterDetail.qrcodeLeftMargin" class="font-detail" controls-position="right" size="mini" :min="0" :max="750"></el-input-number>
                           <span>px</span>
                         </el-col>
                         <el-col :span="8" class="setInfo">
                           Top
-                          <el-input-number v-model="newPosterDetail.qrcodeTopMargin" class="font-detail" controls-position="right" size="mini" :min="0" :max="1206-newPosterDetail.qrcodeLength"></el-input-number>
+                          <el-input-number v-model="newPosterDetail.qrcodeTopMargin" class="font-detail" controls-position="right" size="mini" :min="0" :max="1206"></el-input-number>
                           <span>px</span>
                         </el-col>
                       </el-row>

@@ -307,11 +307,35 @@ export default {
         itemId: 0,
         itemType: 0
       }
+
+      let conversion = function (number) {
+        return Math.round(number *(750/510))
+      };
+
       this.$http.get("/poster/findItemPosters", {params: params}).then(
         res => {
           let resp = res.data;
           if (resp.success === true) {
             this.posterMsg = resp.data;
+            for(let item of this.posterMsg){
+              // 更新海报参数
+              item.portraitLength = conversion(item.portraitLength)
+              item.portraitLeftMargin = conversion(item.portraitLeftMargin)
+              item.portraitTopMargin = conversion(item.portraitTopMargin)
+              item.nicknameFontSize = conversion(item.nicknameFontSize)
+              item.nicknameWidth = conversion(item.nicknameWidth)
+              item.nicknameHeight = conversion(item.nicknameHeight)
+              item.nicknameLeftMargin = conversion(item.nicknameLeftMargin)
+              item.nicknameTopMargin = conversion(item.nicknameTopMargin)
+              item.ctitleWidth = conversion(item.ctitleWidth)
+              item.ctitleHeight = conversion(item.ctitleHeight)
+              item.ctitleLeftMargin = conversion(item.ctitleLeftMargin)
+              item.ctitleTopMargin = conversion(item.ctitleTopMargin)
+              item.ctitleFontSize = conversion(item.ctitleFontSize)
+              item.qrcodeLength = conversion(item.qrcodeLength)
+              item.qrcodeLeftMargin = conversion(item.qrcodeLeftMargin)
+              item.qrcodeTopMargin = conversion(item.qrcodeTopMargin)
+            }
           } else {
             let msg = resp.desc || "请求失败";
             this.$message.error(msg);

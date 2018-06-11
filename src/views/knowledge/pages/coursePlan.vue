@@ -392,6 +392,7 @@
       },
       firstSuccess3(res, file) {
         const self = this;
+
         const image = new Image();
         image.src = 'https:' + res.data.fileUrl;
         image.onload = function () {

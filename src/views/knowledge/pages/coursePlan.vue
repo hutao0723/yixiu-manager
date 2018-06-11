@@ -397,7 +397,7 @@
         image.onload = function () {
           const width = image.width;
           const height = image.height;
-          if (width == 750 && height == 545) {
+          if (width == 750 && height == 544) {
             self.courseSearchForm.imgUrl = 'https:' + res.data.fileUrl;
           } else {
             self.$message.error('上传图片的尺寸必须为 750*544!')

@@ -426,7 +426,7 @@
             this.courseSearchForm.selectType = resp.data.courseId
             this.courseSearchForm.imgUrl = resp.data.imgUrl
           } else {
-            let msg = resp.desc || '编辑失败'
+            let msg = resp.desc || '请求失败'
             this.$message.error(msg)
           }
         })

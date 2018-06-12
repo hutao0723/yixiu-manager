@@ -37,7 +37,7 @@
                     </el-tab-pane>
                     <div class="tabel-wrap">
                             <template>
-                                <el-table :data="bindingList">
+                                <el-table :data="bindingList"  @sort-change="sortTable">
                                     <el-table-column prop="id" label="用户ID" width="100"></el-table-column>
                                     <el-table-column label="用户信息" width="350">
                                     <template slot-scope="scope">
@@ -46,14 +46,14 @@
                                         <span v-text="scope.row.nickName" class="goods-word"></span>
                                     </template>
                                     </el-table-column>
-                                    <el-table-column prop="totalTradeNum" sortable label="累计购买笔数" width="300"></el-table-column>
-                                    <el-table-column prop="totalTradeMoney" sortable label="累计购买金额" width="300">
+                                    <el-table-column prop="totalTradeNum" sortable="custom" label="累计购买笔数" width="300"></el-table-column>
+                                    <el-table-column prop="totalTradeMoney" sortable="custom" label="累计购买金额" width="300">
                                       <template slot-scope="scope">
                                         {{scope.row.totalTradeMoney / 100}}
                                       </template>
                                     </el-table-column>
-                                    <el-table-column prop="bindTime" sortable label="最新绑定时间" width="300"></el-table-column>
-                                    <el-table-column prop="remainingBindTime" sortable label="剩余绑定时间(小时)" width="300"></el-table-column>
+                                    <el-table-column prop="bindTime" sortable="custom" label="最新绑定时间" width="300"></el-table-column>
+                                    <el-table-column prop="remainingBindTime" sortable="custom" label="剩余绑定时间(小时)" width="300"></el-table-column>
                                 </el-table>
                             </template>
                         </div>
@@ -82,6 +82,8 @@ export default {
       tab1: "绑定中",
       tab2: "已解绑",
       tabId: 1,
+      order: null,
+      columns: null,
       tabList: [
         {
           id: 1,
@@ -105,6 +107,15 @@ export default {
   //   this.getUserDistribution(this.tabId);
   // },
   methods: {
+    sortTable(row) {
+      this.columns = row.prop;
+      if (row.order == 'ascending') {
+        this.order = 'asc';
+      } else {
+        this.order = 'desc';
+      }
+      this.getUserDistribution(this.tabId);
+    },
     init() {
       this.getUserDistribution(this.tabId);
       let { userId } = this.$route.params;
@@ -148,7 +159,9 @@ export default {
         pageNum: this.pageOption.pageNum,
         pageSize: this.pageOption.pageSize,
         distributionType: "USER",
-        bindStatus: type
+        bindStatus: type,
+        order: this.order,
+        columns: this.columns
       };
       this.$http
         .get("/distributor/userDistribution/pageList", { params: params })
@@ -159,6 +172,8 @@ export default {
               this.bindingList = resp.data.content;
               // 算出有多少条数据
               this.totalSize = resp.data.totalElements;
+              this.order = null;
+              this.columns = null;
             } else {
               this.pageOption.pageNum = 1;
               let msg = resp.desc || "请求失败";

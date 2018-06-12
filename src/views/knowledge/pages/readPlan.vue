@@ -9,7 +9,7 @@
     <div class="content ">
       <el-form :model="courseForm" :rules="rules" ref="courseForm" label-width="100px" class="column-uleForm">
         <el-form-item label="计划标题" prop="title">
-          <el-input v-model="courseForm.title" placeholder="1-30字，建议14字以内" :maxlength="30" autofocus></el-input>
+          <el-input v-model="courseForm.title" placeholder="1-13字" :maxlength="13" autofocus></el-input>
         </el-form-item>
         <el-form-item label="计划简介" prop="briefer">
           <div id="editorElem" style="text-align:left" >
@@ -136,7 +136,7 @@
         rules: {
           title: [
             {required: true, message: '请输入计划标题', trigger: 'blur'},
-            {min: 1, max: 30, message: '长度在 1 到 30 个字', trigger: 'blur'}
+            {min: 1, max: 13, message: '长度在 1 到 13 个字', trigger: 'blur'}
           ],
           briefer: [
             {required: true, message: '请输入计划简介', trigger: 'blur'},

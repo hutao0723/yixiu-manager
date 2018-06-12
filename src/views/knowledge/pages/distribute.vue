@@ -22,7 +22,7 @@
           </div>
           <div class="tabel-wrap">
             <template>
-              <el-table :data="distributorList" style="width: 100%">
+              <el-table :data="distributorList" style="width: 100%" @sort-change="sortTable">
                 <el-table-column prop="id" label="用户ID" width="100"></el-table-column>
                 <el-table-column label="用户信息" width="350">
                   <template slot-scope="scope">
@@ -31,14 +31,14 @@
                     <span v-text="scope.row.nickName" class="goods-word"></span>
                   </template>
                 </el-table-column>
-                <el-table-column prop="totalDistributeNum" sortable label="累计分销笔数" width="200"></el-table-column>
-                <el-table-column prop="totalTradeMoney" sortable label="累计分销金额" width="200">
+                <el-table-column prop="totalDistributeNum" sortable="custom" label="累计分销笔数" width="200"></el-table-column>
+                <el-table-column prop="totalTradeMoney" sortable="custom" label="累计分销金额" width="200">
                   <template slot-scope="scope">
                     {{scope.row.totalTradeMoney / 100}}
                   </template>
                 </el-table-column>
-                <el-table-column prop="bindUsers" sortable label="绑定用户数" width="200"></el-table-column>
-                <el-table-column prop="gmtCreate" sortable label="加入日期" width="300"></el-table-column>
+                <el-table-column prop="bindUsers" sortable="custom" label="绑定用户数" width="200"></el-table-column>
+                <el-table-column prop="gmtCreate" sortable="custom" label="加入日期" width="300"></el-table-column>
                 <el-table-column  label="操作">
                   <template slot-scope="scope">
                   <router-link :to="{ path: '/manager/knowledge/editdistributor/' + scope.row.id}">
@@ -170,6 +170,8 @@ export default {
         pageNum: 1,
         pageSize: 20
       },
+      columns: null,
+      order: null,
       dialogPageOption: {
         pageNum: 1,
         pageSize: 20
@@ -185,6 +187,15 @@ export default {
   },
   watch: {},
   methods: {
+    sortTable(row) {
+      this.columns = row.prop;
+      if (row.order == 'ascending') {
+        this.order = 'asc';
+      } else {
+        this.order = 'desc';
+      }
+      this.getdistributor();
+    },
     getPosterList() {
       this.getPublicPoster();
     },
@@ -296,11 +307,35 @@ export default {
         itemId: 0,
         itemType: 0
       }
+
+      let conversion = function (number) {
+        return Math.round(number *(750/510))
+      };
+
       this.$http.get("/poster/findItemPosters", {params: params}).then(
         res => {
           let resp = res.data;
           if (resp.success === true) {
             this.posterMsg = resp.data;
+            for(let item of this.posterMsg){
+              // 更新海报参数
+              item.portraitLength = conversion(item.portraitLength)
+              item.portraitLeftMargin = conversion(item.portraitLeftMargin)
+              item.portraitTopMargin = conversion(item.portraitTopMargin)
+              item.nicknameFontSize = conversion(item.nicknameFontSize)
+              item.nicknameWidth = conversion(item.nicknameWidth)
+              item.nicknameHeight = conversion(item.nicknameHeight)
+              item.nicknameLeftMargin = conversion(item.nicknameLeftMargin)
+              item.nicknameTopMargin = conversion(item.nicknameTopMargin)
+              item.ctitleWidth = conversion(item.ctitleWidth)
+              item.ctitleHeight = conversion(item.ctitleHeight)
+              item.ctitleLeftMargin = conversion(item.ctitleLeftMargin)
+              item.ctitleTopMargin = conversion(item.ctitleTopMargin)
+              item.ctitleFontSize = conversion(item.ctitleFontSize)
+              item.qrcodeLength = conversion(item.qrcodeLength)
+              item.qrcodeLeftMargin = conversion(item.qrcodeLeftMargin)
+              item.qrcodeTopMargin = conversion(item.qrcodeTopMargin)
+            }
           } else {
             let msg = resp.desc || "请求失败";
             this.$message.error(msg);
@@ -331,7 +366,9 @@ export default {
         pageNum: this.pageOption.pageNum,
         pageSize: this.pageOption.pageSize,
         createTimeStart: this.startTime,
-        createTimeEnd: this.endTime
+        createTimeEnd: this.endTime,
+        order: this.order,
+        columns: this.columns
       };
       this.$http.get("/distributor/pageList", { params: params }).then(
         res => {
@@ -340,6 +377,8 @@ export default {
             this.distributorList = resp.data.content;
             // 算出有多少条数据
             this.totalSize = resp.data.totalElements;
+            this.order = null;
+            this.columns = null;
           } else {
             this.pageOption.pageNum = 1;
             let msg = resp.desc || "请求失败";

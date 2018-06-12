@@ -396,7 +396,7 @@
       });
     }
   }
-
+}
 </script>
 <style lang="less" scoped>
   .ofa-main-wrap {

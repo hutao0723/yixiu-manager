@@ -364,23 +364,39 @@
           })
         }).catch(() => {
           this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
-        })
-      },
-      getWeChatSetting() {
-        this.$http.get('/wechat/getAuthorization').then(res => {
-          console.log(res)
-          if (res.data.success) {
-            let redirectUrl = res.data.data
-            window.location.href = redirectUrl
-          }
-        })
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+    },
+    getWeChatSetting() {
+      this.$http.get("/wechat/getAuthorization").then(res => {
+        console.log(res);
+        if (res.data.success) {
+          let redirectUrl = res.data.data;
+          window.location.href = redirectUrl;
+        }
+      });
+    },
+    goToTemplateMessage(row, index) {
+
+      if(!row.authorizerTypeId){
+        this.$message({
+          type: "error",
+          message: "该公众号未关联类型"
+        });
+        return false;
       }
+      this.$router.push({
+        name: "templateMessage",
+        params: {
+          type: row.authorizerTypeId,
+          id: row.id
+        }
+      });
     }
   }
-
+}
 </script>
 <style lang="less" scoped>
   .ofa-main-wrap {
@@ -431,4 +447,3 @@
   }
 
 </style>
-

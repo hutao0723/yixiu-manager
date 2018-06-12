@@ -59,6 +59,7 @@
             <el-table-column prop="managerName" label="管理员"></el-table-column>
             <el-table-column label="操作" width="200">
               <template slot-scope="scope">
+                <el-button v-if="scope.row.serviceTypeInfo == 2" type="text" size="mini" @click="goToTemplateMessage(scope.row)">模板消息</el-button>
                 <el-button type="text" size="mini" @click="openDialogType(scope.row.appId,scope.row.id)">类型</el-button>
                 <el-button type="text" size="mini" @click="openDialogAdmin(scope.row.managerName,scope.row.id)">管理员</el-button>
                 <el-button type="text" size="mini" @click="getWeChatSetting">授权</el-button>

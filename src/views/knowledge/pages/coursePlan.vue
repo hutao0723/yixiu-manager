@@ -13,76 +13,92 @@
       <div class="tabel-wrap removeDefStyle">
         <template >
           <el-table :data="courseManageList" border style="width: 100%;text-align: center" > <!--:span-method="arraySpanMethod"-->
-              <el-table-column prop="title" label="书籍标题">
-              </el-table-column>
 
-              <el-table-column  label="解锁日期">
-                <template slot-scope="scope">
-                  <div  class="itemStyle"  v-for="(item,index) in scope.row.readBookCourseVOList">第{{item.dayNum}}天</div>
-                </template>
-              </el-table-column>
+            <el-table-column prop="title" label="书籍标题" width="200">
+            </el-table-column>
 
-              <el-table-column  prop="id" label="课程id" >
-                <template slot-scope="scope" >
-                  <div class="itemStyle" v-for="(item,index) in scope.row.readBookCourseVOList">{{item.courseID}}</div>
-                </template>
-              </el-table-column>
+            <el-table-column  label="解锁日期" >
+              <template slot-scope="scope">
+                <div  class="itemStyle"  v-for="(item,index) in scope.row.readBookCourseVOList">第{{item.dayNum}}天</div>
+              </template>
+            </el-table-column>
 
-              <el-table-column prop="courseType" label="课程类型">
-                <template slot-scope="scope">
-                  <div class="itemStyle" v-for="(item,index) in scope.row.readBookCourseVOList">{{item.courseType==1?'音频':'其它'}}</div>
-                </template>
-              </el-table-column>
+            <el-table-column  prop="id" label="课程id" >
+              <template slot-scope="scope" >
+                <div class="itemStyle" v-for="(item,index) in scope.row.readBookCourseVOList">{{item.courseID}}</div>
+              </template>
+            </el-table-column>
 
-              <el-table-column prop="title" label="课程标题">
-                <template slot-scope="scope">
-                  <div class="itemStyle" v-for="(item,index) in scope.row.readBookCourseVOList">{{item.courseTitle}}</div>
-                </template>
-              </el-table-column>
+            <el-table-column prop="courseType" label="课程类型" >
+              <template slot-scope="scope">
+                <div class="itemStyle" v-for="(item,index) in scope.row.readBookCourseVOList">{{item.courseType==1?'音频':'其它'}}</div>
+              </template>
+            </el-table-column>
 
-              <el-table-column prop = "manageStatus"  label="课程状态">
-                <template slot-scope="scope">
-                  <div class="itemStyle" v-for="(item,index) in scope.row.readBookCourseVOList">
-                    <template v-if="item.courseStatus==0">待上线</template>
-                    <template v-if="item.courseStatus==1">已上线</template>
-                    <template v-if="item.courseStatus==2">已下线</template>
-                  </div>
-                </template>
-              </el-table-column>
+            <el-table-column prop="title" label="课程标题" width="300">
+              <template slot-scope="scope">
+                <div class="itemStyle" v-for="(item,index) in scope.row.readBookCourseVOList">{{item.courseTitle}}</div>
+              </template>
+            </el-table-column>
 
-              <el-table-column label="操作" >
-                <template slot-scope="edit">
-                  <div class="itemStyle" v-for="(item,index) in edit.row.readBookCourseVOList">
-                    <el-button type="text" size="mini" @click="editCourse(1,item)">编辑课程</el-button>
-                    <el-button type="text" size="mini" @click="removeCourse(item)">移除</el-button>
-                  </div>
-                </template>
-              </el-table-column>
+            <el-table-column prop = "manageStatus"  label="课程状态" >
+              <template slot-scope="scope">
+                <div class="itemStyle" v-for="(item,index) in scope.row.readBookCourseVOList">
+                  <template v-if="item.courseStatus==0">待上线</template>
+                  <template v-if="item.courseStatus==1">已上线</template>
+                  <template v-if="item.courseStatus==2">已下线</template>
+                </div>
+              </template>
+            </el-table-column>
 
-              <el-table-column label="操作" >
-                <template slot-scope="edit">
-                  <el-button type="text" size="mini" @click="editCourse(2,edit.row)">添加课程</el-button>
-                  <el-button type="text" size="mini" @click="addBook(2,edit.row)">编辑</el-button>
-                  <el-button type="text" size="mini" @click="deleteBook(edit.row.id)">删除</el-button>
-                </template>
-              </el-table-column>
-            </el-table>
+            <el-table-column label="操作" width="120">
+              <template slot-scope="edit">
+                <div class="itemStyle" v-for="(item,index) in edit.row.readBookCourseVOList">
+                  <el-button type="text" size="mini" @click="editCourse(1,item)">编辑课程</el-button>
+                  <el-button type="text" size="mini" @click="removeCourse(item)">移除</el-button>
+                </div>
+              </template>
+            </el-table-column>
+
+            <el-table-column label="操作" width="140">
+              <template slot-scope="edit">
+                <el-button type="text" size="mini" @click="editCourse(2,edit.row)">添加课程</el-button>
+                <el-button type="text" size="mini" @click="addBook(2,edit.row)">编辑</el-button>
+                <el-button type="text" size="mini" @click="deleteBook(edit.row.id)">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
 
         </template>
       </div>
     </div>
     <!--弹窗-->
+
     <div class="add-type-diolog">
-      <el-dialog :title="digTite + '课程'" :visible.sync="editDiolog">
+      <el-dialog :title="digTite + '课程'" :visible.sync="editDiolog" style="width:80%;left:50%;margin-left:-40%;">
         <el-form :model="courseSearchForm" ref="courseSearchForm" :rules="rules">
           <el-form-item label="解锁日期：">
             第{{courseDay}}天
           </el-form-item>
           <el-form-item label="关联课程：">
-            <el-select filterable v-model="courseSearchForm.selectType" class="iptl w150">
+            <el-select filterable v-model="courseSearchForm.selectType" style="width:50%;" @change="selChange">
               <el-option v-for="(item,index) in courseList" :key="index" :label="item.title" :value="item.id">
               </el-option>
             </el-select>
+          </el-form-item>
+          <el-form-item label="海报背景图">
+            <el-upload
+              class="avatar-uploader"
+              action="/upload/image"
+              name="imageFile"
+              :show-file-list=false
+              :on-success="firstSuccess3"
+              :before-upload="beforeAvatarUpload">
+              <img v-if="courseSearchForm.imgUrl" :src="courseSearchForm.imgUrl" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+              <el-button size="small" type="primary">{{courseSearchForm.imgUrl ? '修改文件' : '选择文件'}}</el-button>
+              <div slot="tip" class="el-upload__tip">750*544,支持jpg、png、gif格式,最大5M</div>
+            </el-upload>
           </el-form-item>
         </el-form>
         <div class="btn-wrap">
@@ -91,6 +107,7 @@
         </div>
       </el-dialog>
     </div>
+
 
     <!--新增|编辑书籍 弹窗-->
     <div class="add-type-diolog">
@@ -128,7 +145,7 @@
               <img v-if="courseForm.backGroundUrl" :src="courseForm.backGroundUrl" class="avatar">
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
               <el-button size="small" type="primary">{{courseForm.backGroundUrl ? '修改文件' : '选择文件'}}</el-button>
-              <div slot="tip" class="el-upload__tip">???*???,支持jpg、png、gif格式,最大5M</div>
+              <div slot="tip" class="el-upload__tip">750*544,支持jpg、png、gif格式,最大5M</div>
             </el-upload>
           </el-form-item>
         </el-form>
@@ -191,6 +208,8 @@
           status: '',
           pageNum: 1,
           pageSize: null,
+          imgUrl:'',
+          selectType:''
         },
         //新增编辑课程form 表单
         courseForm: {
@@ -213,6 +232,10 @@
       this.getData();
     },
     methods: {
+      selChange(val){
+        console.log('*****'+val)
+          this.courseSearchForm.selectType = val;
+      },
       //获取列表数据
       getData() {
         let params ={
@@ -245,7 +268,7 @@
                 }
               }
             })
-          this.contactDot = contactDot;
+            this.contactDot = contactDot;
           } else {
             let msg = resp.desc || '请求失败'
             this.$message.error(msg)
@@ -362,12 +385,27 @@
         image.onload = function () {
           const width = image.width;
           const height = image.height;
-          self.courseForm.backGroundUrl = 'https:' + res.data.fileUrl;
+          if (width == 750 && height == 544) {
+            self.courseForm.backGroundUrl = 'https:' + res.data.fileUrl;
+          } else {
+            self.$message.error('上传图片的尺寸必须为 750*544!')
+          }
+        };
+      },
+      firstSuccess3(res, file) {
+        const self = this;
 
-          // if (width == 360 && height == 484) {
-          // } else {
-          //   self.$message.error('上传图片的尺寸必须为 360*484!')
-          // }
+        const image = new Image();
+        image.src = 'https:' + res.data.fileUrl;
+        image.onload = function () {
+          const width = image.width;
+          const height = image.height;
+
+          if (width == 750 && height == 544) {
+            self.courseSearchForm.imgUrl = 'https:' + res.data.fileUrl;
+          } else {
+            self.$message.error('上传图片的尺寸必须为 750*544!')
+          }
         };
       },
       getAllCourse(title){
@@ -384,24 +422,41 @@
           }
         })
       },
+      getCourseDetail(id){
+        this.$http.get('/read/book/course/detail?id='+id).then(res =>{
+          let resp = res.data;
+          console.log(resp.data.courseId)
+          if (resp.success) {
+             this.courseSearchForm.selectType = resp.data.courseId
+             this.courseSearchForm.imgUrl = resp.data.imgUrl
+          } else {
+            let msg = resp.desc || '请求失败'
+            this.$message.error(msg)
+          }
+        })
+      },
       editCourse(title,row) {
-        console.log(row)
+        this.courseSearchForm.selectType = ''
+        this.courseSearchForm.imgUrl= ''
         this.courseEditId = row.id;
         this.editDiolog = true ;
         this.digType = title;
         this.digTite = title == 1?'编辑':'添加' ;
-
         if(title==1){
           this.courseDay = row.dayNum;
+          this.getCourseDetail(row.id)
         }else{
           this.courseDay = row.lastDayNum+1;
         }
         this.getAllCourse(row.courseTitle)
+
       },
       subCourse(){
         let params = {
-          courseId:this.courseSearchForm.selectType
+          courseId:this.courseSearchForm.selectType,
+          imgUrl:this.courseSearchForm.imgUrl
         };
+
         if(this.digType==1){
           params.id = this.courseEditId
           console.log('编辑')
@@ -409,7 +464,7 @@
             let resp = res.data;
             if (resp.success) {
               this.$message.success('编辑成功');
-              this.editDiolog = false
+              this.editDiolog = false;
               this.getData();
             } else {
               let msg = resp.desc || '编辑失败'
@@ -418,13 +473,16 @@
           })
         }else{
           console.log('新增')
+
           params.readId = this.readId;
           params.bookId =this.courseEditId;
           this.$http.post("/read/book/course/add",qs.stringify(params)).then(res =>{
             let resp = res.data;
             if (resp.success) {
               this.$message.success('编辑成功');
-              this.editDiolog = false
+
+              this.editDiolog = false;
+
               this.getData();
             } else {
               let msg = resp.desc || '编辑失败'
@@ -486,11 +544,27 @@
   }
 
 </script>
-<style lang="less" scoped>
+<style lang="less" >
   .ofa-main-wrap {
     .removeDefStyle{
+      .el-table .cell{
+        display: block !important;
+      }
+      .el-table td, .el-table th{
+        padding:0;
+        text-align:center;
+        min-height:40px;
+        line-height:40px;
+      }
+      .el-table .cell, .el-table th div, .el-table--border td:first-child .cell, .el-table--border th:first-child .cell{
+        padding-left:0;
+        min-height:50px;
+        line-height:50px;
+      }
+      .el-table .cell, .el-table th div{
+        padding-right:0;
+      }
       .itemStyle{
-        padding:10px 0;
         border-bottom:1px solid #ebeef5;
       }
       .itemStyle:last-child{

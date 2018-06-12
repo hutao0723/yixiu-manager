@@ -255,6 +255,18 @@ var setOnline = [
     name: 'save',
     type: 'post',
     url: '/comment/changeStatus'
+  },
+  // 获取分销人员详情
+  {
+    name: 'getDistributorDetail',
+    type: 'get',
+    url: '/distributor/get'
+  },
+  // 分页查询分销人员列表
+  {
+    name: 'getDistributorList',
+    type: 'get',
+    url: '/distributor/pageList'
   }
 ];
 var fs = require('fs');

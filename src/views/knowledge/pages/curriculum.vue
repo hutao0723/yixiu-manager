@@ -67,7 +67,7 @@
               <template slot-scope="scope">
                 <!--openDialogAdmin(scope.row.managerName,scope.row.id）-->
                 <el-button type="text" size="mini" @click="getCourseDetail(scope.row.id)">编辑</el-button>
-                <router-link :to="{ path: '/manager/knowledge/editDraft/' + scope.row.id }"> 
+                <router-link :to="{ path: '/manager/knowledge/editDraft/' + scope.row.id }">
                   <el-button type="text" size="mini">文稿</el-button>
                 </router-link>
                 <el-button type="text" size="mini" @click="changeStatus(scope.row.id,scope.row.status)">
@@ -121,7 +121,7 @@
           <el-input v-model="courseForm.title" placeholder="1-30字，建议14字以内" :maxlength="30"></el-input>
         </el-form-item>
         <el-form-item label="课程副标题" prop="subTitle">
-          <el-input v-model="courseForm.subTitle" placeholder="1-30字，建议14字以内" :maxlength="30"></el-input>
+          <el-input v-model="courseForm.subTitle" placeholder="1-50字，建议14字以内" :maxlength="50"></el-input>
         </el-form-item>
         <el-form-item label="课程封面">
           <el-upload
@@ -356,7 +356,7 @@
           ],
           subTitle: [
             {required: true, message: '请输入课程副标题', trigger: 'blur'},
-            {min: 1, max: 30, message: '长度在 1 到 30 个字', trigger: 'blur'}
+            {min: 1, max: 50, message: '长度在 1 到 50 个字', trigger: 'blur'}
           ],
           freeTime: [
             {required: true, message: '请输入试听时长', trigger: 'blur'},

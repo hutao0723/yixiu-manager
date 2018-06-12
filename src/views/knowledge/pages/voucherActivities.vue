@@ -34,7 +34,7 @@
                 <el-form-item>
                   <el-input v-model="activityValue2" class="iptr"></el-input>
                 </el-form-item>
-                <el-button type="primary" @click="getVoucherActivitiesList" size="small">查询</el-button>
+                <el-button type="primary" @click="onSearch" size="small">查询</el-button>
               </el-form>
             </template> 
           </div>
@@ -59,7 +59,7 @@
             </template>        
           </div>
           <div class="page-control">
-            <el-pagination background :page-size="pageOption.pageSize" :current-page.sync="voucherActivitiesSearchForm.pageNum" @current-change="getVoucherActivitiesList" layout="total, prev, pager, next" :total="totalSize"></el-pagination>
+            <el-pagination background :page-size="pageOption.pageSize" :current-page.sync="voucherActivitiesSearchForm.pageNum" @current-change="pageChange" layout="total, prev, pager, next" :total="totalSize"></el-pagination>
           </div>
         </div>
       </el-tab-pane>
@@ -211,6 +211,16 @@ export default {
         .catch(() => {
           this.loading = false;
         });
+    },
+    // 分页改变
+    pageChange (currentPage) {
+      this.voucherActivitiesSearchForm.pageNum = currentPage
+      this.getVoucherActivitiesList() 
+    },
+    // 分页查询
+    onSearch () {
+      this.voucherActivitiesSearchForm.pageNum = 1
+      this.getVoucherActivitiesList()
     },
     // 切换tab
     handleClick(tab, event) {

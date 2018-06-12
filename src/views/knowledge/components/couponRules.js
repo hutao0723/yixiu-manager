@@ -1,6 +1,6 @@
 
 const couponrules = {
-  activity: [
+  title: [
     { required: true, message: '请输入活动标题', trigger: 'blur'},
     { min: 1, max: 45, message: '长度在 1 到 45 个字符', trigger: 'blur'}
   ],

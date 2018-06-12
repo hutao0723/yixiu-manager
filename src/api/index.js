@@ -103,7 +103,7 @@ export const deleteTemplate = params => post('coupon/template/delete', params);
 //获取已发券列表
 export const voucherList = params => get('coupon/info/page', params);
 //导出优惠券
-export const exportVoucher = params => post('coupon/export/order', params);
+export const exportVoucher = params => get('coupon/export', params);
 //获取母版详情
 export const couponTemplateDetail = params => get('coupon/template/get', params);
 

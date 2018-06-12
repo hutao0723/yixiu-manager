@@ -25,7 +25,7 @@
                     </el-option>
                   </el-select>
                 </el-form-item>
-                <el-button type="primary" @click="getParentEditionList" size="small">查询</el-button>
+                <el-button type="primary" @click="onSearch" size="small">查询</el-button>
               </el-form>
             </template>
           </div>
@@ -48,7 +48,7 @@
                       <el-button type="text" size="mini" :style="{ marginRight: '10px' }">编辑</el-button>
                     </router-link>
                     <el-button type="text" size="mini" @click="copy(scope.row.couponTemplateId)">复制</el-button>
-                    <el-button type="text" size="mini" @click="changeStatus(scope.row.couponTemplateId, scope.row.status)">{{scope.row.couponStatus == 1 ? '下线' : '上线'}}</el-button> 
+                    <el-button type="text" size="mini" @click="changeStatus(scope.row.couponTemplateId, scope.row.couponStatus)">{{scope.row.couponStatus == 1 ? '下线' : '上线'}}</el-button> 
                     <el-button type="text" size="mini" @click="deleteRow(scope.row)">删除</el-button>
                   </template>
                 </el-table-column>
@@ -56,7 +56,7 @@
             </template>        
           </div>
           <div class="page-control">
-            <el-pagination background :page-size="pageOption.pageSize" :current-page.sync="parentEditionSearchForm.pageNum" @current-change="getParentEditionList" layout="total, prev, pager, next" :total="totalSize"></el-pagination>
+            <el-pagination background :page-size="pageOption.pageSize" :current-page.sync="parentEditionSearchForm.pageNum" @current-change="pageChange" layout="total, prev, pager, next" :total="totalSize"></el-pagination>
           </div>
         </div>
       </el-tab-pane>
@@ -104,7 +104,7 @@
                 <el-form-item>
                   <el-input v-model="voucherSearchForm.orderId" class="iptr" placeholder="订单ID"></el-input>
                 </el-form-item>
-                <el-button type="primary" @click="getVoucherList" size="small">查询</el-button>
+                <el-button type="primary" @click="onSearchVoucher" size="small">查询</el-button>
                 <el-button type="primary" @click="exportVoucherList" size="small">导出</el-button>
               </el-form>
             </template>
@@ -131,7 +131,7 @@
             </template>        
           </div>
           <div class="page-control">
-            <el-pagination background :page-size="pageOption1.pageSize" :current-page.sync="voucherSearchForm.pageNum" @current-change="getVoucherList" layout="total, prev, pager, next" :total="totalSize1"></el-pagination>
+            <el-pagination background :page-size="pageOption1.pageSize" :current-page.sync="voucherSearchForm.pageNum" @current-change="pageVoucherList" layout="total, prev, pager, next" :total="totalSize1"></el-pagination>
           </div>
         </div>
       </el-tab-pane>
@@ -323,7 +323,7 @@ export default {
       let params = {
         couponTemplateId: this.parentEditionSearchForm.couponTemplateId,
         title: this.parentEditionSearchForm.title,
-        status: this.parentEditionSearchForm.couponStatus,
+        status: this.parentEditionSearchForm.status,
         pageNum: this.parentEditionSearchForm.pageNum,
         pageSize: this.parentEditionSearchForm.pageSize
       }
@@ -332,7 +332,6 @@ export default {
           if (res.success) {
             this.parentEditionList = res.data.content;
             this.totalSize = res.data.totalElements;
-            console.log(this.parentEditionList)
           } else {
             let msg = res.data.desc || "请求失败";
             this.$message.error(msg);
@@ -342,6 +341,16 @@ export default {
         .catch(() => {
           this.loading = false;
         });
+    },
+    // 分页改变
+    pageChange (currentPage) {
+      this.parentEditionSearchForm.pageNum = currentPage
+      this.getParentEditionList() 
+    },
+    // 分页查询
+    onSearch () {
+      this.parentEditionSearchForm.pageNum = 1
+      this.getParentEditionList()
     },
     //获取已发券列表
     getVoucherList() {
@@ -379,6 +388,16 @@ export default {
         .catch(() => {
           this.loading = false;
         });
+    },
+    // 分页改变
+    pageVoucherList (currentPage) {
+      this.parentEditionSearchForm.pageNum = currentPage
+      this.getVoucherList() 
+    },
+    // 分页查询
+    onSearchVoucher () {
+      this.parentEditionSearchForm.pageNum = 1
+      this.getVoucherList()
     },
     queryExport() {
       if (this.selectType2 == 'dateGroup1') {
@@ -515,7 +534,6 @@ export default {
     },
     //确认删除母版
     queryDeleteParentEdition() {
-      console.log(this.deleteID);
       let params = {
         couponTemplateId: this.deleteID
       }
@@ -523,9 +541,15 @@ export default {
       .then(res => {
         if (res.success) {
           this.dialogDeleteParentEdition = false;
-          let msg = res.data.desc || "删除母版成功";
-          this.$message.success(msg);
-          this.getParentEditionList();
+          if(res.data){
+            let msg = res.data.desc || "删除母版成功";
+            this.$message.success(msg);
+            this.getParentEditionList();
+          }else{
+            let msg = res.data.desc || "删除失败，已经关联";
+            this.$message.error(msg);
+          }
+          
         } else {
           let msg = res.data.desc || "删除母版失败";
           this.$message.error(msg);

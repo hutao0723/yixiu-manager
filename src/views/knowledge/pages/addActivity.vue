@@ -30,9 +30,9 @@
                 <el-radio :label="2">固定周期</el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item  prop="itemSize" v-if="activityForm.limitType == 1" :maxlength="8" type="number">
+            <el-form-item  v-if="activityForm.limitType == 1"  >
               <el-col :span="6">
-                <el-input v-model="activityForm.itemSize" placeholder="1-99999999" type="number" :maxlength="8">
+                <el-input v-model="activityForm.itemSize" placeholder="1-99999999" type="text" max="99999999" :maxlength="8" >
                   <template slot="append">张</template>
                 </el-input>
               </el-col>
@@ -76,7 +76,7 @@
               id: null 
             }
           ],
-          itemSize: ''
+          itemSize: null
         },
         masterOptions: []
       }
@@ -129,6 +129,8 @@
           if (resp.success) {
             if(resp.data){
               this.activityForm = resp.data
+              this.activityForm.itemSize = resp.data.itemSize
+              console.log(typeof(this.activityForm.itemSize))
               this.date =[resp.data.activityStartTime, resp.data.activityEndTime];
               this.masterOptions.couponTemplateId = this.activityForm.awardItems[0].awardContentId;
             }
@@ -142,13 +144,13 @@
       saveActivity () {
         this.activityForm['date'] = this.date;
         for (let key in this.activityForm) {
-          if (key == 'activityId' || key == 'activityStatus' || key == 'deleted' || key == 'gmtCreate' || key == 'gmtModified' || key == 'id') {
+          if (key == 'activityId' || key == 'activityStatus' || key == 'deleted' || key == 'gmtCreate' || key == 'gmtModified') {
             delete this.activityForm[key]
           }
         }
         if (this.activityForm.awardItems) {
           for (let key in this.activityForm.awardItems[0]) {
-            if (key == 'activityId' || key == 'id') {
+            if (key == 'activityId') {
               delete this.activityForm.awardItems[0][key]
             }
           }
@@ -161,14 +163,13 @@
             } else if (this.activityForm.limitType == 2) {
               this.activityForm.itemSize = null;
             }
-            delete this.activityForm.date;
             console.log(this.activityForm)
             this.$http.post('/activity/save', this.activityForm).then(res => {
               if (res.data.success) {
                 this.$message.success('操作成功')
                 this.$router.go(-1);
               } else {
-                this.$message.error('操作失败')
+                this.$message.error(res.data.desc||'操作失败')
               }
             }).catch(() => {
               this.$message.error('网络错误')

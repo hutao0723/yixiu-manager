@@ -18,8 +18,8 @@
               <el-input v-model="masterForm.title" style="width: 60%;" placeholder="1-45字" :maxlength="45"></el-input>
             </el-form-item>
             <el-form-item label="面额" prop="couponPrice">
-              <el-col :span="6">
-                <el-input v-model="masterForm.couponPrice" placeholder="0.01-999.99" type="number" :maxlength="8">
+              <el-col :span="6" >
+                <el-input v-model="masterForm.couponPrice" placeholder="0.01-999.99" type="number"  max="999.99">
                   <template slot="append">元</template>
                 </el-input>
               </el-col>
@@ -30,8 +30,8 @@
                 <el-radio :label="2">固定周期</el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form ref="masterForm" :model="masterForm" label-width="120px" v-show="masterForm.validityType == 1">
-              <el-form-item prop="day">
+            <el-form ref="masterForm" :model="masterForm" label-width="120px" v-if="masterForm.validityType == 1">
+              <el-form-item prop="validityDays">
                 <el-col :span="6">
                   <el-input v-model="masterForm.validityDays" placeholder="1-999" type="number" :maxlength="8">
                     <template slot="append">天</template>
@@ -39,7 +39,7 @@
                 </el-col>
               </el-form-item>
             </el-form>
-            <el-form ref="masterForm" :model="masterForm" label-width="120px" v-show="masterForm.validityType == 2">
+            <el-form ref="masterForm" :model="masterForm" label-width="120px" v-if="masterForm.validityType == 2">
               <el-form-item prop="date">
                 <el-date-picker v-model="date" type="daterange" range-separator="至" start-placeholder="开始日期"  end-placeholder="结束日期" @change="changeDate">
                 </el-date-picker>
@@ -119,6 +119,18 @@
 import numberEditVue from './numberEdit.vue';
   export default {
     data () {
+      var priceRule = (rule, value, callback) => {
+        if(String(value).indexOf('.') !=-1 && String(value).split('.')[1].length >2){
+          callback(new Error('最多两位小数'));
+        }else{
+          if(value> 999.99 || value <0){
+            callback(new Error('价格区间在0.00-999.99之间'));
+          } else{
+            callback()
+          }
+        }
+
+      };
       return {
         date: null,
         type: 'new',
@@ -145,7 +157,25 @@ import numberEditVue from './numberEdit.vue';
         ],
         readOptions: [],
         readList: null,
-        getPlanList: []
+        getPlanList: [],
+
+        rules: {
+          title: [
+            {required: true, message: '请输入母版标题', trigger: 'blur'},
+            {min: 1, max: 45, message: '长度在 1 到 45 个字', trigger: 'blur'}
+          ],
+          couponPrice: [
+            {required: true, message: '请输入专栏价格', trigger: 'blur'},
+            {validator: priceRule, trigger: 'blur' }
+          ],
+          validityDays:[
+            {required: true, message: '请输入天数', trigger: 'blur'},
+            {min: 1, max: 999, message: '长度在 1 到 999 个字', trigger: 'blur'}
+          ],
+          date: [
+            { required: true, message: '请选择时间', trigger: 'blur' }
+          ],
+        },
       }
     },
     created () {
@@ -188,7 +218,6 @@ import numberEditVue from './numberEdit.vue';
         .then(res => {
           if (res.success) {
             this.masterForm = res.data;
-            console.log(this.masterForm)
             this.masterForm.couponPrice = this.masterForm.couponPrice/100;
             this.date = [this.formatDateNew(this.masterForm.couponStartTime), this.formatDateNew(this.masterForm.couponEndTime)];
             if (this.masterForm.itemList) {
@@ -211,11 +240,27 @@ import numberEditVue from './numberEdit.vue';
         this.readForm = null;
       },
       queryReadPlan() {
+        console.log(111)
         this.dialogReadPlanVisible = false;
         this.readPlanList.push(this.readList);
+        console.log(this.readPlanList)
       },
       deleteReadPlan(params) {
-        this.readPlanList.splice(params, 1);
+        this.$confirm('确认后移除定向阅读计划？', '删除', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.readPlanList.splice(params, 1);
+          console.log(222)
+          console.log(this.readPlanList)
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消移除'
+          })
+        })
+        
       },
       chooseReadPlan(params) {
         this.readList = params;
@@ -236,25 +281,26 @@ import numberEditVue from './numberEdit.vue';
         this.$refs['masterForm'].validate((valid) => {
           if (valid) {
             if (this.masterForm.validityType == 1) {
-              this.date = '';
+              this.masterForm.couponStartTime = null;
+              this.masterForm.couponEndTime = null;
             } else if (this.masterForm.validityType == 2) {
               this.masterForm.validityDays = '';
             }
             if (this.masterForm.useScopeType == 1) {
               for (let list of this.readPlanList) {
-                this.getPlanList.push({ itemId: list['id'], itemType: 3})
+                console.log(this.readPlanList)
+                this.getPlanList.push({ itemId: list['id'], itemType: 4})
               }
             } else if (this.masterForm.useScopeType == 2) {
               this.masterForm.itemList = '';
             }
-            console.log(this.masterForm.itemList)
             let params = {
               conditionType: 2,
               conditionValue: 0,
               couponEndTime: this.formatDateNew(this.date[1]),
               couponPrice: this.masterForm.couponPrice*100,
               couponStartTime: this.formatDateNew(this.date[0]),
-              couponTemplateId: this.$route.params.id = 'new' ? '' : this.$route.params.id,
+              couponTemplateId: this.$route.params.id == 'new' ? '' : this.$route.params.id,
               itemList: this.getPlanList,
               pageItemType: 3,
               pageLocationId: 1,
@@ -269,7 +315,7 @@ import numberEditVue from './numberEdit.vue';
                 this.$message.success('操作成功')
                 this.$router.go(-1);
               } else {
-                this.$message.error('操作失败')
+                this.$message.error(res.data.desc||'操作失败')
               }
             }).catch(() => {
               this.$message.error('网络错误')

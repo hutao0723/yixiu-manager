@@ -105,7 +105,7 @@
                   <el-input v-model="voucherSearchForm.orderId" class="iptr" placeholder="订单ID"></el-input>
                 </el-form-item>
                 <el-button type="primary" @click="onSearchVoucher" size="small">查询</el-button>
-                <el-button type="primary" @click="exportVoucherList" size="small">导出</el-button>
+                <el-button type="primary" @click="exportCoupon" size="small">导出</el-button>
               </el-form>
             </template>
           </div>
@@ -143,14 +143,14 @@
           <el-button size="mini" type="primary" @click="queryDeleteParentEdition">确 定</el-button>
         </span>
     </el-dialog>
-    <el-dialog title="优惠券导出" :visible.sync="dialogVoucher" width="30%" >
+    <el-dialog title="优惠券导出" :visible.sync="dialogVisible" width="30%" >
       <span v-if="downStatus">正在生成导出文件，请稍后<span class="beat-ellipsis"></span></span>
-      <span v-else>优惠券文件已生成，请点击「下载」按钮！</span>
+      <span v-else>订单文件已生成，请点击「下载」按钮！</span>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVoucher = false">取 消</el-button>
-        <el-button :disabled="this.disabled" class="el-button el-button--primary" @click="queryExport">下 载</el-button>
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <a :class="disabled ? 'btn-disabled' : ''" :href="disabled ? 'javascript:;' : downloadUrl" class="el-button el-button--primary">下 载</a>
       </span>
-    </el-dialog>
+    </el-dialog> 
   </section>
 </template>
 
@@ -298,7 +298,13 @@ export default {
       totalSize: 0,
       totalSize1: 0,
       parentEditionList: [],
-      voucherList: []
+      voucherList: [],
+
+      dialogVisible: false, // 弹框
+      downStatus: true, // 文字
+      disabled: true, // 按钮状态
+      downloadUrl: 'http://www.baidu.com',//链接
+      filename: ''
     };
   },
   created() {
@@ -398,6 +404,69 @@ export default {
     onSearchVoucher () {
       this.parentEditionSearchForm.pageNum = 1
       this.getVoucherList()
+    },
+    // 导出优惠券
+    exportCoupon() {
+      this.dialogVisible = true
+      this.disabled = true
+      this.downStatus = true
+      if (this.selectType1 == 'couponTemplateTitle') {
+        this.voucherSearchForm.couponTemplateTitle = this.couponValue1;
+        this.voucherSearchForm.couponTemplateId = '';
+      } else if (this.selectType1 == 'couponTemplateId') {
+        this.voucherSearchForm.couponTemplateTitle = '';
+        this.voucherSearchForm.couponTemplateId = this.couponValue1;
+      }
+      if (this.selectType2 == 'dateGroup1') {
+        this.voucherSearchForm.createStartTime = this.satrtTime;
+        this.voucherSearchForm.createEndTime = this.endTime;
+        this.voucherSearchForm.usedStartTime = '';
+        this.voucherSearchForm.usedEndTime = '';
+      } else if (this.selectType2 == 'dateGroup2') {
+        this.voucherSearchForm.createStartTime = '';
+        this.voucherSearchForm.createEndTime = '';
+        this.voucherSearchForm.usedStartTime = this.satrtTime;
+        this.voucherSearchForm.usedEndTime = this.endTime;
+      }
+      this.voucherSearchForm.pageSize = 999
+      let params = this.voucherSearchForm
+      this.$http.get('/coupon/export', {params}).then(res => {
+        let resp = res.data
+        if (resp.success) {
+          this.filename = resp.data
+          let that = this
+          let coupon = setInterval(function(){
+            let params = {
+              filename: that.filename
+            }
+            that.$http.get('/coupon/checkExportProgress', {params}).then(res => {
+              let resp = res.data
+              if (resp.success) {
+                if(resp.data.succeed){
+                  clearInterval(coupon)
+                  that.disabled = false
+                  that.downStatus = false
+                  that.downloadUrl = resp.data.fileUrl
+                }else{
+                  // let msg = resp.data.message || '文件正在上传中'
+                  // that.$message.error(msg)
+                  console.log(resp.data.message)
+                }
+              } else {
+                let msg = resp.desc || '请求失败'
+                that.$message.error(msg)
+              } 
+            }, () => {
+              that.$message.error('网络错误')
+            })
+          }, 500)
+        } else {
+          let msg = resp.desc || '请求失败'
+          this.$message.error(msg)
+        } 
+      }, () => {
+        this.$message.error('网络错误')
+      })
     },
     queryExport() {
       if (this.selectType2 == 'dateGroup1') {

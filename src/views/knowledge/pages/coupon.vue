@@ -34,7 +34,11 @@
               <el-table :data="parentEditionList">
                 <el-table-column prop="couponTemplateId" label="母版ID" ></el-table-column>
                 <el-table-column prop="title" label="母版标题"></el-table-column>
-                <el-table-column prop="couponPrice" label="面额" ></el-table-column>
+                <el-table-column  label="面额" >
+                  <template slot-scope="scope">
+                    {{scope.row.couponPrice/100}}
+                  </template>
+                </el-table-column>
                 <el-table-column v-if="parentEditionList.validityType == 1" prop="validityDays" label="有效期" width="250" ></el-table-column>
                 <el-table-column v-else-if="parentEditionList.validityType == 2" prop="couponStartTime + '/' + couponEndTime" label="有效期" width="250" >
                   <template slot-scope="scope">
@@ -116,7 +120,11 @@
                 <el-table-column width="250" prop="gmtCreate" label="领取时间"></el-table-column>
                 <el-table-column prop="couponTemplateId" label="母版ID" ></el-table-column>
                 <el-table-column prop="couponTemplateTitle" label="母版标题"></el-table-column>
-                <el-table-column prop="couponPrice" label="面额" ></el-table-column>
+                <el-table-column prop="couponPrice" label="面额" >
+                  <template slot-scope="scope">
+                    {{scope.row.couponPrice/100}}
+                  </template>
+                </el-table-column>
                 <el-table-column prop="couponStartTime + '至' + couponEndTime" label="有效期" >
                   <template slot-scope="scope">
                     <div>{{scope.row.couponStartTime}}至{{scope.row.couponEndTime}}</div>

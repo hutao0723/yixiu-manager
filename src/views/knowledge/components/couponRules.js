@@ -1,3 +1,10 @@
+let itemSizeRule = (rule, value, callback) => {
+  if(value<=9999999&&value>=1){
+    callback()
+  }else{
+    callback(new Error('选择范围1-9999999'));
+  }
+}
 
 const couponrules = {
   title: [
@@ -5,11 +12,12 @@ const couponrules = {
     { min: 1, max: 45, message: '长度在 1 到 45 个字符', trigger: 'blur'}
   ],
   coupon: [
-    { required: true, message: '请选择奖励优惠券', trigger: 'blur'}
+    { required: true, message: '请选择奖励优惠券', trigger: 'change'},
+    { type:'string', trigger: 'change', }
   ],
   itemSize: [
     { required: true, message: '请输入优惠券的张数', trigger: 'blur'},
-    { min: 1, max: 99999999, message: '张数在 1 到 99999999之间 ', trigger: 'blur'}
+    {validator: itemSizeRule, trigger: 'blur' ,type:'number'}
   ],
   date: [
     { required: true, message: '请选择时间', trigger: 'blur' }

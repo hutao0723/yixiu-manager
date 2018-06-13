@@ -13,39 +13,44 @@
       </div>
       <div class="tabel-wrap">
         <el-form ref="activityForm" :model="activityForm" label-width="100px" :rules="rules">
+
             <el-form-item label="活动标题" prop="title">
               <el-input v-model="activityForm.title" style="width: 60%;" placeholder="1-45字"></el-input>
             </el-form-item>
-            <el-form-item label="奖励优惠券" prop="awardItems[0].awardContentId">
-              <el-col :span="6">
-                <el-select v-model="activityForm.awardItems[0].awardContentId">
-                  <el-option v-for="item in masterOptions" :key="item.couponTemplateId" :label="item.name" :value="item.couponTemplateId">
-                      </el-option>
-                </el-select>
-              </el-col>
+
+            <el-form-item label="奖励优惠券" prop="coupon">
+							<el-select v-model="activityForm.coupon">
+								<el-option v-for="item in masterOptions" :key="item.couponTemplateId" :label="item.name" :value="item.couponTemplateId">
+								</el-option>
+							</el-select>
             </el-form-item>
+
             <el-form-item label="领奖限制" prop="limitType">
               <el-radio-group v-model="activityForm.limitType">
                 <el-radio :label="1">奖品数量</el-radio>
                 <el-radio :label="2">固定周期</el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item  v-if="activityForm.limitType == 1"  >
+
+            <el-form-item  v-if="activityForm.limitType == 1"  prop='itemSize'>
               <el-col :span="6">
                 <el-input v-model="activityForm.itemSize" placeholder="1-99999999" type="text" max="99999999" :maxlength="8" >
                   <template slot="append">张</template>
                 </el-input>
               </el-col>
             </el-form-item>
+
             <el-form-item prop="date" v-if="activityForm.limitType == 2">
               <el-date-picker v-model="date" type="datetimerange" range-separator="至" start-placeholder="开始日期"  end-placeholder="结束日期" @change="changeDate"></el-date-picker>
             </el-form-item>
+
             <el-form-item>
               <router-link :to="{ path: '/manager/knowledge/voucherActivities'}">
                   <el-button type="pain">取消</el-button>
               </router-link>
               <el-button type="primary" @click="saveActivity">保存</el-button>
             </el-form-item>
+
         </el-form>
       </div>
     </div>
@@ -67,7 +72,8 @@
           activityEndTime: '',
           activityType: 1,
           title: '',
-          limitType: 1,
+					limitType: 1,
+					coupon:'',
           awardItems:[
             {
               activityId: '',
@@ -87,6 +93,7 @@
     },
     watch: {
       'activityForm.coupon': function (newVal) {
+				console.log(newVal)
         if (this.masterOptions[newVal] !== undefined) {
           this.activityForm.id = this.masterOptions[newVal].parentEditionId
         }
@@ -128,9 +135,11 @@
           let resp = res.data
           if (resp.success) {
             if(resp.data){
-              this.activityForm = resp.data
+							this.activityForm = resp.data
+							// 额外添加参数
+							//this.activityForm.coupon = this.activityForm.awardItems[0].awardContentId;
+							this.$set(this.activityForm,'coupon',this.activityForm.awardItems[0].awardContentId)
               this.activityForm.itemSize = resp.data.itemSize
-              console.log(typeof(this.activityForm.itemSize))
               this.date =[resp.data.activityStartTime, resp.data.activityEndTime];
               this.masterOptions.couponTemplateId = this.activityForm.awardItems[0].awardContentId;
             }
@@ -142,7 +151,9 @@
       },
       // 保存活动
       saveActivity () {
-        this.activityForm['date'] = this.date;
+				console.log(this.activityForm.coupon)
+				this.activityForm['date'] = this.date;
+				this.activityForm.awardItems[0].awardContentId = this.activityForm.coupon;
         for (let key in this.activityForm) {
           if (key == 'activityId' || key == 'activityStatus' || key == 'deleted' || key == 'gmtCreate' || key == 'gmtModified') {
             delete this.activityForm[key]
@@ -157,6 +168,9 @@
         }
         this.$refs['activityForm'].validate((valid) => {
           if (valid) {
+						//验证通过
+						//this.activityForm
+
             if (this.activityForm.limitType == 1) {
               this.activityForm.activityStartTime = null;
               this.activityForm.activityEndTime = null;

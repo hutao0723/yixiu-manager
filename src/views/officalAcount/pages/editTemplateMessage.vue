@@ -31,22 +31,15 @@
                           <span>商品信息:</span>
                           <span :style="{ color: this.templateDetail.colorContent.keyword1 }">{{ title }}</span>
                         </p>
-                        <!--<p>-->
-                          <!--<span>订单商品:</span>-->
-                          <!--<span :style="{ color: this.templateDetail.colorContent.keyword1 }">{{ goodsName }}</span>-->
-                        <!--</p>-->
-                        <!--<p>-->
-                          <!--<span>订单编号:</span>-->
-                          <!--<span :style="{ color: this.templateDetail.colorContent.keyword2 }">{{ goodsId }}</span>-->
-                        <!--</p>-->
-                        <!--<p>-->
-                          <!--<span>订单金额:</span>-->
-                          <!--<span :style="{ color: this.templateDetail.colorContent.keyword3 }">{{ goodsMoney }}</span>-->
-                        <!--</p>-->
-                        <!--<p>-->
-                          <!--<span>支付时间:</span>-->
-                          <!--<span :style="{ color: this.templateDetail.colorContent.keyword4 }">{{ goodsTime }}</span>-->
-                        <!--</p>-->
+
+                        <p>
+                          <span>消费金额:</span>
+                          <span :style="{ color: this.templateDetail.colorContent.keyword3 }">{{amount}}</span>
+                        </p>
+                        <p>
+                          <span>购买时间:</span>
+                          <span :style="{ color: this.templateDetail.colorContent.keyword4 }">{{finishTime}}</span>
+                        </p>
                         <p :style="{ color: this.templateDetail.colorContent.remark }">
                           <span>remark:</span>
                           <span>{{ templateDetail.remarkData }}</span>
@@ -233,33 +226,21 @@
                             <el-input size="mini" class="attributeContent" disabled="disabled" placeholder="{title}"></el-input>
                             <el-color-picker v-model="templateDetail.colorContent.keyword1" class="colorPicker" size="mini"></el-color-picker>
                           </div>
-                            <!--<div class="attribute">-->
-                                <!--<i class="el-icon-star-on star"></i>-->
-                                <!--订单商品</div>-->
-                            <!--<el-input size="mini" class="attributeContent" disabled="disabled" placeholder="{itemId}"></el-input>-->
-                            <!--<el-color-picker v-model="templateDetail.colorContent.keyword1" class="colorPicker" size="mini"></el-color-picker>-->
-                          <!--</div>-->
-                          <!--<div class="attributePage">-->
-                              <!--<div class="attribute">-->
-                                  <!--<i class="el-icon-star-on  star"></i>-->
-                                  <!--订单编号</div>-->
-                              <!--<el-input size="mini" class="attributeContent" disabled="disabled" placeholder="{orderId}"></el-input>-->
-                              <!--<el-color-picker v-model="templateDetail.colorContent.keyword2" class="colorPicker" size="mini"></el-color-picker>-->
-                          <!--</div>-->
-                          <!--<div class="attributePage">-->
-                              <!--<div class="attribute">-->
-                                  <!--<i class="el-icon-star-on  star"></i>-->
-                                  <!--订单金额</div>-->
-                              <!--<el-input size="mini" class="attributeContent" disabled="disabled" placeholder="{amount}"></el-input>-->
-                              <!--<el-color-picker v-model="templateDetail.colorContent.keyword3" class="colorPicker" size="mini"></el-color-picker>-->
-                          <!--</div>-->
-                          <!--<div class="attributePage">-->
-                              <!--<div class="attribute">-->
-                                  <!--<i class="el-icon-star-on  star"></i>-->
-                                  <!--支付时间</div>-->
-                              <!--<el-input size="mini" class="attributeContent" disabled="disabled" placeholder="{finishTime}"></el-input>-->
-                              <!--<el-color-picker v-model="templateDetail.colorContent.keyword4" class="colorPicker" size="mini"></el-color-picker>-->
-                          <!--</div>-->
+
+                          <div class="attributePage">
+                              <div class="attribute">
+                                  <i class="el-icon-star-on  star"></i>
+                                  消费金额</div>
+                              <el-input size="mini" class="attributeContent" disabled="disabled" placeholder="{amount}"></el-input>
+                              <el-color-picker v-model="templateDetail.colorContent.keyword3" class="colorPicker" size="mini"></el-color-picker>
+                          </div>
+                          <div class="attributePage">
+                              <div class="attribute">
+                                  <i class="el-icon-star-on  star"></i>
+                                  购买时间</div>
+                              <el-input size="mini" class="attributeContent" disabled="disabled" placeholder="{finishTime}"></el-input>
+                              <el-color-picker v-model="templateDetail.colorContent.keyword4" class="colorPicker" size="mini"></el-color-picker>
+                          </div>
                         </div>
                         <div v-if="templateDetail.templateType == 3">
                           <div class="attributePage">
@@ -486,13 +467,14 @@ export default {
     return {
       //付款超时
       itemName:'订购内容',
-      amount:'订单金额',
+      amount:'99',
       //即将开课
       nickname:'用户昵称',
       beginDate:'2018年6月15日 20:30',
       //每日学习
       title:'课程标题',
       today:' 2018年6月15日 20:30',
+      finishTime:' 2018年6月21日',
       //每日打卡
       couponPrice:'5',
       gmtCreate:' 2018年6月15日 20:30',

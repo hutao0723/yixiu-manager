@@ -129,6 +129,7 @@ export default {
   .listCol {
     margin-right: 20px;
     margin-top: 20px;
+    min-width: 395px;
   }
   .title-wrap {
     width: 100%;
@@ -150,9 +151,11 @@ export default {
   .templateContent {
     margin: 0 15px 20px 15px;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     .msg {
       display: inline-block;
-      font-size: 15px;
+      font-size: 14px;
     }
     .msgTitle {
       /*margin-right: 20px;*/

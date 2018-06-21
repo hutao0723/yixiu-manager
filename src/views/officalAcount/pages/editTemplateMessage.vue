@@ -15,7 +15,7 @@
             <div class="weChatMsg">
                 <div class="weChatId">微信模板ID：</div>
                 <el-input size="mini" class="weChatInput" v-model="templateDetail.templateId"></el-input>
-                <el-tooltip class="item" effect="light" 
+                <el-tooltip class="item" effect="light"
                 placement="right">
                   <div slot="content">请填写微信公众号生成的ID，<br/>选择的模板需要与之对应</div>
                   <i class="el-icon-question" :style="{ marginLeft: '10px' }"></i>
@@ -28,101 +28,238 @@
                     <div v-if="templateDetail.templateType == 1" class="configContent">
                         <p :style="{ color: this.templateDetail.colorContent.first }">{{ templateDetail.firstData }}</p>
                         <p>
-                          订单商品
-                          <span :style="{ color: this.templateDetail.colorContent.keyword1 }">{{ goodsName }}</span>
+                          <span>商品信息:</span>
+                          <span :style="{ color: this.templateDetail.colorContent.keyword1 }">{{ title }}</span>
                         </p>
-                        <p>订单编号
-                          <span :style="{ color: this.templateDetail.colorContent.keyword2 }">{{ goodsId }}</span>
+                        <!--<p>-->
+                          <!--<span>订单商品:</span>-->
+                          <!--<span :style="{ color: this.templateDetail.colorContent.keyword1 }">{{ goodsName }}</span>-->
+                        <!--</p>-->
+                        <!--<p>-->
+                          <!--<span>订单编号:</span>-->
+                          <!--<span :style="{ color: this.templateDetail.colorContent.keyword2 }">{{ goodsId }}</span>-->
+                        <!--</p>-->
+                        <!--<p>-->
+                          <!--<span>订单金额:</span>-->
+                          <!--<span :style="{ color: this.templateDetail.colorContent.keyword3 }">{{ goodsMoney }}</span>-->
+                        <!--</p>-->
+                        <!--<p>-->
+                          <!--<span>支付时间:</span>-->
+                          <!--<span :style="{ color: this.templateDetail.colorContent.keyword4 }">{{ goodsTime }}</span>-->
+                        <!--</p>-->
+                        <p :style="{ color: this.templateDetail.colorContent.remark }">
+                          <span>remark:</span>
+                          <span>{{ templateDetail.remarkData }}</span>
                         </p>
-                        <p>订单金额
-                          <span :style="{ color: this.templateDetail.colorContent.keyword3 }">{{ goodsMoney }}</span>
-                        </p>
-                        <p>支付时间
-                          <span :style="{ color: this.templateDetail.colorContent.keyword4 }">{{ goodsTime }}</span>
-                        </p>
-                        <p :style="{ color: this.templateDetail.colorContent.remark }">{{ templateDetail.remarkData }}</p>
                     </div>
                     <div v-if="templateDetail.templateType == 3" class="configContent">
                         <p :style="{ color: this.templateDetail.colorContent.first }">{{ templateDetail.firstData }}</p>
                         <p>
-                          用户昵称
+
+                          <span>用户昵称:</span>
                           <span :style="{ color: this.templateDetail.colorContent.keyword1 }">{{ nickName }}</span>
                         </p>
-                        <p>绑定时间
+                        <p>
+                          <span>绑定时间:</span>
                           <span :style="{ color: this.templateDetail.colorContent.keyword2 }">{{ bindTime }}</span>
                         </p>
-                        <p>备注
+                        <p>
+                          <span>备注:</span>
                           <span :style="{ color: this.templateDetail.colorContent.keyword3 }">{{ remarkData }}</span>
                         </p>
-                        <p :style="{ color: this.templateDetail.colorContent.remark }">{{ templateDetail.remarkData }}</p>
+                        <p :style="{ color: this.templateDetail.colorContent.remark }">
+                          <span>remark:</span>
+                          <span>{{ templateDetail.remarkData }}</span>
+                        </p>
                     </div>
                     <div v-if="templateDetail.templateType == 4" class="configContent">
                         <p :style="{ color: this.templateDetail.colorContent.first }">{{ templateDetail.firstData }}</p>
                         <p>
-                          获得佣金
+                          <span>收益金额:</span>
                           <span :style="{ color: this.templateDetail.colorContent.keyword1 }">{{ getCommission }}</span>
                         </p>
                         <p>
-                          收益来源
+
+                          <span>收益来源:</span>
                           <span :style="{ color: this.templateDetail.colorContent.keyword2 }">{{ moneyFrom }}</span>
                         </p>
-                        <p>绑定时间
+                        <p>
+                          <span>到账时间:</span>
                           <span :style="{ color: this.templateDetail.colorContent.keyword3 }">{{ bindTime }}</span>
                         </p>
-                        <p :style="{ color: this.templateDetail.colorContent.remark }">{{ templateDetail.remarkData }}</p>
+                        <p :style="{ color: this.templateDetail.colorContent.remark }">
+                          <span>remark:</span>
+                          <span>{{ templateDetail.remarkData }}</span>
+                        </p>
                     </div>
                     <div v-if="templateDetail.templateType == 5" class="configContent">
                         <p :style="{ color: this.templateDetail.colorContent.first }">{{ templateDetail.firstData }}</p>
                         <p>
-                          提现金额
+
+                          <span>提现金额:</span>
                           <span :style="{ color: this.templateDetail.colorContent.keyword1 }">{{ putMoney }}</span>
                         </p>
-                        <p>提现时间
+                        <p>
+                          <span>提现时间:</span>
                           <span :style="{ color: this.templateDetail.colorContent.keyword2 }">{{ putTime }}</span>
                         </p>
-                        <p>理由
+                        <p>
+                          <span>理由:</span>
                           <span :style="{ color: this.templateDetail.colorContent.keyword3 }">{{ reason }}</span>
                         </p>
-                        <p :style="{ color: this.templateDetail.colorContent.remark }">{{ templateDetail.remarkData }}</p>
+                        <p :style="{ color: this.templateDetail.colorContent.remark }">
+                          <span>remark:</span>
+                          <span>{{ templateDetail.remarkData }}</span>
+                        </p>
                     </div>
-                </div>
+                    <div v-if="templateDetail.templateType == 6" class="configContent">
+                      <p :style="{ color: this.templateDetail.colorContent.first }">{{ templateDetail.firstData }}</p>
+                      <p>
+
+                        <span>订购内容:</span>
+                        <span :style="{ color: this.templateDetail.colorContent.keyword1 }">{{ itemName }}</span>
+                      </p>
+                      <p>
+                        <span>过期时间:</span>
+                        <span :style="{ color: this.templateDetail.colorContent.keyword2 }">{{ gmtCreate }}</span>
+                      </p>
+                      <p>
+                        <span>订单金额:</span>
+                        <span :style="{ color: this.templateDetail.colorContent.keyword3 }">{{ amount }}</span>
+                      </p>
+                      <p :style="{ color: this.templateDetail.colorContent.remark }">
+                        <span>remark:</span>
+                        <span>{{ templateDetail.remarkData }}</span>
+                      </p>
+                    </div>
+                    <div v-if="templateDetail.templateType == 7" class="configContent">
+                    <p :style="{ color: this.templateDetail.colorContent.first }">{{ templateDetail.firstData }}</p>
+                    <p>
+
+                      <span> 用户昵称:</span>
+                      <span :style="{ color: this.templateDetail.colorContent.keyword1 }">{{ nickname }}</span>
+                    </p>
+                    <p>
+                      <span>活动开始时间:</span>
+                      <span :style="{ color: this.templateDetail.colorContent.keyword2 }">{{ beginDate }}</span>
+                    </p>
+                    <p :style="{ color: this.templateDetail.colorContent.remark }">
+                      <span>remark:</span>
+                      <span>{{ templateDetail.remarkData }}</span>
+                    </p>
+                  </div>
+                    <div v-if="templateDetail.templateType == 8" class="configContent">  <!--每日学习-->
+                      <p :style="{ color: this.templateDetail.colorContent.first }">{{ templateDetail.firstData }}</p>
+                      <p>
+
+                        <span> 课程名称:</span>
+                        <span :style="{ color: this.templateDetail.colorContent.keyword1 }">{{ title }}</span>
+                      </p>
+                      <p>
+                        <span>开始时间:</span>
+                        <span :style="{ color: this.templateDetail.colorContent.keyword2 }">{{ today }}</span>
+                      </p>
+                      <p :style="{ color: this.templateDetail.colorContent.remark }">
+                        <span>remark:</span>
+                        <span>{{ templateDetail.remarkData }}</span>
+                      </p>
+                    </div>
+                    <div v-if="templateDetail.templateType == 9" class="configContent">  <!--每日打卡-->
+                      <p :style="{ color: this.templateDetail.colorContent.first }">{{ templateDetail.firstData }}</p>
+                      <p>
+
+                        <span>课程:</span>
+                        <span :style="{ color: this.templateDetail.colorContent.keyword1 }">{{ title }}</span>
+                      </p>
+                      <p>
+                        <span>时间:</span>
+                        <span :style="{ color: this.templateDetail.colorContent.keyword2 }">{{ today }}</span>
+                      </p>
+                      <p :style="{ color: this.templateDetail.colorContent.remark }">
+                        <span>remark:</span>
+                        <span>{{ templateDetail.remarkData }}</span>
+                      </p>
+                    </div>
+                    <div v-if="templateDetail.templateType == 10" class="configContent">  <!--领券成功通知-->
+                      <p :style="{ color: this.templateDetail.colorContent.first }">{{ templateDetail.firstData }}</p>
+                      <p>
+
+                        <span>领取人:</span>
+                        <span :style="{ color: this.templateDetail.colorContent.keyword1 }">{{ nickname }}</span>
+                      </p>
+                      <p>
+                        <span>礼品:</span>
+                        <span :style="{ color: this.templateDetail.colorContent.keyword2 }">{{ couponPrice }}元优惠券</span>
+                      </p>
+                      <p>
+                        <span>领取时间:</span>
+                        <span :style="{ color: this.templateDetail.colorContent.keyword2 }">{{ gmtCreate }}</span>
+                      </p>
+                      <p :style="{ color: this.templateDetail.colorContent.remark }">
+                        <span>remark:</span>
+                        <span>{{ templateDetail.remarkData }}</span>
+                      </p>
+                    </div>
+                    <div v-if="templateDetail.templateType == 11" class="configContent">  <!--优惠券过期提醒-->
+                        <p :style="{ color: this.templateDetail.colorContent.first }">{{ templateDetail.firstData }}</p>
+                        <p>
+
+                          <span>店铺名称:</span>
+                          <span :style="{ color: this.templateDetail.colorContent.keyword1 }">一修读书</span>
+                        </p>
+                        <p>
+                          <span>服务时间:</span>
+                          <span :style="{ color: this.templateDetail.colorContent.keyword2 }">至{{ couponEnd_Time }}</span>
+                        </p>
+                        <p :style="{ color: this.templateDetail.colorContent.remark }">
+                          <span>remark:</span>
+                          <span>{{ templateDetail.remarkData }}</span>
+                        </p>
+                      </div>
+                    </div>
                 <div class="configDetail">
                     <div class="editTitle">配置模板内容：</div>
                     <div class="editContent">
                         <div class="attributePage">
-                            <div class="attribute">start</div>
+                            <div class="attribute">first</div>
                             <el-input v-model="templateDetail.firstData" size="mini" class="attributeContent" :maxlength="100"></el-input>
                             <el-color-picker v-model="templateDetail.colorContent.first" class="colorPicker" size="mini"></el-color-picker>
                         </div>
                         <div v-if="templateDetail.templateType == 1">
                           <div class="attributePage">
                             <div class="attribute">
-                                <i class="el-icon-star-on star"></i>
-                                订单商品</div>
-                            <el-input size="mini" class="attributeContent" disabled="disabled" placeholder="{itemId}"></el-input>
+                              <i class="el-icon-star-on star"></i>
+                              商品信息</div>
+                            <el-input size="mini" class="attributeContent" disabled="disabled" placeholder="{title}"></el-input>
                             <el-color-picker v-model="templateDetail.colorContent.keyword1" class="colorPicker" size="mini"></el-color-picker>
                           </div>
-                          <div class="attributePage">
-                              <div class="attribute">
-                                  <i class="el-icon-star-on  star"></i>
-                                  订单编号</div>
-                              <el-input size="mini" class="attributeContent" disabled="disabled" placeholder="{orderId}"></el-input>
-                              <el-color-picker v-model="templateDetail.colorContent.keyword2" class="colorPicker" size="mini"></el-color-picker>
-                          </div>
-                          <div class="attributePage">
-                              <div class="attribute">
-                                  <i class="el-icon-star-on  star"></i>
-                                  订单金额</div>
-                              <el-input size="mini" class="attributeContent" disabled="disabled" placeholder="{amount}"></el-input>
-                              <el-color-picker v-model="templateDetail.colorContent.keyword3" class="colorPicker" size="mini"></el-color-picker>
-                          </div>
-                          <div class="attributePage">
-                              <div class="attribute">
-                                  <i class="el-icon-star-on  star"></i>
-                                  支付时间</div>
-                              <el-input size="mini" class="attributeContent" disabled="disabled" placeholder="{finishTime}"></el-input>
-                              <el-color-picker v-model="templateDetail.colorContent.keyword4" class="colorPicker" size="mini"></el-color-picker>
-                          </div>
+                            <!--<div class="attribute">-->
+                                <!--<i class="el-icon-star-on star"></i>-->
+                                <!--订单商品</div>-->
+                            <!--<el-input size="mini" class="attributeContent" disabled="disabled" placeholder="{itemId}"></el-input>-->
+                            <!--<el-color-picker v-model="templateDetail.colorContent.keyword1" class="colorPicker" size="mini"></el-color-picker>-->
+                          <!--</div>-->
+                          <!--<div class="attributePage">-->
+                              <!--<div class="attribute">-->
+                                  <!--<i class="el-icon-star-on  star"></i>-->
+                                  <!--订单编号</div>-->
+                              <!--<el-input size="mini" class="attributeContent" disabled="disabled" placeholder="{orderId}"></el-input>-->
+                              <!--<el-color-picker v-model="templateDetail.colorContent.keyword2" class="colorPicker" size="mini"></el-color-picker>-->
+                          <!--</div>-->
+                          <!--<div class="attributePage">-->
+                              <!--<div class="attribute">-->
+                                  <!--<i class="el-icon-star-on  star"></i>-->
+                                  <!--订单金额</div>-->
+                              <!--<el-input size="mini" class="attributeContent" disabled="disabled" placeholder="{amount}"></el-input>-->
+                              <!--<el-color-picker v-model="templateDetail.colorContent.keyword3" class="colorPicker" size="mini"></el-color-picker>-->
+                          <!--</div>-->
+                          <!--<div class="attributePage">-->
+                              <!--<div class="attribute">-->
+                                  <!--<i class="el-icon-star-on  star"></i>-->
+                                  <!--支付时间</div>-->
+                              <!--<el-input size="mini" class="attributeContent" disabled="disabled" placeholder="{finishTime}"></el-input>-->
+                              <!--<el-color-picker v-model="templateDetail.colorContent.keyword4" class="colorPicker" size="mini"></el-color-picker>-->
+                          <!--</div>-->
                         </div>
                         <div v-if="templateDetail.templateType == 3">
                           <div class="attributePage">
@@ -143,7 +280,7 @@
                               <div class="attribute">
                                   <i class="el-icon-star-on  star"></i>
                                   备注</div>
-                              <el-input size="mini" class="attributeContent" disabled="disabled" placeholder="快来邀请小伙伴一起读书吧～"></el-input>
+                              <el-input size="mini" class="attributeContent" disabled="disabled" placeholder="绑定成功"></el-input>
                               <el-color-picker v-model="templateDetail.colorContent.keyword3" class="colorPicker" size="mini"></el-color-picker>
                           </div>
                         </div>
@@ -151,7 +288,7 @@
                           <div class="attributePage">
                             <div class="attribute">
                                 <i class="el-icon-star-on star"></i>
-                                获得佣金</div>
+                              收益金额</div>
                             <el-input size="mini" class="attributeContent" disabled="disabled" placeholder="{amount*distributeRate}"></el-input>
                             <el-color-picker v-model="templateDetail.colorContent.keyword1" class="colorPicker" size="mini"></el-color-picker>
                           </div>
@@ -165,7 +302,7 @@
                           <div class="attributePage">
                               <div class="attribute">
                                   <i class="el-icon-star-on  star"></i>
-                                  绑定时间</div>
+                                  到账时间</div>
                               <el-input size="mini" class="attributeContent" disabled="disabled" placeholder="{gmtCreate}"></el-input>
                               <el-color-picker v-model="templateDetail.colorContent.keyword3" class="colorPicker" size="mini"></el-color-picker>
                           </div>
@@ -191,6 +328,117 @@
                                   理由</div>
                               <el-input size="mini" class="attributeContent" disabled="disabled" placeholder="{err_code_des}"></el-input>
                               <el-color-picker v-model="templateDetail.colorContent.keyword3" class="colorPicker" size="mini"></el-color-picker>
+                          </div>
+                        </div>
+                        <div v-if="templateDetail.templateType == 6">
+                          <div class="attributePage">
+                            <div class="attribute">
+                              <i class="el-icon-star-on star"></i>
+                              订购内容</div>
+                            <el-input size="mini" class="attributeContent" disabled="disabled" placeholder="{itemName}"></el-input>
+                            <el-color-picker v-model="templateDetail.colorContent.keyword1" class="colorPicker" size="mini"></el-color-picker>
+                          </div>
+                          <div class="attributePage">
+                            <div class="attribute">
+                              <i class="el-icon-star-on  star"></i>
+                              过期时间</div>
+                            <el-input size="mini" class="attributeContent" disabled="disabled" placeholder="{gmtCreate}"></el-input>
+                            <el-color-picker v-model="templateDetail.colorContent.keyword2" class="colorPicker" size="mini"></el-color-picker>
+                          </div>
+                          <div class="attributePage">
+                            <div class="attribute">
+                              <i class="el-icon-star-on  star"></i>
+                              订单金额</div>
+                            <el-input size="mini" class="attributeContent" disabled="disabled" placeholder="{amount}"></el-input>
+                            <el-color-picker v-model="templateDetail.colorContent.keyword3" class="colorPicker" size="mini"></el-color-picker>
+                          </div>
+                        </div>
+                      <div v-if="templateDetail.templateType == 7">
+                        <div class="attributePage">
+                          <div class="attribute">
+                            <i class="el-icon-star-on star"></i>
+                            用户昵称</div>
+                          <el-input size="mini" class="attributeContent" disabled="disabled" placeholder="{nickname}"></el-input>
+                          <el-color-picker v-model="templateDetail.colorContent.keyword1" class="colorPicker" size="mini"></el-color-picker>
+                        </div>
+                        <div class="attributePage">
+                          <div class="attribute">
+                            <i class="el-icon-star-on  star"></i>
+                            活动开始时间</div>
+                          <el-input size="mini" class="attributeContent" disabled="disabled" placeholder="{beginDate}"></el-input>
+                          <el-color-picker v-model="templateDetail.colorContent.keyword2" class="colorPicker" size="mini"></el-color-picker>
+                        </div>
+                      </div>
+                        <div v-if="templateDetail.templateType == 8"> <!--每日学习-->
+                          <div class="attributePage">
+                            <div class="attribute">
+                              <i class="el-icon-star-on star"></i>
+                              课程名称</div>
+                            <el-input size="mini" class="attributeContent" disabled="disabled" placeholder="{title}"></el-input>
+                            <el-color-picker v-model="templateDetail.colorContent.keyword1" class="colorPicker" size="mini"></el-color-picker>
+                          </div>
+                          <div class="attributePage">
+                            <div class="attribute">
+                              <i class="el-icon-star-on  star"></i>
+                              开始时间</div>
+                            <el-input size="mini" class="attributeContent" disabled="disabled" placeholder="{today}"></el-input>
+                            <el-color-picker v-model="templateDetail.colorContent.keyword2" class="colorPicker" size="mini"></el-color-picker>
+                          </div>
+                        </div>
+                        <div v-if="templateDetail.templateType ==9"> <!--每日打卡-->
+                          <div class="attributePage">
+                            <div class="attribute">
+                              <i class="el-icon-star-on star"></i>
+                              课程</div>
+                            <el-input size="mini" class="attributeContent" disabled="disabled" placeholder="{title}"></el-input>
+                            <el-color-picker v-model="templateDetail.colorContent.keyword1" class="colorPicker" size="mini"></el-color-picker>
+                          </div>
+                          <div class="attributePage">
+                            <div class="attribute">
+                              <i class="el-icon-star-on  star"></i>
+                              时间</div>
+                            <el-input size="mini" class="attributeContent" disabled="disabled" placeholder="{today}"></el-input>
+                            <el-color-picker v-model="templateDetail.colorContent.keyword2" class="colorPicker" size="mini"></el-color-picker>
+                          </div>
+
+                        </div>
+                        <div v-if="templateDetail.templateType == 10"> <!--领券成功通知-->
+                        <div class="attributePage">
+                          <div class="attribute">
+                            <i class="el-icon-star-on star"></i>
+                            领取人</div>
+                          <el-input size="mini" class="attributeContent" disabled="disabled" placeholder="{nickName}"></el-input>
+                          <el-color-picker v-model="templateDetail.colorContent.keyword1" class="colorPicker" size="mini"></el-color-picker>
+                        </div>
+                        <div class="attributePage">
+                          <div class="attribute">
+                            <i class="el-icon-star-on  star"></i>
+                            礼品</div>
+                          <el-input size="mini" class="attributeContent" disabled="disabled" placeholder="{couponPrice}"></el-input>
+                          <el-color-picker v-model="templateDetail.colorContent.keyword2" class="colorPicker" size="mini"></el-color-picker>
+                        </div>
+                        <div class="attributePage">
+                          <div class="attribute">
+                            <i class="el-icon-star-on  star"></i>
+                            领取时间</div>
+                          <el-input size="mini" class="attributeContent" disabled="disabled" placeholder="{gmtCreate}"></el-input>
+                          <el-color-picker v-model="templateDetail.colorContent.keyword2" class="colorPicker" size="mini"></el-color-picker>
+                        </div>
+                      </div>
+                        <div v-if="templateDetail.templateType == 11">
+                          <div class="attributePage">
+                            <div class="attribute">
+                              <i class="el-icon-star-on star"></i>
+                              店铺名称</div>
+                            <el-input size="mini" class="attributeContent" disabled="disabled" placeholder="一修读书"></el-input>
+                            <el-color-picker v-model="templateDetail.colorContent.keyword1" class="colorPicker" size="mini"></el-color-picker>
+                          </div>
+                          <div class="attributePage">
+                            <div class="attribute">
+                              <i class="el-icon-star-on  star"></i>
+                              服务时间</div>
+                            <el-input size="mini" class="attributeContent" disabled="disabled" placeholder="{couponEnd_Time}"></el-input>
+                            <el-color-picker v-model="templateDetail.colorContent.keyword2" class="colorPicker" size="mini"></el-color-picker>
                           </div>
                         </div>
                         <div class="attributePage">
@@ -236,6 +484,19 @@
 export default {
   data() {
     return {
+      //付款超时
+      itemName:'订购内容',
+      amount:'订单金额',
+      //即将开课
+      nickname:'用户昵称',
+      beginDate:'2018年6月15日 20:30',
+      //每日学习
+      title:'课程标题',
+      today:' 2018年6月15日 20:30',
+      //每日打卡
+      couponPrice:'5',
+      gmtCreate:' 2018年6月15日 20:30',
+      couponEnd_Time:'2018年6月15日 20:30',
       dialogPushStatus: false,
       templateTitle: "",
       goodsName: "10招修炼成狐狸精女人",
@@ -278,6 +539,7 @@ export default {
   methods: {
     init() {
       let authorizerId = this.$route.params.id;
+      console.log(authorizerId)
       this.$http.get("/authorizerMpTemplate/details?id=" + authorizerId).then(
         res => {
           let resp = res.data;
@@ -290,6 +552,7 @@ export default {
             }
             this.templateTitle = sessionStorage.getItem("title");
             this.templateDetail.templateType = sessionStorage.getItem("type");
+            console.log(this.templateDetail.templateType)
             this.templateDetail.authorizerId = sessionStorage.getItem("postId");
           } else {
             let msg = resp.desc || "请求失败";
@@ -342,6 +605,7 @@ export default {
         firstData: firstData,
         remarkData: remarkData
       };
+      console.log(params)
       this.$http.post("/authorizerMpTemplate/add", params).then(
         res => {
           let resp = res.data;
@@ -382,6 +646,7 @@ export default {
   },
   mounted() {
     this.init();
+
   }
 };
 </script>
@@ -437,7 +702,17 @@ export default {
           margin-left: 30px;
           p {
             margin-bottom: 20px;
+            line-height: 1.2;
           }
+        }
+        .configContent span:nth-of-type(1){
+          width:30%;
+          text-align: right;
+          display: inline-block;
+        }
+        .configContent span:nth-of-type(2){
+          margin-left: 10px;
+          display: inline-block;
         }
       }
       .configDetail {
@@ -451,16 +726,17 @@ export default {
         }
         .editContent {
           padding: 10px;
+          padding-top:55px;
           margin-top: 20px;
           margin-bottom: 10px;
           border: 1px solid #ccc;
-          width: 350px;
-          height: 320px;
+          width: 400px;
+          height:280px;
           .attributePage {
             position: relative;
             margin-bottom: 10px;
             .attribute {
-              width: 85px;
+              width: 140px;
               text-align: right;
               display: inline-block;
             }

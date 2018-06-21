@@ -13,10 +13,10 @@
         <el-tabs v-model="activeType" type="card" @tab-click="handleClick" class="pad-length">
             <el-tab-pane :label="tab1" :name="tab1">
                 <div class="content">
-                    <el-col :span="6" class="listCol" v-for="(item, index) in this.templateList" :key="index">
+                    <el-col :span="7" class="listCol" v-for="(item, index) in this.templateList" :key="index">
                         <el-card class="templateCard" :body-style="{ padding: '0px' }">
                             <div class="templateTitle">{{ item.templateName }}
-                              <el-tooltip class="item" effect="light" 
+                              <el-tooltip class="item" effect="light"
                               placement="top">
                                 <div slot="content" >
                                     <h5 style="font-size: 22px; font-weight: bold; margin-bottom: 20px">{{ item.templateName }}</h5>
@@ -58,7 +58,7 @@ export default {
         }
       ],
       templateList: [
-        
+
       ]
     };
   },
@@ -77,7 +77,7 @@ export default {
       let authorizerId = this.$route.params.id;
       let config = {
         authorizerId:this.$route.params.id,
-        typeId:this.$route.params.type, 
+        typeId:this.$route.params.type,
       }
       this.$http.get("/mpTypeTemplate/list",{ params: config }).then(
         res => {
@@ -108,6 +108,8 @@ export default {
       sessionStorage.setItem('title', title);
       sessionStorage.setItem('type', type);
       sessionStorage.setItem('postId', this.$route.params.id);
+
+      console.log(id,this.$route.params.id)
       this.$router.push({
         name: "templateDetail",
         params: {
@@ -117,7 +119,6 @@ export default {
     }
   },
   mounted() {
-    console.log(this.$route.params)
     this.init();
   }
 };
@@ -148,17 +149,20 @@ export default {
   }
   .templateContent {
     margin: 0 15px 20px 15px;
+    white-space: nowrap;
     .msg {
       display: inline-block;
       font-size: 15px;
     }
     .msgTitle {
-      margin-right: 50px;
+      /*margin-right: 20px;*/
     }
+
+
   }
   .templateFooter {
-    height: 25px;
-    line-height: 25px;
+    height: 30px;
+    line-height: 30px;
     padding: 0 10px;
     background-color: gray;
     color: #ffffff;

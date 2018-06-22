@@ -124,7 +124,7 @@
 </template>
 <script>
   import { formatDateNew } from '../../../utils/dateUtils'
-  import couponrules from '../components/couponrules'
+  import couponrules from '../components/couponRules'
   import { readList, saveTemplate, couponTemplateDetail } from "@/api/index";
   import qs from 'qs'
   import numberEditVue from './numberEdit.vue';

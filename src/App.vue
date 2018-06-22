@@ -19,6 +19,8 @@ body{
 #app {
   height: 100%;
   width: 100%;
-
 }
+  .el-container{
+    flex-basis:0 !important;
+  }
 </style>

@@ -104,7 +104,6 @@ export default {
     }
     .el-main{
       padding: 10px 40px;
-      flex-basis:none !important;
     }
     .page-title{
       width:100%;

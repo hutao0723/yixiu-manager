@@ -100,9 +100,10 @@
               <div slot="tip" class="el-upload__tip">750*544,支持jpg、png、gif格式,最大5M</div>
             </el-upload>
           </el-form-item>
-          <el-form-item label="分享文案："  prop="shareWord">
-            <el-input style="width:50%;" placeholder="0-30个字" v-model="courseSearchForm.shareWord" auto-complete="off"></el-input>
+          <el-form-item label="分享文案："  prop="shareDocument">
+            <el-input style="width:50%;" placeholder="0-30个字" v-model="courseSearchForm.shareDocument" auto-complete="off"></el-input>
           </el-form-item>
+          <div class="doc-tips">用户昵称：nickname，感想指数：commentLength，感想时间：commentTimeLabel，阅读天数：readDays，书籍标题：bookTitle</div>
           <!-- <el-form-item label="分享图标：">
             <el-upload
               class="avatar-uploader"
@@ -196,7 +197,7 @@
           imgUrl:[
             {required: true, message: '请上传书籍封面', trigger: 'blur'},
           ],
-          shareWord:[
+          shareDocument:[
             { min: 0, max: 30,message: '请输入0-30个字', trigger: 'blur'},
           ]
         },
@@ -231,7 +232,7 @@
           imgUrl:'',
           selectType:'',
           // iconUrl:'',
-          shareWord:''
+          shareDocument:''
         },
         //新增编辑课程form 表单
         courseForm: {
@@ -469,7 +470,7 @@
              this.courseSearchForm.selectType = resp.data.courseId
              this.courseSearchForm.imgUrl = resp.data.imgUrl
              // this.courseSearchForm.iconUrl = resp.data.iconUrl
-             this.courseSearchForm.shareWord = resp.data.shareWord
+             this.courseSearchForm.shareDocument = resp.data.shareDocument
           } else {
             let msg = resp.desc || '请求失败'
             this.$message.error(msg)
@@ -480,7 +481,7 @@
         this.courseSearchForm.selectType = ''
         this.courseSearchForm.imgUrl= ''
         // this.courseSearchForm.iconUrl= ''
-        this.courseSearchForm.shareWord= ''
+        this.courseSearchForm.shareDocument= ''
         this.courseEditId = row.id;
         this.editDiolog = true ;
         this.digType = title;
@@ -499,7 +500,7 @@
           courseId:this.courseSearchForm.selectType,
           imgUrl:this.courseSearchForm.imgUrl,
           // iconUrl: this.courseSearchForm.iconUrl,
-          shareWord: this.courseSearchForm.shareWord,
+          shareDocument: this.courseSearchForm.shareDocument,
         }
 
         if(this.digType==1){
@@ -728,6 +729,10 @@
       .el-upload__tip {
         top: 30px;
       }
+    }
+    .doc-tips{
+      font-size: 12px;
+      color: #606266;
     }
   }
 </style>

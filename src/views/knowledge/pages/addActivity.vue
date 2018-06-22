@@ -59,7 +59,7 @@
 </template>
 <script>
   import { formatDateNew, formatToMs } from '../../../utils/dateUtils'
-  import couponrules from '../components/couponrules'
+  import couponrules from '../components/couponRules'
   import qs from 'qs'
   export default {
     data () {

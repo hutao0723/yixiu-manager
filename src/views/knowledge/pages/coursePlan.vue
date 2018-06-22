@@ -130,14 +130,17 @@
     <!--新增|编辑书籍 弹窗-->
     <div class="add-type-diolog">
       <el-dialog title="添加|编辑书籍" :visible.sync="bookDiolog">
-        <el-form :model="courseForm" ref="courseForm" :rules="rules">
-          <el-form-item label="书籍标题" prop="title">
+        <div>
+          <el-form :model="courseForm" ref="courseForm" :rules="rules">
+
+          <el-form-item label="书籍标题" prop="title" class="is_required">
             <el-col :span="8">
               <el-input v-model="courseForm.title" placeholder="1-30字，建议14字以内" :maxlength="30"></el-input>
 
             </el-col>
           </el-form-item>
-          <el-form-item class="is-required" label="书籍封面" prop="imgUrl">
+
+          <el-form-item label="书籍封面" prop="imgUrl">
             <el-upload
               class="avatar-uploader"
               action="/upload/image"
@@ -152,21 +155,61 @@
             </el-upload>
           </el-form-item>
 
-          <el-form-item label="海报背景图">
-            <el-upload
-              class="avatar-uploader"
-              action="/upload/image"
-              name="imageFile"
-              :show-file-list=false
-              :on-success="firstSuccess2"
-              :before-upload="beforeAvatarUpload">
-              <img v-if="courseForm.backGroundUrl" :src="courseForm.backGroundUrl" class="avatar">
-              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-              <el-button size="small" type="primary">{{courseForm.backGroundUrl ? '修改文件' : '选择文件'}}</el-button>
-              <div slot="tip" class="el-upload__tip">750*544,支持jpg、png、gif格式,最大5M</div>
-            </el-upload>
-          </el-form-item>
-        </el-form>
+          <!--<el-form-item label="海报背景图">-->
+            <!--<el-upload-->
+              <!--class="avatar-uploader"-->
+              <!--action="/upload/image"-->
+              <!--name="imageFile"-->
+              <!--:show-file-list=false-->
+              <!--:on-success="firstSuccess2"-->
+              <!--:before-upload="beforeAvatarUpload">-->
+              <!--<img v-if="courseForm.backGroundUrl" :src="courseForm.backGroundUrl" class="avatar">-->
+              <!--<i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
+              <!--<el-button size="small" type="primary">{{courseForm.backGroundUrl ? '修改文件' : '选择文件'}}</el-button>-->
+              <!--<div slot="tip" class="el-upload__tip">750*544,支持jpg、png、gif格式,最大5M</div>-->
+            <!--</el-upload>-->
+          <!--</el-form-item>-->
+
+            <!-- 试听音频 -->
+            <!--<el-form-item label="试听音频" class="audio-list" prop="uploadFile">-->
+                <!--<div>-->
+                    <!--<div class="file-container">{{fileText}}</div>-->
+                    <!--<el-button size="small" type="primary" id="selectfiles">选择文件</el-button>-->
+                    <!--<div slot="tip" class="el-upload__tip">支持mp3、m4a格式，最大500M</div>-->
+                <!--</div>-->
+            <!--</el-form-item>-->
+
+            <!--&lt;!&ndash; 书籍简介 &ndash;&gt;-->
+            <!--<el-form-item label="书籍简介" prop="title">-->
+                <!--<el-col :span="8">-->
+                    <!--<el-input v-model="courseForm.title" placeholder="1-30字，建议14字以内" :maxlength="30"></el-input>-->
+                <!--</el-col>-->
+            <!--</el-form-item>-->
+
+          </el-form>
+        </div>
+
+
+          <el-form :model="booksForm" ref="booksForm">
+
+              <!-- 试听音频 -->
+              <el-form-item label="试听音频" class="audio-list" prop="uploadFile">
+                  <div class="audio-content">
+                      <div class="file-container">{{fileText}}</div>
+                      <el-button size="small" type="primary" id="selectfiles">选择文件</el-button>
+                      <div slot="tip" class="el-upload__tip">支持mp3、m4a格式，最大500M</div>
+                  </div>
+              </el-form-item>
+
+              <!-- 书籍简介 -->
+              <el-form-item label="书籍简介" prop="title">
+                  <el-col :span="8">
+                      <el-input type="textarea" :rows="4" v-model="booksForm.introduction" placeholder="1-50字，建议14字以内" :maxlength="50"></el-input>
+                  </el-col>
+              </el-form-item>
+
+          </el-form>
+
         <div class="btn-wrap">
           <el-button size="small" @click="bookDiolog = false">取 消</el-button>
           <el-button size="small" type="primary" @click="saveBook()">保存</el-button>
@@ -183,7 +226,8 @@
   import qs from 'qs'
 
   import {
-
+    getDirectTransmissionSign,
+    getCdnFileUrl
   } from '@/api/index'
 
   export default {
@@ -215,14 +259,14 @@
         digType:1,
         bookType:1,
         bookId:null,
-        directTransmissionSign: null, //上传签名
+        directTransmissionSign: null, // 上传签名
         pageOption: {
           pageNum: 1,
           size: 20
         },
         totalSize: 0,
         courseManageList:[],
-        //分页查询课程信息
+        // 分页查询课程信息
         courseSearchForm: {
           id: null,
           title: null,
@@ -234,14 +278,21 @@
           // iconUrl:'',
           shareDocument:''
         },
-        //新增编辑课程form 表单
+        // 新增编辑课程form 表单
         courseForm: {
-          title:null,
-          imgUrl:'',
-          backGroundUrl:'',
-          
+          title: null,
+          imgUrl: '',
+          backGroundUrl: ''
         },
-        courseList:[]
+        courseList: [],
+        booksForm: {
+          introduction:'',
+          uploadFile: {},
+          freeTime: 120,
+          courseType: 1,
+        },
+        fileText: null,
+        fileSrc: null
       }
     },
 
@@ -363,6 +414,13 @@
         this.$http.post('/read/book/detail?id='+id).then(res =>{
           let resp = res.data;
           this.courseForm = resp.data;
+          this.booksForm.introduction = resp.data.introduction
+          try {
+              this.fileText = resp.data.uploadFile.name
+          } catch (error) {
+            this.fileText = ''
+          }
+          
           console.log(resp.data)
         })
       },
@@ -373,9 +431,16 @@
         }else{
           this.courseForm.title = null;
           this.courseForm.imgUrl = '';
+
+          this.booksForm.introduction = ''
+          this.booksForm.uploadFile = {}
+          this.fileSrc = null
+          this.fileText = null
         }
+
         this.bookDiolog = true;
         this.bookType = type;
+        this.getDirectTransmission()
       },
       beforeAvatarUpload(file) {
         const isJLtType = file.type === 'image/jpg' || file.type === 'image/png' || file.type === 'image/gif' || file.type ==='image/jpeg';
@@ -545,13 +610,16 @@
       // 保存书籍
       saveBook () {
         let params =  this.courseForm;
+        params = {...params, ...this.booksForm}
+        params.simpleAudition = this.fileSrc
+        console.log(params)
         params.readId = this.readId;
         this.$refs['courseForm'].validate((valid)=>{
           if (valid) {
             this.loading = true;
             if (this.bookType!=1) {
               params.id = this.bookId;
-              this.$http.post('/read/book/save',qs.stringify(params)).then(res => {
+              this.$http.post('/read/book/save',params).then(res => {
                 let resp = res.data
                 if (resp.success) {
                   this.$message.success('编辑成功');
@@ -565,7 +633,7 @@
                 }
               })
             } else {
-              this.$http.post('/read/book/save',qs.stringify(params)).then(res => {
+              this.$http.post('/read/book/save',params).then(res => {
                 let resp = res.data
                 if (resp.success) {
                   this.$message.success('新增成功');
@@ -580,15 +648,115 @@
               })
             }
           } else {
-            return false;
+            return false
           }
         })
-      }
+      },
 
+      getDirectTransmission() {
+          getDirectTransmissionSign().then(res => {
+              const self = this;
+              if (res.success) {
+                  this.directTransmissionSign = res.data;
+                  // 实例化一个plupload上传对象
+                  var multipart_params = this.directTransmissionSign;
+                  // console.log(multipart_params);
+
+                  var uploader = new plupload.Uploader({
+                      runtimes: 'html5,flash,silverlight,html4',
+                      browse_button: 'selectfiles',
+                      url: 'http://youfen.oss-cn-hangzhou.aliyuncs.com/',
+                      multipart_params: {
+                          'key': multipart_params.dir + new Date().getTime(),
+                          'policy': multipart_params.policy,
+                          'OSSAccessKeyId': multipart_params.accessid,
+                          'success_action_status': '200', //让服务端返回200,不然，默认会返回204
+                          'signature': multipart_params.signature,
+                      },
+                  })
+
+                  uploader.init();
+
+                  uploader.bind('FilesAdded', function (upload, files) {
+                      if (files[files.length - 1].type != "audio/mp3" && files[files.length - 1].type != "audio/x-m4a") {
+                          self.$message.error("请上传mp3或者m4a格式文件");
+                          uploader.removeFile(files);
+                          return false
+                      }
+                      if (files[files.length - 1].size >500000000) {
+                          self.$message.error("文件过大！文件大小必须500M以内");
+                          uploader.removeFile(files);
+                          return false
+                      }
+                      console.log(files[files.length - 1].name)
+                      self.fileText = files[files.length - 1].name;
+                      self.booksForm.uploadFile.name = files[files.length - 1].name;
+                      self.booksForm.uploadFile.url = uploader.settings.multipart_params.key;
+                      uploader.start();
+                  });
+                  uploader.bind('uploadProgress', function (upload, files) {
+                      self.fileText = `已完成${files.percent}%`;
+                  });
+                  uploader.bind('uploadComplete', function (upload, files) {
+                      const key = uploader.settings.multipart_params.key;
+
+                      if(upload.total.uploaded <=0) {
+                          self.fileText = '';
+                          self.$message.error("文件上传失败，请重新上传");
+                          return
+                      }
+                      uploader.settings.multipart_params.key = multipart_params.dir + new Date().getTime();
+                      self.fileText = files[files.length - 1].name;
+                      self.booksForm.uploadFile.name = files[files.length - 1].name;
+                      self.getCdnFileUrlFc(key);
+                  });
+
+
+              } else {
+                  let msg = res.desc || '获取上传路径失败'
+                  this.$message.error(msg)
+              }
+          }).catch(() => {
+              this.$message.error('网络错误')
+          })
+      },
+
+      getCdnFileUrlFc(fileKey) {
+        getCdnFileUrl({
+          fileKey
+        }).then(res => {
+          if (res.success) {
+            this.fileSrc = res.data;
+            this.getAudioLength();
+          } else {
+            let msg = res.desc || '请求失败'
+            this.$message.error(msg)
+          }
+        }).catch(() => {
+        })
+      },
+
+      clearCourseForm(){
+        for (let i in this.booksForm) {
+          this.booksForm[i] = null
+        }
+        this.booksForm.uploadFile = {};
+        this.booksForm.freeTime = 120;
+        this.booksForm.courseType = 1;
+        this.fileText = null;
+      },
+
+      getAudioLength() {
+        const myAudio = document.getElementsByTagName('audio')[0];
+        myAudio.addEventListener("canplay", function () {
+            this.courseForm.timeLength = Math.round(myAudio.duration);
+            console.log(myAudio.duration);
+          }.bind(this)
+        );
+      },
 
     }
   }
-
 </script>
 <style lang="less" >
   .ofa-main-wrap {
@@ -730,9 +898,12 @@
         top: 30px;
       }
     }
-    .doc-tips{
-      font-size: 12px;
-      color: #606266;
-    }
+
+      .audio-content {
+          overflow: hidden;
+          button {
+            // left: 390px;
+          }
+      }
   }
 </style>

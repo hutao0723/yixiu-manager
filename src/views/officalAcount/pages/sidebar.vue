@@ -5,22 +5,22 @@
       <div class="side-wrap" v-show="isShow">
         <p class="page-title" >公众号管理</p>
         <el-menu :collapse="isCollapse" class="menu-collapse" :default-active="pathIndex">
-          <router-link :to="{ path: '/manager/officalAcount' }">   
+          <router-link :to="{ path: '/manager/officalAcount' }">
             <el-menu-item index="1">
               <span slot="title">公众号</span>
             </el-menu-item>
-          </router-link> 
-          <router-link :to="{ path: '/manager/officalAcount/graphType' }">   
+          </router-link>
+          <router-link :to="{ path: '/manager/officalAcount/graphType' }">
             <el-menu-item index="2">
               <span slot="title">图文类型</span>
             </el-menu-item>
-          </router-link> 
-          <router-link :to="{ path: '/manager/officalAcount/publicType' }">   
+          </router-link>
+          <router-link :to="{ path: '/manager/officalAcount/publicType' }">
             <el-menu-item index="3">
               <span slot="title">公众号类型</span>
             </el-menu-item>
-          </router-link> 
-        </el-menu>                
+          </router-link>
+        </el-menu>
       </div>
     </el-aside>
     <el-container>
@@ -32,7 +32,7 @@
               <router-view/>
           </div>
         </el-main>
-    </el-container>  
+    </el-container>
   </el-container>
   </section>
 </template>
@@ -67,7 +67,7 @@ export default {
         case '/manager/officalAcount/publicType':
           pathIndex = "3";
           break;
-      
+
         default:
           break;
       }

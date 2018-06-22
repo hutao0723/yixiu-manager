@@ -57,7 +57,7 @@
             <el-table-column prop="todayNewFollow" label="当日新增关注"></el-table-column>
             <el-table-column prop="todayNewUnFollow" label="当日取消关注"></el-table-column>
             <el-table-column prop="managerName" label="管理员"></el-table-column>
-            <el-table-column label="操作" width="200">
+            <el-table-column label="操作" width="220">
               <template slot-scope="scope">
                 <el-button v-if="scope.row.serviceTypeInfo == 2" type="text" size="mini" @click="goToTemplateMessage(scope.row)">模板消息</el-button>
                 <el-button type="text" size="mini" @click="openDialogType(scope.row.appId,scope.row.id)">类型</el-button>
@@ -104,7 +104,7 @@
 
 <script>
   import qs from 'qs'
-	
+
   export default {
     data() {
       return {

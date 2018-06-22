@@ -129,7 +129,6 @@ export default {
   .listCol {
     margin-right: 20px;
     margin-top: 20px;
-    min-width: 395px;
   }
   .title-wrap {
     width: 100%;

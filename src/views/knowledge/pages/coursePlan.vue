@@ -100,6 +100,23 @@
               <div slot="tip" class="el-upload__tip">750*544,支持jpg、png、gif格式,最大5M</div>
             </el-upload>
           </el-form-item>
+          <el-form-item label="分享文案："  prop="shareWord">
+            <el-input style="width:50%;" placeholder="0-30个字" v-model="courseSearchForm.shareWord" auto-complete="off"></el-input>
+          </el-form-item>
+          <!-- <el-form-item label="分享图标：">
+            <el-upload
+              class="avatar-uploader"
+              action="/upload/image"
+              name="imageFile"
+              :show-file-list=false
+              :on-success="firstSuccess4"
+              :before-upload="beforeAvatarUpload">
+              <img v-if="courseSearchForm.iconUrl" :src="courseSearchForm.iconUrl" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+              <el-button size="small" type="primary">{{courseSearchForm.iconUrl ? '修改文件' : '选择文件'}}</el-button>
+              <div slot="tip" class="el-upload__tip">300*300,支持jpg、png、gif格式,最大5M</div>
+            </el-upload>
+          </el-form-item> -->
         </el-form>
         <div class="btn-wrap">
           <el-button size="small" @click="editDiolog = false">取 消</el-button>
@@ -178,6 +195,9 @@
           ],
           imgUrl:[
             {required: true, message: '请上传书籍封面', trigger: 'blur'},
+          ],
+          shareWord:[
+            { min: 0, max: 30,message: '请输入0-30个字', trigger: 'blur'},
           ]
         },
         courseEditId:null,
@@ -209,13 +229,16 @@
           pageNum: 1,
           pageSize: null,
           imgUrl:'',
-          selectType:''
+          selectType:'',
+          // iconUrl:'',
+          shareWord:''
         },
         //新增编辑课程form 表单
         courseForm: {
           title:null,
           imgUrl:'',
-          backGroundUrl:''
+          backGroundUrl:'',
+          
         },
         courseList:[]
       }
@@ -408,6 +431,22 @@
           }
         };
       },
+      // firstSuccess4(res, file) {
+      //   const self = this;
+
+      //   const image = new Image();
+      //   image.src = 'https:' + res.data.fileUrl;
+      //   image.onload = function () {
+      //     const width = image.width;
+      //     const height = image.height;
+
+      //     if (width == 300 && height == 300) {
+      //       self.courseSearchForm.iconUrl = 'https:' + res.data.fileUrl;
+      //     } else {
+      //       self.$message.error('上传图片的尺寸必须为 300*300!')
+      //     }
+      //   };
+      // },
       getAllCourse(title){
         let params ={
           title:title
@@ -429,6 +468,8 @@
           if (resp.success) {
              this.courseSearchForm.selectType = resp.data.courseId
              this.courseSearchForm.imgUrl = resp.data.imgUrl
+             // this.courseSearchForm.iconUrl = resp.data.iconUrl
+             this.courseSearchForm.shareWord = resp.data.shareWord
           } else {
             let msg = resp.desc || '请求失败'
             this.$message.error(msg)
@@ -438,6 +479,8 @@
       editCourse(title,row) {
         this.courseSearchForm.selectType = ''
         this.courseSearchForm.imgUrl= ''
+        // this.courseSearchForm.iconUrl= ''
+        this.courseSearchForm.shareWord= ''
         this.courseEditId = row.id;
         this.editDiolog = true ;
         this.digType = title;
@@ -454,8 +497,10 @@
       subCourse(){
         let params = {
           courseId:this.courseSearchForm.selectType,
-          imgUrl:this.courseSearchForm.imgUrl
-        };
+          imgUrl:this.courseSearchForm.imgUrl,
+          // iconUrl: this.courseSearchForm.iconUrl,
+          shareWord: this.courseSearchForm.shareWord,
+        }
 
         if(this.digType==1){
           params.id = this.courseEditId

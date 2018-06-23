@@ -129,7 +129,7 @@
 
     <!--新增|编辑书籍 弹窗-->
     <div class="add-type-diolog">
-      <el-dialog title="添加|编辑书籍" :visible.sync="bookDiolog" @close="destroyUploader">
+      <el-dialog title="添加|编辑书籍" :visible.sync="bookDiolog" @closed="destroyUploader">
         <div>
           <el-form :model="courseForm" ref="courseForm" :rules="rules">
 
@@ -224,6 +224,7 @@
   import E from 'wangeditor'
   import plupload from 'plupload';
   import qs from 'qs'
+  import _ from 'lodash'
 
   import {
     getDirectTransmissionSign,
@@ -417,14 +418,14 @@
           this.courseForm = resp.data;
           this.booksForm.introduction = resp.data.introduction
           this.fileSrc = resp.data.fileSrc?resp.data.fileSrc:''
-          try {
-              this.fileText = resp.data.uploadFile.name
-              this.booksForm.uploadFile.name = resp.data.uploadFile.name
-              this.booksForm.uploadFile.url = resp.data.uploadFile.url
-          } catch (error) {
+          if(_.isEmpty(resp.data.uploadFile)){
+            this.booksForm.uploadFile = {}
             this.fileText = ''
+          }else{
+            this.fileText = resp.data.uploadFile.name
+            this.booksForm.uploadFile.name = resp.data.uploadFile.name
+            this.booksForm.uploadFile.url = resp.data.uploadFile.url
           }
-
           // console.log(resp.data)
         })
       },
@@ -614,9 +615,10 @@
       // 保存书籍
       saveBook () {
         let params =  this.courseForm;
+
         params = {...params, ...this.booksForm}
+
         params.simpleAudition = this.fileSrc
-        console.log(params)
         params.readId = Number(this.readId);
         this.$refs['courseForm'].validate((valid)=>{
           if (valid) {
@@ -682,7 +684,7 @@
 
                   this.uploader.init();
 
-                  this.uploader.bind('FilesAdded', function (upload, files) {
+                  this.uploader.bind('FilesAdded', (upload, files) => {
                       if (files[files.length - 1].type != "audio/mp3" && files[files.length - 1].type != "audio/x-m4a") {
                           self.$message.error("请上传mp3或者m4a格式文件");
                           this.uploader.removeFile(files);
@@ -699,10 +701,10 @@
                       self.booksForm.uploadFile.url = this.uploader.settings.multipart_params.key;
                       this.uploader.start();
                   });
-                  this.uploader.bind('uploadProgress', function (upload, files) {
+                  this.uploader.bind('uploadProgress', (upload, files) => {
                       self.fileText = `已完成${files.percent}%`;
                   });
-                  this.uploader.bind('uploadComplete', function (upload, files) {
+                  this.uploader.bind('uploadComplete', (upload, files) => {
                       const key = this.uploader.settings.multipart_params.key;
 
                       if(upload.total.uploaded <=0) {

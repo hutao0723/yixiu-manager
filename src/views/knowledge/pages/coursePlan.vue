@@ -417,6 +417,8 @@
           this.booksForm.introduction = resp.data.introduction
           try {
               this.fileText = resp.data.uploadFile.name
+              this.booksForm.uploadFile.name = resp.data.uploadFile.name
+              this.booksForm.uploadFile.url = resp.data.uploadFile.url
           } catch (error) {
             this.fileText = ''
           }
@@ -613,7 +615,7 @@
         params = {...params, ...this.booksForm}
         params.simpleAudition = this.fileSrc
         console.log(params)
-        params.readId = this.readId;
+        params.readId = Number(this.readId);
         this.$refs['courseForm'].validate((valid)=>{
           if (valid) {
             this.loading = true;
@@ -633,6 +635,7 @@
                 }
               })
             } else {
+              delete(params.id)
               this.$http.post('/read/book/save',params).then(res => {
                 let resp = res.data
                 if (resp.success) {
@@ -710,7 +713,6 @@
                       self.booksForm.uploadFile.name = files[files.length - 1].name;
                       self.getCdnFileUrlFc(key);
                   });
-
 
               } else {
                   let msg = res.desc || '获取上传路径失败'

@@ -129,7 +129,7 @@
 
     <!--新增|编辑书籍 弹窗-->
     <div class="add-type-diolog">
-      <el-dialog title="添加|编辑书籍" :visible.sync="bookDiolog" @closed="destroyUploader">
+      <el-dialog title="添加|编辑书籍" :visible.sync="bookDiolog" @open="createUploader" @closed="destroyUploader">
         <div>
           <el-form :model="courseForm" ref="courseForm" :rules="rules">
 
@@ -301,9 +301,15 @@
     computed: {
 
     },
-    mounted(){
+    created(){
 
     },
+    mounted(){
+      // this.getDirectTransmission()
+    },
+    // beforeUpdate(){
+    //
+    // },
     created() {
       this.readId = this.$route.query.readId;
       this.getData();
@@ -667,7 +673,6 @@
                   this.directTransmissionSign = res.data;
                   // 实例化一个plupload上传对象
                   var multipart_params = this.directTransmissionSign;
-                  // console.log(uploader)
 
                   this.uploader = new plupload.Uploader({
                       runtimes: 'html5,flash,silverlight,html4',
@@ -695,7 +700,7 @@
                           this.uploader.removeFile(files);
                           return false
                       }
-                      console.log(files[files.length - 1].name)
+
                       self.fileText = files[files.length - 1].name;
                       self.booksForm.uploadFile.name = files[files.length - 1].name;
                       self.booksForm.uploadFile.url = this.uploader.settings.multipart_params.key;
@@ -760,9 +765,12 @@
           }.bind(this)
         );
       },
+
+      createUploader(){
+        // this.getDirectTransmission()
+      },
       destroyUploader(){
-        this.uploader.destroy()
-        console.log('destroy')
+        // this.uploader.destroy()
       },
     }
   }

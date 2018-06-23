@@ -129,7 +129,7 @@
 
     <!--新增|编辑书籍 弹窗-->
     <div class="add-type-diolog">
-      <el-dialog title="添加|编辑书籍" :visible.sync="bookDiolog">
+      <el-dialog title="添加|编辑书籍" :visible.sync="bookDiolog" @close="destroyUploader">
         <div>
           <el-form :model="courseForm" ref="courseForm" :rules="rules">
 
@@ -292,7 +292,8 @@
           courseType: 1,
         },
         fileText: null,
-        fileSrc: null
+        fileSrc: null,
+        uploader: null // uploader实例化对象
       }
     },
 
@@ -415,6 +416,7 @@
           let resp = res.data;
           this.courseForm = resp.data;
           this.booksForm.introduction = resp.data.introduction
+          this.fileSrc = resp.data.fileSrc?resp.data.fileSrc:''
           try {
               this.fileText = resp.data.uploadFile.name
               this.booksForm.uploadFile.name = resp.data.uploadFile.name
@@ -422,8 +424,8 @@
           } catch (error) {
             this.fileText = ''
           }
-          
-          console.log(resp.data)
+
+          // console.log(resp.data)
         })
       },
       addBook(type,row){
@@ -663,9 +665,9 @@
                   this.directTransmissionSign = res.data;
                   // 实例化一个plupload上传对象
                   var multipart_params = this.directTransmissionSign;
-                  // console.log(multipart_params);
+                  // console.log(uploader)
 
-                  var uploader = new plupload.Uploader({
+                  this.uploader = new plupload.Uploader({
                       runtimes: 'html5,flash,silverlight,html4',
                       browse_button: 'selectfiles',
                       url: 'http://youfen.oss-cn-hangzhou.aliyuncs.com/',
@@ -678,37 +680,37 @@
                       },
                   })
 
-                  uploader.init();
+                  this.uploader.init();
 
-                  uploader.bind('FilesAdded', function (upload, files) {
+                  this.uploader.bind('FilesAdded', function (upload, files) {
                       if (files[files.length - 1].type != "audio/mp3" && files[files.length - 1].type != "audio/x-m4a") {
                           self.$message.error("请上传mp3或者m4a格式文件");
-                          uploader.removeFile(files);
+                          this.uploader.removeFile(files);
                           return false
                       }
                       if (files[files.length - 1].size >500000000) {
                           self.$message.error("文件过大！文件大小必须500M以内");
-                          uploader.removeFile(files);
+                          this.uploader.removeFile(files);
                           return false
                       }
                       console.log(files[files.length - 1].name)
                       self.fileText = files[files.length - 1].name;
                       self.booksForm.uploadFile.name = files[files.length - 1].name;
-                      self.booksForm.uploadFile.url = uploader.settings.multipart_params.key;
-                      uploader.start();
+                      self.booksForm.uploadFile.url = this.uploader.settings.multipart_params.key;
+                      this.uploader.start();
                   });
-                  uploader.bind('uploadProgress', function (upload, files) {
+                  this.uploader.bind('uploadProgress', function (upload, files) {
                       self.fileText = `已完成${files.percent}%`;
                   });
-                  uploader.bind('uploadComplete', function (upload, files) {
-                      const key = uploader.settings.multipart_params.key;
+                  this.uploader.bind('uploadComplete', function (upload, files) {
+                      const key = this.uploader.settings.multipart_params.key;
 
                       if(upload.total.uploaded <=0) {
                           self.fileText = '';
                           self.$message.error("文件上传失败，请重新上传");
                           return
                       }
-                      uploader.settings.multipart_params.key = multipart_params.dir + new Date().getTime();
+                      this.uploader.settings.multipart_params.key = multipart_params.dir + new Date().getTime();
                       self.fileText = files[files.length - 1].name;
                       self.booksForm.uploadFile.name = files[files.length - 1].name;
                       self.getCdnFileUrlFc(key);
@@ -756,7 +758,10 @@
           }.bind(this)
         );
       },
-
+      destroyUploader(){
+        this.uploader.destroy()
+        console.log('destroy')
+      },
     }
   }
 </script>

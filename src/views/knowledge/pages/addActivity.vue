@@ -20,7 +20,7 @@
 
             <el-form-item label="奖励优惠券" prop="coupon">
 							<el-select v-model="activityForm.coupon">
-								<el-option v-for="item in masterOptions" :key="item.couponTemplateId" :label="item.name" :value="item.couponTemplateId">
+								<el-option v-for="item in masterOptions" :key="item.couponTemplateId" :label="item.name + '/' + item.id" :value="item.couponTemplateId">
 								</el-option>
 							</el-select>
             </el-form-item>

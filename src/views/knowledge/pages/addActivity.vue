@@ -23,6 +23,7 @@
 								<el-option v-for="item in masterOptions" :key="item.couponTemplateId" :label="item.name + '/' + item.id" :value="item.couponTemplateId">
 								</el-option>
 							</el-select>
+             
             </el-form-item>
 
             <el-form-item label="领奖限制" prop="limitType">
@@ -78,7 +79,7 @@
             {
               activityId: '',
               awardContentId: '',
-              awardContentType: 0,
+              awardContentType: 1,
               id: null 
             }
           ],

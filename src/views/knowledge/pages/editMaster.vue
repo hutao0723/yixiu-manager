@@ -320,7 +320,7 @@
       saveTemplate() {
 
         this.$refs['masterForm'].validate((valid) => {
-					if(this.readPlanList.length<1){
+					if(this.masterForm.useScopeType == 1 && this.readPlanList.length<1){
 						this.self_v = true
 						return false;
 					}else{

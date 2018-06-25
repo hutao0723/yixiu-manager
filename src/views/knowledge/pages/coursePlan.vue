@@ -101,7 +101,7 @@
             </el-upload>
           </el-form-item>
           <el-form-item label="分享文案："  prop="shareDocument">
-            <el-input style="width:50%;" placeholder="0-30个字" v-model="courseSearchForm.shareDocument" auto-complete="off"></el-input>
+            <el-input style="width:50%;" placeholder="0-100个字" v-model="courseSearchForm.shareDocument" auto-complete="off"></el-input>
           </el-form-item>
           <div class="doc-tips">用户昵称：nickname，感想字数：commentLength，感想时间：commentTimeLabel，阅读天数：readDays，书籍标题：bookTitle</div>
           <!-- <el-form-item label="分享图标：">
@@ -243,7 +243,7 @@
             {required: true, message: '请上传书籍封面', trigger: 'blur'},
           ],
           shareDocument:[
-            { min: 0, max: 30,message: '请输入0-30个字', trigger: 'blur'},
+            { min: 0, max: 100,message: '请输入0-100个字', trigger: 'blur'},
           ]
         },
         courseEditId:null,

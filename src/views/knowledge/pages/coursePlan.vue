@@ -101,9 +101,9 @@
             </el-upload>
           </el-form-item>
           <el-form-item label="分享文案："  prop="shareDocument">
-            <el-input style="width:50%;" placeholder="0-30个字" v-model="courseSearchForm.shareDocument" auto-complete="off"></el-input>
+            <el-input style="width:80%;" placeholder="0-30个字" v-model="courseSearchForm.shareDocument" auto-complete="off"></el-input>
           </el-form-item>
-          <div class="doc-tips">用户昵称：nickname，感想字数：commentLength，感想时间：commentTimeLabel，阅读天数：readDays，书籍标题：bookTitle</div>
+          <div class="doc-tips">用户昵称nickname，感想字数commentLength，感想时间commentTimeLabel，阅读天数readDays，书籍标题bookTitle</div>
           <!-- <el-form-item label="分享图标：">
             <el-upload
               class="avatar-uploader"
@@ -960,5 +960,10 @@
             // left: 390px;
           }
       }
+  }
+  .doc-tips{
+    font-size: 10px;
+    padding-left: 80px;
+    margin-top: -14px;
   }
 </style>

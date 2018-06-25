@@ -41,8 +41,6 @@
                 </el-input>
               </el-col>
             </el-form-item>
-
-
      
             <el-form-item prop="date" v-if="masterForm.validityType == 2">
               <el-date-picker v-model="masterForm.date" type="daterange" range-separator="至" start-placeholder="开始日期"  end-placeholder="结束日期" @change="changeDate">
@@ -75,8 +73,6 @@
               </el-table>
               <p v-show="self_v && readPlanList.length<1" style="color:red">请选择关联阅读计划</p>
             </el-form-item>
-
-
 
             <el-form-item>
               <el-button type="primary" v-show="masterForm.useScopeType == 1" @click="showDialog">关联阅读计划</el-button>

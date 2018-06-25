@@ -147,7 +147,7 @@
         if (!res.test(value)) {
           callback(new Error('请输入正整数'));
         } else {
-          if (value >= 999 || value < 1) {
+          if (value > 999 || value < 1) {
             callback(new Error('选择范围1-999天'));
           } else {
             callback()

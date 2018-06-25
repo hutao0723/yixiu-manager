@@ -1,8 +1,13 @@
 let itemSizeRule = (rule, value, callback) => {
-  if(value<=9999999&&value>=1){
-    callback()
-  }else{
-    callback(new Error('选择范围1-9999999'));
+  const res = /^[+]{0,1}(\d+)$/;
+  if (!res.test(value)) {
+    callback(new Error('请输入正整数'));
+  } else {
+    if (value > 99999999 || value < 1) {
+      callback(new Error('选择范围1-99999999'));
+    } else {
+      callback()
+    }
   }
 }
 

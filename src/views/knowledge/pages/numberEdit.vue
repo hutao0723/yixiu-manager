@@ -8,7 +8,7 @@
       </el-breadcrumb>
     </div>
     <div class="content ">
-      <el-form :model="columnForm" :rules="rules" ref="columnForm"  label-width="100px" class="column-uleForm" label-position="left">
+      <el-form :model="columnForm" :rules="rules" ref="columnForm"  label-width="120px" class="column-uleForm" label-position="left">
         <el-form-item prop="beginDate" label="开课日期">
           <el-col :span="6">
             <el-date-picker type="date" placeholder="选择日期" v-model="columnForm.beginDate" style="width: 100%;"></el-date-picker>
@@ -35,7 +35,7 @@
               <img v-if="item.teacherWxQrcodeUrl" :src="item.teacherWxQrcodeUrl" class="avatar">
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
               <el-button size="small" type="primary">{{columnForm.teacherWxQrcodeUrl ? '修改文件' : '选择文件'}}</el-button>
-              <div slot="tip" class="el-upload__tip">750*545,支持jpg、png、gif格式,最大5M</div>
+              <div slot="tip" class="el-upload__tip">540*630,支持jpg、png、gif格式,最大5M</div>
             </el-upload>
             <!--<el-form-item label="微信号" style="padding:30px 0" >-->
               <!--<el-col :span="6">-->
@@ -51,6 +51,11 @@
         </el-form-item>
         <el-form-item>
           <a href="javascript:;" @click="addTeach()">新增老师微信</a>
+        </el-form-item>
+        <el-form-item label="感想海报样式" prop="commentPosterType">
+          <el-select v-model="columnForm.commentPosterType" placeholder="订单号" class="w150 iptl">
+            <el-option v-for="(item) in commentPosterTypeOptions" :key="item.id" :label="item.label" :value="item.value"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item>
           <el-button @click="cancelForm()">取消</el-button>
@@ -110,7 +115,7 @@
       // }
       return {
         teachterArr:[
-          {markCode:"1-3000",startNum:1,startEnd:3000,teacherWxNumber:'',teacherWxQrcodeUrl:''}
+          {markCode:"1-500",startNum:1,startEnd:500,teacherWxNumber:'',teacherWxQrcodeUrl:''}
         ],
         wxNumArr:[],
         imgIndex:0,
@@ -127,8 +132,21 @@
         columnForm: {
           beginDate:'',
           stageNum:'',
-          wxQrcodeUrl:null
+          wxQrcodeUrl:null,
+          commentPosterType:'H5'
         },
+
+        commentPosterTypeOptions: [
+          {
+            value: 'H5',
+            label: 'H5'
+          },
+          {
+            value: 'IMG',
+            label: '图片'
+          }
+        ],
+
         rules: {
           stageNum: [
             {required: true, message: '请输入课程期数', trigger: 'blur'},
@@ -142,7 +160,10 @@
           ],
           wxQrcodeUrl:[
             {required: true, message: '请上传至少一张背景图', trigger: 'blur'},
-          ]
+          ],
+          commentPosterType:[
+            {  required: true, message: '请选择感想海报', trigger: 'blur' },
+          ],
         }
       }
     },
@@ -178,8 +199,8 @@
         }
         let teachObj = {
           startNum:this.startEnd+1,
-          startEnd:this.startEnd + 3000,
-          markCode:(this.startEnd+1) +'-'+ (this.startEnd+3000),
+          startEnd:this.startEnd + 500,
+          markCode:(this.startEnd+1) +'-'+ (this.startEnd+500),
           teacherWxNumber:"",
           teacherWxQrcodeUrl:""
         }
@@ -264,12 +285,12 @@
         image.onload = function () {
           const width = image.width;
           const height = image.height;
-          if (width == 750 && height == 545) {
+          if (width == 540 && height == 630) {
             self.columnForm.wxQrcodeUrl = 'https:' + res.data.fileUrl;
             self.teachterArr[self.imgIndex].teacherWxQrcodeUrl = 'https:' + res.data.fileUrl;
             self.$set(self.teachterArr, self.imgIndex,self.teachterArr[self.imgIndex] );
           } else {
-            self.$message.error('上传图片的尺寸必须为 750*545!')
+            self.$message.error('上传图片的尺寸必须为 540*630!')
           }
       };
 

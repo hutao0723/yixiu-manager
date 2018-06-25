@@ -13,26 +13,29 @@
         <el-tabs v-model="activeType" type="card" @tab-click="handleClick" class="pad-length">
             <el-tab-pane :label="tab1" :name="tab1">
                 <div class="content">
-                    <el-col :span="6" class="listCol" v-for="(item, index) in this.templateList" :key="index">
+                    <el-col :span="7" class="listCol" v-for="(item, index) in this.templateList" :key="index">
                         <el-card class="templateCard" :body-style="{ padding: '0px' }">
-                            <div class="templateTitle">{{ item.templateTitle }}
-                              <el-tooltip class="item" effect="light" 
+                            <div class="templateTitle">{{ item.templateName }}
+                              <el-tooltip class="item" effect="light"
                               placement="top">
-                                <div slot="content" v-html="item.toolTipContent"></div>
+                                <div slot="content" >
+                                    <h5 style="font-size: 22px; font-weight: bold; margin-bottom: 20px">{{ item.templateName }}</h5>
+                                    <p style="margin-bottom: 20px" v-for='el in item.templateDescribe'>{{el}}</p>
+                                </div>
                                 <i class="el-icon-question" :style="{ float: 'right' }"></i>
                               </el-tooltip>
                             </div>
                             <div class="templateContent">
                                 <div class="msg msgTitle">推送时间：</div>
-                                <div class="msg msgContent">{{ item.templateDate }}</div>
+                                <div class="msg msgContent">{{ item.pushTime }}</div>
                             </div>
                             <div class="templateContent">
                                 <div class="msg msgTitle">推送状态：</div>
-                                <div class="msg msgContent">{{ item.templateStatus }}</div>
+                                <div class="msg msgContent">{{ item.pushStatus*1?"启用中":"未启用" }}</div>
                             </div>
                             <div class="templateFooter">
-                                <div class="footerLeft">{{ item.templatePushRole }}</div>
-                                <div class="footerRight" @click="editTemplate(item.id, item.templateTitle, item.templateType)">编辑</div>
+                                <div class="footerLeft">{{ item.pushUser }}</div>
+                                <div class="footerRight" @click="editTemplate(item.authorizeMpTemplateId, item.templateName, item.templateType)">编辑</div>
                             </div>
                         </el-card>
                     </el-col>
@@ -55,54 +58,7 @@ export default {
         }
       ],
       templateList: [
-        {
-          id: '',
-          templateType: 1,
-          templatePushRole: '推送给用户',
-          templateTitle: "支付成功通知",
-          templateDate: "支付成功后",
-          templateStatus: "",
-          toolTipContent:
-            '<div style="font-size: 22px; font-weight: bold; margin-bottom: 20px">支付成功通知</div><div style="margin-left: 20px"><div style="margin-bottom: 20px">订单商品：课程或专栏的标题</div><div style="margin-bottom: 20px">主订单号：用户支付完成后，平台生成的订单编号</div><div style="margin-bottom: 20px">支付金额：订单的实际付款金额</div><div style="margin-bottom: 20px">支付时间：平台主订单的交易完成时间</div></div>'
-        },
-        // {
-        //   templateType: "2",
-        //   templateTitle: "绑定成功通知",
-        //   templateDate: "关联成功后",
-        //   templateStatus: "",
-        //   toolTipContent:
-        //     '<div style="font-size: 22px; font-weight: bold; margin-bottom: 20px">绑定成功通知</div><div style="margin-left: 20px"><div style="margin-bottom: 20px">用户昵称：微信用户昵称</div><div style="margin-bottom: 20px">绑定时间：用户绑定分销员的时间</div></div>'
-        // },
-        {
-          id: '',
-          templateType: 3,
-          templatePushRole: '推送给分销员',
-          templateTitle: "绑定成功通知",
-          templateDate: "新用户绑定",
-          templateStatus: "",
-          toolTipContent:
-            '<div style="font-size: 22px; font-weight: bold; margin-bottom: 20px">绑定成功通知</div><div style="margin-left: 20px"><div style="margin-bottom: 20px">用户昵称：微信用户昵称</div><div style="margin-bottom: 20px">绑定时间：用户绑定分销员的时间</div><div style="margin-bottom: 20px">注：新用户（未绑定过任何分销员）绑定分销员</div><div style="margin-bottom: 20px">时，会给分销员1分钱奖励</div></div>'
-        },
-        {
-          id: '',
-          templateType: 4,
-          templatePushRole: '推送给分销员',
-          templateTitle: "收益到账提醒",
-          templateDate: "收益到账后",
-          templateStatus: "",
-          toolTipContent:
-            '<div style="font-size: 22px; font-weight: bold; margin-bottom: 20px">收益到账提醒</div><div style="margin-left: 20px"><div style="margin-bottom: 20px">收益金额：分销员绑定用户的订单支付金额*分销比例</div><div style="margin-bottom: 20px">到账时间：收益金额打入分销员账户的时间</div></div>'
-        },
-        {
-          id: '',
-          templateType: 5,
-          templatePushRole: '推送给分销员',
-          templateTitle: "提现失败通知",
-          templateDate: "提现失败后",
-          templateStatus: "",
-          toolTipContent:
-            '<div style="font-size: 22px; font-weight: bold; margin-bottom: 20px">提现失败通知</div><div style="margin-left: 20px"><div style="margin-bottom: 20px">提现金额：分销员体现的金额</div><div style="margin-bottom: 20px">提现时间：提现金额打入分销员微信账户的时间</div><div style="margin-bottom: 20px">理由：用户提现失败的理由</div></div></div>'
-        }
+
       ]
     };
   },
@@ -119,24 +75,19 @@ export default {
     },
     init() {
       let authorizerId = this.$route.params.id;
-      this.$http.get("/authorizerMpTemplate/list?authorizerId="+ authorizerId).then(
+      let config = {
+        authorizerId:this.$route.params.id,
+        typeId:this.$route.params.type,
+      }
+      this.$http.get("/mpTypeTemplate/list",{ params: config }).then(
         res => {
           let resp = res.data;
           if (resp.success === true) {
-            let list = resp.data;
-            for (let key in list) {
-              if (list[key].pushStatus === 0) {
-                list[key].pushStatus = "停用中";
-              } else if (list[key].pushStatus === 1) {
-                list[key].pushStatus = "启用中";
-              }
-              for (let detail of this.templateList) {
-                if (detail.templateType == key) {
-                  detail.templateStatus = list[key].pushStatus;
-                  detail.id = list[key].id;
-                }
-              }
-            }
+            this.templateList = resp.data;
+
+            this.templateList.forEach((el)=>{
+              el.templateDescribe = el.templateDescribe.split(';')
+            })
           } else {
             let msg = resp.desc || "请求失败";
             this.$message.error(msg);
@@ -157,6 +108,8 @@ export default {
       sessionStorage.setItem('title', title);
       sessionStorage.setItem('type', type);
       sessionStorage.setItem('postId', this.$route.params.id);
+
+      console.log(id,this.$route.params.id)
       this.$router.push({
         name: "templateDetail",
         params: {
@@ -176,6 +129,7 @@ export default {
   .listCol {
     margin-right: 20px;
     margin-top: 20px;
+    min-width: 395px;
   }
   .title-wrap {
     width: 100%;
@@ -196,17 +150,22 @@ export default {
   }
   .templateContent {
     margin: 0 15px 20px 15px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     .msg {
       display: inline-block;
-      font-size: 15px;
+      font-size: 14px;
     }
     .msgTitle {
-      margin-right: 50px;
+      /*margin-right: 20px;*/
     }
+
+
   }
   .templateFooter {
-    height: 25px;
-    line-height: 25px;
+    height: 30px;
+    line-height: 30px;
     padding: 0 10px;
     background-color: gray;
     color: #ffffff;

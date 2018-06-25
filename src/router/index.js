@@ -80,7 +80,13 @@ export const constantRouterMap = [
             component: function (resolve) {
               require(['../views/delivery/pages/subLinkPage'], resolve)
             }
-          }
+          },
+          {
+            path: 'monitor',
+            component: function (resolve) {
+              require(['../views/delivery/pages/monitor'], resolve)
+            }
+          },
         ]
       },
       {

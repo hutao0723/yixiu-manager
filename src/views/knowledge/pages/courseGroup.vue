@@ -21,14 +21,14 @@
               <template slot-scope="edit">
 
                 <el-button type="text" size="mini" @click="buildNewCourse(edit.row.id)">编辑</el-button>
-
+                <el-button type="text" size="mini" @click="delCourse(edit.row.id)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
         </template>
       </div>
       <div class="page-control">
-       <el-pagination background  :page-size="20" :current-page.sync="pageOption.pageNum" @current-change="pageChange" layout="total, prev, pager, next" :total="totalSize"></el-pagination>
+        <el-pagination background  :page-size="20" :current-page.sync="pageOption.pageNum" @current-change="pageChange" layout="total, prev, pager, next" :total="totalSize"></el-pagination>
       </div>
     </div>
 
@@ -82,7 +82,30 @@
         })
       },
       buildNewCourse(numId) {
-         this.$router.push("/manager/knowledge/numberEdit?readId=" + this.readId+'&&numId='+ numId);
+        this.$router.push("/manager/knowledge/numberEdit?readId=" + this.readId+'&&numId='+ numId);
+      },
+      delCourse(id){
+        this.$confirm('确认删除', '删除', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$http.post('/read/stage/delete?id='+id).then(res => {
+            let resp = res.data
+            if (resp.success) {
+              this.$message.success('删除成功');
+              this.getData()
+            } else {
+              let msg = resp.desc || '删除失败'
+              this.$message.error(msg)
+            }
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
       },
       // 分页请求
       pageChange (currentPage) {

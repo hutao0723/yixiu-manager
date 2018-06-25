@@ -8,28 +8,30 @@
     </div>
     <div class="content">
       <div class="search-bar">
+
         <el-button type="primary" @click="newcourseForm(0)" size="small" class="fr">新建阅读计划</el-button>
+        <el-button type="primary"  size="small" class="fr_left" @click="goPoster()">海报</el-button>
         <template>
           <el-form :inline="true" :model="courseSearchForm" class="demo-form-inline" size="small">
-              <el-form-item >
-                <el-select v-model="courseSearchForm.selectType" class="iptl w150">
-                  <el-option v-for="item in searchOptions" :key="item.value" :label="item.label" :value="item.value">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item v-if="courseSearchForm.selectType == 'title'">
-                <el-input  v-model="courseSearchForm.searchValue" class="iptr" ></el-input>
-              </el-form-item>
+            <el-form-item >
+              <el-select v-model="courseSearchForm.selectType" class="iptl w150">
+                <el-option v-for="item in searchOptions" :key="item.value" :label="item.label" :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item v-if="courseSearchForm.selectType == 'title'">
+              <el-input  v-model="courseSearchForm.searchValue" class="iptr" ></el-input>
+            </el-form-item>
             <el-form-item v-if="courseSearchForm.selectType == 'id'">
               <el-input  type="number" v-model="courseSearchForm.searchValue" class="iptr" ></el-input>
             </el-form-item>
-              <el-form-item>
-                <el-select v-model="courseSearchForm.readState" class="w150">
-                  <el-option v-for="item in specialStateOptions" :key="item.value" :label="item.label"
-                             :value="item.value">
-                  </el-option>
-                </el-select>
-              </el-form-item>
+            <el-form-item>
+              <el-select v-model="courseSearchForm.readState" class="w150">
+                <el-option v-for="item in specialStateOptions" :key="item.value" :label="item.label"
+                           :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
 
             <el-button type="primary" @click="getData" size="small">查询</el-button>
           </el-form>
@@ -40,7 +42,11 @@
           <el-table :data="courseList" style="width: 100%">
             <el-table-column prop="id" label="计划ID">
             </el-table-column>
-
+            <el-table-column label="权重">
+              <template slot-scope="scope">
+                {{scope.row.sorted}}
+              </template>
+            </el-table-column>
             <el-table-column prop="title" label="计划标题">
             </el-table-column>
             <el-table-column prop="price" label="计划价格">
@@ -48,16 +54,12 @@
                 {{scope.row.presentPrice}}
               </template>
             </el-table-column>
-            <el-table-column prop="price" label="计划原价">
-              <template slot-scope="scope">
-                {{scope.row.costPrice}}
-              </template>
-            </el-table-column>
-            <el-table-column label="权重">
-              <template slot-scope="scope">
-                {{scope.row.sorted}}
-              </template>
-            </el-table-column>
+            <!--<el-table-column prop="price" label="计划原价">-->
+            <!--<template slot-scope="scope">-->
+            <!--{{scope.row.costPrice}}-->
+            <!--</template>-->
+            <!--</el-table-column>-->
+
             <el-table-column  label="计划状态" :formatter="getStatus" >
 
             </el-table-column>
@@ -213,6 +215,9 @@
       this.getData();
     },
     methods: {
+      goPoster(){
+        this.$router.push('/manager/knowledge/readPoster')
+      },
       openDialogWeight (row) {
         this.editDiolog = true
         this.weightForm.id = row.id
@@ -363,6 +368,10 @@
 </script>
 <style lang="less" scoped>
   .ofa-main-wrap {
+    .fr_left{
+      float: right;
+      margin-right: 20px;
+    }
     width: 100%;
     .totle-time {
       color: #333;

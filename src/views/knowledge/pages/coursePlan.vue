@@ -101,7 +101,7 @@
             </el-upload>
           </el-form-item>
           <el-form-item label="分享文案："  prop="shareDocument">
-            <el-input style="width:50%;" placeholder="0-100个字" v-model="courseSearchForm.shareDocument" auto-complete="off"></el-input>
+            <el-input style="width:50%;" placeholder="0-30个字" v-model="courseSearchForm.shareDocument" auto-complete="off"></el-input>
           </el-form-item>
           <div class="doc-tips">用户昵称：nickname，感想字数：commentLength，感想时间：commentTimeLabel，阅读天数：readDays，书籍标题：bookTitle</div>
           <!-- <el-form-item label="分享图标：">
@@ -232,7 +232,44 @@
   } from '@/api/index'
 
   export default {
+
     data() {
+      const checkWechatID = (rule, value, callback) => {
+        let inputValue = String(value)
+        if(inputValue.match(/nickname/g)){
+           inputValue = inputValue.replace(/nickname/g,'');
+        }
+        if(inputValue.match(/commentLength/g)){
+           inputValue = inputValue.replace(/commentLength/g,'');
+        }
+        if(inputValue.match(/commentTimeLabel/g)){
+           inputValue = inputValue.replace(/commentTimeLabel/g,'');
+        }
+        if(inputValue.match(/readDays/g)){
+           inputValue = inputValue.replace(/readDays/g,'');
+        }
+        if(inputValue.match(/bookTitle/g)){
+           inputValue = inputValue.replace(/bookTitle/g,'');
+        }
+        if(inputValue.length > 30){
+          callback(new Error('确保长度在0-30个字'))
+        }else{
+          callback()
+        }
+        
+        // // console.log(value.length)
+        // setTimeout(() => {
+        //   if (!reg.test(value)) {
+        //     callback(new Error('请输入正确的字符'))
+        //   } else {
+        //     if (value.length > 20) {
+        //       callback(new Error('确保长度小于20'))
+        //     } else {
+        //       callback()
+        //     }
+        //   }
+        // }, 1000)
+      }
       return {
         rules:{
           title: [
@@ -243,7 +280,8 @@
             {required: true, message: '请上传书籍封面', trigger: 'blur'},
           ],
           shareDocument:[
-            { min: 0, max: 100,message: '请输入0-100个字', trigger: 'blur'},
+            { min: 0 ,},
+            {validator: checkWechatID, trigger: 'blur' }
           ]
         },
         courseEditId:null,

@@ -134,8 +134,8 @@
         if(String(value).indexOf('.') !=-1 && String(value).split('.')[1].length >2){
           callback(new Error('最多两位小数'));
         }else{
-          if(value> 999.99 || value <0){
-            callback(new Error('价格区间在0.00-999.99之间'));
+          if(value> 999.99 || value <=0){
+            callback(new Error('价格区间在0.01-999.99之间'));
           } else{
             callback()
           }
@@ -143,11 +143,16 @@
 
       };
       let dayRule = (rule, value, callback) => {
-				if(value<=999&&value>=1){
-					callback()
-				}else{
-					callback(new Error('选择范围1-999天'));
-				}
+        const res = /^[+]{0,1}(\d+)$/;
+        if (!res.test(value)) {
+          callback(new Error('请输入正整数'));
+        } else {
+          if (value >= 999 || value < 1) {
+            callback(new Error('选择范围1-999天'));
+          } else {
+            callback()
+          }
+        }
       }
       return {
 				//控制阅读计划验证
@@ -340,7 +345,7 @@
               conditionType: 2,
               conditionValue: 0,
               couponEndTime: this.formatDateNew(this.masterForm.date[1]),
-              couponPrice: this.masterForm.couponPrice*100,
+              couponPrice: Math.round(this.masterForm.couponPrice*100),
               couponStartTime: this.formatDateNew(this.masterForm.date[1]),
               couponTemplateId: this.$route.params.id == 'new' ? '' : this.$route.params.id,
               itemList: this.getPlanList,

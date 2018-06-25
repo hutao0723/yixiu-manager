@@ -157,7 +157,7 @@
           case '/manager/knowledge/coupon':
           pathIndex = "7-1";
           break;
-          case '/manager/knowledge/coupon':
+          case '/manager/knowledge/voucherActivities':
           pathIndex = "7-3";
           break;
           case '/manager/knowledge/distribute':

@@ -100,6 +100,24 @@
               <div slot="tip" class="el-upload__tip">750*544,支持jpg、png、gif格式,最大5M</div>
             </el-upload>
           </el-form-item>
+          <el-form-item label="分享文案："  prop="shareDocument">
+            <el-input style="width:80%;" placeholder="0-30个字" v-model="courseSearchForm.shareDocument" auto-complete="off"></el-input>
+          </el-form-item>
+          <div class="doc-tips">用户昵称nickname，感想字数commentLength，感想时间commentTimeLabel，阅读天数readDays，书籍标题bookTitle</div>
+          <!-- <el-form-item label="分享图标：">
+            <el-upload
+              class="avatar-uploader"
+              action="/upload/image"
+              name="imageFile"
+              :show-file-list=false
+              :on-success="firstSuccess4"
+              :before-upload="beforeAvatarUpload">
+              <img v-if="courseSearchForm.iconUrl" :src="courseSearchForm.iconUrl" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+              <el-button size="small" type="primary">{{courseSearchForm.iconUrl ? '修改文件' : '选择文件'}}</el-button>
+              <div slot="tip" class="el-upload__tip">300*300,支持jpg、png、gif格式,最大5M</div>
+            </el-upload>
+          </el-form-item> -->
         </el-form>
         <div class="btn-wrap">
           <el-button size="small" @click="editDiolog = false">取 消</el-button>
@@ -111,15 +129,18 @@
 
     <!--新增|编辑书籍 弹窗-->
     <div class="add-type-diolog">
-      <el-dialog title="添加|编辑书籍" :visible.sync="bookDiolog">
-        <el-form :model="courseForm" ref="courseForm" :rules="rules">
-          <el-form-item label="书籍标题" prop="title">
+      <el-dialog title="添加|编辑书籍" :visible.sync="bookDiolog" @open="createUploader" @closed="destroyUploader">
+        <div>
+          <el-form :model="courseForm" ref="courseForm" :rules="rules">
+
+          <el-form-item label="书籍标题" prop="title" class="is_required">
             <el-col :span="8">
               <el-input v-model="courseForm.title" placeholder="1-30字，建议14字以内" :maxlength="30"></el-input>
 
             </el-col>
           </el-form-item>
-          <el-form-item class="is-required" label="书籍封面" prop="imgUrl">
+
+          <el-form-item label="书籍封面" prop="imgUrl">
             <el-upload
               class="avatar-uploader"
               action="/upload/image"
@@ -134,21 +155,61 @@
             </el-upload>
           </el-form-item>
 
-          <el-form-item label="海报背景图">
-            <el-upload
-              class="avatar-uploader"
-              action="/upload/image"
-              name="imageFile"
-              :show-file-list=false
-              :on-success="firstSuccess2"
-              :before-upload="beforeAvatarUpload">
-              <img v-if="courseForm.backGroundUrl" :src="courseForm.backGroundUrl" class="avatar">
-              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-              <el-button size="small" type="primary">{{courseForm.backGroundUrl ? '修改文件' : '选择文件'}}</el-button>
-              <div slot="tip" class="el-upload__tip">750*544,支持jpg、png、gif格式,最大5M</div>
-            </el-upload>
-          </el-form-item>
-        </el-form>
+          <!--<el-form-item label="海报背景图">-->
+            <!--<el-upload-->
+              <!--class="avatar-uploader"-->
+              <!--action="/upload/image"-->
+              <!--name="imageFile"-->
+              <!--:show-file-list=false-->
+              <!--:on-success="firstSuccess2"-->
+              <!--:before-upload="beforeAvatarUpload">-->
+              <!--<img v-if="courseForm.backGroundUrl" :src="courseForm.backGroundUrl" class="avatar">-->
+              <!--<i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
+              <!--<el-button size="small" type="primary">{{courseForm.backGroundUrl ? '修改文件' : '选择文件'}}</el-button>-->
+              <!--<div slot="tip" class="el-upload__tip">750*544,支持jpg、png、gif格式,最大5M</div>-->
+            <!--</el-upload>-->
+          <!--</el-form-item>-->
+
+            <!-- 试听音频 -->
+            <!--<el-form-item label="试听音频" class="audio-list" prop="uploadFile">-->
+                <!--<div>-->
+                    <!--<div class="file-container">{{fileText}}</div>-->
+                    <!--<el-button size="small" type="primary" id="selectfiles">选择文件</el-button>-->
+                    <!--<div slot="tip" class="el-upload__tip">支持mp3、m4a格式，最大500M</div>-->
+                <!--</div>-->
+            <!--</el-form-item>-->
+
+            <!--&lt;!&ndash; 书籍简介 &ndash;&gt;-->
+            <!--<el-form-item label="书籍简介" prop="title">-->
+                <!--<el-col :span="8">-->
+                    <!--<el-input v-model="courseForm.title" placeholder="1-30字，建议14字以内" :maxlength="30"></el-input>-->
+                <!--</el-col>-->
+            <!--</el-form-item>-->
+
+          </el-form>
+        </div>
+
+
+          <el-form :model="booksForm" ref="booksForm">
+
+              <!-- 试听音频 -->
+              <el-form-item label="试听音频" class="audio-list" prop="uploadFile">
+                  <div class="audio-content">
+                      <div class="file-container">{{fileText}}</div>
+                      <el-button size="small" type="primary" id="selectfiles">选择文件</el-button>
+                      <div slot="tip" class="el-upload__tip">支持mp3、m4a格式，最大500M</div>
+                  </div>
+              </el-form-item>
+
+              <!-- 书籍简介 -->
+              <el-form-item label="书籍简介" prop="title">
+                  <el-col :span="8">
+                      <el-input type="textarea" :rows="4" v-model="booksForm.introduction" placeholder="1-50字，建议14字以内" :maxlength="50"></el-input>
+                  </el-col>
+              </el-form-item>
+
+          </el-form>
+
         <div class="btn-wrap">
           <el-button size="small" @click="bookDiolog = false">取 消</el-button>
           <el-button size="small" type="primary" @click="saveBook()">保存</el-button>
@@ -163,13 +224,52 @@
   import E from 'wangeditor'
   import plupload from 'plupload';
   import qs from 'qs'
+  import _ from 'lodash'
 
   import {
-
+    getDirectTransmissionSign,
+    getCdnFileUrl
   } from '@/api/index'
 
   export default {
+
     data() {
+      const checkWechatID = (rule, value, callback) => {
+        let inputValue = String(value)
+        if(inputValue.match(/nickname/g)){
+           inputValue = inputValue.replace(/nickname/g,'');
+        }
+        if(inputValue.match(/commentLength/g)){
+           inputValue = inputValue.replace(/commentLength/g,'');
+        }
+        if(inputValue.match(/commentTimeLabel/g)){
+           inputValue = inputValue.replace(/commentTimeLabel/g,'');
+        }
+        if(inputValue.match(/readDays/g)){
+           inputValue = inputValue.replace(/readDays/g,'');
+        }
+        if(inputValue.match(/bookTitle/g)){
+           inputValue = inputValue.replace(/bookTitle/g,'');
+        }
+        if(inputValue.length > 30){
+          callback(new Error('确保长度在0-30个字'))
+        }else{
+          callback()
+        }
+        
+        // // console.log(value.length)
+        // setTimeout(() => {
+        //   if (!reg.test(value)) {
+        //     callback(new Error('请输入正确的字符'))
+        //   } else {
+        //     if (value.length > 20) {
+        //       callback(new Error('确保长度小于20'))
+        //     } else {
+        //       callback()
+        //     }
+        //   }
+        // }, 1000)
+      }
       return {
         rules:{
           title: [
@@ -178,6 +278,10 @@
           ],
           imgUrl:[
             {required: true, message: '请上传书籍封面', trigger: 'blur'},
+          ],
+          shareDocument:[
+            { min: 0 ,},
+            {validator: checkWechatID, trigger: 'blur' }
           ]
         },
         courseEditId:null,
@@ -194,14 +298,14 @@
         digType:1,
         bookType:1,
         bookId:null,
-        directTransmissionSign: null, //上传签名
+        directTransmissionSign: null, // 上传签名
         pageOption: {
           pageNum: 1,
           size: 20
         },
         totalSize: 0,
         courseManageList:[],
-        //分页查询课程信息
+        // 分页查询课程信息
         courseSearchForm: {
           id: null,
           title: null,
@@ -209,24 +313,41 @@
           pageNum: 1,
           pageSize: null,
           imgUrl:'',
-          selectType:''
+          selectType:'',
+          // iconUrl:'',
+          shareDocument:''
         },
-        //新增编辑课程form 表单
+        // 新增编辑课程form 表单
         courseForm: {
-          title:null,
-          imgUrl:'',
-          backGroundUrl:''
+          title: null,
+          imgUrl: '',
+          backGroundUrl: ''
         },
-        courseList:[]
+        courseList: [],
+        booksForm: {
+          introduction:'',
+          uploadFile: {},
+          freeTime: 120,
+          courseType: 1,
+        },
+        fileText: null,
+        fileSrc: null,
+        uploader: null // uploader实例化对象
       }
     },
 
     computed: {
 
     },
-    mounted(){
+    created(){
 
     },
+    mounted(){
+      // this.getDirectTransmission()
+    },
+    // beforeUpdate(){
+    //
+    // },
     created() {
       this.readId = this.$route.query.readId;
       this.getData();
@@ -339,7 +460,17 @@
         this.$http.post('/read/book/detail?id='+id).then(res =>{
           let resp = res.data;
           this.courseForm = resp.data;
-          console.log(resp.data)
+          this.booksForm.introduction = resp.data.introduction
+          this.fileSrc = resp.data.fileSrc?resp.data.fileSrc:''
+          if(_.isEmpty(resp.data.uploadFile)){
+            this.booksForm.uploadFile = {}
+            this.fileText = ''
+          }else{
+            this.fileText = resp.data.uploadFile.name
+            this.booksForm.uploadFile.name = resp.data.uploadFile.name
+            this.booksForm.uploadFile.url = resp.data.uploadFile.url
+          }
+          // console.log(resp.data)
         })
       },
       addBook(type,row){
@@ -349,9 +480,16 @@
         }else{
           this.courseForm.title = null;
           this.courseForm.imgUrl = '';
+
+          this.booksForm.introduction = ''
+          this.booksForm.uploadFile = {}
+          this.fileSrc = null
+          this.fileText = null
         }
+
         this.bookDiolog = true;
         this.bookType = type;
+        this.getDirectTransmission()
       },
       beforeAvatarUpload(file) {
         const isJLtType = file.type === 'image/jpg' || file.type === 'image/png' || file.type === 'image/gif' || file.type ==='image/jpeg';
@@ -408,6 +546,22 @@
           }
         };
       },
+      // firstSuccess4(res, file) {
+      //   const self = this;
+
+      //   const image = new Image();
+      //   image.src = 'https:' + res.data.fileUrl;
+      //   image.onload = function () {
+      //     const width = image.width;
+      //     const height = image.height;
+
+      //     if (width == 300 && height == 300) {
+      //       self.courseSearchForm.iconUrl = 'https:' + res.data.fileUrl;
+      //     } else {
+      //       self.$message.error('上传图片的尺寸必须为 300*300!')
+      //     }
+      //   };
+      // },
       getAllCourse(title){
         let params ={
           title:title
@@ -429,6 +583,8 @@
           if (resp.success) {
              this.courseSearchForm.selectType = resp.data.courseId
              this.courseSearchForm.imgUrl = resp.data.imgUrl
+             // this.courseSearchForm.iconUrl = resp.data.iconUrl
+             this.courseSearchForm.shareDocument = resp.data.shareDocument
           } else {
             let msg = resp.desc || '请求失败'
             this.$message.error(msg)
@@ -438,6 +594,8 @@
       editCourse(title,row) {
         this.courseSearchForm.selectType = ''
         this.courseSearchForm.imgUrl= ''
+        // this.courseSearchForm.iconUrl= ''
+        this.courseSearchForm.shareDocument= ''
         this.courseEditId = row.id;
         this.editDiolog = true ;
         this.digType = title;
@@ -454,8 +612,10 @@
       subCourse(){
         let params = {
           courseId:this.courseSearchForm.selectType,
-          imgUrl:this.courseSearchForm.imgUrl
-        };
+          imgUrl:this.courseSearchForm.imgUrl,
+          // iconUrl: this.courseSearchForm.iconUrl,
+          shareDocument: this.courseSearchForm.shareDocument,
+        }
 
         if(this.digType==1){
           params.id = this.courseEditId
@@ -499,13 +659,17 @@
       // 保存书籍
       saveBook () {
         let params =  this.courseForm;
-        params.readId = this.readId;
+
+        params = {...params, ...this.booksForm}
+
+        params.simpleAudition = this.fileSrc
+        params.readId = Number(this.readId);
         this.$refs['courseForm'].validate((valid)=>{
           if (valid) {
             this.loading = true;
             if (this.bookType!=1) {
               params.id = this.bookId;
-              this.$http.post('/read/book/save',qs.stringify(params)).then(res => {
+              this.$http.post('/read/book/save',params).then(res => {
                 let resp = res.data
                 if (resp.success) {
                   this.$message.success('编辑成功');
@@ -519,7 +683,8 @@
                 }
               })
             } else {
-              this.$http.post('/read/book/save',qs.stringify(params)).then(res => {
+              delete(params.id)
+              this.$http.post('/read/book/save',params).then(res => {
                 let resp = res.data
                 if (resp.success) {
                   this.$message.success('新增成功');
@@ -534,15 +699,119 @@
               })
             }
           } else {
-            return false;
+            return false
           }
         })
-      }
+      },
 
+      getDirectTransmission() {
+          getDirectTransmissionSign().then(res => {
+              const self = this;
+              if (res.success) {
+                  this.directTransmissionSign = res.data;
+                  // 实例化一个plupload上传对象
+                  var multipart_params = this.directTransmissionSign;
 
+                  this.uploader = new plupload.Uploader({
+                      runtimes: 'html5,flash,silverlight,html4',
+                      browse_button: 'selectfiles',
+                      url: 'http://youfen.oss-cn-hangzhou.aliyuncs.com/',
+                      multipart_params: {
+                          'key': multipart_params.dir + new Date().getTime(),
+                          'policy': multipart_params.policy,
+                          'OSSAccessKeyId': multipart_params.accessid,
+                          'success_action_status': '200', //让服务端返回200,不然，默认会返回204
+                          'signature': multipart_params.signature,
+                      },
+                  })
+
+                  this.uploader.init();
+
+                  this.uploader.bind('FilesAdded', (upload, files) => {
+                      if (files[files.length - 1].type != "audio/mp3" && files[files.length - 1].type != "audio/x-m4a") {
+                          self.$message.error("请上传mp3或者m4a格式文件");
+                          this.uploader.removeFile(files);
+                          return false
+                      }
+                      if (files[files.length - 1].size >500000000) {
+                          self.$message.error("文件过大！文件大小必须500M以内");
+                          this.uploader.removeFile(files);
+                          return false
+                      }
+
+                      self.fileText = files[files.length - 1].name;
+                      self.booksForm.uploadFile.name = files[files.length - 1].name;
+                      self.booksForm.uploadFile.url = this.uploader.settings.multipart_params.key;
+                      this.uploader.start();
+                  });
+                  this.uploader.bind('uploadProgress', (upload, files) => {
+                      self.fileText = `已完成${files.percent}%`;
+                  });
+                  this.uploader.bind('uploadComplete', (upload, files) => {
+                      const key = this.uploader.settings.multipart_params.key;
+
+                      if(upload.total.uploaded <=0) {
+                          self.fileText = '';
+                          self.$message.error("文件上传失败，请重新上传");
+                          return
+                      }
+                      this.uploader.settings.multipart_params.key = multipart_params.dir + new Date().getTime();
+                      self.fileText = files[files.length - 1].name;
+                      self.booksForm.uploadFile.name = files[files.length - 1].name;
+                      self.getCdnFileUrlFc(key);
+                  });
+
+              } else {
+                  let msg = res.desc || '获取上传路径失败'
+                  this.$message.error(msg)
+              }
+          }).catch(() => {
+              this.$message.error('网络错误')
+          })
+      },
+
+      getCdnFileUrlFc(fileKey) {
+        getCdnFileUrl({
+          fileKey
+        }).then(res => {
+          if (res.success) {
+            this.fileSrc = res.data;
+            this.getAudioLength();
+          } else {
+            let msg = res.desc || '请求失败'
+            this.$message.error(msg)
+          }
+        }).catch(() => {
+        })
+      },
+
+      clearCourseForm(){
+        for (let i in this.booksForm) {
+          this.booksForm[i] = null
+        }
+        this.booksForm.uploadFile = {};
+        this.booksForm.freeTime = 120;
+        this.booksForm.courseType = 1;
+        this.fileText = null;
+      },
+
+      getAudioLength() {
+        const myAudio = document.getElementsByTagName('audio')[0];
+        myAudio.addEventListener("canplay", function () {
+            this.courseForm.timeLength = Math.round(myAudio.duration);
+            console.log(myAudio.duration);
+          }.bind(this)
+        );
+      },
+
+      createUploader(){
+        // this.getDirectTransmission()
+      },
+      destroyUploader(){
+        // this.uploader.destroy()
+      },
     }
   }
-
 </script>
 <style lang="less" >
   .ofa-main-wrap {
@@ -684,5 +953,17 @@
         top: 30px;
       }
     }
+
+      .audio-content {
+          overflow: hidden;
+          button {
+            // left: 390px;
+          }
+      }
+  }
+  .doc-tips{
+    font-size: 10px;
+    padding-left: 80px;
+    margin-top: -14px;
   }
 </style>

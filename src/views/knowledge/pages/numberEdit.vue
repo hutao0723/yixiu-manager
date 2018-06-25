@@ -8,7 +8,7 @@
       </el-breadcrumb>
     </div>
     <div class="content ">
-      <el-form :model="columnForm" :rules="rules" ref="columnForm"  label-width="100px" class="column-uleForm" label-position="left">
+      <el-form :model="columnForm" :rules="rules" ref="columnForm"  label-width="120px" class="column-uleForm" label-position="left">
         <el-form-item prop="beginDate" label="开课日期">
           <el-col :span="6">
             <el-date-picker type="date" placeholder="选择日期" v-model="columnForm.beginDate" style="width: 100%;"></el-date-picker>
@@ -51,6 +51,11 @@
         </el-form-item>
         <el-form-item>
           <a href="javascript:;" @click="addTeach()">新增老师微信</a>
+        </el-form-item>
+        <el-form-item label="感想海报样式" prop="commentPosterType">
+          <el-select v-model="columnForm.commentPosterType" placeholder="订单号" class="w150 iptl">
+            <el-option v-for="(item) in commentPosterTypeOptions" :key="item.id" :label="item.label" :value="item.value"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item>
           <el-button @click="cancelForm()">取消</el-button>
@@ -127,8 +132,21 @@
         columnForm: {
           beginDate:'',
           stageNum:'',
-          wxQrcodeUrl:null
+          wxQrcodeUrl:null,
+          commentPosterType:'H5'
         },
+
+        commentPosterTypeOptions: [
+          {
+            value: 'H5',
+            label: 'H5'
+          },
+          {
+            value: 'IMG',
+            label: '图片'
+          }
+        ],
+
         rules: {
           stageNum: [
             {required: true, message: '请输入课程期数', trigger: 'blur'},
@@ -142,7 +160,10 @@
           ],
           wxQrcodeUrl:[
             {required: true, message: '请上传至少一张背景图', trigger: 'blur'},
-          ]
+          ],
+          commentPosterType:[
+            {  required: true, message: '请选择感想海报', trigger: 'blur' },
+          ],
         }
       }
     },

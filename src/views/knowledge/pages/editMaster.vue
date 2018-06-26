@@ -347,9 +347,9 @@
             let params = {
               conditionType: 2,
               conditionValue: 0,
-              couponEndTime: this.formatDateNew(this.masterForm.date[1]),
+              couponEndTime: this.masterForm.date?this.formatDateNew(this.masterForm.date[1]):'',
               couponPrice: Math.round(this.masterForm.couponPrice*100),
-              couponStartTime: this.formatDateNew(this.masterForm.date[0]),
+              couponStartTime: this.masterForm.date?this.formatDateNew(this.masterForm.date[0]):'',
               couponTemplateId: this.$route.params.id == 'new' ? '' : this.$route.params.id,
               itemList: this.getPlanList,
               pageItemType: 4,

@@ -43,7 +43,7 @@
             </el-form-item>
      
             <el-form-item prop="date" v-if="masterForm.validityType == 2">
-              <el-date-picker v-model="masterForm.date" type="daterange" range-separator="至" start-placeholder="开始日期"  end-placeholder="结束日期" @change="changeDate">
+              <el-date-picker v-model="dateSlots" type="daterange" range-separator="至" start-placeholder="开始日期"  end-placeholder="结束日期" @change="changeDate">
               </el-date-picker>
             </el-form-item>
 
@@ -151,6 +151,7 @@
         }
       }
       return {
+          dateSlots:'',
 				//控制阅读计划验证
 				self_v:false,
         date: null,
@@ -209,11 +210,17 @@
       this.init()
     },
     watch: {
+        'dateSlots':function(newValue,oldValue){
+                this.masterForm.date = newValue;
+                console.log(this.masterForm.date)
+        }
     },
     methods: {
-      changeDate() {
-        this.masterForm.couponStartTime = this.date ? this.formatDateNew(this.date[0]) : '';
-        this.masterForm.couponEndTime = this.date ? this.formatDateNew(this.date[1]) : '';
+      changeDate(val) {
+        // console.log(val)
+        // console.log(this.masterForm.date )
+        // this.masterForm.couponStartTime = this.masterForm.date ? this.formatDateNew(this.date[0]) : '';
+        // this.masterForm.couponEndTime = this.masterForm.date ? this.formatDateNew(this.date[1]) : '';
       },
       // 关联阅读计划
       relatePlan() {
@@ -247,7 +254,7 @@
             this.masterForm = res.data;
            
             this.masterForm.couponPrice = this.masterForm.couponPrice/100;
-            this.masterForm.date = [this.formatDateNew(this.masterForm.couponStartTime), this.formatDateNew(this.masterForm.couponEndTime)];
+            this.dateSlots = [this.formatDateNew(this.masterForm.couponStartTime), this.formatDateNew(this.masterForm.couponEndTime)];
             if (this.masterForm.itemList) {
               for (let index of this.readOptions) {
                 for (let index1 of this.masterForm.itemList) {
@@ -340,9 +347,9 @@
             let params = {
               conditionType: 2,
               conditionValue: 0,
-              couponEndTime: this.formatDateNew(this.masterForm.date[1]),
+              couponEndTime: this.masterForm.date?this.formatDateNew(this.masterForm.date[1]):'',
               couponPrice: Math.round(this.masterForm.couponPrice*100),
-              couponStartTime: this.formatDateNew(this.masterForm.date[1]),
+              couponStartTime: this.masterForm.date?this.formatDateNew(this.masterForm.date[0]):'',
               couponTemplateId: this.$route.params.id == 'new' ? '' : this.$route.params.id,
               itemList: this.getPlanList,
               pageItemType: 4,

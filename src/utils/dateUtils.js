@@ -61,7 +61,7 @@ export function formatToMs(date) {
   let minutes = date.getMinutes();
   let seconds = date.getSeconds();
   hours = hours < 10 ? '0' + hours : hours;
-  minutes = minutes < 10 ? '00' : minutes;
+  minutes = minutes < 10 ? '0' + minutes : minutes;
   seconds = seconds < 10 ? '0' + seconds : seconds;
   month = ('0' + month).slice(-2);
   day = ('0' + day).slice(-2);

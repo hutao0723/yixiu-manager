@@ -1,0 +1,27 @@
+{
+  "code": "string",
+  "data": {
+    "activityEndTime": "2018-06-06 19:37:14",
+    "activityId": 0,
+    "activityStartTime": "2018-06-06 19:37:14",
+    "activityStatus": 0,
+    "activityType": 1,
+    "awardItems": [
+      {
+        "activityId": 0,
+        "awardContentId": 2,
+        "awardContentType": 0,
+        "id": 0
+      }
+    ],
+    "deleted": false,
+    "gmtCreate": "2018-06-06 19:37:14",
+    "gmtModified": "2018-06-06 19:37:14",
+    "id": 0,
+    "itemSize": 10000,
+    "limitType": 1,
+    "title": "哎我操"
+  },
+  "desc": "string",
+  "success": true
+}

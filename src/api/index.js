@@ -84,7 +84,37 @@ export const templateDetail = params => get('authorizerMpTemplate/details', para
 */
 //分页查询分销详情
 export const getUserDistributionList = params => get('distributor/userDistribution/pageList', params);
-//查询分销人员详情
-export const getDistributorDetail = params => get('distributor/get', params);
-//分页查询分销人员列表
-export const getDistributorList = params => get('distributor/pageList', params);
+
+/*
+*优惠券相关接口
+*/
+//获取母版列表
+export const parentEditionList = params => get('coupon/template/page', params);
+//查询阅读计划集合,适用于阅读计划下拉框
+export const readList = params => get('read/list', params);
+//复制优惠券母版
+export const copyTemplate = params => post('coupon/template/copy', params);
+//保存优惠券母版
+export const saveTemplate = params => post('coupon/template/save', params);
+//修改优惠券母版状态
+export const updateStatusTemplate = params => post('coupon/template/updateStatus', params);
+//删除优惠券母版
+export const deleteTemplate = params => post('coupon/template/delete', params);
+//获取已发券列表
+export const voucherList = params => get('coupon/info/page', params);
+//导出优惠券
+export const exportVoucher = params => get('coupon/export', params);
+//获取母版详情
+export const couponTemplateDetail = params => get('coupon/template/get', params);
+
+/*
+*发券活动相关接口
+*/
+//获取活动列表
+export const voucherActivitiesList = params => get('activity/pageList', params);
+//修改活动状态
+export const updateStatusActivity = params => post('activity/updateStatus', params);
+//删除活动
+export const deleteActivity = params => post('activity/delete', params);
+//复制活动
+export const copyActivity = params => post('activity/copy', params);

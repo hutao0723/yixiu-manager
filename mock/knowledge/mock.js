@@ -256,18 +256,83 @@ var setOnline = [
     type: 'post',
     url: '/comment/changeStatus'
   },
-  // 获取分销人员详情
+  //母版列表
   {
-    name: 'getDistributorDetail',
+    name: 'parentEditionList',
     type: 'get',
-    url: '/distributor/get'
+    url: '/coupon/template/page'
   },
-  // 分页查询分销人员列表
+  //复制优惠券母版
   {
-    name: 'getDistributorList',
+    name: 'copyTemplate',
+    type: 'post',
+    url: '/coupon/template/copy'
+  },
+  //复制活动
+  {
+    name: 'copyActivity',
+    type: 'post',
+    url: '/activity/copy'
+  },
+  //修改优惠券母版状态
+  {
+    name: 'updateStatusTemplate',
+    type: 'post',
+    url: '/coupon/template/updateStatus'
+  },
+  //修改活动状态
+  {
+    name: 'updateStatusActivity',
+    type: 'post',
+    url: '/activity/updateStatus'
+  },
+  //删除优惠券母版
+  {
+    name: 'deleteTemplate',
+    type: 'post',
+    url: '/coupon/template/delete'
+  },
+  //删除活动
+  {
+    name: 'deleteActivity',
+    type: 'post',
+    url: '/activity/delete'
+  },
+  //已发券列表
+  {
+    name: 'voucherList',
     type: 'get',
-    url: '/distributor/pageList'
-  }
+    url: '/coupon/info/page'
+  },
+  //发券活动列表
+  {
+    name: 'voucherActivitiesList',
+    type: 'get',
+    url: '/activity/pageList'
+  },
+  //获取奖励优惠券列表
+  {
+    name: 'couponSimpleList',
+    type: 'get',
+    url: '/coupon/template/simple/list'
+  },
+  // 获取活动详情
+  {
+    name: 'activitySingle',
+    type: 'get',
+    url: '/activity/get'
+  },
+  // 保存活动
+  {
+    name: 'save',
+    type: 'post',
+    url: '/activity/save'
+  },
+  {
+    name: 'exportVoucher',
+    type: 'post',
+    url: '/coupon/export/order'
+  },
 ];
 var fs = require('fs');
 

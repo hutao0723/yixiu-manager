@@ -1,0 +1,39 @@
+{
+  "code": "string",
+  "data": {
+    "content": [
+      {
+        "activityEndTime": "2018-06-06T10:39:35.929Z",
+        "activityId": "string",
+        "activityStartTime": "2018-06-06T10:39:35.929Z",
+        "activityStatus": 0,
+        "activityType": 0,
+        "awardItems": [
+          {
+            "activityId": 0,
+            "awardContentId": "string",
+            "awardContentType": 0,
+            "id": 0
+          }
+        ],
+        "deleted": false,
+        "gmtCreate": "2018-06-06T10:39:35.929Z",
+        "gmtModified": "2018-06-06T10:39:35.929Z",
+        "id": 0,
+        "itemSize": 0,
+        "limitType": 0,
+        "title": "123"
+      }
+    ],
+    "firstPage": true,
+    "lastPage": true,
+    "number": 0,
+    "numberOfElements": 0,
+    "size": 0,
+    "sort": {},
+    "totalElements": 0,
+    "totalPages": 0
+  },
+  "desc": "string",
+  "success": true
+}

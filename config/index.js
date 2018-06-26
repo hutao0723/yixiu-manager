@@ -12,8 +12,9 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '*': {
+        // 测试环境 
+        target: 'http://172.16.6.146:9101/',  // 接口域名
         // 测试环境
-        target: 'http://172.31.20.47:9101',  // 接口域名   / http://172.31.50.240:9101  http://mng.youfen666test.com
         changeOrigin: true,  //是否跨域
       }
 

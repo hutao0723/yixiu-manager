@@ -1,0 +1,22 @@
+{
+  "code": "string",
+  "data": [
+    {
+      "couponTemplateId": 1,
+      "id": 0,
+      "name": "五一大放送"
+    },
+    {
+      "couponTemplateId": 2,
+      "id": 0,
+      "name": "优惠大抢购"
+    },
+    {
+      "couponTemplateId": 3,
+      "id": 0,
+      "name": "优惠福利券"
+    }
+  ],
+  "desc": "string",
+  "success": true
+}

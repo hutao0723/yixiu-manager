@@ -126,6 +126,7 @@ export default {
         },
         {
           value: "couponTemplateId",
+          //value:'templateId',
           label: "母版ID"
         }
       ],
@@ -191,10 +192,10 @@ export default {
       }
       if (this.selectType2 == 'couponTemplateTitle') {
         this.voucherActivitiesSearchForm.couponTemplateTitle = this.activityValue2;
-        this.voucherActivitiesSearchForm.couponTemplateId = '';
+        this.voucherActivitiesSearchForm.templateId = '';
       } else if (this.selectType2 == 'couponTemplateId') {
         this.voucherActivitiesSearchForm.couponTemplateTitle = '';
-        this.voucherActivitiesSearchForm.couponTemplateId = this.activityValue2;
+        this.voucherActivitiesSearchForm.templateId = this.activityValue2;
       }
       console.log(this.voucherActivitiesSearchForm)
       voucherActivitiesList(this.voucherActivitiesSearchForm)

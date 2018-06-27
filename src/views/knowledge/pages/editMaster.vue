@@ -256,13 +256,15 @@
             this.masterForm.couponPrice = this.masterForm.couponPrice/100;
             this.dateSlots = [this.formatDateNew(this.masterForm.couponStartTime), this.formatDateNew(this.masterForm.couponEndTime)];
             if (this.masterForm.itemList) {
-              for (let index of this.readOptions) {
+                console.log('数据',this.readOptions)
                 for (let index1 of this.masterForm.itemList) {
-                  if (index['id'] == index1['itemId']) {
-                    this.readPlanList.push(index)
-                  }
+                  for (let index of this.readOptions) {
+                    if (index['id'] == index1['itemId']) {
+                        this.readPlanList.push(index)
+                    }
                 }
               }
+              console.log(this.readPlanList)
             }
           } else {
             let msg = res.data.desc || "获取母版详情失败";

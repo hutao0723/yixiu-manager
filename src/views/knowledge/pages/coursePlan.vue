@@ -127,9 +127,9 @@
               <el-tab-pane :label="item.name" :name="item.name" v-for="(item,index) in tabList" :key="item.id"  :value="index">
               </el-tab-pane>
             </el-tabs>
-            <el-input type="textarea" style="width:80%" placeholder="1-1000个字" v-model="courseSearchForm.content1" auto-complete="off" v-if="tabId == 1"></el-input>
-            <el-input type="textarea" style="width:80%" placeholder="1-1000个字" v-model="courseSearchForm.content2" auto-complete="off" v-if="tabId == 2"></el-input>
-            <el-input type="textarea" style="width:80%" placeholder="1-1000个字" v-model="courseSearchForm.content3" auto-complete="off" v-if="tabId == 3"></el-input>
+            <el-input type="textarea" style="width:80%" placeholder="1-1000个字" v-model="content1" auto-complete="off" v-if="tabId == 1"></el-input>
+            <el-input type="textarea" style="width:80%" placeholder="1-1000个字" v-model="content2" auto-complete="off" v-if="tabId == 2"></el-input>
+            <el-input type="textarea" style="width:80%" placeholder="1-1000个字" v-model="content3" auto-complete="off" v-if="tabId == 3"></el-input>
           </el-form-item>
         </el-form>
         <div class="btn-wrap">
@@ -337,6 +337,9 @@
           // iconUrl:'',
           shareDocument:''
         },
+        content1: '',
+        content2: '',
+        content3: '',
         // 新增编辑课程form 表单
         courseForm: {
           title: null,
@@ -374,10 +377,11 @@
     },
     methods: {
       handleClick(tab, event) {
-        if(this.tabList[tab.index].id == this.tabId){
-          return
-        }
+        // if(this.tabList[tab.index].id == this.tabId){
+        //   return
+        // }
         this.tabId = this.tabList[tab.index].id
+        console.log(this.tabId )
       },
       selChange(val){
         console.log('*****'+val)
@@ -612,9 +616,9 @@
              // this.courseSearchForm.iconUrl = resp.data.iconUrl
              this.courseSearchForm.shareDocument = resp.data.shareDocument
              this.courseId = resp.data.courseId;
-             this.courseSearchForm.content1 = resp.data.content1;
-             this.courseSearchForm.content2 = resp.data.content2;
-             this.courseSearchForm.content3 = resp.data.content3;
+             this.content1 = resp.data.content1;
+             this.content2 = resp.data.content2;
+             this.content3 = resp.data.content3;
           } else {
             let msg = resp.desc || '请求失败'
             this.$message.error(msg)
@@ -638,9 +642,9 @@
           this.getCourseDetail(row)
         }else{
           this.courseDay = row.lastDayNum+1;
-          this.courseSearchForm.content1 = '';
-          this.courseSearchForm.content2 = '';
-          this.courseSearchForm.content3 = '';
+          this.content1 = '';
+          this.content2 = '';
+          this.content3 = '';
         }
         this.getAllCourse(row.courseTitle)
 
@@ -651,9 +655,9 @@
           imgUrl:this.courseSearchForm.imgUrl,
           // iconUrl: this.courseSearchForm.iconUrl,
           shareDocument: this.courseSearchForm.shareDocument,
-          content1: this.courseSearchForm.content1,
-          content2: this.courseSearchForm.content2,
-          content3: this.courseSearchForm.content3,
+          content1: this.content1,
+          content2: this.content2,
+          content3: this.content3,
         }
 
         if(this.digType==1){

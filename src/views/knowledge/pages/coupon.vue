@@ -122,7 +122,7 @@
               <el-table :data="voucherList">
                 <el-table-column prop="id" label="优惠券ID" ></el-table-column>
                 <el-table-column width="250" prop="gmtCreate" label="领取时间"></el-table-column>
-                <el-table-column prop="couponTemplateId" label="母版ID" ></el-table-column>
+                <el-table-column prop="templateId" label="母版ID" ></el-table-column>
                 <el-table-column prop="couponTemplateTitle" label="母版标题"></el-table-column>
                 <el-table-column prop="couponPrice" label="面额" >
                   <template slot-scope="scope">
@@ -374,11 +374,11 @@ export default {
     getVoucherList() {
       this.loading = true;
       if (this.selectType1 == 'couponTemplateTitle') {
-        this.voucherSearchForm.couponTemplateTitle = this.couponValue1;
+        this.voucherSearchForm.templateTitle = this.couponValue1;
         this.voucherSearchForm.couponTemplateId = '';
       } else if (this.selectType1 == 'couponTemplateId') {
         this.voucherSearchForm.couponTemplateTitle = '';
-        this.voucherSearchForm.couponTemplateId = this.couponValue1;
+        this.voucherSearchForm.templateId = this.couponValue1;
       }
       if (this.selectType2 == 'dateGroup1') {
         this.voucherSearchForm.createStartTime = this.satrtTime;
@@ -424,10 +424,10 @@ export default {
       this.downStatus = true
       if (this.selectType1 == 'couponTemplateTitle') {
         this.voucherSearchForm.couponTemplateTitle = this.couponValue1;
-        this.voucherSearchForm.couponTemplateId = '';
+        this.voucherSearchForm.templateId = '';
       } else if (this.selectType1 == 'couponTemplateId') {
         this.voucherSearchForm.couponTemplateTitle = '';
-        this.voucherSearchForm.couponTemplateId = this.couponValue1;
+        this.voucherSearchForm.templateId = this.couponValue1;
       }
       if (this.selectType2 == 'dateGroup1') {
         this.voucherSearchForm.createStartTime = this.satrtTime;

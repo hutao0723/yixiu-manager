@@ -341,7 +341,7 @@ export default {
         this.parentEditionSearchForm.couponTemplateId = this.templateValue;
       }
       let params = {
-        couponTemplateId: this.parentEditionSearchForm.couponTemplateId,
+        id: this.parentEditionSearchForm.couponTemplateId,
         title: this.parentEditionSearchForm.title,
         status: this.parentEditionSearchForm.status,
         pageNum: this.parentEditionSearchForm.pageNum,

@@ -13,7 +13,7 @@ module.exports = {
     proxyTable: {
       '*': {
         // 测试环境 
-        target: 'http://172.16.6.146:9101/',  // 接口域名
+        target: 'http://192.168.199.130:9101/',  // 接口域名
         // 测试环境
         changeOrigin: true,  //是否跨域
       }
@@ -21,7 +21,7 @@ module.exports = {
     },
 
     // Various Dev Server settings
-    host: 'localhost', // can be overwritten by process.env.HOST 172.31.50.163
+    host: '127.0.0.1', // can be overwritten by process.env.HOST 172.31.50.163
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,

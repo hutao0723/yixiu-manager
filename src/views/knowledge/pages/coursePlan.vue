@@ -118,6 +118,19 @@
               <div slot="tip" class="el-upload__tip">300*300,支持jpg、png、gif格式,最大5M</div>
             </el-upload>
           </el-form-item> -->
+          <!-- <el-tabs v-model="activeType" type="card" @tab-click="handleClick" class="pad-length">
+            <el-tab-pane :label="item.name" :name="item.name" v-for="(item,index) in tabList" :key="item.id"  :value="index">
+            </el-tab-pane>
+          </el-tabs> -->
+          <el-form-item label="评论模板：" >
+            <el-tabs v-model="activeType" type="card" @tab-click="handleClick">
+              <el-tab-pane :label="item.name" :name="item.name" v-for="(item,index) in tabList" :key="item.id"  :value="index">
+              </el-tab-pane>
+            </el-tabs>
+            <el-input type="textarea" style="width:80%" placeholder="1-1000个字" v-model="courseSearchForm.content1" auto-complete="off" v-if="tabId == 1"></el-input>
+            <el-input type="textarea" style="width:80%" placeholder="1-1000个字" v-model="courseSearchForm.content2" auto-complete="off" v-if="tabId == 2"></el-input>
+            <el-input type="textarea" style="width:80%" placeholder="1-1000个字" v-model="courseSearchForm.content3" auto-complete="off" v-if="tabId == 3"></el-input>
+          </el-form-item>
         </el-form>
         <div class="btn-wrap">
           <el-button size="small" @click="editDiolog = false">取 消</el-button>
@@ -284,6 +297,13 @@
             {validator: checkWechatID, trigger: 'blur' }
           ]
         },
+        tabId: 1,
+        activeType: '模板一',
+        tabList: [
+          {id: 1,name: '模板一'},
+          {id: 2,name: '模板二'},
+          {id: 3,name: '模板三'},
+        ],
         courseEditId:null,
         readId:null,
         spanArr:[],
@@ -353,6 +373,12 @@
       this.getData();
     },
     methods: {
+      handleClick(tab, event) {
+        if(this.tabList[tab.index].id == this.tabId){
+          return
+        }
+        this.tabId = this.tabList[tab.index].id
+      },
       selChange(val){
         console.log('*****'+val)
           this.courseSearchForm.selectType = val;
@@ -576,8 +602,8 @@
           }
         })
       },
-      getCourseDetail(id){
-        this.$http.get('/read/book/course/detail?id='+id).then(res =>{
+      getCourseDetail(row){
+        this.$http.get('/read/book/course/detail?id='+row.id + '&readId=' + this.readId + '&courseId=' + row.courseID).then(res =>{
           let resp = res.data;
           console.log(resp.data.courseId)
           if (resp.success) {
@@ -585,6 +611,10 @@
              this.courseSearchForm.imgUrl = resp.data.imgUrl
              // this.courseSearchForm.iconUrl = resp.data.iconUrl
              this.courseSearchForm.shareDocument = resp.data.shareDocument
+             this.courseId = resp.data.courseId;
+             this.courseSearchForm.content1 = resp.data.content1;
+             this.courseSearchForm.content2 = resp.data.content2;
+             this.courseSearchForm.content3 = resp.data.content3;
           } else {
             let msg = resp.desc || '请求失败'
             this.$message.error(msg)
@@ -592,6 +622,8 @@
         })
       },
       editCourse(title,row) {
+        this.activeType = '模板一'
+        this.tabId = 1
         this.courseSearchForm.selectType = ''
         this.courseSearchForm.imgUrl= ''
         // this.courseSearchForm.iconUrl= ''
@@ -601,10 +633,14 @@
         this.digType = title;
         this.digTite = title == 1?'编辑':'添加' ;
         if(title==1){
+          console.log(row)
           this.courseDay = row.dayNum;
-          this.getCourseDetail(row.id)
+          this.getCourseDetail(row)
         }else{
           this.courseDay = row.lastDayNum+1;
+          this.courseSearchForm.content1 = '';
+          this.courseSearchForm.content2 = '';
+          this.courseSearchForm.content3 = '';
         }
         this.getAllCourse(row.courseTitle)
 
@@ -615,10 +651,15 @@
           imgUrl:this.courseSearchForm.imgUrl,
           // iconUrl: this.courseSearchForm.iconUrl,
           shareDocument: this.courseSearchForm.shareDocument,
+          content1: this.courseSearchForm.content1,
+          content2: this.courseSearchForm.content2,
+          content3: this.courseSearchForm.content3,
         }
 
         if(this.digType==1){
-          params.id = this.courseEditId
+          params.id = this.courseEditId;
+          params.readId = this.readId;
+          params.courseId = this.courseId;
           console.log('编辑')
           this.$http.post("/read/book/course/edit",qs.stringify(params)).then(res =>{
             let resp = res.data;
@@ -815,6 +856,12 @@
 </script>
 <style lang="less" >
   .ofa-main-wrap {
+    .el-textarea{
+      .el-textarea__inner{
+      height: 200px;
+    }
+    }
+    
     .removeDefStyle{
       .el-table .cell{
         display: block !important;

@@ -77,7 +77,7 @@
             </el-table-column>
             <el-table-column prop="amount" label="订单金额(元)" >
               <template slot-scope="scope">
-                <div>{{scope.row.amount ? (scope.row.amount / 100).toFixed(2) : ''}}</div>
+                <div>{{ (scope.row.amount / 100).toFixed(2) }}</div>
               </template>
             </el-table-column>
             <el-table-column prop="orderStatus" label="订单状态" >

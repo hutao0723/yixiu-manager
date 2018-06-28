@@ -107,7 +107,7 @@
                   <el-input v-model="voucherSearchForm.activityId" class="iptr" placeholder="活动ID"></el-input>
                 </el-form-item>
                 <el-form-item>
-                  <el-input v-model="voucherSearchForm.consumerId " class="iptr" placeholder="用户ID"></el-input>
+                  <el-input v-model="globConsumerID" class="iptr" placeholder="用户ID"></el-input>
                 </el-form-item>
                 <el-form-item>
                   <el-input v-model="voucherSearchForm.orderId" class="iptr" placeholder="订单ID"></el-input>
@@ -173,6 +173,8 @@ import qs from "qs";
 export default {
   data() {
     return {
+        //鬼
+        globConsumerID:'',
       downStatus: true, // 文字
       downloadUrl: 'http://www.baidu.com',//链接
       disabled: true,
@@ -391,6 +393,7 @@ export default {
         this.voucherSearchForm.usedStartTime = this.satrtTime;
         this.voucherSearchForm.usedEndTime = this.endTime;
       }
+      this.voucherSearchForm.consumerId  = this.globConsumerID
       console.log(this.voucherSearchForm)
       voucherList(this.voucherSearchForm)
         .then(res => {

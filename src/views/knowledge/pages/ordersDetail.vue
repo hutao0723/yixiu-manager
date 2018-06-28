@@ -178,7 +178,7 @@
                   <tbody>
                     <tr>
                       <td>{{detailList.couponId}}</td>
-                      <td>{{detailList.couponTemplateId}}</td>
+                      <td>{{detailList.templateId}}</td>
                       <td>{{detailList.couponTemplateTitle}}</td>
                       <td>{{detailList.couponPrice ? (detailList.couponPrice / 100).toFixed(2) : ''}}</td>
                     </tr>

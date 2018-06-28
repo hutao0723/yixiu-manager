@@ -120,7 +120,7 @@
           <div class="tabel-wrap">
             <template>
               <el-table :data="voucherList">
-                <el-table-column prop="id" label="优惠券ID" ></el-table-column>
+                <el-table-column prop="couponId" label="优惠券ID" ></el-table-column>
                 <el-table-column width="250" prop="gmtCreate" label="领取时间"></el-table-column>
                 <el-table-column prop="templateId" label="母版ID" ></el-table-column>
                 <el-table-column prop="couponTemplateTitle" label="母版标题"></el-table-column>

@@ -86,7 +86,7 @@
                     <tr>
                       <td>{{detailList.orderId}}</td>
                       <td>{{detailList.gmtCreate}}</td>
-                      <td>{{detailList.amount? (detailList.amount / 100).toFixed(2) : ''}}</td>
+                      <td>{{detailList.amount==''? (detailList.amount / 100).toFixed(2) : ''}}</td>
                       <td>{{detailList.orderStatus}}</td>
                       <td>{{detailList.orderType}}</td>
                       <td>{{detailList.finishTime}}</td>
@@ -112,7 +112,7 @@
                       <td>{{orderFunds.gmtCreate}}</td>
                       <td>{{orderFunds.bizType}}</td>
                       <td>{{orderFunds.payType}}</td>
-                      <td>{{orderFunds.amount ? (orderFunds.amount / 100).toFixed(2) : ''}}</td>
+                      <td>{{orderFunds.amount==''? (orderFunds.amount / 100).toFixed(2) : ''}}</td>
                       <td>{{orderFunds.finishTime}}</td>
                       <td>{{orderFunds.outSeqNo}}</td>
                     </tr>
@@ -162,6 +162,25 @@
                     <tr>
                       <td>{{detailList.distributorId}}</td>
                       <td>{{detailList.distributorName}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div class="order-detail-title">优惠券</div>
+                <table class="table-list">
+                  <thead>
+                    <tr class="tr-header">
+                      <th class="w255">优惠券ID</th>
+                      <th class="w255">母版ID</th>
+                      <th class="w255">母版标题</th>
+                      <th>面额</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>{{detailList.couponId}}</td>
+                      <td>{{detailList.templateId}}</td>
+                      <td>{{detailList.couponTemplateTitle}}</td>
+                      <td>{{detailList.couponPrice ? (detailList.couponPrice / 100).toFixed(2) : ''}}</td>
                     </tr>
                   </tbody>
                 </table>

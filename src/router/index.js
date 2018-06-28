@@ -378,6 +378,32 @@ export const constantRouterMap = [
               require(['../views/knowledge/pages/lecturer'], resolve)
             }
           },
+          {
+            name: 'coupon',
+            path: 'coupon',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/coupon'], resolve)
+            }
+          },
+          {
+            name: 'voucherActivities',
+            path: 'voucherActivities',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/voucherActivities'], resolve)
+            }
+          },
+          {
+            path: 'editMaster/:id',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/editMaster'], resolve)
+            }
+          },
+          {
+            path: 'addActivity/:id',
+            component: function (resolve) {
+              require(['../views/knowledge/pages/addActivity'], resolve)
+            }
+          }
         ]
       }
     ]

@@ -1,0 +1,35 @@
+{
+  "success": true,
+  "data": {
+    "content": [
+      {
+        "couponTemplateId": 1,
+        "title": "五一大放送",
+        "couponPrice": "19.9元",
+        "expireDate": "2018.6.6",
+        "status": 1
+      },
+      {
+        "couponTemplateId": 2,
+        "title": "优惠大抢购",
+        "couponPrice": "19.7元",
+        "expireDate": "2018.6.2",
+        "status": 0
+      },
+      {
+        "couponTemplateId": 3,
+        "title": "优惠福利券",
+        "couponPrice": "19.8元",
+        "expireDate": "2018.6.3",
+        "status": -1
+      }
+    ],
+    "totalPages": 7,
+    "numberOfElements": 20,
+    "firstPage": true,
+    "lastPage": false,
+    "totalElements": 135,
+    "size": 20,
+    "number": 0
+  }
+}

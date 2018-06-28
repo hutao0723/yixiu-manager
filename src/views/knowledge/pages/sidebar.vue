@@ -67,6 +67,16 @@
             </el-submenu>
             <el-submenu index="7">
             <span slot="title">营销</span>
+            <router-link :to="{ path: '/manager/knowledge/coupon' }">
+              <el-menu-item index="7-1">
+                <span>优惠券</span>
+              </el-menu-item>
+            </router-link>
+            <router-link :to="{ path: '/manager/knowledge/voucherActivities' }">
+              <el-menu-item index="7-3">
+                <span>发券活动</span>
+              </el-menu-item>
+            </router-link>
             <router-link :to="{ path: '/manager/knowledge/distribute' }">
               <el-menu-item index="7-2">
                 <span>分销</span>
@@ -146,6 +156,9 @@
           
           case '/manager/knowledge/coupon':
           pathIndex = "7-1";
+          break;
+          case '/manager/knowledge/voucherActivities':
+          pathIndex = "7-3";
           break;
           case '/manager/knowledge/distribute':
           pathIndex = "7-2";

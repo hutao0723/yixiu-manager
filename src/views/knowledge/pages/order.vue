@@ -34,7 +34,7 @@
               <el-input v-model="searchForm.inputThree" placeholder="请输入" class="iptr"></el-input>              
             </el-form-item>
             <el-form-item label="创建时间">
-              <el-date-picker  v-model="searchForm.time" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
+              <el-date-picker  v-model="searchForm.time" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" @change="changeDate">
               </el-date-picker>
             </el-form-item>
             <el-form-item label="订单状态">
@@ -77,7 +77,7 @@
             </el-table-column>
             <el-table-column prop="amount" label="订单金额(元)" >
               <template slot-scope="scope">
-                <div>{{scope.row.amount ? (scope.row.amount / 100).toFixed(2) : ''}}</div>
+                <div>{{ (scope.row.amount / 100).toFixed(2) }}</div>
               </template>
             </el-table-column>
             <el-table-column prop="orderStatus" label="订单状态" >
@@ -241,6 +241,9 @@ export default {
       }, () => {
         this.$message.error('网络错误')
       })
+    },
+    changeDate() {
+      console.log(this.searchForm.time)
     },
     // 导出
     exportOrders () {

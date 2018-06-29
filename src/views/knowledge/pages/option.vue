@@ -340,9 +340,9 @@ export default {
         let resp = res.data
         if (resp.success) {
           this.orderList = resp.data.content
-          this.orderList.forEach((item,index)=>{
-            this.orderList[index].releaseTime = formatToMs(item.releaseTime)
-          })
+        //   this.orderList.forEach((item,index)=>{
+        //     this.orderList[index].releaseTime = formatToMs(item.releaseTime)
+        //   })
           // 算出有多少条数据
           this.totalSize = resp.data.totalElements
         } else {

@@ -122,7 +122,7 @@
             <el-tab-pane :label="item.name" :name="item.name" v-for="(item,index) in tabList" :key="item.id"  :value="index">
             </el-tab-pane>
           </el-tabs> -->
-          <el-form-item label="评论模板：" >
+          <el-form-item label="感想模板：" >
             <el-tabs v-model="activeType" type="card" @tab-click="handleClick">
               <el-tab-pane :label="item.name" :name="item.name" v-for="(item,index) in tabList" :key="item.id"  :value="index">
               </el-tab-pane>

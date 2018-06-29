@@ -127,9 +127,9 @@
               <el-tab-pane :label="item.name" :name="item.name" v-for="(item,index) in tabList" :key="item.id"  :value="index">
               </el-tab-pane>
             </el-tabs>
-            <el-input type="textarea" style="width:80%" placeholder="1-1000个字" v-model="content1" auto-complete="off" v-if="tabId == 1"></el-input>
-            <el-input type="textarea" style="width:80%" placeholder="1-1000个字" v-model="content2" auto-complete="off" v-if="tabId == 2"></el-input>
-            <el-input type="textarea" style="width:80%" placeholder="1-1000个字" v-model="content3" auto-complete="off" v-if="tabId == 3"></el-input>
+            <el-input type="textarea" style="width:80%" placeholder="0-1000个字" v-model="content1" auto-complete="off" v-if="tabId == 1"></el-input>
+            <el-input type="textarea" style="width:80%" placeholder="0-1000个字" v-model="content2" auto-complete="off" v-if="tabId == 2"></el-input>
+            <el-input type="textarea" style="width:80%" placeholder="0-1000个字" v-model="content3" auto-complete="off" v-if="tabId == 3"></el-input>
           </el-form-item>
         </el-form>
         <div class="btn-wrap">
